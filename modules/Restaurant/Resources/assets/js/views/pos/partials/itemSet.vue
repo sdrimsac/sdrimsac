@@ -42,7 +42,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <!-- COLOR / TALLA VARIANTES (Tabla) -->
                     <div v-if="comp.color_size && comp.color_size.length">
                         <label class="mt-3 d-block"
@@ -175,14 +174,6 @@ export default {
             if (done) done();
         },
         confirmSelection() {
-            // Nuevo formato solicitado:
-            // components: [ { item_id, quantity, series_id } , { item_id, quantity, color_size_id }, { item_id, quantity, lot_id } ]
-            // Reglas:
-            //  - SERIES: un objeto por cada serie seleccionada (has_sale true), quantity = 1 (asumido)
-            //  - COLOR/TALLA: un objeto por cada variante con selectedQuantity > 0 (quantity = selectedQuantity)
-            //  - LOTES: un objeto sólo con el lote marcado (checked) + quantity = 1 (o comp.quantity si existiera)
-            //  - item_id proviene de comp.id (fallback comp.item_id)
-            // (Si necesitas otra lógica de quantity, ajustar aquí)
 
             const flattened = [];
 

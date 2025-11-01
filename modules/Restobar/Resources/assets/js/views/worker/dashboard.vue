@@ -31,7 +31,7 @@
                                     class="btn_guardarsmall"
                                     type="primary"
                                 >
-                                    Mesa N° {{ currentTable.number }}
+                                    Mesa N° {{ currentTable.number }} {{ currentTable.is_vip }}
                                 </el-button>
                             </div>
                         </div>

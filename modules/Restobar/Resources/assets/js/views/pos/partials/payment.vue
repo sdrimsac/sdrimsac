@@ -1814,6 +1814,28 @@ export default {
             this.sendPayment(null, form);
         });
     },
+    watch: {
+        // Vigilar cambios sobre el objeto `form` para detectar cuándo y quién cambia is_vip
+        form: {
+            handler(newVal, oldVal) {
+                try {
+                    const newVip = newVal && newVal.is_vip;
+                    const oldVip = oldVal && oldVal.is_vip;
+                    if (newVip !== oldVip) {
+                        console.log(
+                            '[DEBUG][payment.vue] form.is_vip changed ->',
+                            'old:', oldVip,
+                            'new:', newVip,
+                            'caller stack:', (new Error()).stack.split('\n').slice(2,5).join('\n')
+                        );
+                    }
+                } catch (e) {
+                    console.log('[DEBUG][payment.vue] watcher error', e);
+                }
+            },
+            deep: true
+        }
+    },
     beforeDestroy() {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
@@ -3085,6 +3107,12 @@ export default {
 
             this.cancel = false;
             this.form_cash_document = {};
+            // Asegurar que el form siempre tenga el flag is_vip
+            // No sobrescribir el valor si ya fue proporcionado por el padre.
+            if (!this.form) this.form = {};
+            if (this.form.is_vip === undefined || this.form.is_vip === null) {
+                this.form.is_vip = false;
+            }
 
             this.invoice = true;
             this.receipt = true;
@@ -4387,31 +4415,6 @@ export default {
                             : nested[f];
                     }
                 });
-                // Si discounts está vacío pero hay total_discount y original_price -> construir
-                /* if (
-                    (!it.discounts || it.discounts.length === 0) &&
-                    Number(it.total_discount) > 0
-                ) {
-                    const qty = Number(it.quantity || nested?.quantity || 0);
-                    const originalP = Number(
-                        it.original_price || nested?.original_price || 0
-                    );
-                    if (qty > 0 && originalP > 0) {
-                        const lineBase = originalP * qty;
-                        const amount = Number(it.total_discount);
-                        const factor =
-                            lineBase > 0 ? _.round(amount / lineBase, 5) : 0;
-                        it.discounts = [
-                            {
-                                discount_type_id: "00",
-                                description: "Descuento por item",
-                                factor,
-                                amount: _.round(amount, 2),
-                                base: _.round(lineBase, 2)
-                            }
-                        ];
-                    }
-                } */
                 // Alinear total_discount con suma de discounts si hay divergencia
                 if (Array.isArray(it.discounts) && it.discounts.length) {
                     const sum = _.round(
@@ -4552,13 +4555,16 @@ export default {
 
             try {
                 let ordenId = this.idOrden;
+                let isVip = this.form.is_vip;
 
                 console.log("ordenId ver si llega el id", ordenId);
+
+                console.log("is_vip ver si llega el id", isVip);
 
                 /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
 
                 if (
-                    (ordenId) && (this.is_vip === false) &&
+                    (ordenId) && !isVip &&
                     (form.variation == undefined ||
                         form.variation == null ||
                         form.variation == false) &&
@@ -4566,7 +4572,7 @@ export default {
                     !this.ordens_all_table
                 ) {
                     const responses = await this.$http.post(
-                        "/restobar/worker/send-orden",
+                        "/restobar/worker/print-orden",
                         this.orden_items
                     );
                     if (!responses.data.success) {

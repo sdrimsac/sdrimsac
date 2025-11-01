@@ -1033,6 +1033,7 @@ export default {
                 id: this.ordenSelectedId,
                 caja: false,
                 to_carry: this.to_carry,
+                is_vip: this.table.is_vip,
                 printing: true,
                 commands_fisico: null,
                 ref: this.referencia,

@@ -148,13 +148,13 @@ class OrdenController extends Controller
     {
         ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
-    $configuration = Configuration::first();
-    $precuenta = $request->precuenta ?? false;
-    // Ensure we detect restaurant mode even if config uses the alternative flag
-    // (some parts of the codebase use `restobar_home` instead of `restaurant`).
-    // Fall back to `restobar_home` when `restaurant` is falsy.
-    $is_restaurant = $configuration->restaurant ?: ($configuration->restobar_home ?? false);
-    $show_unit_ticket = $configuration->show_unit_types_ticket;
+        $configuration = Configuration::first();
+        $precuenta = $request->precuenta ?? false;
+        // Ensure we detect restaurant mode even if config uses the alternative flag
+        // (some parts of the codebase use `restobar_home` instead of `restaurant`).
+        // Fall back to `restobar_home` when `restaurant` is falsy.
+        $is_restaurant = $configuration->restaurant ?: ($configuration->restobar_home ?? false);
+        $show_unit_ticket = $configuration->show_unit_types_ticket;
         $company = Company::first();
         $orden = $request->id;
         $ordens_items_extern = explode("_", $request->ids);
@@ -314,7 +314,7 @@ class OrdenController extends Controller
                             $details = $fallback;
                         }
                     } catch (\Exception $e) {
-                            // ignore fallback errors silently
+                        // ignore fallback errors silently
                     }
                 }
                 // Adjuntamos la colección de detalles al objeto para que esté disponible en la vista
@@ -359,7 +359,7 @@ class OrdenController extends Controller
                 $to_carry[] = $ord_itm;
             }
             $user_name = $ord_itm->user->name;
-           /*  Log::info('Usuario en ítem de orden para ticket', ['user_name' => $user_name]); */
+            /*  Log::info('Usuario en ítem de orden para ticket', ['user_name' => $user_name]); */
             if (!in_array($user_name, $users)) {
                 $users[] = $user_name;
             }
@@ -1033,10 +1033,67 @@ class OrdenController extends Controller
         return compact('orden');
     }
 
+    public function OrderPrint(Request $request)
+    {
+        // Preparar datos mínimos para la impresión sin tocar la base
+        $orden = Orden::find($request->id);
+        if (!$orden) {
+            return [
+                'success' => false,
+                'message' => 'Orden no encontrada para impresión'
+            ];
+        }
+
+        $configuration = Configuration::first();
+
+        // Construir arrays que usan las rutinas de impresión más abajo
+        $orden_items_ids = collect($request->items)->pluck('id')->toArray();
+        $orden_items_ids_for_kitchen = collect($request->items)->map(function ($it) {
+            return [
+                'orden_id' => $it['id'],
+                'area_id' => $it['area_id'] ?? null,
+            ];
+        })->toArray();
+
+        $print_box = $configuration->print_commands;
+        $print_kitchen = $configuration->print_kitchen;
+        $conopy_kitchen = $configuration->conopy_kitchen;
+        $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
+
+
+        if ($print_kitchen && (!$printing)) {
+            $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+            $user_id = auth()->id();
+            foreach ($ids_areas as $area_id) {
+                $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                    return $area_id == $a['area_id'];
+                }), "orden_id");
+                $area_found = Area::find($area_id);
+                if ($area_found) {
+                    $copies = $area_found->copies ?? 0;
+                    $total_copies = $copies + 1;
+
+                    if ($area_found->printer || $area_found->search_print == 1) {
+                        for ($i = 0; $i < $total_copies; $i++) {
+                            dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            sleep(1);
+                        }
+                    }
+                }
+            }
+        }
+        return [
+            'id' => $orden->id,
+            'success' => true,
+            'message' => 'Impresión encolada para orden existente',
+            'printed' => true
+        ];
+    }
+
     public function store(Request $request)
     {
         try {
-            $printOnlyExistingOrder = false;
+            /* $printOnlyExistingOrder = false;
             if (!empty($request->id) && !empty($request->items) && is_array($request->items)) {
                 $allItemsHaveId = collect($request->items)->every(function ($it) {
                     return isset($it['id']) && $it['id'] !== null && $it['id'] !== '';
@@ -1044,10 +1101,10 @@ class OrdenController extends Controller
                 if ($allItemsHaveId) {
                     $printOnlyExistingOrder = true;
                 }
-            }
-            
+            } */
 
-            if ($printOnlyExistingOrder) {
+
+            /* if ($printOnlyExistingOrder) {
                 // Preparar datos mínimos para la impresión sin tocar la base
                 $orden = Orden::find($request->id);
                 if (!$orden) {
@@ -1073,39 +1130,39 @@ class OrdenController extends Controller
                 $conopy_kitchen = $configuration->conopy_kitchen;
                 $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
 
-            
-                    if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
-                        $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                        $user_id = auth()->id();
-                        foreach ($ids_areas as $area_id) {
-                            $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                                return $area_id == $a['area_id'];
-                            }), "orden_id");
-                            $area_found = Area::find($area_id);
-                            if ($area_found) {
-                                $copies = $area_found->copies ?? 0;
-                                $total_copies = $copies + 1;
 
-                                if ($area_found->printer || $area_found->search_print == 1) {
-                                    for ($i = 0; $i < $total_copies; $i++) {
-                                        dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                        sleep(1);
-                                    }
+                if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
+                    $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                    $user_id = auth()->id();
+                    foreach ($ids_areas as $area_id) {
+                        $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                            return $area_id == $a['area_id'];
+                        }), "orden_id");
+                        $area_found = Area::find($area_id);
+                        if ($area_found) {
+                            $copies = $area_found->copies ?? 0;
+                            $total_copies = $copies + 1;
+
+                            if ($area_found->printer || $area_found->search_print == 1) {
+                                for ($i = 0; $i < $total_copies; $i++) {
+                                    dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                                    sleep(1);
                                 }
                             }
                         }
                     }
-                
-                
-                    // Si sólo se pidió imprimir items existentes, terminamos aquí
-                    // para NO modificar la orden en la base de datos.
-                    return [
-                        'id' => $orden->id,
-                        'success' => true,
-                        'message' => 'Impresión encolada para orden existente',
-                        'printed' => true
-                    ];
                 }
+
+
+                // Si sólo se pidió imprimir items existentes, terminamos aquí
+                // para NO modificar la orden en la base de datos.
+                return [
+                    'id' => $orden->id,
+                    'success' => true,
+                    'message' => 'Impresión encolada para orden existente',
+                    'printed' => true
+                ];
+            } */
 
             $user = auth()->user();
             $ref = $request->ref;
@@ -1687,7 +1744,7 @@ class OrdenController extends Controller
             } else {
                 // Only dispatch kitchen print jobs when configuration allows it AND
                 // the incoming request is NOT asking to skip printing ($printing == false).
-                if ($print_kitchen && ((!$printing || $printOnlyExistingOrder) || $is_vip)) {
+                if ($print_kitchen && ((!$printing) || $is_vip)) {
                     $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
                     $user_id = auth()->id();
                     foreach ($ids_areas as $area_id) {

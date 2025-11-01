@@ -163,25 +163,6 @@
 
                     </div>
                 </div>
-
-                <!-- <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
-                    clientTableData.table &&
-                    configuration.restaurant ||
-                    configuration.hotels">
-                    <strong>
-                        {{ clientTableData.is_room ? "HABITACIÓN" : "MESA" }}
-                        <span
-                            style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#fff;color:#073f68;font-weight:700;font-size:1.25rem;margin:0 8px;">
-                            {{ clientTableData.table }}
-                        </span>
-                        Ref. :
-                        {{ clientTableData.ref }}
-                        {{ clientTableData.customer_id }}
-                     
-                    </strong>
-                </div> -->
-
-
                 <div class="row">
 
 

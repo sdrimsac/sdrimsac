@@ -54,6 +54,7 @@ class TableCollection extends ResourceCollection
                 'zone'          => $row->zone ? $row->zone->name : null,
                 'zone_id'       => $row->zone_id,
                 'is_delivery'   => $row->is_delivery,
+                'is_vip'        => (bool)$row->is_vip,
             ];
         });
     }

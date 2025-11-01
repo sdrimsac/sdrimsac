@@ -321,6 +321,7 @@ Route::prefix('restobar')->group(function () {
 
             //ORDERS
             Route::post('send-orden', [OrdenController::class, 'store']);
+            Route::post('print-orden', [OrdenController::class, 'OrderPrint']);
             //Route::get('send-verificate/{id}', 'OrdenController@getRealStock');
             Route::get('orden-new/{id}', [OrdenController::class, 'order']);
             Route::get('search_orden_document', [RestobarController::class, 'search_orden_document']);

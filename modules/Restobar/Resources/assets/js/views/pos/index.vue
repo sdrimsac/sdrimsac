@@ -3202,6 +3202,7 @@ export default {
             if (orden.mesa != undefined && orden.id != undefined) {
                 this.clientTableData = {
                     table: orden.mesa.number,
+                    is_vip: orden.mesa.is_vip,
                     ref: orden.ref ?? "-",
                     table_id: orden.mesa.id,
                     orden_id: orden.id,
@@ -3489,6 +3490,26 @@ export default {
         async paymentsOrden(form, variationItem = []) {
             console.log("paymentsOrden recibida:", form);
             console.log("variationItem recibida:", variationItem);
+            /* this.is_vip = form.is_vip;
+            console.log("this.is_vip seteada:", this.is_vip); */
+            // Asegurar que el flag is_vip también esté presente en el objeto `form`
+            // y en `formVariation` para que componentes hijos que lean `this.form.is_vip`
+            // reciban el valor correcto (evita perderlo al hacer swap de forms).
+            this.form.is_vip = !!form.is_vip;
+            console.log("this.form.is_vip seteada:", this.form.is_vip);
+            this.formVariation.is_vip = !!form.is_vip;
+            console.log("this.formVariation.is_vip seteada:", this.formVariation.is_vip);
+            // Loguear también lo que ve el componente hijo (si ya está montado)
+            try {
+                if (this.$refs.paymentComponent && this.$refs.paymentComponent.form) {
+                    console.log(
+                        '[DEBUG][index.vue] child paymentComponent.form.is_vip:',
+                        this.$refs.paymentComponent.form.is_vip
+                    );
+                }
+            } catch (e) {
+                console.warn('[DEBUG][index.vue] could not read child form.is_vip', e);
+            }
             this.orden_items = form;
             console.log("orden_items seteada:", this.orden_items);
             this.form.printDocument = form.printDocument;
@@ -3500,7 +3521,7 @@ export default {
             this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;
             this.form.customer_id = form.customer_id ? form.customer_id : 1;
-
+        
             // Propagar banderas de impresión opcionales
             this.form.printerDefault = form.printerDefault;
             if (this.form.is_room) {

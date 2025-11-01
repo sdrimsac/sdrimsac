@@ -129,7 +129,7 @@
                         {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
-                        {{ clientTableData.is_vip ? 'true' : 'false' }}
+                        {{ clientTableData.is_vip }}
                         <!-- {{ clientTableData.table_id }} -->
                     </strong>
                 </div>
@@ -367,10 +367,9 @@
                             isCreatingOrden == false &&
                             clientTableData.table != undefined &&
                             ordens.length != 0
-                        " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;"
-                            @click="
-                                cancelGeneralOrden(clientTableData.orden_id)
-                                ">
+                        " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;" @click="
+                            cancelGeneralOrden(clientTableData.orden_id)
+                            ">
                             <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">Cancelar</span>
@@ -781,7 +780,8 @@
                                                                                         X
                                                                                         ${order_pend.categoriaMadera.selectedAncho}
                                                                                         X
-                                                                                        ${order_pend.categoriaMadera.selectedLargo}` }}
+                                                                                        ${order_pend.categoriaMadera.selectedLargo}`
+                                                                                        }}
                                                                                     </strong>
                                                                                 </small>
                                                                             </span>
@@ -827,7 +827,7 @@
                                                                                     style="font-size: 12px; margin-right: 4px;"
                                                                                     type="info">
                                                                                     {{ tag._promo_quantity }} - {{
-                                                                                    tag.description
+                                                                                        tag.description
                                                                                     }}
                                                                                 </el-tag>
 
@@ -3643,6 +3643,16 @@ export default {
             // Verificar descuentos antes de enviar
             console.log('Verificando descuentos antes de enviar:', JSON.parse(JSON.stringify(this.localOrden)));
             try {
+                const normalizeVip = v => {
+                    if (v === true) return true;
+                    if (v === 1) return true;
+                    if (v === '1') return true;
+                    if (typeof v === 'string') {
+                        const s = v.toLowerCase().trim();
+                        return s === 'true' || s === '1';
+                    }
+                    return false;
+                };
                 const responses = await this.$http.post(
                     "/restobar/worker/send-orden",
                     {
@@ -3652,7 +3662,7 @@ export default {
                         caja: true,
                         printing: true,
                         saleDirect: false,
-                        is_vip: this.clientTableData.is_vip,
+                        is_vip: normalizeVip(this.clientTableData.is_vip),
                         orden
                     }
                 );
@@ -4200,7 +4210,7 @@ export default {
                 comercial_treatment_id: this.commercialTreatmentId,
                 print_kitchen: this.configuration.print_kitchen,
                 to_carry: this.to_carry,
-                is_vip : this.clientTableData.is_vip,
+                is_vip: this.clientTableData.is_vip,
                 orden: {
                     table_id: 1,
                     status_orden_id: 1
