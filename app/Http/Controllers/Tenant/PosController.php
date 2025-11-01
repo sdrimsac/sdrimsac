@@ -65,6 +65,7 @@ class PosController extends Controller
     public function last_number_documents(Request $request)
     {
         $company = Company::first();
+        $configuration = Configuration::first();
         $series = $request->series;
         $customer = null;
         $orden_id = $request->ordenId;
@@ -114,7 +115,15 @@ class PosController extends Controller
                     }
                     $result[$prefix] = $last_sale_note;
                 } else {
-                    $last_document  = Document::where("series", $prefix)->where('soap_type_id', $company->soap_type_id)->latest("id")->first();
+                    if ($configuration->health_network) {
+                        $last_document = Document::where("series", $prefix)
+                            ->where('soap_type_id', $company->soap_type_id)
+                            ->orderBy('number', 'desc')
+                            ->first();
+                    } else {
+                        $last_document  = Document::where("series", $prefix)
+                            ->where('soap_type_id', $company->soap_type_id)->latest("id")->first();
+                    }
                     if ($last_document) {
                         $last_document = $last_document->number + 1;
                     } else {
@@ -424,7 +433,6 @@ class PosController extends Controller
                         $table->due_date = $latestDocument->date_payment;
                         $t_return['due_date'] = Carbon::parse($latestDocument->date_payment)->format('d/m/Y');
                     }
-
                 }
 
                 return $t_return;
@@ -462,24 +470,24 @@ class PosController extends Controller
 
         $categories_to_show = [];
         $brands = Brand::all();
-        
+
         $transport_places = [];
         if ($config->tap) {
             $transport_places = TransportPlace::all();
         }
-        
-        if($config->maderera){
+
+        if ($config->maderera) {
             $categoria_madera = CategoriaMadera::all();
             $medida_alto = ItemMedidaAlto::all();
             $medida_grosor = ItemMedidaGrosor::all();
             $medida_ancho = ItemMedidaAncho::all();
-        }else{
+        } else {
             $categoria_madera = [];
             $medida_alto = [];
             $medida_grosor = [];
             $medida_ancho = [];
         }
-        
+
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
             ->where('active', 1)
             ->get();
@@ -588,12 +596,12 @@ class PosController extends Controller
                 $table->hotel_rent_items = collect($hotel_rent_items);
             }
         }
-        if($config->mode_salon){
-            $categories_to_show = CategoryItem::where('show_count_pos', true)->get()->transform(function($row){
+        if ($config->mode_salon) {
+            $categories_to_show = CategoryItem::where('show_count_pos', true)->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
                     'name' => $row->name,
-                    'image' => url('').'/storage/uploads/category/'.$row->icono,
+                    'image' => url('') . '/storage/uploads/category/' . $row->icono,
                 ];
             });
         }
