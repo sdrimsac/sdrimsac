@@ -4271,9 +4271,12 @@ export default {
                     this.clientTableData.customer_id
                 ); */
             }
-            if (!this.configuration.maderera && !this.divided_items) {
-                form_submit.items = this.mergeItems(form_submit.items);
-            }
+            // Mantener los items tal como están en la lista al pagar.
+            // Antes se consolidaban automáticamente (mergeItems) cuando
+            // no era 'maderera' y no estaban 'divided_items'. Eso causa que
+            // líneas idénticas se agrupen y puede desalinear el IGV por
+            // redondeos. Para respetar exactamente lo que se ve en la lista,
+            // no llamamos a mergeItems aquí.
             // Adjuntar discounts por item (tipo 00) antes de emitir
             this._attachItemDiscounts(form_submit.items);
             console.log("ver form_submit ver los datos que pase", form_submit.items);

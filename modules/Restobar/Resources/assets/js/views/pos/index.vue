@@ -3004,13 +3004,14 @@ export default {
                 this.limpiarForm();
             }
         },
-        creatingOrden(number, id, is_room = false) {
+        creatingOrden(number, id, is_room = false, is_vip = false) {
             this.isCreatingOrden = true;
             console.log(
                 "creatingOrden",
                 number,
                 id,
                 is_room,
+                is_vip,
                 this.clientTableData
             );
             // Limpiar localOrden y clientTableData en el padre
@@ -3023,7 +3024,8 @@ export default {
                 table_id: id,
                 is_room,
                 customer_id: undefined,
-                correlative: undefined
+                correlative: undefined,
+                is_vip: !!is_vip
             };
             console.log(
                 "clientTableData después de crear orden",

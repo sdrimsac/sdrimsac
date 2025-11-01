@@ -14,6 +14,7 @@ use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use App\Events\MessageEvent;
+use App\Models\Tenant\Establishment;
 use Modules\Restaurant\Models\TableType;
 use Modules\Restaurant\Models\Zone;
 
@@ -242,10 +243,21 @@ class TableController extends Controller
     public function tables_zones(Request $request)
     {
         $configuration = Configuration::first();
-        $zones = Zone::where('active', true)->get();
-        return compact(
-            'zones',
-        );
+        $establishments = Establishment::all(['id', 'description']);
+       /*  $zones = Zone::where('active', true)->select(['id', 'description', 'establishment_id', 'description_establishment'])->get(); */
+        $zones = Zone::where('active', true)
+            ->with('establishment:id,description') // Solo traer la descripción del establecimiento
+            ->get()
+            ->map(function ($zone) {
+                return [
+                    'id' => $zone->id,
+                    'name' => $zone->name, // Reemplaza 'name' por la columna correcta
+                    'establishment_id' => $zone->establishment_id,
+                    'description_establishment' => $zone->establishment ? $zone->establishment->description : null,
+                ];
+            });
+
+        return compact('zones', 'establishments');
     }
 
     public function store_zone(Request $request, $type)
@@ -467,6 +479,9 @@ class TableController extends Controller
         }
         if (isset($data['is_delivery'])) {
             $data['is_delivery'] = filter_var($data['is_delivery'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+        if (isset($data['is_vip'])) {
+            $data['is_vip'] = filter_var($data['is_vip'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
         $table = Table::firstOrNew(['id' => $id]);

@@ -14,8 +14,8 @@ export function inputReCalculateTotal() {
     let total_unaffected = 0;
     let total_free = 0;
     let total_igv = 0;
-    let total_value = 0;
-    let total = 0;
+    let total_value = 0; // base values (without IGV)
+    let total = 0; // grand total (base + igv + other taxes + charges - discounts)
     let total_plastic_bag_taxes = 0;
     /* console.log("Items antes del cálculo:", JSON.stringify(this.form.items)); */
     if (
@@ -29,56 +29,61 @@ export function inputReCalculateTotal() {
         );
     }
 
+    // Recalcular por cada línea de item de forma clara y predecible
     this.form.items.forEach(row => {
-        total_discount += safeNumber(row.total_discount);
-        total_charge += safeNumber(row.total_charge);
+        const qty = safeNumber(row.quantity);
+        const line_charge = safeNumber(row.total_charge);
+        const line_discount = safeNumber(row.total_discount);
+        const plastic = safeNumber(row.total_plastic_bag_taxes);
 
+        // Determinar base (valor sin IGV) de la línea. Si ya viene como total_value
+        // lo usamos; en algunos casos la línea puede venir con precio con IGV incluido
+        // (affectation ids 11-16), en cuyo caso separamos la base y el IGV.
+        let line_total_value = safeNumber(row.total_value);
+        let line_igv = safeNumber(row.total_igv);
+
+        // Si la línea tiene un tipo que indica precio incluye IGV (11-16)
+        if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id)) {
+            // Descomponer precio que incluye IGV en base + igv
+            const igvRate = this.toNumber(this.percentage_igv) / 100 || 0;
+            if (igvRate > 0) {
+                // base = total_value / (1 + igvRate)
+                const base = _.round(line_total_value / (1 + igvRate), 8);
+                const igvFromIncluded = _.round(line_total_value - base, 2);
+                line_igv = igvFromIncluded;
+                line_total_value = _.round(base, 2);
+            }
+        } else {
+            // Si no viene total_igv calculado y es tipo gravado (10), calcularlo
+            if (row.affectation_igv_type_id === "10") {
+                line_igv = _.round(line_total_value * (this.toNumber(this.percentage_igv) / 100), 2);
+            } else {
+                line_igv = 0;
+            }
+        }
+
+        // total de la línea: base + igv + plastic taxes + charges - discounts
+        const line_total = _.round(line_total_value + line_igv + plastic + line_charge - line_discount, 2);
+
+        // Acumular por tipo de afectación
         if (row.affectation_igv_type_id === "10") {
-            total_taxed += safeNumber(row.total_value);
+            total_taxed += line_total_value;
+        } else if (row.affectation_igv_type_id === "20") {
+            total_exonerated += line_total_value;
+        } else if (row.affectation_igv_type_id === "30") {
+            total_unaffected += line_total_value;
+        } else if (row.affectation_igv_type_id === "40") {
+            total_exportation += line_total_value;
+        } else {
+            total_free += line_total_value;
         }
-        if (row.affectation_igv_type_id === "20") {
-            total_exonerated += safeNumber(row.total_value);
-        }
-        if (row.affectation_igv_type_id === "30") {
-            total_unaffected += safeNumber(row.total_value);
-        }
-        if (row.affectation_igv_type_id === "40") {
-            total_exportation += safeNumber(row.total_value);
-        }
-        /* console.log("row:", row.affectation_igv_type_id); */
-        if (
-            ["11", "12", "13", "14", "15", "16"].includes(
-                row.affectation_igv_type_id
-            )
-        ) {
-            let unit_value = safeNumber(row.total_value) / safeNumber(row.quantity);
-            let total_value_partial = unit_value * safeNumber(row.quantity);
-            row.total_taxes =
-                safeNumber(row.total_value) -
-                total_value_partial +
-                safeNumber(row.total_plastic_bag_taxes);
-            /* row.total_igv = total_value_partial * (row.percentage_igv / 100); */
-            row.total_igv =
-                        total_value_partial *
-                        (this.toNumber(row.percentage_igv) / 100);
-            row.total_base_igv = total_value_partial;
-            console.log("restando de", row.total_value, total_value);
-            total_value -= safeNumber(row.total_value);
-            console.log("sumando", row.total, total);
-            total += safeNumber(row.total);
-        }
-        if (["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) < 0) {
-            total_free += safeNumber(row.total_value);
-            console.log("Total value actualizado:", total_value);
-        }
-        if (
-            ["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) > -1
-        ) {
-            total_igv += safeNumber(row.total_igv);
-            total += safeNumber(row.total);
-        }
-        total_value += safeNumber(row.total_value);
-        total_plastic_bag_taxes += safeNumber(row.total_plastic_bag_taxes);
+
+        total_igv += line_igv;
+        total_value += line_total_value;
+        total_plastic_bag_taxes += plastic;
+        total_discount += line_discount;
+        total_charge += line_charge;
+        total += line_total;
     });
 
     this.form.total_exportation = _.round(total_exportation, 2);
@@ -89,7 +94,7 @@ export function inputReCalculateTotal() {
     this.form.total_igv = _.round(total_igv, 2);
     this.form.total_value = _.round(total_value, 2);
     this.form.total_value_without_rounding = total_value;
-    this.form.total_taxes = _.round(total_igv, 2);
+    this.form.total_taxes = _.round(total_igv + this.form.total_isc + total_plastic_bag_taxes, 2);
     this.form.total_plastic_bag_taxes = _.round(total_plastic_bag_taxes, 2);
     /* console.log("Totales después del redondeo:", {
         total_taxed: this.form.total_taxed,
@@ -101,11 +106,9 @@ export function inputReCalculateTotal() {
     }); */
 
     // this.form.total = _.round(total, 2)
-    this.form.total = _.round(
-        total_charge + total + this.form.total_plastic_bag_taxes,
-        2
-    );
-    /* console.log("Total final calculado:", this.form.total); */
+    // El total ya fue acumulado en `total` (que incluye base + igv + plastic + charges - discounts)
+    this.form.total = _.round(total, 2);
+   // console.log("Total final calculado:", this.form.total);
 
     if (this.discount_amount) {
         if (!this.original_totals_snapshot) {

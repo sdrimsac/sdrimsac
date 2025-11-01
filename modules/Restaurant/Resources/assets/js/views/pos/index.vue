@@ -3635,12 +3635,15 @@ export default {
                 // Copiar montos precalculados si llegan desde list_ordens
                 if (item._total_line !== undefined) {
                     this.ordens[i].food.item._total_line = item._total_line;
+                    console.log("Asignado total_line:", this.ordens[i].food.item._total_line);
                 }
                 if (item._base !== undefined) {
                     this.ordens[i].food.item._base = item._base;
+                    console.log("Asignado base:", this.ordens[i].food.item._base);
                 }
                 if (item._igv !== undefined) {
                     this.ordens[i].food.item._igv = item._igv;
+                    console.log("Asignado igv:", this.ordens[i].food.item._igv);
                 }
                 if (item.total !== undefined) {
                     this.ordens[i].food.item.total = item.total;

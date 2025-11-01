@@ -1036,10 +1036,6 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
-            // Si la petición corresponde a una orden ya creada y los items
-            // incluidos en la request ya son items existentes (traen `id`),
-            // entonces NO debemos modificar la orden: sólo disparar impresiones.
-            // Esto cubre el caso de "cobrar/imprimir" que vuelve a llamar a `store`.
             $printOnlyExistingOrder = false;
             if (!empty($request->id) && !empty($request->items) && is_array($request->items)) {
                 $allItemsHaveId = collect($request->items)->every(function ($it) {
@@ -1116,6 +1112,7 @@ class OrdenController extends Controller
             $mozo_id = $request->mozo_id ?? null;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
+            $is_vip = $request->is_vip ?? false;
 
             $mozo_user = auth()->user();
 
@@ -1609,29 +1606,6 @@ class OrdenController extends Controller
                                 // detail created (no debug log)
                             }
                         }
-
-                        /* if (!empty($selectedPromotionItems)) {
-                            // Insertar solo los componentes que el usuario seleccionó
-                            foreach ($selectedPromotionItems as $sel) {
-                                // El objeto enviado desde frontend puede variar; normalizamos
-                                $subItemId = $sel['id'] ?? $sel['item_id'] ?? null;
-                                if (!$subItemId) continue;
-
-                                $subItem = Item::find($subItemId);
-                                if (!$subItem) continue;
-
-                                $promoQty = isset($sel['_promo_quantity']) ? floatval($sel['_promo_quantity']) : (isset($sel['quantity']) ? floatval($sel['quantity']) : 1);
-                                $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
-
-                                $createdDetail = OrderItemDetail::create([
-                                    'orden_item_id' => $ordenItemModel->id,
-                                    'item_id' => $subItem->id,
-                                    'description' => $subItem->description,
-                                    'quantity' => $detailQuantity,
-                                ]);
-                                // detail created (no debug log)
-                            }
-                        } */
                     } catch (Exception $e) {
                         // Log and continue — promotion details are auxiliary
                         Log::error("Error creating promotion details for orden item: {$created->id}", ['error' => $e->getMessage()]);
@@ -1674,9 +1648,6 @@ class OrdenController extends Controller
             $print_kitchen = $configuration->print_kitchen;
             $conopy_kitchen = $configuration->conopy_kitchen;
 
-            // Respect a 'printing' flag coming from the request: when printing==true
-            // we must NOT send kitchen print jobs from this store action.
-            // (The frontend may set printing=true when it only wants to queue printing elsewhere.)
             $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
 
             // Si printerDefault=true, permite imprimir aunque sea habitación
@@ -1716,7 +1687,7 @@ class OrdenController extends Controller
             } else {
                 // Only dispatch kitchen print jobs when configuration allows it AND
                 // the incoming request is NOT asking to skip printing ($printing == false).
-                if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
+                if ($print_kitchen && ((!$printing || $printOnlyExistingOrder) || $is_vip)) {
                     $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
                     $user_id = auth()->id();
                     foreach ($ids_areas as $area_id) {

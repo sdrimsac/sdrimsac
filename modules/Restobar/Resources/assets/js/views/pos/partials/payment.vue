@@ -4558,7 +4558,7 @@ export default {
                 /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
 
                 if (
-                    (ordenId) &&
+                    (ordenId) && (this.is_vip === false) &&
                     (form.variation == undefined ||
                         form.variation == null ||
                         form.variation == false) &&

@@ -34,6 +34,7 @@ class Table extends ModelTenant
         'has_billar',
         'zone_id',
         'is_delivery',
+        'is_vip'
 
     ];
     protected $casts = [

@@ -363,22 +363,21 @@
                                 ></small>
                             </div>
                         </div>
-                        <!-- <div
+                        <div
                             class="col-md-4"
                             v-if="
-                                type == 'caja/tables' &&
-                                    configurations.restaurant_delivery
+                                type == 'caja/tables' 
                             "
                         >
-                            <label for="">Delivery</label>
+                            <label for="">Es Mesa VIP</label>
                             <el-checkbox
-                                v-model="form.is_delivery"
-                                label="Delivery"
+                                v-model="form.is_vip"
+                                label="VIP"
                             >
                                 <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa
-                                para delivery?
+                                VIP?
                             </el-checkbox>
-                        </div> -->
+                        </div>
                         <template
                             v-if="
                                 type == 'caja/rooms' && all_services.length > 0
@@ -820,8 +819,9 @@ export default {
                 establishment_id: null,
                 area_id: null,
                 has_frigobar: false,
-               /*  is_delivery: false, */
-               status_table_id: 1,
+                is_delivery: false,
+                is_vip: false,
+                status_table_id: 1,
                 description: null,
                 id: null,
                 description: null,

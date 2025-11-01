@@ -498,7 +498,17 @@ export default {
             this.hasSelectedOrdenToChange = false;
             this.ordenToChange = null;
         },
-        sendOrdens(orden) {
+        sendOrdens(orden, table = null) {
+            // Si se proporciona la mesa, anexamos su flag is_vip al objeto orden
+            try {
+                if (table && typeof orden === 'object' && orden !== null) {
+                    orden.is_vip = !!table.is_vip;
+                }
+            } catch (e) {
+                // no bloquear en caso de error al anexar
+                console.error(e);
+            }
+
             if (this.changingOrden && !this.hasSelectedTableToChange) {
                 this.hasSelectedTableToChange = true;
             } else if (this.changingOrden && this.hasSelectedTableToChange) {
@@ -542,7 +552,8 @@ export default {
                     );
                     return;
                 }
-                this.$emit("creatingOrden", table.number, table.id);
+                // Pasamos is_vip como cuarto parámetro (tercero es is_room=false)
+                this.$emit("creatingOrden", table.number, table.id, false, !!table.is_vip);
                 console.log(
                     "Mesa seleccionada para crear orden:",
                     table.number,
@@ -573,7 +584,8 @@ export default {
 
                     this.ordens = ordens;
                     if (ordens.length == 1) {
-                        this.sendOrdens(this.ordens[0]);
+                        // Enviar la única orden y anexar is_vip de la mesa seleccionada
+                        this.sendOrdens(this.ordens[0], table);
                     } else {
                         if (this.changingOrden) {
                             this.hasSelectedTableToChange = true;

@@ -10,6 +10,23 @@
         class="rounded-dialog"
     >
         <div class="row-m-2">
+            <div class="col-12" v-if="type == 'zones'">
+                <label for="name">Establecimiento</label>
+                <el-select
+                    v-model="form.establishment_id"
+                    placeholder="Seleccione establecimiento"
+                    style="width: 100%;"
+                    clearable
+                    filterable
+                >
+                    <el-option
+                        v-for="establishment in establishments"
+                        :key="establishment.id"
+                        :label="establishment.description"
+                        :value="establishment.id"
+                    ></el-option>
+                </el-select>
+            </div>
             <div class="col-12">
                 <label for="name">Número/Descripción</label>
                 <el-input
@@ -29,12 +46,14 @@
                 <thead>
                     <tr>
                         <th>Descripción|Número</th>
+                        <th>Establecimiento</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody v-if="type == 'zones'">
                     <tr v-for="(zone, idx) in all_zones" :key="idx">
                         <td>{{ zone.name }}</td>
+                        <td>{{ zone.description_establishment }}</td>
                         <td>
                             <button
                                 @click="editZone(zone.id)"
@@ -73,10 +92,11 @@ export default {
         return {
             title: "",
             all_zones: [],
+            establishments: [],
             form: {
                 id: null,
                 name: null,
-              
+                establishment_id: null
             }
         };
     },
@@ -156,6 +176,7 @@ export default {
                 const response = await this.$http.get(`/caja/tables/tables-zone`);
                 let { zones } = response.data;
                 this.all_zones = zones;
+                this.establishments = response.data.establishments;
             } catch (e) {
                 console.log(e);
                 this.$toast.error("Error al obtener las mesas");

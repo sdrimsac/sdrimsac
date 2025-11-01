@@ -129,6 +129,7 @@
                         {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
+                        {{ clientTableData.is_vip ? 'true' : 'false' }}
                         <!-- {{ clientTableData.table_id }} -->
                     </strong>
                 </div>
@@ -3651,6 +3652,7 @@ export default {
                         caja: true,
                         printing: true,
                         saleDirect: false,
+                        is_vip: this.clientTableData.is_vip,
                         orden
                     }
                 );
@@ -4198,6 +4200,7 @@ export default {
                 comercial_treatment_id: this.commercialTreatmentId,
                 print_kitchen: this.configuration.print_kitchen,
                 to_carry: this.to_carry,
+                is_vip : this.clientTableData.is_vip,
                 orden: {
                     table_id: 1,
                     status_orden_id: 1

@@ -36,12 +36,14 @@ class Table extends ModelTenant
         'has_billar',
         'zone_id',
         'is_delivery',
+        'is_vip'
 
     ];
     protected $casts = [
         'has_frigobar' => 'boolean',
         'is_cleaning' => 'boolean',
         'enabled' => 'boolean',
+        'is_vip' => 'boolean',
     ];
     protected static function boot()
     {

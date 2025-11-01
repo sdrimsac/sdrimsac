@@ -1,6 +1,8 @@
 <?php
 
 namespace Modules\Restaurant\Models;
+
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ModelTenant;
 
 
@@ -15,6 +17,12 @@ class Zone extends ModelTenant
     protected $fillable = [
         'name',
         'active',
+        'establishment_id'
       
     ];
+
+    public function establishment()
+    {
+        return $this->belongsTo(Establishment::class, 'establishment_id');
+    }
 }
