@@ -1200,7 +1200,8 @@ export default {
                                     description: responseItem.description || responseItem.name || "",
                                     price: Number(responseItem.sale_unit_price || responseItem.price || 0).toFixed(2),
                                     item: responseItem,
-                                    series: responseItem.series || []
+                                    series: responseItem.series || [],
+                                    area_id: responseItem.area_id || null,
                                 };
                             }
                         } catch (err) {

@@ -278,16 +278,16 @@ class OrdenController extends Controller
         $orden_items = $raw_orden_items->groupBy(function ($elemento) use (&$diff_ordens) {
             $diff_ordens[] = $elemento->orden_id;
             return $elemento->food_id . '-' . $elemento->price . '-' . $elemento->observations;
-        })->map(function ($grupo) {
+        })->map(function ($grupo) use ($area_id) {
 
             $cantidadTotal = $grupo->sum('quantity');
             // Tomamos el primer elemento del grupo como representante y actualizamos la cantidad
             $item = $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
 
             // Adjuntar los detalles asociados a los orden_items de este grupo (si existen)
-            try {
-                $orden_item_ids = $grupo->pluck('id')->toArray();
-                $details = OrderItemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
+                try {
+                    $orden_item_ids = $grupo->pluck('id')->toArray();
+                    $details = OrderItemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
                 // Log for debugging: which orden_item_ids and how many details found
                 // lookup performed; no debug logging
 
@@ -300,7 +300,16 @@ class OrdenController extends Controller
                 } catch (\Exception $e) {
                     // ignore raw lookup errors silently
                 }
-                if ($details->isEmpty()) {
+                    // Si se indicó un área concreta para impresión y existen detalles
+                    // (normalmente porque el item es una promoción), filtramos los
+                    // detalles para mostrar sólo los que pertenecen a esa área.
+                    if (!empty($area_id) && $details->isNotEmpty()) {
+                        $details = $details->filter(function ($d) use ($area_id) {
+                            return intval($d->area_id) === intval($area_id);
+                        })->values();
+                    }
+
+                    if ($details->isEmpty()) {
                     try {
                         $representative = $item; // $item is the representative OrdenItem model
                         $fallback = OrderItemDetail::whereHas('orden_item', function ($q) use ($representative) {
@@ -308,11 +317,16 @@ class OrdenController extends Controller
                                 ->where('food_id', $representative->food_id);
                         })->get();
 
-                        // fallback lookup performed; no debug logging
+                            // Si se hizo fallback, aplicar el mismo filtrado por área
+                            if (!empty($area_id) && $fallback->isNotEmpty()) {
+                                $fallback = $fallback->filter(function ($d) use ($area_id) {
+                                    return intval($d->area_id) === intval($area_id);
+                                })->values();
+                            }
 
-                        if ($fallback->count() > 0) {
-                            $details = $fallback;
-                        }
+                            if ($fallback->count() > 0) {
+                                $details = $fallback;
+                            }
                     } catch (\Exception $e) {
                         // ignore fallback errors silently
                     }
@@ -909,8 +923,28 @@ class OrdenController extends Controller
             ];
         }
 
-        // Agrupar por área
-        $items_by_area = $orden_items->groupBy('area_id');
+        // Agrupar por área — si un orden_item tiene order_item_details (promoción),
+        // usamos el area_id de cada detalle para enrutar la impresión; sino usamos
+        // el area_id del item padre.
+        $items_by_area = [];
+        foreach ($orden_items as $itm) {
+            try {
+                $details = OrderItemDetail::where('orden_item_id', $itm->id)->get();
+            } catch (Exception $e) {
+                $details = collect();
+            }
+
+            if ($details->isNotEmpty()) {
+                foreach ($details as $d) {
+                    $aid = $d->area_id ?? $itm->area_id;
+                    $items_by_area[$aid][] = $itm;
+                }
+            } else {
+                $aid = $itm->area_id;
+                $items_by_area[$aid][] = $itm;
+            }
+        }
+
         $impresiones = [];
 
         foreach ($items_by_area as $area_id => $items) {
@@ -922,7 +956,7 @@ class OrdenController extends Controller
                 ];
             }
 
-            $orden_item_ids = $items->pluck('id')->toArray();
+            $orden_item_ids = collect($items)->pluck('id')->toArray();
             $ids_string = implode("_", $orden_item_ids);
 
             // Asignar propiedades auxiliares a la orden
@@ -1093,76 +1127,6 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
-            /* $printOnlyExistingOrder = false;
-            if (!empty($request->id) && !empty($request->items) && is_array($request->items)) {
-                $allItemsHaveId = collect($request->items)->every(function ($it) {
-                    return isset($it['id']) && $it['id'] !== null && $it['id'] !== '';
-                });
-                if ($allItemsHaveId) {
-                    $printOnlyExistingOrder = true;
-                }
-            } */
-
-
-            /* if ($printOnlyExistingOrder) {
-                // Preparar datos mínimos para la impresión sin tocar la base
-                $orden = Orden::find($request->id);
-                if (!$orden) {
-                    return [
-                        'success' => false,
-                        'message' => 'Orden no encontrada para impresión'
-                    ];
-                }
-
-                $configuration = Configuration::first();
-
-                // Construir arrays que usan las rutinas de impresión más abajo
-                $orden_items_ids = collect($request->items)->pluck('id')->toArray();
-                $orden_items_ids_for_kitchen = collect($request->items)->map(function ($it) {
-                    return [
-                        'orden_id' => $it['id'],
-                        'area_id' => $it['area_id'] ?? null,
-                    ];
-                })->toArray();
-
-                $print_box = $configuration->print_commands;
-                $print_kitchen = $configuration->print_kitchen;
-                $conopy_kitchen = $configuration->conopy_kitchen;
-                $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
-
-
-                if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
-                    $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                    $user_id = auth()->id();
-                    foreach ($ids_areas as $area_id) {
-                        $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                            return $area_id == $a['area_id'];
-                        }), "orden_id");
-                        $area_found = Area::find($area_id);
-                        if ($area_found) {
-                            $copies = $area_found->copies ?? 0;
-                            $total_copies = $copies + 1;
-
-                            if ($area_found->printer || $area_found->search_print == 1) {
-                                for ($i = 0; $i < $total_copies; $i++) {
-                                    dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                    sleep(1);
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-                // Si sólo se pidió imprimir items existentes, terminamos aquí
-                // para NO modificar la orden en la base de datos.
-                return [
-                    'id' => $orden->id,
-                    'success' => true,
-                    'message' => 'Impresión encolada para orden existente',
-                    'printed' => true
-                ];
-            } */
 
             $user = auth()->user();
             $ref = $request->ref;
@@ -1353,10 +1317,6 @@ class OrdenController extends Controller
                 ];
             }
 
-            // Use the authenticated mozo (waiter) as the creator of the orden items.
-            // Previously $user could have been overwritten with a CAJ (cash) user
-            // for internal logic, causing printed tickets to show the cashier's name.
-            // Ensure order items are assigned to the actual mozo who placed the order.
             $user_id = $mozo_user->id;
             $message = 'Pedido realizado.';
             $establishment_id = auth()->user()->establishment_id;
@@ -1595,29 +1555,39 @@ class OrdenController extends Controller
 
             DB::beginTransaction();
             try {
-                $food_ids = $orden_items->pluck('food_id')->toArray();
-
-                OrdenItem::insert($orden_items->toArray());
-
-                $created_items = OrdenItem::where('orden_id', $orden->id)
-                    ->whereIn('food_id', $food_ids)
-                    ->select('id', 'food_id', 'area_id')
-                    ->latest('id')
-                    ->take(count($food_ids))
-                    ->get();
-
-                $orden_items_ids = $created_items->pluck('id')->toArray();
-
-                $orden_items_ids_for_kitchen = $created_items->map(function ($item) {
-                    return ['orden_id' => $item->id, 'area_id' => $item->area_id];
-                })->toArray();
-
-                // Asegurarnos que los items creados estén en el mismo orden en que los envió el cliente.
-                // Obtenemos los últimos N creados (ya lo hicimos) pero los invertimos para que queden en orden ascendente
-                // y correspondan índice a índice con el array de entrada `$items`.
-                $created_items = $created_items->reverse()->values();
-
+                // Create each OrdenItem individually to preserve per-item area_id/user_id and order
+                $created_items = collect();
                 $inputItems = array_values($items);
+
+                foreach ($orden_items as $ordData) {
+                    // Create model and assign fields explicitly to avoid mass-assignment issues
+                    $ordenItem = new OrdenItem();
+                    $ordenItem->food_id = $ordData['food_id'];
+                    $ordenItem->observations = $ordData['observations'];
+                    $ordenItem->quantity = $ordData['quantity'];
+                    $ordenItem->unit_type_id = $ordData['unit_type_id'] ?? null;
+                    $ordenItem->price = $ordData['price'];
+                    $ordenItem->user_id = $ordData['user_id'];
+                    $ordenItem->orden_id = $ordData['orden_id'];
+                    $ordenItem->to_carry = $ordData['to_carry'] ?? 0;
+                    $ordenItem->status_orden_id = $ordData['status_orden_id'] ?? 1;
+                    $ordenItem->date = $ordData['date'] ?? Carbon::today();
+                    $ordenItem->time = $ordData['time'] ?? date('H:i:s');
+                    $ordenItem->area_id = $ordData['area_id'] ?? null;
+                    $ordenItem->save();
+
+                    // Debug log: ensure area_id saved correctly per created orden item
+                    try {
+                        Log::debug('OrdenItem created', ['id' => $ordenItem->id, 'food_id' => $ordenItem->food_id, 'area_id' => $ordenItem->area_id, 'user_id' => $ordenItem->user_id]);
+                    } catch (Exception $e) {
+                        // ignore logging errors
+                    }
+
+                    $created_items->push($ordenItem);
+                }
+
+                // Build ids arrays preserving the created order (same as input)
+                $orden_items_ids = $created_items->pluck('id')->toArray();
 
                 foreach ($created_items as $index => $created) {
                     try {
@@ -1641,7 +1611,6 @@ class OrdenController extends Controller
                         if (!empty($selectedPromotionItems)) {
                             foreach ($selectedPromotionItems as $sel) {
 
-                                // Prioriza el item_id real, no el id del food
                                 $subItemId = $sel['item_id'] ?? ($sel['item']['id'] ?? null);
                                 if (!$subItemId) continue;
 
@@ -1654,19 +1623,50 @@ class OrdenController extends Controller
 
                                 $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
 
+                                $areaIdFromInput = data_get($sel, 'item.area_id');
+                                $areaIdForDetail = $areaIdFromInput ?? $subItem->area_id ?? $ordenItemModel->area_id ?? null;
+                                $userIdForDetail = $ordenItemModel->user_id ?? auth()->id() ?? null;
+                                try {
+                                    
+                                } catch (Exception $e) {
+                                    // ignore logging errors
+                                }
+
                                 $createdDetail = OrderItemDetail::create([
                                     'orden_item_id' => $ordenItemModel->id,
                                     'item_id' => $subItem->id,
                                     'description' => $subItem->description,
                                     'quantity' => $detailQuantity,
+                                    'area_id' => $areaIdForDetail,
+                                    'user_id' => $userIdForDetail
                                 ]);
-                                // detail created (no debug log)
                             }
                         }
                     } catch (Exception $e) {
                         // Log and continue — promotion details are auxiliary
                         Log::error("Error creating promotion details for orden item: {$created->id}", ['error' => $e->getMessage()]);
                         continue;
+                    }
+                }
+
+                // Ahora que se han creado los detalles de promoción (order_item_details),
+                // construimos la lista para la cocina usando el area_id de cada detalle
+                // cuando existan; si no existen detalles para un orden_item usamos el
+                // area_id del item padre.
+                $orden_items_ids_for_kitchen = [];
+                foreach ($created_items as $ci) {
+                    try {
+                        $details_for_item = OrderItemDetail::where('orden_item_id', $ci->id)->get();
+                    } catch (Exception $e) {
+                        $details_for_item = collect();
+                    }
+
+                    if ($details_for_item->isNotEmpty()) {
+                        foreach ($details_for_item as $d) {
+                            $orden_items_ids_for_kitchen[] = ['orden_id' => $ci->id, 'area_id' => $d->area_id];
+                        }
+                    } else {
+                        $orden_items_ids_for_kitchen[] = ['orden_id' => $ci->id, 'area_id' => $ci->area_id];
                     }
                 }
 
@@ -1706,8 +1706,6 @@ class OrdenController extends Controller
             $conopy_kitchen = $configuration->conopy_kitchen;
 
             $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
-
-            // Si printerDefault=true, permite imprimir aunque sea habitación
 
             if ($conopy_kitchen) {
                 $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
@@ -1769,7 +1767,10 @@ class OrdenController extends Controller
 
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
-            if ($print_box) {
+            // Only print to caja if the configuration allows it AND the current
+            // user is in the caja area (avoids sending an extra caja print when
+            // the order items were routed to cocina/barra).
+            if ($print_box && ($isFromBox || $this->isArea("CAJ", $user->area_id))) {
                 dispatch(new Print2OrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
             }
 
@@ -1989,17 +1990,35 @@ class OrdenController extends Controller
 
             $orden = Orden::find($id);
 
-            // Get items grouped by area_id
-            $items_by_area = OrdenItem::where('orden_id', $id)
-                ->get()
-                ->groupBy('area_id');
+            // Get items and group by area_id — si hay detalles (promoción), usar el
+            // area_id de cada detalle para enrutar la impresión.
+            $raw_items = OrdenItem::where('orden_id', $id)->get();
+
+            $items_by_area = [];
+            foreach ($raw_items as $itm) {
+                try {
+                    $details = OrderItemDetail::where('orden_item_id', $itm->id)->get();
+                } catch (Exception $e) {
+                    $details = collect();
+                }
+
+                if ($details->isNotEmpty()) {
+                    foreach ($details as $d) {
+                        $aid = $d->area_id ?? $itm->area_id;
+                        $items_by_area[$aid][] = $itm;
+                    }
+                } else {
+                    $aid = $itm->area_id;
+                    $items_by_area[$aid][] = $itm;
+                }
+            }
 
             $items_message = [];
             $print_data = [];
 
             // Process items for each area
             foreach ($items_by_area as $area_id => $items) {
-                $orden_items_ids = $items->pluck('id')->toArray();
+                $orden_items_ids = collect($items)->pluck('id')->toArray();
                 $area = Area::find($area_id);
 
                 // Get printer for this area
