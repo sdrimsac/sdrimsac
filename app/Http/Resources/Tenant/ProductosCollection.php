@@ -23,11 +23,11 @@ class ProductosCollection extends ResourceCollection
                 return false;
             }
 
-            if ($category_id && $inventory->item->category_id != $category_id) {
+            if ($category_id && (!isset($inventory->item) || $inventory->item->category_id != $category_id)) {
                 return false;
             }
 
-            if ($inventoryTransactionType && $inventory->inventoryTransaction->type != $inventoryTransactionType) {
+            if ($inventoryTransactionType && (!isset($inventory->inventoryTransaction) || $inventory->inventoryTransaction->type != $inventoryTransactionType)) {
                 return false;
             }
             return true;
@@ -39,15 +39,15 @@ class ProductosCollection extends ResourceCollection
             return [
                 'color_size' => $color_size,
                 'id' => $inventory->id,
-                'inventory_transaction_id' => $inventory->inventoryTransaction->id,
-                'type' => $inventory->inventoryTransaction->type == 'input' ? 'input' : 'output',
+                'inventory_transaction_id' => optional($inventory->inventoryTransaction)->id,
+                'type' => (optional($inventory->inventoryTransaction)->type !== null) ? (optional($inventory->inventoryTransaction)->type == 'input' ? 'input' : 'output') : null,
                 'quantity' => $inventory->quantity,
                 'item_id' => $inventory->item_id,
-                'item_description' => $inventory->item->description,
-                'item_internal_id' => $inventory->item->internal_id,
+                'item_description' => optional($inventory->item)->description,
+                'item_internal_id' => optional($inventory->item)->internal_id,
                 'warehouse_id' => $inventory->warehouse_id,
-                'category_name' => $inventory->item->category->name,
-                'warehouse_description' => $inventory->warehouse->description,
+                'category_name' => optional(optional($inventory->item)->category)->name,
+                'warehouse_description' => optional($inventory->warehouse)->description,
                 'created_at' => $inventory->created_at->format('Y-m-d H:i:s'),
                 'lot_code' => $inventory->lot_code,
                 'lots' => $lots,
