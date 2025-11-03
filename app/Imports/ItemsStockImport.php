@@ -9,6 +9,7 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 use Modules\Item\Models\Brand;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
 use Modules\Item\Models\CategoryItem;
@@ -32,6 +33,8 @@ class ItemsStockImport implements ToCollection
     public function collection(Collection $rows)
     {
         $warehouse_id = $this->warehouse_id;
+
+        Log::info('Warehouse ID en import asdasfsdfsdf: ' . $warehouse_id);
 
         if (is_null($warehouse_id)) {
             throw new Exception('El campo almacen no puede estar vacío.');
@@ -72,17 +75,24 @@ class ItemsStockImport implements ToCollection
                         $inventory->inventory_transaction_id = 28;
                         $inventory->real_stock = $stock;
                         $inventory->system_stock = $result['quantity'];
-                        $inventory->save();
+                        // Save the inventory without firing model events (to avoid any automatic
+                        // listeners creating an inventory_kardex with missing data).
+                        \Illuminate\Database\Eloquent\Model::withoutEvents(function () use ($inventory) {
+                            $inventory->save();
+                        });
+
+                        // Create the inventory_kardex explicitly with the correct warehouse_id
+                        // to ensure the non-null constraint is satisfied.
+                        $inventory_kardex = $inventory->inventory_kardex()->create([
+                            'date_of_issue' => date('Y-m-d'),
+                            'item_id' => $item->id,
+                            'warehouse_id' => $warehouse_id,
+                            'quantity' => $result['quantity'],
+                            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
+                        ]);
 
                         $item->stock = 0;
                         $item->save();
-
-                        /* $inventory_kardex =  $inventory->inventory_kardex()->create([
-                             'date_of_issue' => date('Y-m-d'),
-                             'item_id' => $item->id,
-                             'warehouse_id' => $warehouse_id,
-                             'quantity' => $result['quantity'],
-                         ]); */
 
                         // if ($result['type'] == 1) {
                         //     $item_warehouse->stock += $result['quantity'];

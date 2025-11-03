@@ -90,7 +90,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3 mt-2" v-if="form.identity_document_type_id !== '6'">
-                                
+
                                 <el-select v-model="form.sex" placeholder="Sexo">
                                     <el-option label="Másculino" value="M"></el-option>
                                     <el-option label="Femenino" value="F"></el-option>
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="col-12" >
+                        <div class="col-12">
                             <div class="form-group d-flex flex-column align-items-center">
                                 <label class="control-label mb-2">
                                     <i class="fas fa-image"></i> Imagen
@@ -128,7 +128,7 @@
                                 </el-upload>
                                 <small class=" mt-2">Formatos permitidos: </small>
                                 <small class="mt-1">JPG, PNG. Tamaño máximo:</small>
-                                    
+
                             </div>
                         </div>
                     </div>
@@ -163,12 +163,16 @@
                             <div class="col-6 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.client_zone_id }">
                                     <div class="d-flex align-items-center">
-                                        <el-select v-model="form.client_zone_id" filterable dusk="client_zone_id" placeholder="Seleccione una zona" style="flex: 1;">
+                                        <el-select v-model="form.client_zone_id" filterable dusk="client_zone_id"
+                                            placeholder="Seleccione una zona" style="flex: 1;">
                                             <el-option v-for="option in zones" :key="option.id" :value="option.id"
                                                 :label="option.description"></el-option>
                                         </el-select>
-                                        <el-tooltip class="item" effect="dark" content="Crear Zona de Atención" placement="top">
-                                            <a href="#" @click.prevent="showCreateFormZone = true" class="ml-2 d-flex align-items-center" style="white-space: nowrap; font-size: 1.5em;">
+                                        <el-tooltip class="item" effect="dark" content="Crear Zona de Atención"
+                                            placement="top">
+                                            <a href="#" @click.prevent="showCreateFormZone = true"
+                                                class="ml-2 d-flex align-items-center"
+                                                style="white-space: nowrap; font-size: 1.5em;">
                                                 <i class="fas fa-plus-circle"></i>
                                             </a>
                                         </el-tooltip>
@@ -179,19 +183,22 @@
                             </div>
                             <div class="col-6 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.telephone }">
-                                    <el-input v-model="form.telephone" dusk="telephone" @input="toUpperCase('telephone')" placeholder=" Teléfono o WhatsApp"
+                                    <el-input v-model="form.telephone" dusk="telephone"
+                                        @input="toUpperCase('telephone')" placeholder=" Teléfono o WhatsApp"
                                         maxlength="9" show-word-limit>
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
-                                    <small class="text-danger" v-if="errors.telephone" v-text="errors.telephone[0]"></small>
+                                    <small class="text-danger" v-if="errors.telephone"
+                                        v-text="errors.telephone[0]"></small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12 mt-2">
                             <div class="form-group" :class="{ 'has-danger': errors.email }">
-                                
-                                <el-input v-model="form.email" dusk="email" @input="toUpperCase('email')" placeholder=" Correo electrónico">
+
+                                <el-input v-model="form.email" dusk="email" @input="toUpperCase('email')"
+                                    placeholder=" Correo electrónico">
                                     <i slot="prefix" class="el-icon-edit-outline"></i>
                                 </el-input>
                                 <small class="text-danger" v-if="errors.email" v-text="errors.email[0]"></small>
@@ -201,8 +208,9 @@
                         <div class="row" v-if="configuration.mod_renta">
                             <div class="col-md-6 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.occupation }">
-                                    
-                                    <el-input type="text" v-model="form.occupation" @input="toUpperCase('occupation')" placeholder=" Ocupacion Cliente">
+
+                                    <el-input type="text" v-model="form.occupation" @input="toUpperCase('occupation')"
+                                        placeholder=" Ocupacion Cliente">
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
                                     <small class="text-danger" v-if="errors.occupation"
@@ -211,7 +219,8 @@
                             </div>
                             <div class="col-md-6 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.ref_origin }">
-                                    <el-input type="text" v-model="form.ref_origin" @input="toUpperCase('ref_origin')" placeholder=" Referencia de Procedencia">
+                                    <el-input type="text" v-model="form.ref_origin" @input="toUpperCase('ref_origin')"
+                                        placeholder=" Referencia de Procedencia">
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
                                     <small class="text-danger" v-if="errors.ref_origin"
@@ -222,9 +231,9 @@
                         <div class="row " v-if="configuration.mod_renta">
                             <div class="col-md-12 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.name_family }">
-                                    
-                                    <el-input type="text" v-model="form.name_family"
-                                        @input="toUpperCase('name_family')" placeholder=" Nombre Familiar Emergencia">
+
+                                    <el-input type="text" v-model="form.name_family" @input="toUpperCase('name_family')"
+                                        placeholder=" Nombre Familiar Emergencia">
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
                                     <small class="text-danger" v-if="errors.name_family"
@@ -233,18 +242,19 @@
                             </div>
                             <div class="col-md-6 mt-2">
                                 <div class="form-group">
-                                    
+
                                     <el-select v-model="form.parient_id" filterable placeholder=" Parentesco">
                                         <el-option v-for="option in parent" :key="option.id" :value="option.id"
                                             :label="option.description"></el-option>
                                     </el-select>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6 mt-2">
                                 <div class="form-group" :class="{ 'has-danger': errors.telephone_family }">
-                                    
-                                    <el-input type="text" v-model="form.telephone_family" placeholder=" Telefono Familiar Emergencia"
+
+                                    <el-input type="text" v-model="form.telephone_family"
+                                        placeholder=" Telefono Familiar Emergencia"
                                         @input="toUpperCase('telephone_family')" maxlength="9" show-word-limit>
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
@@ -253,8 +263,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <!-- Ubigeo -->
                     <div class="col-4">
@@ -308,12 +316,13 @@
                         <div class="col-12 mt-2">
                             <el-checkbox v-model="form.is_staff">¿ES personal de la empresa?</el-checkbox>
                         </div>
-
-
+                        <div class="col-12 mt-2" v-if="form.is_staff">
+                            <label for="base_salary">Salario Base del Personal</label>
+                            <el-input-number v-model="form.base_salary" controls-position="right" :min="1"
+                                :max="999999"></el-input-number>
+                        </div>
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div class="col-md-6" v-if="configuration.mod_renta">
                         <div class="form-group d-flex flex-column align-items-center">
@@ -321,21 +330,14 @@
                                 <i class="fas fa-id-card"></i> DNI 1
                                 <span class="text-danger"></span>
                             </label>
-                            <el-upload
-                                class="avatar-uploader-custom"
-                                :data="{ type: 'persons_extra1' }"
-                                :headers="headers"
-                                :action="`/${resource}/uploads`"
-                                :show-file-list="false"
-                                :on-success="onSuccessExtra1"
-                                :before-upload="resizeAndConvertToPng"
-                            >
+                            <el-upload class="avatar-uploader-custom" :data="{ type: 'persons_extra1' }"
+                                :headers="headers" :action="`/${resource}/uploads`" :show-file-list="false"
+                                :on-success="onSuccessExtra1" :before-upload="resizeAndConvertToPng">
                                 <div class="avatar-wrapper"
                                     style="width: 300px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; border: 1px solid #e4e7ed; background: #fafafa;">
                                     <img v-if="form.image_extra1_url" :src="form.image_extra1_url" class="avatar-img"
                                         style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"
-                                        style="font-size: 32px;"></i>
+                                    <i v-else class="el-icon-plus avatar-uploader-icon" style="font-size: 32px;"></i>
                                 </div>
                             </el-upload>
                             <small class="text-muted mt-2">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</small>
@@ -347,21 +349,14 @@
                                 <i class="fas fa-id-card"></i> DNI 2
                                 <span class="text-danger"></span>
                             </label>
-                            <el-upload
-                                class="avatar-uploader-custom"
-                                :data="{ type: 'persons_extra2' }"
-                                :headers="headers"
-                                :action="`/${resource}/uploads`"
-                                :show-file-list="false"
-                                :on-success="onSuccessExtra2"
-                                :before-upload="resizeAndConvertToPng"
-                            >
+                            <el-upload class="avatar-uploader-custom" :data="{ type: 'persons_extra2' }"
+                                :headers="headers" :action="`/${resource}/uploads`" :show-file-list="false"
+                                :on-success="onSuccessExtra2" :before-upload="resizeAndConvertToPng">
                                 <div class="avatar-wrapper"
                                     style="width: 300px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; border: 1px solid #e4e7ed; background: #fafafa;">
                                     <img v-if="form.image_extra2_url" :src="form.image_extra2_url" class="avatar-img"
                                         style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"
-                                        style="font-size: 32px;"></i>
+                                    <i v-else class="el-icon-plus avatar-uploader-icon" style="font-size: 32px;"></i>
                                 </div>
                             </el-upload>
                             <small class="text-muted mt-2">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</small>
@@ -854,6 +849,7 @@ export default {
                 has_credit_line: false,
                 is_staff: false,
                 credit_line: 0.0,
+                base_salary: 0.0,
                 id: null,
                 type: this.type,
                 identity_document_type_id: "6",

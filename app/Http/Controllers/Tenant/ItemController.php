@@ -135,6 +135,7 @@ class ItemController extends Controller
             try {
                 $import = new ItemsStockImport();
                 $import->setWarehouseId($request->warehouse_id);
+                Log::info('Warehouse ID ver si pasa: ' . $request->warehouse_id);
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();
                 return [

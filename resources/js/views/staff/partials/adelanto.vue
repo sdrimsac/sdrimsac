@@ -22,10 +22,12 @@
                         <label for="amount">Observacion</label>
                         <el-input type="textarea" rows="3" placeholder="Ingrese una observacion"
                             v-model="observacion"></el-input>
-                    </div>
-                    <div class="d-flex text-end">
+                    </div> 
+                    <br>
+                    <div class="col-12 d-flex justify-content-end">
+                        <el-button class="ml-2" @click="cancel">Cancelar</el-button>
                         <el-button type="primary" @click="submitAdelanto">Enviar</el-button>
-                        <el-button @click="cancel">Cancelar</el-button>
+                        
                     </div>
                 </div>
             </div>

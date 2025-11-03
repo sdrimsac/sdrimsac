@@ -609,7 +609,6 @@ class PurchaseController extends Controller
                         ItemWarehousePrice::where('item_id', $row['item_id'])
                             ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
                     }
-                    Log::info('Actualizar precio de compra del item', ['item_id' => $row['item_id'], 'unit_price' => $unit_price]);
 
                     /* aqui si la affectation_igv_type_id = 10 el unit_price lo debe multiplicar por 1.18 aho si es 20 ahi si no*/
                     if ($row['affectation_igv_type_id'] == 10) {
@@ -819,52 +818,76 @@ class PurchaseController extends Controller
 
                 /* if ($items = $data['items'] ?? false) { */
                     foreach ($data['items'] as $row) {
+
+                        Log::info('Procesando item de compra para posible CashStockMovementdasdasfdsfsdfsdfsdf');
                         $init_report = null;
                         // Determinar flag init_report (puede venir en row['item'] o en row directamente)
                         if (isset($row['item']) && is_array($row['item']) && array_key_exists('init_report', $row['item'])) {
                             $init_report = $row['item']['init_report'];
+                            Log::info('init_report encontrado en row[item] gffgadasdfd4fsdfsdsd', ['init_report' => $init_report]);
                         } elseif (array_key_exists('init_report', $row)) {
                             $init_report = $row['init_report'];
+                            Log::info('init_report encontrado en row fcdgasdasdasd', ['init_report' => $init_report]);
                         }
 
                         if ($init_report == 1) {
-                            // Determinar caja a usar: preferir arcaCash si existe, si no la caja del usuario, si no cualquier caja abierta
+
+                            Log::info('Procesando item para CashStockMovement vcdvcxvxcvxcxvx');
+                           
                             $cashToUse = (isset($arcaCash) && $arcaCash) ? $arcaCash : Cash::where('user_id', auth()->id())->where('state', 1)->latest()->first();
                             if (!$cashToUse) {
                                 $cashToUse = Cash::where('state', 1)->latest()->first();
                             }
 
-                            $item_id = $row['item_id'];
-                            $quantity = $row['quantity'];
+                            // Resolución defensiva del item_id (puede venir en diferentes formas)
+                            $item_id = null;
+                            if (!empty($row['item_id'])) {
+                                $item_id = $row['item_id'];
+                            } elseif (!empty($row['item']['id'])) {
+                                $item_id = $row['item']['id'];
+                            } elseif (!empty($row['item']['item_id'])) {
+                                $item_id = $row['item']['item_id'];
+                            }
+
+                            $quantity = $row['quantity'] ?? 0;
+                            $warehouse_id = $row['warehouse_id'] ?? null;
 
                             if (!$cashToUse) {
                                 Log::warning('No se encontró caja abierta para registrar CashStockMovement', ['item_id' => $item_id]);
                                 continue; // saltar este item
                             }
 
+                            if (empty($item_id) || $quantity <= 0) {
+                                Log::warning('Datos inválidos para registrar CashStockMovement', ['item' => $row]);
+                                continue;
+                            }
+
                             $cash_id = $cashToUse->id;
 
-                            $movement = CashStockMovement::where('cash_id', $cash_id)
-                                ->where('item_id', $item_id)
-                                ->first();
+                            // Buscar por caja, item y almacén (si existe). Usar firstOrNew para garantizar creación o actualización atómica.
+                            $movement = CashStockMovement::firstOrNew([
+                                'cash_id' => $cash_id,
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_id,
+                            ]);
+                            Log::info('Registrando CashStockMovement', [
+                                'cash_id' => $cash_id,
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_id,
+                                'quantity' => $quantity,
+                                'existing_movement_id' => $movement->id ?? null
+                            ]);
 
-                            if ($movement) {
-                                $movement->purchases = ($movement->purchases ?? 0) + $quantity;
-                                $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
-                                $movement->save();
-                            } else {
-                                // Crear registro inicial si no existe
-                                CashStockMovement::create([
-                                    'cash_id' => $cash_id,
-                                    'warehouse_id' => $row['warehouse_id'] ?? null,
-                                    'item_id' => $item_id,
-                                    'initial_stock' => 0,
-                                    'purchases' => $quantity,
-                                    'sold_quantity' => 0,
-                                    'current_stock' => $quantity,
-                                    'movement_type' => 'purchase',
-                                ]);
+                            // Asegurar valores numéricos
+                            $movement->purchases = ($movement->purchases ?? 0) + $quantity;
+                            $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
+                            $movement->movement_type = $movement->movement_type ?? 'purchase';
+                            // Si es un nuevo registro, inicializar otros campos
+                            if (!$movement->exists) {
+                                $movement->initial_stock = $movement->initial_stock ?? 0;
+                                $movement->sold_quantity = $movement->sold_quantity ?? 0;
                             }
+                            $movement->save();
                         }
                     }
                 /* } */
@@ -1835,6 +1858,7 @@ class PurchaseController extends Controller
                                 'price_default' => $row->price_default,
                             ];
                         }),
+                        'init_report' => (bool) $row->init_report,
                         'series_enabled' => (bool) $row->series_enabled,
                         'max_quantity' => $row->max_quantity,
                         'max_quantity_description' => $row->max_quantity_description,

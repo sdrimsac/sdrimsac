@@ -39,23 +39,14 @@
               <td>{{ Number(row.amount_extra).toFixed(2) }}</td>
               <td class="text-center">
                 <!-- <div style="display: flex; gap: 5px; flex-wrap: wrap;"> -->
-                <el-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
+                <el-button type="primary" gradient animation-type="scale" style="min-width: 32px; height: 32px; padding: 0; margin-right: 5px;"
                   @click.native.prevent="clickAdelanto(row)">
-                  <i class="fa fa-edit"></i>
+                  <i class="fa fa-money-bill-wave"></i>
                 </el-button>
                 <el-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
                   @click.prevent="clickCreate(row.id)">
                   <i class="fa fa-edit"></i>
                 </el-button>
-
-                <vs-button gradient warn animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                  @click.prevent="clickDisable(row.id)" v-if="row.active">
-                  <i class="fa fa-ban"></i>
-                </vs-button>
-                <vs-button gradient success animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                  @click.prevent="clickEnable(row.id)" v-else>
-                  <i class="fa fa-check"></i>
-                </vs-button>
               </td>
             </tr>
             <template v-slot:footer>
