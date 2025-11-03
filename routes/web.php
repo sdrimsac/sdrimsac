@@ -203,6 +203,8 @@ if ($hostname) {
                     Route::get('/get-ordens/{customer_id}', [StaffController::class, 'get_ordens']);
                     Route::post('/generate-summary', [StaffController::class, 'generarResumenAsistencias']);
                     Route::get('/records', [StaffController::class, 'recordsWorker']);
+                    Route::post('/adelanto', [StaffController::class, 'adelanto']);
+
 
                 });
                 Route::prefix('/sellers')->group(function () {

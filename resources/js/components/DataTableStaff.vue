@@ -9,23 +9,23 @@
                         <label for="">Buscar Personal</label>
                         <el-select ref="cliente" filterable remote clearable popper-class="el-select-customers"
                             dusk="customer_id" placeholder="Ingrese Personal / Cliente"
-                            :remote-method="searchRemoteCustomers" @change="changeCustomer" v-model="form.person_id">
-                            <el-option v-for="option in customers" :key="option.id" :value="option.id"
-                                :label="option.description"></el-option>
+                            :remote-method="searchRemoteCustomers" @change="changeCustomer" v-model="search.person_id">
+                            <el-option v-for="option in persons" :key="option.id" :value="option.id"
+                                :label="option.name"></el-option>
                         </el-select>
                     </div>
                     <!-- </div> -->
 
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Seleccione Establecimiento</label>
-                        <el-select v-model="form.establishment_id" placeholder="Seleccione Establecimiento">
+                        <el-select v-model="search.establishment_id" placeholder="Seleccione Establecimiento" clearable filterable @change="changeCustomer">
                             <el-option v-for="item in establishments" :key="item.id" :label="item.description"
                                 :value="item.id"></el-option>
                         </el-select>
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Seleccione Mes</label>
-                        <el-date-picker class="w-100" v-model="form.date" type="month" placeholder="Seleccione Mes"
+                        <el-date-picker class="w-100" v-model="search.date" type="month" placeholder="Seleccione Mes" @change="changeCustomer"
                             value-format="yyyy-MM" :picker-options="{
                                 disabledDate(time) {
                                     // Comparar por inicio de mes para evitar bloquear meses pasados
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Estado de Pago</label>
-                        <el-select v-model="form.paid" placeholder="Seleccione">
+                        <el-select v-model="form.search" placeholder="Seleccione">
                             <el-option label="Pagado" value="1"></el-option>
                             <el-option label="Pendiente" value="0"></el-option>
                         </el-select>
@@ -83,14 +83,15 @@ export default {
     data() {
         return {
             search: {
-                column: null,
-                value: null
+                value: null,
+                person_id: null
             },
             columns: [],
             records: [],
             customers: [],
             pagination: {},
             warehouses: [],
+            persons: [],
             establishments: [],
             time: null,
             form: {
@@ -124,7 +125,8 @@ export default {
             // .get(`/${_.head(column_resource)}/columns`)
             .get(`/${this.resource}/tables`)
             .then(response => {
-                this.warehouses = response.data.warehouses;
+                this.establishments = response.data.establishments;
+                this.persons = response.data.persons
                 // this.search.column = _.head(Object.keys(this.columns));
             });
         await this.getRecords();
@@ -166,19 +168,20 @@ export default {
         changeCustomer() {
             this.getRecords();
         },
-        searchRemoteCustomers(query) {
-            if (query.length < 3) {
-                return;
+        
+        async searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                // if (input!="") {
+
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+                const response = await this.$http.get(
+                    `/documents/search/customers?${parameters}`
+                );
+                this.customers = response.data.customers;
+                this.loading_search = false;
+                this.input_person.number = null;
             }
-            /* this.loading_search = true; */
-            this.$http
-                .get(`/customers/search?term=${query}`)
-                .then(response => {
-                    this.customers = response.data;
-                })
-                .finally(() => {
-                    this.loading_search = false;
-                });
         },
 
         customIndex(index) {
@@ -287,7 +290,7 @@ export default {
         }, */
         getQueryParameters() {
             // Exclude `column` from the query parameters because it's not used by the server
-            const { column, ...searchWithoutColumn } = this.search || {};
+            const { column, ...searchWithoutColumn } = this.search || this.form;
 
             return queryString.stringify({
                 page: this.pagination.current_page,
@@ -297,6 +300,7 @@ export default {
         },
         changeClearInput() {
             this.search.value = "";
+            this.form.person_id = "";
             this.getRecords();
         }
     }

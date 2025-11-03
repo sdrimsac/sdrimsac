@@ -23,6 +23,7 @@ use App\Models\Tenant\PersonAttendance;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
+use App\Models\Tenant\WorkerAdvance;
 use App\Models\Tenant\WorkerDailySummari;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,6 +52,26 @@ class StaffController extends Controller
             ->person($person)
             ->company($company)
             ->download('Lista_de_credito_' . Carbon::now() . '.xlsx');
+    }
+
+    public function adelanto (Request $request) {
+
+        $person_id = $request->input('person_id');
+        $amount = $request->input('amount');
+        $method = $request->input('method');
+        $date_time_advances = $request->input('date_time_advances');
+
+        $create = WorkerAdvance::create([
+            'person_id' => $person_id,
+            'amount' => $amount,
+            'method' => $method,
+            'date_time_advance' => $date_time_advances ?? now()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $create
+        ]);
     }
 
     public function importPerson(Request $request)
@@ -527,21 +548,23 @@ class StaffController extends Controller
     }
     public function tables()
     {
-        $printers = Area::whereNotNull('printer')->get()
+        /* $printers = Area::whereNotNull('printer')->get()
             ->transform(function ($row, $key) {
                 return [
                     'id' => $row->id,
                     'description' => $row->description,
                     'printer' => $row->printer,
                 ];
-            });
+            }); */
+        $persons = Person::all();
         $establishments = Establishment::all();
-        $series = Series::all();
+        /* $series = Series::all(); */
         return [
             'success' => true,
-            'printers' => $printers,
+            /* 'printers' => $printers, */
             'establishments' => $establishments,
-            'series' => $series,
+            'persons' => $persons
+            /* 'series' => $series, */
         ];
     }
     public function records(Request $request)

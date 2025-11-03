@@ -37,7 +37,9 @@
                             <tbody>
                                 <tr v-for="(row, index) in records" :key="index"
                                     :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
-                                    <template v-if="row.id">
+                                    <!-- Guard against null/undefined rows returned from API or accidentally inserted -->
+                                    <template v-if="row">
+                                        <template v-if="row.id">
                                        
                                         <td :class="{ 'text-danger': row.extorned }">
                                             <template v-if="row.extorned">
@@ -111,9 +113,9 @@
                                             </div>
 
                                         </td>
-                                    </template>
-                                    <!-- Ingresar Pago -->
-                                    <template v-else>
+                                        </template>
+                                        <!-- Ingresar Pago -->
+                                        <template v-else>
                                         <!-- <td>Ingresar Pago :</td> -->
                                         <td>
                                             <div class="form-group mb-0" :class="{
@@ -219,6 +221,11 @@
                                                 </button>
                                             </div>
                                         </td>
+                                        </template>
+                                    </template>
+                                    <!-- If row is null, render an empty placeholder to avoid render errors -->
+                                    <template v-else>
+                                        <td colspan="5">&nbsp;</td>
                                     </template>
                                 </tr>
                             </tbody>
@@ -311,8 +318,9 @@ export default {
         });
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
-            this.payment_method_types = response.data.payment_method_types;
-            this.payment_destinations = response.data.payment_destinations;
+            // filter out any null/undefined entries from server data to avoid template errors
+            this.payment_method_types = (response.data.payment_method_types || []).filter(o => o != null);
+            this.payment_destinations = (response.data.payment_destinations || []).filter(o => o != null);
             //this.initDocumentTypes()
         });
     },
@@ -413,7 +421,8 @@ export default {
             await this.$http
                 .get(`/${this.resource}/records/${this.documentId}`)
                 .then(response => {
-                    this.records = response.data.data;
+                    // Ensure we don't keep null/undefined entries returned by the API
+                    this.records = (response.data.data || []).filter(r => r != null);
 
                     // Clear any previous canCancel flags
                     this.records.forEach(r => {
