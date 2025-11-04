@@ -108,12 +108,19 @@
                                 </div>
 
                                 <div
+                                    style="background:rgba(255,255,255,0.95);color:#0b2433;border-radius:50%;width:60px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:900"
+                                >
+                                    <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:17px;font-weight:800;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;line-height:1;">
+                                        {{ (table.number || '').toString().slice(0, 4) }}
+                                    </span>
+                                </div>
+                                <!-- <div
                                     style="background:rgba(255,255,255,0.95);color:#0b2433;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:900"
                                 >
                                     <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:25px;font-weight:800;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;line-height:1;">
                                         {{ table.number }}
                                     </span>
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- Banda de estado (LIBRE / OCUPADO / OTRO) -->
