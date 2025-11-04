@@ -402,6 +402,8 @@ class RecetaController extends Controller
 
             $item = Item::findOrFail($id);
             $this->deleteRecordInitialKardex($item);
+            $item->sets()->delete();
+            $item->food()->delete();
             $item->delete();
 
             return [
