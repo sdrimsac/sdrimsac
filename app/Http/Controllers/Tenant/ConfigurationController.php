@@ -32,7 +32,6 @@ class ConfigurationController extends Controller
 {
     public function create()
     {
-
         return view('tenant.configurations.form');
     }
     public function app() {}
@@ -481,6 +480,7 @@ class ConfigurationController extends Controller
                 'box_ordenes' => true,
                 'show_variation_dcto' => true,
                 'box_orden' => true,
+                   
             ]);
 
             $this->check_and_set_restaurant();

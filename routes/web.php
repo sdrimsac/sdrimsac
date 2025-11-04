@@ -64,6 +64,8 @@ if ($hostname) {
             /* Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']); */
             Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
 
+            Route::get('staff/export-excel', [StaffController::class, 'ExportExcel']);
+
             Route::get('report_cash/download-report-discount/{filename}', [CashController::class, 'downloadReportDiscount']);
             /* para reporte de madera  */
             Route::get('/madera', [MaderaController::class, 'index_madera'])->name('tenant.madera.index');

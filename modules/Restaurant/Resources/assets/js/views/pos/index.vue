@@ -343,14 +343,12 @@
                                                             </template>
                                                         </div>
                                                     </div>
-                                                    <div v-if="configuration.list_or_card" class="col-3">
+                                                    <div class="col-3">
                                                         <button @click="toggleView"
                                                             class="btn btn-primary btn-sm ml-auto float-right">
                                                             {{ showList ? "Mostrar Card" : "Tabla - Card" }}
                                                         </button>
                                                     </div>
-
-
                                                 </div>
                                                 <div class="mb-1">
                                                     <!-- Marca -->

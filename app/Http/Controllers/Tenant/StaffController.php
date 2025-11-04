@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditListExport;
+use App\Exports\StaffWorkerExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
 use App\Http\Resources\Tenant\CreditListPersonCollection;
@@ -174,68 +175,138 @@ class StaffController extends Controller
 
     public function generarResumenAsistencias(Request $request)
     {
-        // Puedes filtrar por mes si deseas
         $month = $request->input('month', now()->format('m'));
         $year = $request->input('year', now()->format('Y'));
-
-        // Obtener todos los empleados (personas con is_staff)
+        
         $empleados = Person::where('is_staff', true)->get();
+        $startOfMonth = Carbon::createFromDate($year, $month, 1)->startOfDay();
+        $endOfMonth = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->addDay();
 
         foreach ($empleados as $empleado) {
 
             $registros = PersonAttendance::where('person_id', $empleado->id)
-                ->whereYear('date_attendance', $year)
-                ->whereMonth('date_attendance', $month)
+                ->where(function ($q) use ($startOfMonth, $endOfMonth) {
+                    $q->whereBetween('date_time_attendance', [$startOfMonth->toDateTimeString(), $endOfMonth->toDateTimeString()])
+                      ->orWhereBetween(DB::raw("CONCAT(date_attendance, ' ', COALESCE(time_attendance, '00:00:00'))"), [$startOfMonth->toDateTimeString(), $endOfMonth->toDateTimeString()]);
+                })
                 ->orderBy('date_time_attendance')
-                ->get()
-                ->groupBy('date_attendance');
+                ->get();
 
-            foreach ($registros as $fecha => $marcas) {
-
-                // Construir array de horas (HH:MM:SS) por cada marca del día.
-                $times = $marcas->map(function ($r) {
-                    if (!empty($r->time_attendance)) return $r->time_attendance;
-                    if (!empty($r->date_time_attendance)) return Carbon::parse($r->date_time_attendance)->format('H:i:s');
+            // Construir lista con Carbon, tipo y registro original
+            $marks = $registros->map(function ($r) {
+                if (!empty($r->date_time_attendance)) {
+                    $dt = Carbon::parse($r->date_time_attendance);
+                } elseif (!empty($r->time_attendance) && !empty($r->date_attendance)) {
+                    $dt = Carbon::parse($r->date_attendance . ' ' . $r->time_attendance);
+                } else {
                     return null;
-                })->filter()->values();
+                }
+                return [
+                    'dt' => $dt,
+                    'type' => isset($r->type) ? strtolower($r->type) : null,
+                    'raw' => $r,
+                ];
+            })->filter()->values();
 
-                $horasTrabajadas = 0;
-                $workedMinutes = 0;
-                $hasUnpaired = false;
-                $lastPairedEnd = null;
+            // Eliminar duplicados cercanos (misma marca repetida)
+            $filtered = [];
+            foreach ($marks as $m) {
+                if (empty($filtered)) {
+                    $filtered[] = $m;
+                    continue;
+                }
+                $last = end($filtered);
+                $diffSeconds = $last['dt']->diffInSeconds($m['dt']);
+                // si la diferencia es menor o igual a 5 segundos consideramos duplicado
+                if ($diffSeconds <= 5 && $last['type'] === $m['type']) {
+                    // omitimos duplicado
+                    continue;
+                }
+                $filtered[] = $m;
+            }
 
-                // Emparejar marcas: 0-1, 2-3, ... sumar solo intervalos emparejados
-                for ($i = 0; $i < $times->count(); $i += 2) {
-                    $startStr = $times->get($i);
-                    if ($startStr === null) continue;
-                    if ($times->has($i + 1)) {
-                        $endStr = $times->get($i + 1);
-                        if ($endStr === null) {
-                            $hasUnpaired = true;
-                            continue;
+            $pairsByDate = [];
+            $unpairedByDate = [];
+
+            // Emparejar buscando preferentemente un INGRESO seguido de SALIDA
+            $i = 0;
+            $count = count($filtered);
+            while ($i < $count) {
+                $start = $filtered[$i];
+
+                // buscar siguiente marca que sea salida o al menos distinta a la actual
+                $end = null;
+                for ($j = $i + 1; $j < $count; $j++) {
+                    // preferimos emparejar ingreso->salida
+                    if ($start['type'] && strpos($start['type'], 'ing') !== false) {
+                        if (isset($filtered[$j]['type']) && strpos($filtered[$j]['type'], 'sal') !== false) {
+                            $end = $filtered[$j];
+                            $i = $j + 1;
+                            break;
                         }
-                        $start = Carbon::parse($fecha . ' ' . $startStr);
-                        $end = Carbon::parse($fecha . ' ' . $endStr);
-                        if ($end->lt($start)) {
-                            $end->addDay();
-                        }
-                        $workedMinutes += $start->diffInMinutes($end);
-                        $lastPairedEnd = Carbon::parse($endStr)->format('H:i:s');
                     } else {
-                        // marca sin pareja (entrada sin salida)
-                        $hasUnpaired = true;
+                        // si start no es ingreso, aceptamos la siguiente marca distinta
+                        $end = $filtered[$j];
+                        $i = $j + 1;
+                        break;
                     }
                 }
 
+                if ($end === null) {
+                    // no hay pareja -> registramos un par con exit null
+                    $dateKey = $start['dt']->toDateString();
+                    $unpairedByDate[$dateKey] = true;
+                    if (!isset($pairsByDate[$dateKey])) {
+                        $pairsByDate[$dateKey] = ['minutes' => 0, 'pairs' => []];
+                    }
+                    $pairsByDate[$dateKey]['pairs'][] = [
+                        'entrance' => $start['dt']->format('H:i:s'),
+                        'exit' => null,
+                        'minutes' => 0,
+                        'exit_date' => null,
+                    ];
+                    // avanzar un paso
+                    $i++;
+                    continue;
+                }
+
+                // Asegurar que end es posterior a start (manejo turno nocturno)
+                $endDt = $end['dt'];
+                $startDt = $start['dt'];
+                if ($endDt->lt($startDt)) {
+                    $endDt = $endDt->copy()->addDay();
+                }
+
+                $dateKey = $startDt->toDateString();
+                if (!isset($pairsByDate[$dateKey])) {
+                    $pairsByDate[$dateKey] = ['minutes' => 0, 'pairs' => []];
+                }
+                $minutes = $startDt->diffInMinutes($endDt);
+                $pairsByDate[$dateKey]['minutes'] += $minutes;
+                $pairsByDate[$dateKey]['pairs'][] = [
+                    'entrance' => $startDt->format('H:i:s'),
+                    'exit' => $endDt->format('H:i:s'),
+                    'minutes' => $minutes,
+                    'exit_date' => $endDt->toDateString(),
+                ];
+            }
+
+            // Guardar/actualizar resumen diario por cada fecha calculada
+
+            foreach ($pairsByDate as $fecha => $data) {
+                $workedMinutes = $data['minutes'];
                 $horasTrabajadas = $workedMinutes / 60;
 
-                // Entrada: primera marca del día (si existe). Salida: última salida pareada si existe,
-                // si no existe usar la última marca (posiblemente una entrada sin salida) o 00:00:00
-                $entrance_val = $times->count() ? $times->first() : '00:00:00';
-                if ($lastPairedEnd) {
-                    $exit_val = $lastPairedEnd;
-                } else {
-                    $exit_val = $times->count() ? $times->last() : '00:00:00';
+                // obtener pares para este dia
+                $pairs_array = $data['pairs'] ?? [];
+
+                // fecha de salida: usamos la exit_date del último par si existe
+                $fecha_salida = $fecha;
+                if (!empty($pairs_array)) {
+                    $lastPair = end($pairs_array);
+                    if (!empty($lastPair['exit_date'])) {
+                        $fecha_salida = $lastPair['exit_date'];
+                    }
                 }
 
                 $horasExtras = max(0, $horasTrabajadas - 8);
@@ -250,8 +321,7 @@ class StaffController extends Controller
                     }
                 }
 
-                // Marcar falta si no hay marcas o existe alguna marca sin pareja (entrada sin salida)
-                $falta = ($times->count() == 0) || $hasUnpaired;
+                $falta = ($workedMinutes == 0) || (!empty($unpairedByDate[$fecha]));
 
                 WorkerDailySummari::updateOrCreate(
                     [
@@ -259,12 +329,15 @@ class StaffController extends Controller
                         'date_daily' => $fecha
                     ],
                     [
-                        'entrance' => $entrance_val,
-                        'exit' => $exit_val,
+                        // guardamos los pares para que la UI muestre intervalos separados
+                        'pairs' => $pairs_array,
+                        'entrance' => null,
+                        'exit' => null,
                         'horas_trabajadas' => round($horasTrabajadas, 2),
                         'overtime' => round($horasExtras, 2),
                         'amount_extra' => round($montoExtra, 2),
                         'lack' => $falta,
+                        'date_end_daily' => $fecha_salida,
                     ]
                 );
             }
@@ -276,29 +349,7 @@ class StaffController extends Controller
         ]);
     }
 
-    /* public function getRecords(Request $request)
-    {
-        // obtener los persons  donde is_staff = true y tambien obtner la realcionn de dias de la tabla worker_daily_summaries
-        $query = Person::query()->where('is_staff', true);
-        $query->with('worker_daily_summaries');
-        $query->orderBy('name')->paginate(20);
-        return $query;
-    } */
-    /* public function recordsWorker(Request $request)
-    {
-        $records = $this->getRecords($request);
-
-        return StaffPersonWorkerCollection::collection($records)->paginate(20);
-    } */
-
-    /* public function recordsWorker(Request $request)
-    {
-        $records = $this->getRecords($request)->paginate(20);
-
-        return StaffPersonWorkerCollection::collection($records);
-    } */
-
-    public function recordsWorker(Request $request)
+    public function getRecords(Request $request)
     {
         $query = WorkerDailySummari::with('person')
             ->whereHas('person', function ($q) {
@@ -309,6 +360,10 @@ class StaffController extends Controller
             $query->where('date_daily', $request->date);
         }
 
+        if ($request->filled('date_day')) {
+            $query->where('date_daily', $request->date_day);
+        }
+
         if ($request->filled('person_id')) {
             $query->where('person_id', $request->person_id);
         }
@@ -317,38 +372,31 @@ class StaffController extends Controller
             $query->whereBetween('date_daily', [$request->from_date, $request->to_date]);
         }
 
-        $records = $query->orderBy('date_daily', 'desc')->paginate(20);
+        $records = $query->orderBy('date_daily', 'desc');
 
         //return StaffPersonWorkerCollection::collection($records);
-        return new StaffPersonWorkerCollection($records);
+        return $records;
+        //return new StaffPersonWorkerCollection($records);
     }
 
-
-    /* public function getRecords(Request $request)
+    public function recordsWorker(Request $request)
     {
-        $records = Person::where('is_staff', true)
-            ->with('worker_daily_summaries')
-            ->orderBy('name');
+        $records = $this->getRecords($request);
+        
+        return new StaffPersonWorkerCollection($records->paginate(20));
+    }
 
-        // Filtro por nombre
-        if ($request->has('name') && $request->name != '') {
-            $records->where('name', 'like', "%{$request->name}%");
-        }
-
-        // Filtro por fecha en la relación worker_daily_summaries
-        if ($request->has('date') && $request->date != '') {
-            $records->whereHas('worker_daily_summaries', function ($q) use ($request) {
-                $q->where('date_daily', $request->date);
-            });
-        }
-
-        // Filtro por cliente u otra cosa
-        if ($request->has('client_id') && $request->client_id != '') {
-            $records->where('client_id', $request->client_id);
-        }
-
-        return $records;
-    } */
+    public function ExportExcel(Request $request)
+    {
+        $company = Company::first();
+        $records = $this->getRecords($request)->get();
+        $person = Person::find($request->person_id);
+        return (new StaffWorkerExport)
+            ->records($records)
+            ->person($person)
+            ->company($company)
+            ->download('Lista_de_personal_' . Carbon::now() . '.xlsx');
+    }
 
     public function recordByPerson(Request $request)
     {

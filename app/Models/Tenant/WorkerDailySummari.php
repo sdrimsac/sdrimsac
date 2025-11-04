@@ -21,9 +21,20 @@ class WorkerDailySummari extends Model
         'overtime',
         'amount_extra',
         'lack',
+        'pairs',
         'date_daily',
+        'date_end_daily',
         'created_at',
         'updated_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'pairs' => 'array',
     ];
 
     public function person()

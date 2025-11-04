@@ -61,7 +61,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(data, index) in foods" :key="index"
+                                            <tr v-for="(data, index) in foods" :key="(data.id || (data.item && data.item.id) || index)"
                                                 @click="handleRowClick(data, index)" :style="{
                                                     backgroundColor: index % 2 === 0 ? '#fff' : '#afafaf',
                                                     color: 'inherit'
@@ -165,7 +165,7 @@
                 </template>
                 <template v-else>
                     <div class="d-flex flex-wrap">
-                        <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
+                        <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="(data.id || (data.item && data.item.id) || index)">
                             <el-tooltip effect="dark" :disabled="data.item.warehouses.length == 1 ||
                                 !configuration.show_stock_establishment_box
                                 ">
@@ -519,7 +519,7 @@
             <template v-else>
                 <!-- Card del Producto o Servicio Primero  RESTAURANT-->
                 <div class="d-flex flex-wrap">
-                    <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
+                    <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="(data.id || (data.item && data.item.id) || index)">
                         <el-tooltip effect="dark"
                             :disabled="data.item.warehouses.length == 1 || !configuration.show_stock_establishment_box">
                             <div slot="content">
@@ -1128,6 +1128,7 @@ export default {
     methods: {
         async onAddPromotionItems(items) {
             this.showDialogItemPromotion = false;
+            console.log("onAddPromotionItems llamado con items asdfafasdfasdfas:", items);
 
             if (!Array.isArray(items) || items.length === 0) return;
 
@@ -1141,7 +1142,6 @@ export default {
             for (const promotionId of Object.keys(groups)) {
                 const group = groups[promotionId];
 
-                // Construir array detallado de items de la promoción
                 const promoItemsDetailed = [];
 
                 for (const promo of group) {
@@ -1227,6 +1227,7 @@ export default {
                     // Realizar verificaciones similares a addFood si el item es set/promocion
                     try {
                         let foodFound = this.localOrden.filter(f => f.id == (found.item ? found.item.id : found.id));
+                        console.log("Verificando stock para item de promoción encontrado:", foodFound);
                         let existingQty = 0;
                         if (foodFound.length != 0) {
                             existingQty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
@@ -1269,20 +1270,45 @@ export default {
                     continue;
                 }
 
-                // Intentar encontrar el item de promoción real (el padre) en foods/listFoods
-                let promotionItem = this.listFoods.find(
-                    f => (f.item && f.item.id == promotionId) || f.id == promotionId
-                );
-                if (!promotionItem) {
-                    promotionItem = this.foods.find(
-                        f => (f.item && f.item.id == promotionId) || f.id == promotionId
-                    );
-                }
+                // Intentar encontrar el item de promoción real (el padre) en listFoods/foods
+                // Hacemos la búsqueda tolerante a tipos (string/number) y a variaciones (code)
+                const normalize = v => (v === null || typeof v === 'undefined') ? '' : String(v).trim();
+                const pidNorm = normalize(promotionId);
+
+                const findPromotionItem = arr => {
+                    if (!Array.isArray(arr)) return null;
+                    return arr.find(f => {
+                        try {
+                            const candidateIds = [
+                                normalize(f && f.item && f.item.id),
+                                normalize(f && f.id),
+                                normalize(f && f.code),
+                                normalize(f && f.description)
+                            ];
+                            // direct match
+                            if (candidateIds.includes(pidNorm)) return true;
+                            // numeric loose equality (e.g., '12' == 12)
+                            for (let c of candidateIds) {
+                                if (c !== '' && pidNorm !== '' && c == pidNorm) return true;
+                            }
+                            // match when code contains pid (covers cases like 'PROM0008')
+                            if (f && f.code && String(f.code).includes(pidNorm)) return true;
+                            return false;
+                        } catch (e) {
+                            return false;
+                        }
+                    });
+                };
+
+                let promotionItem = findPromotionItem(this.listFoods) || findPromotionItem(this.foods);
 
                 let promotionFood;
                 if (promotionItem) {
                     // Clonar el item real y anexar los promotion_items
                     promotionFood = JSON.parse(JSON.stringify(promotionItem));
+                    // Asegurar que el objeto resultante lleve el id de la promoción
+                    // Esto evita que emitId tome el id del item subyacente por error.
+                    promotionFood.promotion_id = promotionId;
                     promotionFood.promotion_items = promoItemsDetailed;
                     // Aseguramos la marca de que es una promoción
                     promotionFood.item = promotionFood.item || {};
@@ -1323,8 +1349,19 @@ export default {
                     quantity: 1
                 };
 
-                // Preferir pasar el id del item subyacente cuando esté disponible
-                const emitId = (promotionFood && promotionFood.item && promotionFood.item.id) ? promotionFood.item.id : currentFood.id;
+                // IMPORTANTE: Para evitar colisiones/mapeos erróneos en el padre,
+                // preferimos siempre pasar el id real del item subyacente cuando exista.
+                // Solo si no existe item.id usamos promotion_id; como último recurso usamos currentFood.id
+                let emitId;
+                if (promotionFood && promotionFood.item && promotionFood.item.id) {
+                    // Siempre preferir el id del item real
+                    emitId = promotionFood.item.id;
+                } else if (promotionFood && promotionFood.promotion_id) {
+                    // Fallback: id de la promoción (solo si no hay item.id)
+                    emitId = promotionFood.promotion_id;
+                } else {
+                    emitId = currentFood.id;
+                }
                 // Debug: trazas para ayudar a identificar mapeos erróneos
                 console.debug('onAddPromotionItems: emitiendo insertOrden', { currentFoodId: currentFood.id, emitId, promotionId: promotionId, promoItemsCount: promoItemsDetailed.length });
 

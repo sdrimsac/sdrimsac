@@ -20,52 +20,73 @@
             <tr slot="heading" class="bg-primary">
               <th class="text-white" style="width: 40px;">#</th>
               <th class="text-white" style="width: 180px;">Personal</th>
-              <th class="text-white" style="width: 120px;">Fecha</th>
-              <th class="text-white" style="width: 150px;">Hora de entrada</th>
-              <th class="text-white" style="width: 100px;">Hora de salida</th>
+              <th class="text-white" style="width: 120px;">Fecha y hora de ingreso</th>
+              <th class="text-white" style="width: 150px;">Horas Trabajadas</th>
+              <th class="text-white" style="width: 100px;"> Fecha y Hora de salida</th>
               <th class="text-white" style="width: 100px;">Horas Trabajadas</th>
               <th class="text-white" style="width: 120px;">Total Horas Extras</th>
               <th class="text-white" style="width: 120px;">Saldo Extra</th>
+              <th class="text-white" style="width: 100px;">Adelantos</th>
               <th class="text-white text-center" style="width: 100px;">Acciones</th>
             </tr>
             <tr slot-scope="{ index, row }">
               <td>{{ index + 1 }}</td>
               <td>{{ row.person_name }}</td>
               <td>{{ row.date_daily }}</td>
-              <td>{{ row.entrance }} </td>
-              <td>{{ row.exit }}</td>
+              <td>
+                <div v-if="row.pairs" style="display:flex; flex-direction:column; gap:6px;">
+                  <div
+                    v-for="(p, i) in (typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs)"
+                    :key="i"
+                    style="display:flex; justify-content:space-between; align-items:center; padding:6px 8px; background:#f7f9fb; border-radius:6px; border:1px solid #e3e7ea;"
+                  >
+                    <div style="display:flex; flex-direction:column;">
+                      <div style="font-size:0.95rem; color:#222;">
+                        <strong style="margin-right:6px;">{{ p.entrance }}</strong>
+                        <span style="opacity:0.6; margin:0 6px;">→</span>
+                        <strong style="margin-left:6px;">{{ p.exit }}</strong>
+                      </div>
+                      <small style="color:#6b7280;">{{ p.exit_date }}</small>
+                    </div>
+                    <div style="font-weight:600; white-space:nowrap; color:#111;">
+                      {{ Math.floor((p.minutes||0)/60) }}h {{ ('0' + ((p.minutes||0)%60)).slice(-2) }}m
+                    </div>
+                  </div>
+
+                  <div style="display:flex; justify-content:space-between; padding:6px 8px; margin-top:4px; background:#eef2f6; border-radius:6px; border:1px solid #dde6eb; font-weight:700;">
+                    <div>Total</div>
+                    <div>
+                      {{ Math.floor(((typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs).reduce((s,p)=>s+(p.minutes||0),0))/60) }}h
+                      {{ ('0' + (((typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs).reduce((s,p)=>s+(p.minutes||0),0))%60)).slice(-2) }}m
+                    </div>
+                  </div>
+                </div>
+
+                <div v-else style="color:#6c757d; text-align:center; padding:8px;">-</div>
+              </td>
+              <td>{{ row.date_end_daily }}</td>
               <td>{{ row.horas_trabajadas }}</td>
               <td>{{ Number(row.overtime).toFixed(2) }}</td>
               <td>{{ Number(row.amount_extra).toFixed(2) }}</td>
               <td class="text-center">
                 <!-- <div style="display: flex; gap: 5px; flex-wrap: wrap;"> -->
-                <el-button type="primary" gradient animation-type="scale" style="min-width: 32px; height: 32px; padding: 0; margin-right: 5px;"
+                <el-button type="primary" gradient animation-type="scale"
+                  style="min-width: 32px; height: 32px; padding: 0; margin-right: 5px;"
                   @click.native.prevent="clickAdelanto(row)">
                   <i class="fa fa-money-bill-wave"></i>
                 </el-button>
-                <el-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
+                <!-- <el-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
                   @click.prevent="clickCreate(row.id)">
                   <i class="fa fa-edit"></i>
-                </el-button>
+                </el-button> -->
               </td>
             </tr>
-            <template v-slot:footer>
-              <tr style="background: #f5f5f5; font-weight: bold;">
-                <td colspan="4" class="text-right" style="font-weight: bold; font-size: 1.1rem;">Totales:</td>
-                <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.cpe }}</td>
-                <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.nv }}</td>
-                <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.totalVentas }}</td>
-                <td></td>
-                <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.totalComision }}</td>
-                <td colspan="2"></td>
-              </tr>
-            </template>
           </data-table>
         </div>
       </div>
     </div>
     <import-excel :showDialog.sync="showDialogImportExcel"></import-excel>
-  <adelanto :showDialog.sync="showDialogAdelanto" :person_id="person_id"></adelanto>
+    <adelanto :showDialog.sync="showDialogAdelanto" :person_id="person_id"></adelanto>
   </div>
 </template>
 <script>

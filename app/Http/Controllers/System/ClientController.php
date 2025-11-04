@@ -1195,6 +1195,10 @@ class ClientController extends Controller
         DB::connection('tenant')->table('college_plans')->insert([
             ['name' => 'OTROS', 'description' => 'ADQUISICION', 'period_id' => 1, 'type_id' => 3, 'count' => 1, 'days_extension' => 0, 'active' => 1],
         ]);
+
+        DB::connection('tenant')->table('configurations')
+            ->where('id', 1)
+            ->update(['list_or_card' => true]);
     }
 
     public function validateWebsite($uuid, $website)

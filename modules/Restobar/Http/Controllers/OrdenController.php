@@ -285,9 +285,9 @@ class OrdenController extends Controller
             $item = $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
 
             // Adjuntar los detalles asociados a los orden_items de este grupo (si existen)
-                try {
-                    $orden_item_ids = $grupo->pluck('id')->toArray();
-                    $details = OrderItemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
+            try {
+                $orden_item_ids = $grupo->pluck('id')->toArray();
+                $details = OrderItemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
                 // Log for debugging: which orden_item_ids and how many details found
                 // lookup performed; no debug logging
 
@@ -300,16 +300,16 @@ class OrdenController extends Controller
                 } catch (\Exception $e) {
                     // ignore raw lookup errors silently
                 }
-                    // Si se indicó un área concreta para impresión y existen detalles
-                    // (normalmente porque el item es una promoción), filtramos los
-                    // detalles para mostrar sólo los que pertenecen a esa área.
-                    if (!empty($area_id) && $details->isNotEmpty()) {
-                        $details = $details->filter(function ($d) use ($area_id) {
-                            return intval($d->area_id) === intval($area_id);
-                        })->values();
-                    }
+                // Si se indicó un área concreta para impresión y existen detalles
+                // (normalmente porque el item es una promoción), filtramos los
+                // detalles para mostrar sólo los que pertenecen a esa área.
+                if (!empty($area_id) && $details->isNotEmpty()) {
+                    $details = $details->filter(function ($d) use ($area_id) {
+                        return intval($d->area_id) === intval($area_id);
+                    })->values();
+                }
 
-                    if ($details->isEmpty()) {
+                if ($details->isEmpty()) {
                     try {
                         $representative = $item; // $item is the representative OrdenItem model
                         $fallback = OrderItemDetail::whereHas('orden_item', function ($q) use ($representative) {
@@ -317,16 +317,16 @@ class OrdenController extends Controller
                                 ->where('food_id', $representative->food_id);
                         })->get();
 
-                            // Si se hizo fallback, aplicar el mismo filtrado por área
-                            if (!empty($area_id) && $fallback->isNotEmpty()) {
-                                $fallback = $fallback->filter(function ($d) use ($area_id) {
-                                    return intval($d->area_id) === intval($area_id);
-                                })->values();
-                            }
+                        // Si se hizo fallback, aplicar el mismo filtrado por área
+                        if (!empty($area_id) && $fallback->isNotEmpty()) {
+                            $fallback = $fallback->filter(function ($d) use ($area_id) {
+                                return intval($d->area_id) === intval($area_id);
+                            })->values();
+                        }
 
-                            if ($fallback->count() > 0) {
-                                $details = $fallback;
-                            }
+                        if ($fallback->count() > 0) {
+                            $details = $fallback;
+                        }
                     } catch (\Exception $e) {
                         // ignore fallback errors silently
                     }
@@ -1069,7 +1069,6 @@ class OrdenController extends Controller
 
     public function OrderPrint(Request $request)
     {
-        // Preparar datos mínimos para la impresión sin tocar la base
         $orden = Orden::find($request->id);
         if (!$orden) {
             return [
@@ -1080,7 +1079,6 @@ class OrdenController extends Controller
 
         $configuration = Configuration::first();
 
-        // Construir arrays que usan las rutinas de impresión más abajo
         $orden_items_ids = collect($request->items)->pluck('id')->toArray();
         $orden_items_ids_for_kitchen = collect($request->items)->map(function ($it) {
             return [
@@ -1094,10 +1092,46 @@ class OrdenController extends Controller
         $conopy_kitchen = $configuration->conopy_kitchen;
         $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
 
+        $orden_items_ids_for_kitchen = [];
+        $itemIds = $orden_items_ids;
+
+        foreach ($itemIds as $itemId) {
+            try {
+                $details_for_item = OrderItemDetail::where('orden_item_id', $itemId)->get();
+            } catch (Exception $e) {
+                $details_for_item = collect();
+            }
+
+            if ($details_for_item->isNotEmpty()) {
+                foreach ($details_for_item as $d) {
+                    $orden_items_ids_for_kitchen[] = ['orden_id' => $itemId, 'area_id' => $d->area_id];
+                }
+            } else {
+                $ci = OrdenItem::find($itemId);
+                $areaId = $ci->area_id ?? null;
+                $orden_items_ids_for_kitchen[] = ['orden_id' => $itemId, 'area_id' => $areaId];
+            }
+        }
+
 
         if ($print_kitchen && (!$printing)) {
             $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
             $user_id = auth()->id();
+            try {
+                if ($request->get('debug', false) || config('app.debug')) {
+                    $areas_debug = [];
+                    foreach ($ids_areas as $aid) {
+                        $areaObj = (!is_null($aid)) ? Area::find($aid) : null;
+                        $areas_debug[] = [
+                            'area_id' => $aid,
+                            'area_description' => $areaObj ? $areaObj->description : null
+                        ];
+                    }
+                    Log::debug('OrderPrint: built kitchen routing', ['mapping' => $orden_items_ids_for_kitchen, 'areas' => $areas_debug]);
+                }
+            } catch (\Exception $e) {
+               
+            }
             foreach ($ids_areas as $area_id) {
                 $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
                     return $area_id == $a['area_id'];
@@ -1116,12 +1150,27 @@ class OrdenController extends Controller
                 }
             }
         }
-        return [
+        $response = [
             'id' => $orden->id,
             'success' => true,
             'message' => 'Impresión encolada para orden existente',
             'printed' => true
         ];
+
+        // If debug requested, return the mapping to the caller for inspection
+        if ($request->get('debug', false)) {
+            $response['mapping'] = $orden_items_ids_for_kitchen;
+            $response['areas'] = collect(array_unique(array_column($orden_items_ids_for_kitchen, 'area_id')))
+                ->map(function ($aid) {
+                    $area = (!is_null($aid)) ? Area::find($aid) : null;
+                    return [
+                        'area_id' => $aid,
+                        'description' => $area ? $area->description : null
+                    ];
+                })->values();
+        }
+
+        return $response;
     }
 
     public function store(Request $request)
@@ -1164,7 +1213,6 @@ class OrdenController extends Controller
             if ($configuration->sales_stock) {
                 $user = auth()->user();
 
-                // Obtener el almacén del usuario según su establecimiento
                 $establishment_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
 
                 if (!$establishment_warehouse) {
@@ -1177,7 +1225,6 @@ class OrdenController extends Controller
                 foreach ($request->items as $item) {
                     $food = Food::find($item['food']['id']);
 
-                    // Validar que el producto tenga un item asociado
                     if (!$food->item) {
                         return [
                             'success' => false,
@@ -1185,12 +1232,10 @@ class OrdenController extends Controller
                         ];
                     }
 
-                    // Saltar validación de stock para servicios (type ZZ)
                     if ($food->item->unit_type_id === 'ZZ') {
                         continue;
                     }
 
-                    // Validar que el producto esté activo
                     if (!$food->item->active) {
                         return [
                             'success' => false,
@@ -1199,61 +1244,114 @@ class OrdenController extends Controller
                     }
 
                     if (Str::startsWith($food->item->internal_id, ['PROM00'])) {
-                        // 🔹 Obtener los productos que forman la promoción
-                        $promotion_items = ItemPromotion::where('item_id', $food->item_id)->get();
+                        // If the request provided specific promotion items selected by the user,
+                        // validate only those. Otherwise fall back to configured promotion items.
+                        $selectedPromotionItems = data_get($item, 'food.promotion_items', null);
 
-                        foreach ($promotion_items as $promo) {
-                            $product = Item::find($promo->promotion_item_id);
+                        if (!empty($selectedPromotionItems) && is_array($selectedPromotionItems)) {
+                            foreach ($selectedPromotionItems as $sel) {
+                                // support either ['item_id'] or ['item']['id'] shapes
+                                $subItemId = isset($sel['item_id']) ? $sel['item_id'] : (isset($sel['item']['id']) ? $sel['item']['id'] : null);
+                                if (!$subItemId) continue;
 
-                            if (!$product) continue;
+                                $product = Item::find($subItemId);
+                                if (!$product) continue;
 
-                            // Cantidad requerida de este producto en la promoción
-                            $required_qty_promo = floatval($promo->quantity) * floatval($item['quantity']);
+                                // quantity selected in the promotion detail: prefer custom key used elsewhere
+                                $promo_qty = isset($sel['_promo_quantity']) ? floatval($sel['_promo_quantity']) : (isset($sel['quantity']) ? floatval($sel['quantity']) : 1);
+                                $required_qty_promo = $promo_qty * floatval($item['quantity']);
 
-                            // 🔹 Verificar si este producto tiene receta (ItemSet)
-                            $recipe_items = ItemSet::where('item_id', $product->id)->get();
+                                $recipe_items = ItemSet::where('item_id', $product->id)->get();
 
-                            if ($recipe_items->count() > 0) {
-                                // ✅ Producto con receta — validar cada ingrediente
-                                foreach ($recipe_items as $ingredient_row) {
-                                    $ingredient = Item::find($ingredient_row->individual_item_id);
-                                    if (!$ingredient) continue;
+                                if ($recipe_items->count() > 0) {
+                                    foreach ($recipe_items as $ingredient_row) {
+                                        $ingredient = Item::find($ingredient_row->individual_item_id);
+                                        if (!$ingredient) continue;
 
-                                    $warehouse_stock = ItemWarehouse::where([
-                                        'item_id' => $ingredient->id,
-                                        'warehouse_id' => $establishment_warehouse->id,
-                                        'active' => 1,
-                                    ])->value('stock') ?? 0;
+                                        $warehouse_stock = ItemWarehouse::where([
+                                            'item_id' => $ingredient->id,
+                                            'warehouse_id' => $establishment_warehouse->id,
+                                            'active' => 1,
+                                        ])->value('stock') ?? 0;
 
-                                    $required_quantity = floatval($ingredient_row->quantity) * $required_qty_promo;
+                                        $required_quantity = floatval($ingredient_row->quantity) * $required_qty_promo;
 
-                                    if ($required_quantity > $warehouse_stock) {
-                                        return [
-                                            'success' => false,
-                                            'message' => "El ingrediente {$ingredient->description} de la receta {$product->description} (dentro de la promoción {$food->description}) solo tiene {$warehouse_stock} unidades en el almacén {$establishment_warehouse->description}, y se requieren {$required_quantity}.",
-                                        ];
+                                        if ($required_quantity > $warehouse_stock) {
+                                            return [
+                                                'success' => false,
+                                                'message' => "El ingrediente {$ingredient->description} de la receta {$product->description} (dentro de la promoción {$food->description}) solo tiene {$warehouse_stock} unidades en el almacén {$establishment_warehouse->description}, y se requieren {$required_quantity}.",
+                                            ];
+                                        }
+                                    }
+                                } else {
+                                    if ($product->unit_type_id !== 'ZZ') { 
+                                        $warehouse_stock = ItemWarehouse::where([
+                                            'item_id' => $product->id,
+                                            'warehouse_id' => $establishment_warehouse->id,
+                                            'active' => 1,
+                                        ])->value('stock') ?? 0;
+
+                                        if ($required_qty_promo > $warehouse_stock) {
+                                            return [
+                                                'success' => false,
+                                                'message' => "El producto {$product->description} dentro de la promoción {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}, y se requieren {$required_qty_promo}.",
+                                            ];
+                                        }
                                     }
                                 }
-                            } else {
-                                // ✅ Producto sin receta — validar stock directo
-                                if ($product->unit_type_id !== 'ZZ') { // Evitar validar servicios
-                                    $warehouse_stock = ItemWarehouse::where([
-                                        'item_id' => $product->id,
-                                        'warehouse_id' => $establishment_warehouse->id,
-                                        'active' => 1,
-                                    ])->value('stock') ?? 0;
+                            }
+                        } else {
+                            // fallback: validate all configured promotion items
+                            $promotion_items = ItemPromotion::where('item_id', $food->item_id)->get();
 
-                                    if ($required_qty_promo > $warehouse_stock) {
-                                        return [
-                                            'success' => false,
-                                            'message' => "El producto {$product->description} dentro de la promoción {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}, y se requieren {$required_qty_promo}.",
-                                        ];
+                            foreach ($promotion_items as $promo) {
+                                $product = Item::find($promo->promotion_item_id);
+
+                                if (!$product) continue;
+
+                                $required_qty_promo = floatval($promo->quantity) * floatval($item['quantity']);
+
+                                $recipe_items = ItemSet::where('item_id', $product->id)->get();
+
+                                if ($recipe_items->count() > 0) {
+                                    foreach ($recipe_items as $ingredient_row) {
+                                        $ingredient = Item::find($ingredient_row->individual_item_id);
+                                        if (!$ingredient) continue;
+
+                                        $warehouse_stock = ItemWarehouse::where([
+                                            'item_id' => $ingredient->id,
+                                            'warehouse_id' => $establishment_warehouse->id,
+                                            'active' => 1,
+                                        ])->value('stock') ?? 0;
+
+                                        $required_quantity = floatval($ingredient_row->quantity) * $required_qty_promo;
+
+                                        if ($required_quantity > $warehouse_stock) {
+                                            return [
+                                                'success' => false,
+                                                'message' => "El ingrediente {$ingredient->description} de la receta {$product->description} (dentro de la promoción {$food->description}) solo tiene {$warehouse_stock} unidades en el almacén {$establishment_warehouse->description}, y se requieren {$required_quantity}.",
+                                            ];
+                                        }
+                                    }
+                                } else {
+                                    if ($product->unit_type_id !== 'ZZ') { 
+                                        $warehouse_stock = ItemWarehouse::where([
+                                            'item_id' => $product->id,
+                                            'warehouse_id' => $establishment_warehouse->id,
+                                            'active' => 1,
+                                        ])->value('stock') ?? 0;
+
+                                        if ($required_qty_promo > $warehouse_stock) {
+                                            return [
+                                                'success' => false,
+                                                'message' => "El producto {$product->description} dentro de la promoción {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}, y se requieren {$required_qty_promo}.",
+                                            ];
+                                        }
                                     }
                                 }
                             }
                         }
                     } else if (Str::startsWith($food->item->internal_id, ['PACK0', 'PLAT0'])) {
-                        // Obtener los productos individuales que componen la receta
                         $item_set = ItemSet::where('item_id', $food->item_id)->get();
 
                         foreach ($item_set as $row) {
@@ -1627,7 +1725,6 @@ class OrdenController extends Controller
                                 $areaIdForDetail = $areaIdFromInput ?? $subItem->area_id ?? $ordenItemModel->area_id ?? null;
                                 $userIdForDetail = $ordenItemModel->user_id ?? auth()->id() ?? null;
                                 try {
-                                    
                                 } catch (Exception $e) {
                                     // ignore logging errors
                                 }

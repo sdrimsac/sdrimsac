@@ -24,6 +24,8 @@ class StaffPersonWorkerCollection extends ResourceCollection
                 'overtime' => $row->overtime,
                 'amount_extra' => $row->amount_extra,
                 'lack' => $row->lack,
+                'date_end_daily' => $row->date_end_daily,
+                'pairs' => $row->pairs,
             ];
         });
     }

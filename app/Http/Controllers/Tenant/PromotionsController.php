@@ -467,32 +467,101 @@ class PromotionsController extends Controller
             return $result;
         }
 
-        // Primero ver si $item_id es en realidad un id de fila en items_promotions
-        $item_promotion_row = ItemPromotionModel::find($item_id);
-
         $establishment = Establishment::find(auth()->user()->establishment_id);
         $warehouse_id = $establishment ? $establishment->id : null;
 
+        // Preferir tratar el id como un Item (promoción) si existe un Item con ese id
+        $promotion = Item::with('promotion_items.promotion_item')->where('id', $item_id)->first();
+
+        if ($promotion && $promotion->promotion_items->isNotEmpty()) {
+            // Devolver todos los promotion_items de la promoción
+            foreach ($promotion->promotion_items as $promotion_item) {
+                $quantity = floatval($promotion_item->quantity);
+                $promo_item = $promotion_item->promotion_item;
+                $product_id = $promotion_item->promotion_item_id;
+
+                $stock = 0;
+                $difference = 0;
+                $has_stock = true;
+
+                if ($promo_item && isset($promo_item->unit_type_id) && $promo_item->unit_type_id === 'ZZ') {
+                    $stock = null;
+                    $difference = 0;
+                    $has_stock = true;
+                } elseif ($promo_item && $promo_item->is_set) {
+                    $ingredients = ItemSet::where('item_id', $product_id)->get();
+                    if ($ingredients->isEmpty()) {
+                        $stock = 0;
+                    } else {
+                        $possible_sets = [];
+                        foreach ($ingredients as $ing) {
+                            $ingredient_id = $ing->individual_item_id;
+                            $ingredient_qty = floatval($ing->quantity);
+                            if ($ingredient_qty <= 0) {
+                                $possible_sets[] = 0;
+                                continue;
+                            }
+                            $ingredient_wh = $warehouse_id ? ItemWarehouse::where('item_id', $ingredient_id)
+                                ->where('warehouse_id', $warehouse_id)
+                                ->first() : null;
+                            $ingredient_stock = $ingredient_wh ? floatval($ingredient_wh->stock) : 0.0;
+                            $possible = floor($ingredient_stock / $ingredient_qty);
+                            $possible_sets[] = $possible;
+                        }
+                        $stock = count($possible_sets) ? min($possible_sets) : 0;
+                    }
+                    if ($stock < $quantity) {
+                        $difference = $quantity - $stock;
+                        $has_stock = false;
+                    }
+                } else {
+                    $item_warehouse = $warehouse_id ? ItemWarehouse::where('item_id', $product_id)
+                        ->where('warehouse_id', $warehouse_id)
+                        ->first() : null;
+
+                    $stock = $item_warehouse ? $item_warehouse->stock : 0;
+                    if ($stock < $quantity) {
+                        $difference = $quantity - $stock;
+                        $has_stock = false;
+                    }
+                }
+
+                $result[] = [
+                    'promotion_item_id' => $product_id,
+                    // promotion_id is the parent promotion item's id
+                    'promotion_id' => $promotion->id ?? null,
+                    'internal_id' => $promo_item ? $promo_item->internal_id : null,
+                    'description' => $promo_item ? $promo_item->description : "Item ID {$product_id}",
+                    'quantity_required' => $quantity,
+                    'sale_unit_price' => isset($promotion_item->sale_unit_price) ? $promotion_item->sale_unit_price : ($promo_item->sale_unit_price ?? 0),
+                    'stock_available' => $stock,
+                    'difference' => $difference,
+                    'has_stock' => $has_stock,
+                    'max_quantity' => $promotion_item->max_quantity ?? 1,
+                ];
+            }
+
+            return $result;
+        }
+
+        // Si no existe un Item (promoción) con ese id, intentar por id de fila en items_promotions
+        $item_promotion_row = ItemPromotionModel::find($item_id);
+
         if ($item_promotion_row) {
-            // Se pasó el id de la fila items_promotions: devolver info solo de ese producto
             $quantity = floatval($item_promotion_row->quantity);
             $product_id = $item_promotion_row->promotion_item_id;
             $promo_item = Item::find($product_id);
 
-            // If the promotional product is a recipe (is_set), compute stock based on its ingredients
             $stock = 0;
             $difference = 0;
             $has_stock = true;
 
-            // If the item is a service (unit_type_id == 'ZZ'), it does not control stock => always available
             if ($promo_item && isset($promo_item->unit_type_id) && $promo_item->unit_type_id === 'ZZ') {
                 $stock = null;
                 $difference = 0;
                 $has_stock = true;
-            } else if ($promo_item && $promo_item->is_set) {
-                // Get recipe ingredients (ItemSet rows)
+            } elseif ($promo_item && $promo_item->is_set) {
                 $ingredients = ItemSet::where('item_id', $product_id)->get();
-                // If no ingredients defined, treat as zero stock
                 if ($ingredients->isEmpty()) {
                     $stock = 0;
                 } else {
@@ -508,14 +577,11 @@ class PromotionsController extends Controller
                             ->where('warehouse_id', $warehouse_id)
                             ->first() : null;
                         $ingredient_stock = $ingredient_wh ? floatval($ingredient_wh->stock) : 0.0;
-                        // Compute how many full sets we can make from this ingredient
                         $possible = floor($ingredient_stock / $ingredient_qty);
                         $possible_sets[] = $possible;
                     }
-                    // The recipe stock is the minimum possible sets across all ingredients
                     $stock = count($possible_sets) ? min($possible_sets) : 0;
                 }
-                // Compare available recipe sets with required quantity
                 if ($stock < $quantity) {
                     $difference = $quantity - $stock;
                     $has_stock = false;
@@ -544,81 +610,6 @@ class PromotionsController extends Controller
                 'difference' => $difference,
                 'has_stock' => $has_stock,
                 'max_quantity' => $item_promotion_row->max_quantity ?? 1,
-            ];
-
-            return $result;
-        }
-
-        // Si no es una fila de items_promotions, se asume que es el id del Item (promoción)
-        $promotion = Item::with('promotion_items.promotion_item')->where('id', $item_id)->first();
-
-        if (!$promotion) return $result;
-
-        foreach ($promotion->promotion_items as $promotion_item) {
-            $quantity = floatval($promotion_item->quantity);
-            $promo_item = $promotion_item->promotion_item;
-            $product_id = $promotion_item->promotion_item_id;
-
-            // If the promo item is a recipe (is_set), compute stock from its ingredients
-            $stock = 0;
-            $difference = 0;
-            $has_stock = true;
-
-            // If the promo item is a service (unit_type_id == 'ZZ'), consider it always available
-            if ($promo_item && isset($promo_item->unit_type_id) && $promo_item->unit_type_id === 'ZZ') {
-                $stock = null;
-                $difference = 0;
-                $has_stock = true;
-            } else if ($promo_item && $promo_item->is_set) {
-                $ingredients = ItemSet::where('item_id', $product_id)->get();
-                if ($ingredients->isEmpty()) {
-                    $stock = 0;
-                } else {
-                    $possible_sets = [];
-                    foreach ($ingredients as $ing) {
-                        $ingredient_id = $ing->individual_item_id;
-                        $ingredient_qty = floatval($ing->quantity);
-                        if ($ingredient_qty <= 0) {
-                            $possible_sets[] = 0;
-                            continue;
-                        }
-                        $ingredient_wh = $warehouse_id ? ItemWarehouse::where('item_id', $ingredient_id)
-                            ->where('warehouse_id', $warehouse_id)
-                            ->first() : null;
-                        $ingredient_stock = $ingredient_wh ? floatval($ingredient_wh->stock) : 0.0;
-                        $possible = floor($ingredient_stock / $ingredient_qty);
-                        $possible_sets[] = $possible;
-                    }
-                    $stock = count($possible_sets) ? min($possible_sets) : 0;
-                }
-                if ($stock < $quantity) {
-                    $difference = $quantity - $stock;
-                    $has_stock = false;
-                }
-            } else {
-                $item_warehouse = $warehouse_id ? ItemWarehouse::where('item_id', $product_id)
-                    ->where('warehouse_id', $warehouse_id)
-                    ->first() : null;
-
-                $stock = $item_warehouse ? $item_warehouse->stock : 0;
-                if ($stock < $quantity) {
-                    $difference = $quantity - $stock;
-                    $has_stock = false;
-                }
-            }
-
-            $result[] = [
-                'promotion_item_id' => $product_id,
-                // promotion_id is the parent promotion item's id
-                'promotion_id' => $promotion->id ?? null,
-                'internal_id' => $promo_item ? $promo_item->internal_id : null,
-                'description' => $promo_item ? $promo_item->description : "Item ID {$product_id}",
-                'quantity_required' => $quantity,
-                'sale_unit_price' => isset($promotion_item->sale_unit_price) ? $promotion_item->sale_unit_price : ($promo_item->sale_unit_price ?? 0),
-                'stock_available' => $stock,
-                'difference' => $difference,
-                'has_stock' => $has_stock,
-                'max_quantity' => $promotion_item->max_quantity ?? 1,
             ];
         }
 

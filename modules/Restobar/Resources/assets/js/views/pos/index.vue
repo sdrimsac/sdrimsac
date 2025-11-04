@@ -3838,6 +3838,8 @@ export default {
             }
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
 
+            //console.log("[INSERT ORDEN] orden recibida:", orden);
+
             if (ordenAdded.length == 0 || this.divided_items) {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
@@ -4013,136 +4015,6 @@ export default {
                             }
                         }
                         // Unificar lógica de escaneo de códigos de barras
-                        /* if (
-                            Array.isArray(orden?.food?.item?.item_codes) &&
-                            this.barcode === true &&
-                            this.input_item
-                        ) {
-                            // Buscar el objeto real en localOrden (para presentaciones usar type_id)
-                            let realIndex = this.localOrden.findIndex(
-                                p => p.id == food_id && p.type_id == type.id
-                            );
-                            let realItem =
-                                realIndex !== -1
-                                    ? this.localOrden[realIndex].food.item
-                                    : orden.food.item;
-
-                            const scanned = String(this.input_item)
-                                .trim()
-                                .toLowerCase();
-
-                            // Inicializar _all_item_codes si no existe o está vacía
-                            if (
-                                !Array.isArray(realItem._all_item_codes) ||
-                                realItem._all_item_codes.length === 0
-                            ) {
-                                realItem._all_item_codes = [
-                                    ...realItem.item_codes
-                                ];
-                            } else {
-                                // Si el código escaneado no está en _all_item_codes pero sí en item_codes, agregarlo
-                                const existsInAll = realItem._all_item_codes.some(
-                                    c =>
-                                        String(c.code_barcode)
-                                            .trim()
-                                            .toLowerCase() === scanned
-                                );
-                                const existsInItemCodes = realItem.item_codes.some(
-                                    c =>
-                                        String(c.code_barcode)
-                                            .trim()
-                                            .toLowerCase() === scanned
-                                );
-                                if (!existsInAll && existsInItemCodes) {
-                                    const codeToAdd = realItem.item_codes.find(
-                                        c =>
-                                            String(c.code_barcode)
-                                                .trim()
-                                                .toLowerCase() === scanned
-                                    );
-                                    realItem._all_item_codes.push(codeToAdd);
-                                    console.log(
-                                        "[SCAN] Se agregó el código escaneado a _all_item_codes:",
-                                        codeToAdd
-                                    );
-                                }
-                            }
-
-                            if (!Array.isArray(realItem.item_codes_scanned)) {
-                                this.$set(realItem, "item_codes_scanned", []);
-                            }
-
-                            console.log(
-                                "[SCAN] _all_item_codes:",
-                                realItem._all_item_codes
-                            );
-                            console.log(
-                                "[SCAN] item_codes_scanned antes:",
-                                realItem.item_codes_scanned
-                            );
-
-                            const foundCode = realItem._all_item_codes.find(
-                                c =>
-                                    String(c.code_barcode)
-                                        .trim()
-                                        .toLowerCase() === scanned
-                            );
-
-                            if (!foundCode) {
-                                this.$toast.error(
-                                    "Código no válido para este producto."
-                                );
-                                this.input_item = "";
-                                return;
-                            }
-
-                            const alreadyScanned = realItem.item_codes_scanned.some(
-                                c =>
-                                    String(c.code_barcode)
-                                        .trim()
-                                        .toLowerCase() === scanned
-                            );
-
-                            if (alreadyScanned) {
-                                this.$toast.warning(
-                                    "Este código ya fue escaneado."
-                                );
-                                this.input_item = "";
-                                return;
-                            }
-
-                            realItem.item_codes_scanned.push(foundCode);
-                            // Mostrar el contenido real del array, no el Observer
-                            try {
-                                console.log(
-                                    "[SCAN] item_codes_scanned después (raw):",
-                                    JSON.parse(
-                                        JSON.stringify(
-                                            realItem.item_codes_scanned
-                                        )
-                                    )
-                                );
-                                console.log(
-                                    "[SCAN] item_codes_scanned count:",
-                                    realItem.item_codes_scanned.length
-                                );
-                                console.log(
-                                    "[SCAN] Último agregado:",
-                                    foundCode
-                                );
-                                console.log(
-                                    "[SCAN] Todos los code_barcode:",
-                                    realItem.item_codes_scanned.map(
-                                        c => c.code_barcode
-                                    )
-                                );
-                            } catch (e) {
-                                console.log(
-                                    "[SCAN] item_codes_scanned después (fallback):",
-                                    realItem.item_codes_scanned
-                                );
-                            }
-                        } */
 
                         // orden.quantity = Number(type.quantity_unit);
                         orden.quantity = orden.food.item.series_enabled

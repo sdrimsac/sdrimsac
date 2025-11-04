@@ -62,18 +62,64 @@ class PersonWorkerImport implements ToCollection
             }
 
             // Agrupar solo por persona; procesaremos emparejamientos cruzando fechas si es necesario
+            // store the Carbon instance as well to avoid re-parsing/timezone issues later
             $groups[$person->id][] = [
                 'person_id' => $person->id,
                 'date_time' => $date_time,
                 'date_attendance' => $date_only,
                 'time_attendance' => $time_only,
+                'carbon' => $carbon,
             ];
         }
         // Segundo: procesar cada grupo (por persona), ordenar por datetime y emparejar cronológicamente
         foreach ($groups as $person_id => $marks) {
+            // sort by the Carbon timestamp to ensure correct chronological order and avoid
+            // any parsing/formatting inconsistencies
             usort($marks, function ($a, $b) {
-                return strtotime($a['date_time']) <=> strtotime($b['date_time']);
+                $ta = isset($a['carbon']) ? $a['carbon']->getTimestamp() : strtotime($a['date_time']);
+                $tb = isset($b['carbon']) ? $b['carbon']->getTimestamp() : strtotime($b['date_time']);
+                return $ta <=> $tb;
             });
+
+            // Después de ordenar las marcas, eliminamos duplicados cercanos
+            // (por ejemplo: persona marcó 2 veces al ingresar). Mantendremos
+            // la primera marca y descartaremos las siguientes si están dentro
+            // de una tolerancia (minutos).
+            $toleranceMinutes = 10; // tolerancia configurable en minutos
+
+            $filtered = [];
+            foreach ($marks as $m) {
+                if (empty($filtered)) {
+                    $filtered[] = $m;
+                    continue;
+                }
+
+                $last = end($filtered);
+                // Usamos las instancias Carbon ya almacenadas para calcular la diferencia
+                if (isset($last['carbon']) && isset($m['carbon'])) {
+                    $diff = $last['carbon']->diffInMinutes($m['carbon']);
+                } else {
+                    try {
+                        $lastDt = Carbon::parse($last['date_time']);
+                        $curDt = Carbon::parse($m['date_time']);
+                        $diff = $lastDt->diffInMinutes($curDt);
+                    } catch (Exception $e) {
+                        // Si algo falla al parsear, no descartamos la marca por seguridad
+                        $diff = $toleranceMinutes + 1;
+                    }
+                }
+
+                if ($diff <= $toleranceMinutes) {
+                    // Omitimos la marca duplicada cercana. Guardamos un mensaje opcional.
+                    $this->errors[] = "Marca duplicada eliminada person_id={$m['person_id']} datetime={$m['date_time']} (diferencia {$diff} minutos)";
+                    continue;
+                }
+
+                $filtered[] = $m;
+            }
+
+            // Reemplazamos el arreglo de marcas por el filtrado
+            $marks = array_values($filtered);
 
             $i = 0;
             $count = count($marks);
@@ -85,11 +131,17 @@ class PersonWorkerImport implements ToCollection
                     $exit = $marks[$i + 1];
 
                     // Calcular si la salida corresponde a la misma jornada (ej. turno nocturno)
-                    try {
-                        $startDt = Carbon::parse($entry['date_time']);
-                        $endDt = Carbon::parse($exit['date_time']);
-                    } catch (Exception $e) {
-                        $this->errors[] = "Error al parsear fechas para emparejar person_id={$person_id}: " . $e->getMessage();
+                    // Use the stored Carbon instances if available to avoid timezone/parse differences
+                    if (isset($entry['carbon']) && isset($exit['carbon'])) {
+                        $startDt = $entry['carbon'];
+                        $endDt = $exit['carbon'];
+                    } else {
+                        try {
+                            $startDt = Carbon::parse($entry['date_time']);
+                            $endDt = Carbon::parse($exit['date_time']);
+                        } catch (Exception $e) {
+                            $this->errors[] = "Error al parsear fechas para emparejar person_id={$person_id}: " . $e->getMessage();
+                        }
                         // crear ambos por separado sin alterar fechas
                         $pair = [
                             ['m' => $entry, 'type' => 'INGRESO', 'date_att' => $entry['date_attendance']],
@@ -114,10 +166,12 @@ class PersonWorkerImport implements ToCollection
                     }
 
                     // Si la salida es posterior a la entrada y la diferencia es razonable (<=12 horas),
-                    // consideramos que pertenece a la misma jornada y asignamos la fecha de la entrada a la salida.
+                    // consideramos que pertenece a la misma jornada; usamos la fecha del datetime de salida
+                    // para que las salidas después de medianoche se registren en el día correcto.
                     $diffHours = $startDt->diffInHours($endDt, false);
                     if ($endDt->gte($startDt) && $diffHours <= 12) {
-                        $exit_date_attendance = $startDt->format('Y-m-d');
+                        // usar la fecha del endDt (salida), no la del inicio
+                        $exit_date_attendance = $endDt->format('Y-m-d');
                     } else {
                         $exit_date_attendance = $exit['date_attendance'];
                     }

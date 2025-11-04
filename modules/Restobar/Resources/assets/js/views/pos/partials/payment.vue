@@ -4557,9 +4557,9 @@ export default {
                 let ordenId = this.idOrden;
                 let isVip = this.form.is_vip;
 
-                console.log("ordenId ver si llega el id", ordenId);
+                /* console.log("ordenId ver si llega el id", ordenId);
 
-                console.log("is_vip ver si llega el id", isVip);
+                console.log("is_vip ver si llega el id", isVip); */
 
                 /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
 

@@ -18,15 +18,16 @@
 
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Seleccione Establecimiento</label>
-                        <el-select v-model="search.establishment_id" placeholder="Seleccione Establecimiento" clearable filterable @change="changeCustomer">
+                        <el-select v-model="search.establishment_id" placeholder="Seleccione Establecimiento" clearable
+                            filterable @change="changeCustomer">
                             <el-option v-for="item in establishments" :key="item.id" :label="item.description"
                                 :value="item.id"></el-option>
                         </el-select>
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Seleccione Mes</label>
-                        <el-date-picker class="w-100" v-model="search.date" type="month" placeholder="Seleccione Mes" @change="changeCustomer"
-                            value-format="yyyy-MM" :picker-options="{
+                        <el-date-picker class="w-100" v-model="form.date" type="month" placeholder="Seleccione Mes"
+                            @change="changeCustomer" value-format="yyyy-MM" :picker-options="{
                                 disabledDate(time) {
                                     // Comparar por inicio de mes para evitar bloquear meses pasados
                                     const now = new Date();
@@ -37,17 +38,33 @@
                             }"></el-date-picker>
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
-                        <label for="">Estado de Pago</label>
-                        <el-select v-model="form.search" placeholder="Seleccione">
-                            <el-option label="Pagado" value="1"></el-option>
-                            <el-option label="Pendiente" value="0"></el-option>
-                        </el-select>
+                        <label for="">Seleccione Dia</label>
+                        <el-date-picker class="w-100" v-model="form.date_day" type="date" placeholder="Seleccione Dia"
+                            @change="changeCustomer" value-format="yyyy-MM-dd" :picker-options="{
+                                disabledDate(time) {
+                                    // Comparar por inicio de mes para evitar bloquear meses pasados
+                                    const now = new Date();
+                                    const timeMonthStart = new Date(time.getFullYear(), time.getMonth(), 1).getTime();
+                                    const nowMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+                                    return timeMonthStart > nowMonthStart; // true = deshabilitado (meses futuros)
+                                }
+                            }"></el-date-picker>
                     </div>
                     <div class="col-2">
                         <button type="button" class="btn btn-primary" @click="diasPersonal">
-                            Buscar
+                            Generar datos de personal
                         </button>
                     </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" @click="ExportExcel">
+                            exportar a excel
+                        </button>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" @click="ExportPdf">
+                            exportar a pdf
+                        </button>
+                    </div> 
                 </div>
             </div>
 
@@ -97,8 +114,9 @@ export default {
             form: {
                 person_id: null,
                 establishment_id: null,
-                date: moment().format("YYYY-MM"),
-                paid: null
+                date: null,
+                paid: null,
+                date_day: null
             },
         };
     },
@@ -110,16 +128,6 @@ export default {
         });
     },
     async mounted() {
-        // console.log(this.resource);
-        // let column_resource = _.split(this.resource, "/");
-
-        /* await this.$http
-            // .get(`/${_.head(column_resource)}/columns`)
-            .get(`/${this.resource}/columns`)
-            .then(response => {
-                this.columns = response.data;
-                this.search.column = _.head(Object.keys(this.columns));
-            }); */
 
         await this.$http
             // .get(`/${_.head(column_resource)}/columns`)
@@ -132,9 +140,18 @@ export default {
         await this.getRecords();
     },
     methods: {
+
+        ExportExcel() {
+            const parameters = this.getQueryParameters();
+            const url = `staff/export-excel` + parameters;
+            window.open(url, '_blank');
+        },
+        ExportPdf() {
+            const parameters = this.getQueryParameters();
+            const url = `staff/export-pdf?` + parameters;
+            window.open(url, '_blank');
+        },
         diasPersonal() {
-            // Extraer month y year desde form.date (formato esperado: YYYY-MM).
-            // Si no existe date o no se puede parsear, usar la fecha actual.
             let month = null;
             let year = null;
             if (this.form.date) {
@@ -150,25 +167,27 @@ export default {
                 year = d.getFullYear();
             }
 
-            this.$http.post('/staff/generate-summary', {
-                /* person_id: this.form.person_id,
-                establishment_id: this.form.establishment_id, */
-                /* date: this.form.date, */
-                /* paid: this.form.paid, */
+            const payload = {
                 month: month,
                 year: year
-            }).then(response => {
-                this.records = response.data.data;
-                this.pagination = response.data.meta;
-                this.pagination.per_page = parseInt(
-                    response.data.meta.per_page
-                );
+            };
+
+            if (this.form.date_day) {
+                payload.date_day = this.form.date_day;
+            }
+
+            this.$http.post('/staff/generate-summary', payload).then(response => {
+                this.records = response.data && response.data.data ? response.data.data : [];
+
+                const meta = (response.data && response.data.meta) ? response.data.meta : {};
+                this.pagination = Object.assign({ total: 0, per_page: 10, current_page: 1 }, meta);
+                this.pagination.per_page = parseInt(this.pagination.per_page) || 10;
             });
         },
         changeCustomer() {
             this.getRecords();
         },
-        
+
         async searchRemoteCustomers(input) {
             if (input.length > 0) {
                 // if (input!="") {
@@ -201,11 +220,12 @@ export default {
                     `/${this.resource}/records?${this.getQueryParameters()}`
                 );
 
-                this.records = response.data.data;
-                this.pagination = response.data.meta;
-                this.pagination.per_page = parseInt(
-                    response.data.meta.per_page
-                );
+                this.records = response.data && response.data.data ? response.data.data : [];
+
+                // Defensive meta handling: ensure pagination is always an object with defaults
+                const meta = (response.data && response.data.meta) ? response.data.meta : {};
+                this.pagination = Object.assign({ total: 0, per_page: 10, current_page: 1 }, meta);
+                this.pagination.per_page = parseInt(this.pagination.per_page) || 10;
             }, 500);
         },
         /* async clickPayment(form) {
@@ -289,8 +309,12 @@ export default {
             }
         }, */
         getQueryParameters() {
-            // Exclude `column` from the query parameters because it's not used by the server
-            const { column, ...searchWithoutColumn } = this.search || this.form;
+            // Merge `search` and `form` so filters from both places are included
+            // (previously this used `this.search || this.form` which ignored `form`
+            // because `this.search` is always truthy)
+            const merged = Object.assign({}, this.search || {}, this.form || {});
+            // Exclude `column` if present
+            const { column, ...searchWithoutColumn } = merged;
 
             return queryString.stringify({
                 page: this.pagination.current_page,

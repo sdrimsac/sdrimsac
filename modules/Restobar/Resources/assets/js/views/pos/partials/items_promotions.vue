@@ -266,6 +266,7 @@ export default {
             }
 
             this.$emit('addPromotionItems', itemsToAdd);
+            console.log('Emitiendo addPromotionItems con itemsToAdd:', itemsToAdd);
             this.closeDialog();
         },
     },

@@ -22,7 +22,7 @@
                             <small class="form-control-feedback" v-if="errors.file" v-text="errors.file[0]"></small>
                         </div>
                         <div class="col-12 mb-2 d-flex justify-content-center">
-                            <a class="mr-auto" href="/formats/import_worker.xlsx" target="_new">
+                            <a class="mr-auto" href="/formats/import_workers.xlsx" target="_new">
                                 <span class="mr-2"> Descargar AQUÍ el formato</span>
                             </a>
                         </div>
