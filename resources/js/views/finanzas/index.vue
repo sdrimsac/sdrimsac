@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="row m-2 table-responsive">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Fecha</th>
@@ -57,7 +57,7 @@
                                 </td>
                                 <td>{{ record.number }}</td>
                                 <td>{{ Number(record.total).toFixed(2) }}</td>
-                                <td class="text-warning">
+                                <td style="color: #b30000; font-weight: 700;">
                                     {{ Number(record.remain).toFixed(2) }}
                                 </td>
                                 <td>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="row m-2 table-responsive">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Fecha</th>
@@ -130,7 +130,7 @@
                                 </td>
                                 <td>{{ record.full_number }}</td>
                                 <td>{{ Number(record.total).toFixed(2) }}</td>
-                                <td class="text-warning">
+                                <td style="color: #b30000; font-weight: 700;">
                                     {{ Number(record.remain).toFixed(2) }}
                                 </td>
                                 <td>
@@ -214,7 +214,7 @@ export default {
 
         // Export for CPE credits tab
         exportExcelCpe() {
-            window.open(`/${this.resourceCpe}/export?date_start=${this.date_start_cpe || ""}&date_end=${this.date_end_cpe || ""}&value=${this.searchCpe || ""}&establishment_id=${this.establishment_id_cpe || ""}`, "_blank");
+            window.open(`/documents/credit-cash/export?date_start=${this.date_start_cpe || ""}&date_end=${this.date_end_cpe || ""}&value=${this.searchCpe || ""}&establishment_id=${this.establishment_id_cpe || ""}`, "_blank");
         },
 
         clickPayment(recordId) {

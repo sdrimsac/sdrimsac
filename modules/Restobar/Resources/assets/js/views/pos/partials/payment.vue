@@ -180,9 +180,7 @@
                                                 </label> -->
                                                 <el-date-picker v-model="form.date_of_issue" type="date"
                                                     value-format="yyyy-MM-dd" format="dd-MM-yyyy" :clearable="false"
-                                                    style="width: 100%;" :readonly="this.configuration
-                                                        .restrict_receipt_date
-                                                        " @change="changeDateOfIssue"></el-date-picker>
+                                                    style="width: 100%;" :readonly="!!configuration.restrict_receipt_date" @change="changeDateOfIssue"></el-date-picker>
                                             </div>
                                             <!-- Botón de Visualización de Lista de venta -->
                                             <div class="form-group me-1" style="flex: 1 1 auto;">
@@ -4437,7 +4435,6 @@ export default {
                 form.prefix = "NV";
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
-                console.log("es nota de venta paso por aqui");
                 this.resource_payments = "sale_note_payments";
                 this.resource_options = this.resource_documents;
             } else {

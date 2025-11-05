@@ -206,6 +206,7 @@ if ($hostname) {
                     Route::post('/generate-summary', [StaffController::class, 'generarResumenAsistencias']);
                     Route::get('/records', [StaffController::class, 'recordsWorker']);
                     Route::post('/adelanto', [StaffController::class, 'adelanto']);
+                    Route::post('/send-credit', [StaffController::class, 'send_credit']);
 
 
                 });
@@ -1312,6 +1313,8 @@ if ($hostname) {
                 Route::delete('incomebox/{boxes}', [App\Http\Controllers\Tenant\BoxController::class, 'destroy']);
 
                 Route::get('sale-notes/credit-cash/export', [App\Http\Controllers\Tenant\SaleNoteController::class, 'export_credit_cash']);
+
+                Route::get('documents/credit-cash/export', [App\Http\Controllers\Tenant\DocumentController::class, 'export_credit_cash_cpe']);
             });
         }
     );

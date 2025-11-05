@@ -83,6 +83,7 @@ use App\CoreFacturalo\Requests\Api\Validation\DocumentValidation;
 use App\CoreFacturalo\Requests\Inputs\DocumentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditByClientExport;
+use App\Exports\DocumentCreditCashExport;
 use App\Exports\DocumentDetraccionExport;
 use App\Exports\DocumentExport;
 use App\Exports\DocumentVenta;
@@ -2324,42 +2325,44 @@ class DocumentController extends Controller
         }
     }
 
-    /* public function document_credit_cash_records(Request $request)
+    public function export_credit_cash_cpe(Request $request)
     {
-        $value = $request->value;
         $date_start = $request->date_start;
+        $value = $request->value;
         $date_end = $request->date_end;
         $establishment_id = $request->establishment_id;
-        $records = Document::query()
 
+        $records = Document::query()
             ->with([
-                // Use the existing 'person' relationship on Document instead of a non-existent 'customer' relationship
                 'person:id,name,number',
                 'state_type:id,description',
-                // 'documents' is not a relationship; remove to avoid RelationNotFoundException
                 'user:id,name',
                 'boxes:id,document_id,amount'
             ])
             ->where('payment_condition_id', '02')
             ->whereNotIn('state_type_id', ['11', '09'])
+            ->whereNotIn('id', function ($query) {
+                $query->select('affected_document_id')
+                    ->from('notes')
+                    ->whereNotNull('affected_document_id');
+            })
             ->select('documents.*')
-            ->distinct(); // Usamos distinct en lugar de groupBy
+            ->distinct();
 
-        // Aplicar filtros de búsqueda si existe un valor
+        // 🔎 Filtro de búsqueda
         if ($value) {
             $records->where(function ($query) use ($value) {
                 $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
 
-                // Filter by the related 'person' (customer) record
                 $query->whereHas('person', function ($subQuery) use ($searchTerm) {
                     $subQuery->where('name', 'like', $searchTerm)
                         ->orWhere('number', 'like', $searchTerm);
                 })
-                    // Search by document number
                     ->orWhere('number', 'like', $searchTerm);
             });
         }
 
+        // 📅 Filtros por fecha
         if ($date_start) {
             $records->where('date_of_issue', '>=', $date_start);
         }
@@ -2368,17 +2371,19 @@ class DocumentController extends Controller
             $records->where('date_of_issue', '<=', $date_end);
         }
 
+        // 🏢 Filtro por establecimiento
         if ($establishment_id) {
             $records->where('establishment_id', $establishment_id);
         }
 
+        $records = $records->get();
 
-        // Ordenar y paginar
-        return new DocumentLiteCollection(
-            $records->latest()
-                ->paginate(config('tenant.items_per_page'))
-        );
-    } */
+        $company = Company::active();
+
+        return (new DocumentCreditCashExport(collect($records)))
+            ->company($company)
+            ->download('Reporte_Creditos_finanzas_cpe_' . Carbon::now() . '.xlsx');
+    }
 
     public function document_credit_cash_records(Request $request)
     {

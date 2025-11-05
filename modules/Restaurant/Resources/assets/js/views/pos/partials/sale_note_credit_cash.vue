@@ -221,7 +221,7 @@ export default {
 
         // Export for CPE credits tab
         exportExcelCpe() {
-            window.open(`/${this.resourceCpe}/export?date_start=${this.date_start_cpe || ""}&date_end=${this.date_end_cpe || ""}&value=${this.searchCpe || ""}&establishment_id=${this.establishment_id_cpe || ""}`, "_blank");
+            window.open(`/documents/credit-cash/export?date_start=${this.date_start_cpe || ""}&date_end=${this.date_end_cpe || ""}&value=${this.searchCpe || ""}&establishment_id=${this.establishment_id_cpe || ""}`, "_blank");
         },
 
         clickPayment(recordId) {

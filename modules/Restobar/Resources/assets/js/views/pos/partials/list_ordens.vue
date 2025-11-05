@@ -3595,7 +3595,7 @@ export default {
             try {
                 this.ordenLoading = true;
                 const responses = await this.$http.post(
-                    "/credit-list/send-credit",
+                    "/staff/send-credit",
                     {
                         customer_id,
                         items: this.localOrden,

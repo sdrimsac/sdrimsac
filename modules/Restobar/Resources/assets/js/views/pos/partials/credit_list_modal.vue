@@ -39,7 +39,7 @@
                     <label for="account">Monto Utilizado</label>
                     <el-input 
                         readonly 
-                        :value="form.balance.toFixed(2)" 
+                        :value="Number(form.balance || 0).toFixed(2)" 
                         input-style="font-size: 1.5em;"
                     ></el-input>
                 </div>
@@ -121,9 +121,29 @@ export default {
                 const response = await this.$http(
                     `/credit-list/balance/${customer_id}`
                 );
-                this.form.balance = response.data;
-                this.form.total =
-                    parseFloat(this.form.balance) + parseFloat(this.amountToAdd);
+
+                // Normalizar el valor recibido del backend: asegurar que sea Number
+                const raw = response.data;
+                let balance = 0;
+
+                if (raw === null || raw === undefined || raw === "") {
+                    balance = 0;
+                } else if (typeof raw === "object") {
+                    // Si viene un objeto como { balance: 123 } o { value: 123 }
+                    balance = Number(raw.balance ?? raw.value ?? 0);
+                } else {
+                    // String o number: reemplazar comas y convertir
+                    balance = Number(String(raw).replace(/,/g, "."));
+                }
+
+                if (Number.isNaN(balance)) {
+                    // como fallback intentar extraer dígitos, si falla usar 0
+                    const cleaned = String(raw).replace(/[^0-9.\-]/g, "");
+                    balance = parseFloat(cleaned) || 0;
+                }
+
+                this.form.balance = balance;
+                this.form.total = Number(this.form.balance) + Number(this.amountToAdd);
             } catch (e) {
                 this.$toast.error(e.message);
             } finally {

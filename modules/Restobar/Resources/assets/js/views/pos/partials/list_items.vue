@@ -9,7 +9,7 @@
         :close-on-click-modal="false"
     > -->
     <el-dialog @open="open" @close="close" append-to-body :show-close="true" :visible="showDialog" :title="null"
-        width="70%" close-on-click-modal="true">
+        width="70%" :close-on-click-modal="true">
         <!-- Personalización del título con slot -->
         <template #title>
             <div style="display: grid; grid-template-columns: 1fr auto; gap: 300px; align-items: center;">

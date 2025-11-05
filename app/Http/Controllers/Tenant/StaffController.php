@@ -35,11 +35,12 @@ use Modules\Restaurant\Models\Table;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Modules\Restaurant\Events\OrdenEvent;
-use Modules\Restaurant\Events\PrintEvent;
-use Modules\Restaurant\Models\Area;
-use Modules\Restaurant\Models\Food;
+use Modules\Restobar\Events\OrdenEvent;
+use Modules\Restobar\Events\PrintEvent;
+use Modules\Restobar\Models\Area;
+use Modules\Restobar\Models\Food;
 use Maatwebsite\Excel\Excel;
+use Modules\Restobar\Models\OrderItemDetail;
 
 class StaffController extends Controller
 {
@@ -55,7 +56,8 @@ class StaffController extends Controller
             ->download('Lista_de_credito_' . Carbon::now() . '.xlsx');
     }
 
-    public function adelanto (Request $request) {
+    public function adelanto(Request $request)
+    {
 
         $person_id = $request->input('person_id');
         $amount = $request->input('amount');
@@ -177,7 +179,7 @@ class StaffController extends Controller
     {
         $month = $request->input('month', now()->format('m'));
         $year = $request->input('year', now()->format('Y'));
-        
+
         $empleados = Person::where('is_staff', true)->get();
         $startOfMonth = Carbon::createFromDate($year, $month, 1)->startOfDay();
         $endOfMonth = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->addDay();
@@ -187,7 +189,7 @@ class StaffController extends Controller
             $registros = PersonAttendance::where('person_id', $empleado->id)
                 ->where(function ($q) use ($startOfMonth, $endOfMonth) {
                     $q->whereBetween('date_time_attendance', [$startOfMonth->toDateTimeString(), $endOfMonth->toDateTimeString()])
-                      ->orWhereBetween(DB::raw("CONCAT(date_attendance, ' ', COALESCE(time_attendance, '00:00:00'))"), [$startOfMonth->toDateTimeString(), $endOfMonth->toDateTimeString()]);
+                        ->orWhereBetween(DB::raw("CONCAT(date_attendance, ' ', COALESCE(time_attendance, '00:00:00'))"), [$startOfMonth->toDateTimeString(), $endOfMonth->toDateTimeString()]);
                 })
                 ->orderBy('date_time_attendance')
                 ->get();
@@ -382,7 +384,7 @@ class StaffController extends Controller
     public function recordsWorker(Request $request)
     {
         $records = $this->getRecords($request);
-        
+
         return new StaffPersonWorkerCollection($records->paginate(20));
     }
 
@@ -474,7 +476,7 @@ class StaffController extends Controller
             $item_id = $food->item_id;
             $item = Item::find($item_id);
             if ($item->unit_type_id  !== 'ZZ') {
-                if (!$item->is_set) {
+                if (!$item->is_set && !$item->promotion_items) {
 
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
@@ -483,7 +485,261 @@ class StaffController extends Controller
             }
         }
     }
+
     public function send_credit(Request $request)
+    {
+        $configuration = Configuration::firstOrFail();
+        $cash_id = $request->cash_id;
+        try {
+            DB::beginTransaction();
+            $customer_id = $request->customer_id;
+            $ref = $request->ref;
+            $customer = Person::find($customer_id);
+            $customer_name = $customer->name;
+            $items = $request->items;
+            $user_id = auth()->id();
+            $table_caja_id = Table::get_caja();
+            $table_caja = Table::find($table_caja_id);
+            $table_caja->status_table_id = 2;
+            $table_caja->save();
+            $status_orden_id = 1;
+            $orden = Orden::create([
+                'table_id' => $table_caja_id,
+                'status_orden_id' => $status_orden_id,
+                'date' => date('Y-m-d'),
+                'ref' => $customer_name . ' - ' . $ref,
+            ]);
+            $orden_items_ids = [];
+            $orden_items_ids_for_kitchen = [];
+            /* foreach ($items as $item) {
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $item['food']['id'];
+                $orden_item->observations = $item['observation'] ?? '-';
+                $orden_item->quantity = $item['quantity'];
+                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+                $orden_item->price = $item['price'];
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->save();
+
+                // Set area_id and multiply quantities like OrdenController
+                $promotion_items = null;
+                if (!empty($item['promotion_items'])) {
+                    $promotion_items = $item['promotion_items'];
+                } elseif (!empty($item['food']['promotion_items'])) {
+                    $promotion_items = $item['food']['promotion_items'];
+                } elseif (!empty($item['food']['item']['promotion_items'])) {
+                    $promotion_items = $item['food']['item']['promotion_items'];
+                }
+
+                // Si el item trae promotion_items (es una promoción) — puede venir en distintas rutas/niveles — normalizamos y guardamos los detalles
+                // Posibles ubicaciones: $item['promotion_items'], $item['food']['promotion_items'], $item['food']['item']['promotion_items']
+                $promotion_items = null;
+                if (!empty($item['promotion_items'])) {
+                    $promotion_items = $item['promotion_items'];
+                } elseif (!empty($item['food']['promotion_items'])) {
+                    $promotion_items = $item['food']['promotion_items'];
+                } elseif (!empty($item['food']['item']['promotion_items'])) {
+                    $promotion_items = $item['food']['item']['promotion_items'];
+                }
+
+                if (!empty($promotion_items)) {
+                    Log::info('Guardando promotion_items para orden_item_id: ' . $orden_item->id);
+                    try {
+                        // promotion_items puede venir como Collection o array
+                        if ($promotion_items instanceof \Illuminate\Support\Collection) {
+                            $promotion_items = $promotion_items->toArray();
+                        }
+
+                        foreach ($promotion_items as $p_item) {
+                            // Diferentes formas posibles del detalle de promoción
+                            $detail_item_id = null;
+                            if (isset($p_item['item']['id'])) {
+                                $detail_item_id = $p_item['item']['id'];
+                            } elseif (isset($p_item['id'])) {
+                                $detail_item_id = $p_item['id'];
+                            } elseif (isset($p_item['item_id'])) {
+                                $detail_item_id = $p_item['item_id'];
+                            }
+
+                            $detail_description = $p_item['description'] ?? ($p_item['item']['description'] ?? ($p_item['name'] ?? null));
+                            $detail_quantity = $p_item['quantity'] ?? ($p_item['item_quantity'] ?? ($p_item['quantity_item'] ?? 1));
+
+                            // Multiplicar la cantidad del detalle por la cantidad del item padre (comportamiento consistente con OrdenController)
+                            $detail_quantity_final = $detail_quantity * (float) $orden_item->quantity;
+
+                            // Determinar área del detalle: preferir la que venga en el input, luego la del item registrado, por último la del item padre
+                            $area_id_from_input = data_get($p_item, 'item.area_id');
+                            $area_id_for_detail = $area_id_from_input ?? null;
+                            if (empty($area_id_for_detail) && $detail_item_id) {
+                                try {
+                                    $sub_item = Item::find($detail_item_id);
+                                    if ($sub_item && isset($sub_item->area_id)) {
+                                        $area_id_for_detail = $sub_item->area_id;
+                                    }
+                                } catch (\Exception $e) {
+                                    $area_id_for_detail = null;
+                                }
+                            }
+                            if (empty($area_id_for_detail)) {
+                                $area_id_for_detail = $orden_item->area_id ?? null;
+                            }
+
+                            $user_id_for_detail = $user_id ?? null;
+
+                            OrderItemDetail::create([
+                                'orden_item_id' => $orden_item->id,
+                                'item_id' => $detail_item_id,
+                                'description' => $detail_description,
+                                'quantity' => $detail_quantity_final,
+                                'area_id' => $area_id_for_detail,
+                                'user_id' => $user_id_for_detail,
+                            ]);
+                        }
+                    } catch (\Exception $ex) {
+                        // No queremos que falle todo el envío de crédito por un detalle de promoción
+                        Log::error('Error guardando promotion_items en order_item_details: ' . $ex->getMessage());
+                    }
+                }
+                $orden_items_ids[] = $orden_item->id;
+                $orden_items_ids_for_kitchen[] = [
+                    "orden_id" => $orden_item->id,
+                    "area_id" => $orden_item->area_id
+                ];
+
+
+                event(new OrdenEvent($orden_item->id));
+            } */
+            foreach ($items as $item) {
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $item['food']['id'];
+                $orden_item->observations = $item['observation'] ?? '-';
+                $orden_item->quantity = $item['quantity'];
+                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+                $orden_item->price = $item['price'];
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->save();
+
+                // Agregamos la primera área (del item principal)
+                $orden_items_ids_for_kitchen[] = [
+                    "orden_id" => $orden_item->id,
+                    "area_id" => $orden_item->area_id
+                ];
+
+                // Procesar promoción (si aplica)
+                $promotion_items = $item['promotion_items']
+                    ?? $item['food']['promotion_items']
+                    ?? $item['food']['item']['promotion_items']
+                    ?? null;
+
+                if (!empty($promotion_items)) {
+                    if ($promotion_items instanceof \Illuminate\Support\Collection) {
+                        $promotion_items = $promotion_items->toArray();
+                    }
+
+                    foreach ($promotion_items as $p_item) {
+                        $detail_item_id = $p_item['item']['id']
+                            ?? $p_item['id']
+                            ?? $p_item['item_id']
+                            ?? null;
+
+                        $detail_description = $p_item['description']
+                            ?? ($p_item['item']['description'] ?? ($p_item['name'] ?? null));
+
+                        $detail_quantity = $p_item['quantity']
+                            ?? ($p_item['item_quantity'] ?? ($p_item['quantity_item'] ?? 1));
+
+                        $detail_quantity_final = $detail_quantity * (float) $orden_item->quantity;
+
+                        $area_id_for_detail = data_get($p_item, 'item.area_id')
+                            ?? optional(Item::find($detail_item_id))->area_id
+                            ?? $orden_item->area_id;
+
+                        $user_id_for_detail = $user_id;
+
+                        OrderItemDetail::create([
+                            'orden_item_id' => $orden_item->id,
+                            'item_id' => $detail_item_id,
+                            'description' => $detail_description,
+                            'quantity' => $detail_quantity_final,
+                            'area_id' => $area_id_for_detail,
+                            'user_id' => $user_id_for_detail,
+                        ]);
+
+                        // 🔹 También agregar detalle de promoción al array de impresión
+                        $orden_items_ids_for_kitchen[] = [
+                            "orden_id" => $orden_item->id,
+                            "area_id" => $area_id_for_detail
+                        ];
+                    }
+                }
+
+                $orden_items_ids[] = $orden_item->id;
+
+                // Disparar evento por item
+                event(new OrdenEvent($orden_item->id));
+            }
+
+            $print_box = $configuration->print_commands;
+            $print_kitchen = $configuration->print_kitchen;
+            if ($print_kitchen) {
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+                }
+            }
+
+            Log::info('Áreas únicas para impresión en cocina:dadadadfsdqsfgsdgdf ');
+            $credit_list =  CreditList::create([
+                'cash_id' => $cash_id,
+                'orden_id' => $orden->id,
+                'customer_id' => $customer_id,
+                'user_id' => $user_id,
+                'establishment_id' => auth()->user()->establishment_id,
+                'observation' => $request->ref,
+                'paid' => false,
+            ]);
+
+            Log::info("CreditList creado con ID:4ertetertertertert");
+            $this->update_stock($credit_list);
+
+            Log::info("Intentando imprimir crédito para CreditList ID DAFSDFSDFSDFDF: {$credit_list->id}");
+
+            event(new PrintEvent($credit_list->id, 'S', true, null, []));
+            sleep(1);
+            event(new PrintEvent($credit_list->id, 'S', true, null, []));
+
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => 'Credito enviado correctamente'
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+
+    public function send_credit_restobar(Request $request)
     {
         $configuration = Configuration::firstOrFail();
         $cash_id = $request->cash_id;
