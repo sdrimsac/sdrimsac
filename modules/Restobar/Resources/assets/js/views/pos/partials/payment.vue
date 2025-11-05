@@ -180,7 +180,9 @@
                                                 </label> -->
                                                 <el-date-picker v-model="form.date_of_issue" type="date"
                                                     value-format="yyyy-MM-dd" format="dd-MM-yyyy" :clearable="false"
-                                                    style="width: 100%;" :readonly="!!configuration.restrict_receipt_date" @change="changeDateOfIssue"></el-date-picker>
+                                                    style="width: 100%;"
+                                                    :readonly="!!configuration.restrict_receipt_date"
+                                                    @change="changeDateOfIssue"></el-date-picker>
                                             </div>
                                             <!-- Botón de Visualización de Lista de venta -->
                                             <div class="form-group me-1" style="flex: 1 1 auto;">
@@ -391,9 +393,8 @@
                                 </div>
                                 <div class="radio-tile-group2 flex-wrap">
                                     <div class="input-container2 border rounded-sm">
-                                        <input
-                                            :disabled="form_payment.is_bank || disablePayments"
-                                            id="cash" v-model="method_payments" class="radio-button2" type="radio"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="cash"
+                                            v-model="method_payments" class="radio-button2" type="radio"
                                             name="method_payment" value="01" @change="method_payment('Efectivo')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat">
@@ -402,9 +403,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.culqi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="culqui" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="02"
-                                            @change="method_payment('Culqui')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="culqui"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="02" @change="method_payment('Culqui')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat">
                                             <div class="icon bike-icon"></div>
@@ -412,8 +413,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.izipay">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="05" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="05" @change="
                                                 method_payment(
                                                     'TARJETA: IZYPAY'
                                                 )
@@ -425,8 +427,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.openpay">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="07" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="07" @change="
                                                 method_payment(
                                                     'TARJETA: OPENPAY'
                                                 )
@@ -438,8 +441,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.nubiz">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="06" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="06" @change="
                                                 method_payment(
                                                     'TARJETA: NIUBIZ'
                                                 )
@@ -451,9 +455,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.yape">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="yape" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="03"
-                                            @change="method_payment('Yape')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="yape"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="03" @change="method_payment('Yape')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat">
                                             <div class="icon bike-icon"></div>
@@ -461,9 +465,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.plin">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="04"
-                                            @change="method_payment('PLIN')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="04" @change="method_payment('PLIN')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; ">
                                             <div class="icon bike-icon"></div>
@@ -471,8 +475,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.didi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="08" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="08" @change="
                                                 method_payment('DIDI FOOD')
                                                 " />
                                         <div class="radio-tile2"
@@ -483,8 +488,9 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.pedidosya">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="09" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="09" @change="
                                                 method_payment('PEDIDOS YA')
                                                 " />
                                         <div class="radio-tile2"
@@ -495,9 +501,9 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.rappi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="10"
-                                            @change="method_payment('RAPPI')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="10" @change="method_payment('RAPPI')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; ">
                                             <div class="icon bike-icon"></div>
@@ -668,7 +674,7 @@
                             <div class="d-flex align-items-end mb-2">
                                 <div class="me-2" style="flex: 1 1 0;">
                                     <label class="control-label fw-bold">Ingrese Monto {{ currencyTypeActive.symbol
-                                    }}</label>
+                                        }}</label>
                                     <el-input id="inputTotal" ref="enter_amount" v-model="form.enter_amount"
                                         @blur="diferen()" @input="enterAmount()" class="me-1">
                                     </el-input>
@@ -740,7 +746,7 @@
                                             <td>
                                                 <strong v-if="!isNaN(paymnt.amount)">{{
                                                     Number(paymnt.amount).toFixed(2)
-                                                }}</strong>
+                                                    }}</strong>
                                             </td>
                                             <td>
                                                 <el-tooltip content="Eliminar pago" placement="top">
@@ -932,7 +938,7 @@
                                     <span>OP. EXONERADAS:</span>
                                     <span class="text-end" style="min-width: 90px;">{{
                                         Number(form.total_exonerated).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <div v-if="form.total_taxed > 0" class="d-flex justify-content-between">
                                     <template v-if="affectation_optional_id === '10'">
@@ -966,7 +972,7 @@
                                 <div class="d-flex justify-content-between">
                                     <span>IGV:</span>
                                     <span class="text-end" style="min-width: 90px;">{{ Number(form.total_igv).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <div v-if="form.difference > 0" class="d-flex justify-content-between">
                                     <span>VUELTO:</span>
@@ -978,7 +984,7 @@
                                     <span>TOTAL A PAGAR:</span>
                                     <span class="text-end fw-bold" style="min-width: 90px;">{{
                                         Number(form.total).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <!-- Mensaje de motivo de cambio de afectación -->
                                 <div v-if="affectation_optional_id === '10'" class="mt-2 p-2 border rounded bg-light">
@@ -1113,177 +1119,8 @@
     </el-dialog>
 </template>
 
-<style>
-.input-container2 {
-    width: 100px;
-    /* Ancho del botón */
-    height: 50px;
-    /* Alto del botón */
-    border-radius: 8px;
-    /* Bordes redondeados */
-    overflow: hidden;
-    /* Asegura que la imagen no sobresalga */
-    cursor: pointer;
-    /* Muestra el cursor interactivo */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Sombra suave */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    /* Transiciones suaves */
-}
-
-.input-container2:hover {
-    transform: scale(1.05);
-    /* Agranda ligeramente el botón al pasar el cursor */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Sombra más pronunciada */
-}
-
-.radio-tile2 {
-    background-size: cover;
-    /* Asegura que la imagen cubra todo el espacio */
-    background-position: center;
-    /* Centra la imagen */
-    width: 100%;
-    /* Ocupa todo el ancho del contenedor */
-    height: 100%;
-    /* Ocupa todo el alto del contenedor */
-    border-radius: 8px;
-    /* Coincide con el contenedor */
-}
-
-.container-fluid {
-    width: 100%;
-    /* Ocupa el ancho completo */
-    padding-right: 0px;
-    /* Padding interno para mantener contenido alineado */
-    padding-left: 0px;
-    /* Padding interno */
-    margin-right: auto;
-    /* Centra el contenedor en dispositivos grandes */
-    margin-left: auto;
-    /* Centra el contenedor en dispositivos grandes */
-}
-
-.no-padding {
-    padding: 0 !important;
-}
-
-/* Para el icono de los botones */
-.custom-radio-button i {
-    color: inherit !important;
-    /* Asegura que el icono también herede el color */
-}
-
-.custom-select {
-    width: 70% !important;
-    /* Agregamos !important para asegurar que no se sobreescriba */
-}
-
-.el-scrollbar {
-    z-index: 2000 !important;
-}
-
-.c-width {
-    width: 80px !important;
-    padding: 0 !important;
-    margin-right: 0 !important;
-}
-
-.control-label,
-h4,
-h5,
-label {
-    color: #000;
-}
-
-/* Estilo por defecto para pantallas grandes (muestra el texto y el ícono) */
-.radio-buttons-group .el-radio-button {
-    padding: 5px 15px;
-    /* Ajusta el espacio entre íconos y texto */
-    display: flex;
-    align-items: center;
-}
-
-/* Oculta el texto en pantallas pequeñas, solo muestra los íconos */
-.radio-buttons-group .el-radio-button .radio-button-text {
-    margin-left: 10px;
-    /* Espacio entre el ícono y el texto */
-}
-
-/* Media query para pantallas de tamaño 1280x768px */
-@media (max-width: 1280px) and (max-height: 768px) {
-
-    /* Ajuste en los botones para pantallas pequeñas */
-    .radio-buttons-group .el-radio-button {
-        padding: 5px;
-        /* Reduce el padding en pantallas pequeñas */
-    }
-
-    .radio-buttons-group .el-radio-button .radio-button-text {
-        display: none;
-        /* Oculta el texto */
-    }
-
-    .radio-buttons-group .el-radio-button i {
-        font-size: 20px;
-        /* Ajusta el tamaño del ícono */
-    }
-
-    .radio-buttons-group .el-radio-button {
-        width: 40px;
-        /* Ajusta el tamaño del botón */
-        height: 40px;
-        /* Ajusta el tamaño del botón */
-    }
-}
-
-/* Media query para pantallas muy pequeñas (como móviles) */
-@media (max-width: 576px) {
-
-    /* Ajuste aún más pequeño en los íconos y botones */
-    .radio-buttons-group .el-radio-button i {
-        font-size: 18px;
-        /* Tamaño de ícono más pequeño */
-    }
-
-    .radio-buttons-group .el-radio-button {
-        width: 35px;
-        /* Ajusta el tamaño aún más pequeño */
-        height: 35px;
-    }
-}
-
-.responsive-btn {
-    transition: all 0.2s;
-}
-
-@media (max-width: 1280px) {
-    .responsive-btn {
-        font-size: 12px !important;
-        padding: 4px 8px !important;
-        width: 90px !important;
-        height: 36px !important;
-    }
-}
-
-.btn-inactive {
-    background-color: #e0e0e0 !important;
-    border-color: #e0e0e0 !important;
-    color: #222 !important;
-    cursor: not-allowed !important;
-}
-</style>
-
-
 <script>
-// import * as shajs from 'sha.js';
 import _ from "lodash";
-//import CardBrandsForm from "../../../../../../../../resources/js/views/card_brands/form.vue";
-// import SaleNotesOptions from '../../sale_notes/partials/options.vue'
-//import OptionsForm from './options.vue'
-//import MultiplePaymentForm from "./multiple_payment.vue";
-//import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
-//import ShowSplitPaymentForm from "./split_payment.vue";
 
 const PromotionBox = () => import("./promotion_box.vue");
 const ListItems = () => import("./list_items.vue");
@@ -1375,19 +1212,7 @@ export default {
         method_payments(newMethod, _) {
             this.checkTotal(newMethod);
         },
-        /* 'form.payment_condition_id'(newVal) {
-            // Si es factura o boleta y se selecciona crédito a cuotas, agrega una cuota por defecto
-            if ((this.form.document_type_id === '01' || this.form.document_type_id === '03') && newVal === '03') {
-                if (this.currentPayments.length === 0) {
-                    this.currentPayments.push({
-                        id: Date.now(),
-                        method: 'Efectivo',
-                        amount: this.form.total,
-                        date: new Date()
-                    });
-                }
-            }
-        }, */
+    
         'form.payment_condition_id'(newVal) {
             if ((this.form.document_type_id === '01' || this.form.document_type_id === '03') && newVal === '03') {
                 if (this.currentPayments.length === 0) {
@@ -1437,11 +1262,6 @@ export default {
             console.log(newVal, "cambio de total");
             this.affectationwindows(this.affectation_optional_id);
         },
-        /* percentage_igv(newVal, oldVal) {
-            if (newVal !== oldVal && typeof this.updateIgvAndRecalculate === 'function') {
-                this.updateIgvAndRecalculate(newVal);
-            }
-        } */
     },
 
     data() {
@@ -1824,7 +1644,7 @@ export default {
                             '[DEBUG][payment.vue] form.is_vip changed ->',
                             'old:', oldVip,
                             'new:', newVip,
-                            'caller stack:', (new Error()).stack.split('\n').slice(2,5).join('\n')
+                            'caller stack:', (new Error()).stack.split('\n').slice(2, 5).join('\n')
                         );
                     }
                 } catch (e) {
@@ -1838,8 +1658,6 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
-        // Disable dates before today for payment installments
-        // Accepts Date object, timestamp (number) or moment object
         disabledDate(time) {
             try {
                 if (time === null || time === undefined) return false;
@@ -2244,25 +2062,6 @@ export default {
             );
         },
         checkTotal(newMethod) {
-            /* let hasExceedBank = false; */
-            /* if (hasExceedBank) {
-                Swal.fire({
-                    icon: "warning", // Icono de alerta
-                    title: "Atención",
-                    html: `
-                        <div class="text-danger">
-                            Recuerde que debido al monto deberá hacer
-                            esta operación mediante Bancarización.
-                            Ingrese en el campo "Observaciones" el
-                            número de voucher o número de operación.
-                        </div>
-                    `,
-                    confirmButtonText: "Entendido",
-                    customClass: {
-                        htmlContainer: "text-center" // Para centrar el texto
-                    }
-                });
-            } */
 
             if (newMethod == "01") {
                 let { total } = this.form;
@@ -2397,56 +2196,6 @@ export default {
                         2
                     );
                 }
-                /* const possibleOriginalPrice =
-                    i.original_price ||
-                    (i.item && i.item.original_price) ||
-                    i.sale_unit_price_original ||
-                    i.price_original ||
-                    i.sale_unit_price_before ||
-                    i.unit_price_before ||
-                    (i.item &&
-                        (i.item.sale_unit_price_original ||
-                            i.item.price_original)) ||
-                    null;
-                const qty = Number(i.quantity || 0);
-                const currentUnitPrice = Number(
-                    i.sale_unit_price || (i.item && i.item.sale_unit_price) || 0
-                ); */
-                /* if (
-                    discountsArray.length === 0 &&
-                    existingDiscountTotal > 0 &&
-                    possibleOriginalPrice &&
-                    qty > 0
-                ) {
-                    const originalP = Number(possibleOriginalPrice);
-                    const lineBase = originalP * qty;
-                    if (originalP > currentUnitPrice && lineBase > 0) {
-                        const factor = _.round(
-                            existingDiscountTotal / lineBase,
-                            5
-                        );
-                        discountsArray.push({
-                            discount_type_id: "00",
-                            description: "Descuento por item",
-                            factor,
-                            amount: _.round(existingDiscountTotal, 2),
-                            base: _.round(lineBase, 2)
-                        });
-                    }
-                } */
-                // Si el arreglo tiene descuentos y total_discount está en cero, sincronizar
-                /* if (
-                    discountsArray.length &&
-                    (!existingDiscountTotal || existingDiscountTotal === 0)
-                ) {
-                    existingDiscountTotal = _.round(
-                        discountsArray.reduce(
-                            (a, d) => a + (Number(d.amount) || 0),
-                            0
-                        ),
-                        2
-                    );
-                } */
                 return {
                     ...i,
                     warehouse_id: null,
@@ -3353,57 +3102,6 @@ export default {
             qz.print(config, data).catch(e => {
                 this.$toast.error(e.message);
             });
-            // if (this.printerOn == 1) {
-            //     if (multiple_boxes == true) {
-            //         if (this.auth_login == auth) {
-            //             let config = qz.configs.create(Printer, {
-            //                 scaleContent: false
-            //             });
-            //             if (!qz.websocket.isActive()) {
-            //                 await qz.websocket.connect(config);
-            //             }
-            //             let data = [
-            //                 {
-            //                     type: "pdf",
-            //                     format: "file",
-            //                     data: linkpdf
-            //                 }
-            //             ];
-            //             qz.print(config, data).catch(e => {
-            //                 this.$toast.error(e.message);
-            //             });
-            //             for (let index = 0; index < copies; index++) {
-            //                 qz.print(config, data).catch(e => {
-            //                     this.$toast.error(e.message);
-            //                 });
-            //             }
-            //         }
-            //     }
-            //     if (multiple_boxes == false) {
-            //         let config = qz.configs.create(Printer, {
-            //             scaleContent: false
-            //         });
-            //         if (!qz.websocket.isActive()) {
-            //             await qz.websocket.connect(config);
-            //         }
-            //         let data = [
-            //             {
-            //                 type: "pdf",
-            //                 format: "file",
-            //                 data: linkpdf
-            //             }
-            //         ];
-
-            //         qz.print(config, data).catch(e => {
-            //             this.$toast.error(e.message);
-            //         });
-            //         for (let index = 0; index < copies; index++) {
-            //             qz.print(config, data).catch(e => {
-            //                 this.$toast.error(e.message);
-            //             });
-            //         }
-            //     }
-            // }
         },
 
         async clickSendWhatsapp(
@@ -3484,38 +3182,6 @@ export default {
                     this.form.date_of_issue = moment().format("YYYY-MM-DD");
                 }
             }
-
-            //si el documento es una boleta solo permitir emitir si la fecha de emision tiene el mismo mes que la fecha actual
-            // if (this.form.document_type_id == "03") {
-            //     let date = moment();
-            //     if (moment(this.form.date_of_issue).month() != date.month()) {
-            //         this.$toast.error(
-            //             "La fecha de emisión debe ser del mismo mes"
-            //         );
-            //         this.form.date_of_issue = moment().format("YYYY-MM-DD");
-            //     }
-            // }
-            // if(this.configuration.restrict_receipt_date){
-            //     return;
-            // }
-            // this.form.date_of_due = this.form.date_of_issue;
-            // if (
-            //     moment(this.form.date_of_issue) < moment().day(-1) &&
-            //     this.configuration.restrict_receipt_date
-            // ) {
-            //     this.$toast.error(
-            //         "No puede seleccionar una fecha menor a 6 días."
-            //     );
-            //     this.dateValid = false;
-            // } else {
-            //     this.dateValid = true;
-            // }
-            // this.form.date_of_due = this.form.date_of_issue;
-            // this.searchExchangeRateByDate(this.form.date_of_issue).then(
-            //     response => {
-            //         this.form.exchange_rate_sale = response;
-            //     }
-            // );
             this.form.exchange_rate_sale = 1;
         },
         NuevaVenta() {
@@ -3602,91 +3268,6 @@ export default {
             return discountInputDiscountAmountGlobal.call(this);
         },
 
-        /* discountGlobal() {
-            // this.form.total = this.form.total_value;
-            let global_discount = parseFloat(this.discount_amount);
-            let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
-            if (global_discount > total) {
-                this.discount_amount = 0;
-                this.$forceUpdate();
-                return this.$toast.error(
-                    "El descuento no puede ser mayor al total"
-                );
-            }
-            // let total_value = parseFloat(this.form.total_value);
-            let new_total = total - global_discount;
-            let factor = _.round(global_discount / total, 4);
-            this.form.discounts = [
-                {
-                    discount_type_id: "03",
-                    description:
-                        "Descuentos globales que no afectan la base imponible del IGV/IVAP",
-                    factor,
-                    amount: global_discount,
-                    base: total
-                }
-            ];
-            this.form.total_discount = global_discount;
-            if (this.discountTotal) {
-                this.form.total = new_total;
-            } else {
-                let global_discount_amount = global_discount;
-                let global_discount_amount_without_rounding = global_discount;
-                let { discount_with_base_variant } = this.configuration;
-                if (discount_with_base_variant) {
-                    global_discount_amount = Number(
-                        (global_discount / 1.18).toFixed(2)
-                    );
-                    global_discount_amount_without_rounding =
-                        global_discount / 1.18;
-                }
-                let factor = _.round(global_discount_amount / base, 4);
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor,
-                        amount: global_discount_amount,
-                        base
-                    }
-                ];
-
-                let new_base = this.form.total_value_without_rounding;
-
-                this.form.total_taxed = _.round(
-                    new_base - global_discount_amount_without_rounding,
-                    2
-                );
-                let total_taxed_without_rounding =
-                    new_base - global_discount_amount_without_rounding;
-                this.form.total_value = this.form.total_taxed;
-                if (this.configuration.affectation_igv_type_id == "10") {
-                    this.form.total_igv = _.round(
-                        total_taxed_without_rounding *
-                            (this.percentage_igv / 100),
-                        2
-                    );
-                } else {
-                    this.form.total_igv = 0;
-                }
-
-                //impuestos (isc + igv + icbper)
-                this.form.total_taxes = _.round(
-                    this.form.total_igv +
-                        this.form.total_isc +
-                        this.form.total_plastic_bag_taxes,
-                    2
-                );
-                this.form.total = _.round(
-                    this.form.total_taxed + this.form.total_taxes,
-                    2
-                );
-                this.form.subtotal = this.form.total;
-            }
-        }, */
-
         discountGlobal3() {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
@@ -3745,6 +3326,46 @@ export default {
             return discountInputdiscountGlobal2.call(this);
         },
         // aqui es donde se considera todo los metodos de pago
+        /* method_payment(method_pay) {
+            // Traza para depuración
+            try {
+                console.debug('[payment.method_payment] invoked', { method_pay, method_payments_model: this.method_payments });
+            } catch (e) {}
+
+            this.hasCreditCardCharge = false;
+            this.form.payment_condition_id = "01";
+            this.form.method_pay = method_pay;
+            this.form.afectar_caja = true;
+
+            // Actualizar form_payment.payment_method_type_id para controlar visibilidad de input efectivo
+            try {
+                const foundKey = Object.keys(this.paymentsValue).find(k => this.paymentsValue[k] === method_pay);
+                this.form_payment.payment_method_type_id = foundKey || '01';
+            } catch (e) {
+                this.form_payment.payment_method_type_id = '01';
+            }
+
+            if (this.configuration.credit_mode) {
+                if (
+                    method_pay == "TARJETA: IZYPAY" ||
+                    method_pay == "TARJETA: OPENPAY" ||
+                    method_pay == "TARJETA: NIUBIZ" ||
+                    method_pay == "Culqui"
+                ) {
+                    this.hasCreditCardCharge = true;
+                } else {
+                    this.chargeCredit.amount = 0;
+                }
+
+                this.calculateCharge();
+            }
+
+            // Solo limpiar operation_number si el método NO es Yape ni PLIN
+            if (method_pay !== "Yape" && method_pay !== "PLIN") {
+                this.operation_number = null;
+            }
+        }, */
+
         method_payment(method_pay) {
             this.hasCreditCardCharge = false;
             this.form.payment_condition_id = "01";
@@ -3762,12 +3383,13 @@ export default {
                     this.chargeCredit.amount = 0;
                 }
 
-                this.calculateCharge();
+                /* this.calculateCharge(); */
             }
             if (method_pay !== "Yape" || method_pay !== "PLIN") {
                 this.operation_number = null;
             }
         },
+
         // Método para actualizar el IGV de los items y recalcular totales
         updateIgvAndRecalculate(newIgv) {
             console.log('[LOG] updateIgvAndRecalculate - newIgv:', newIgv, 'this.percentage_igv:', this.percentage_igv);
@@ -3934,9 +3556,20 @@ export default {
         async enterAmount(amount = 0) {
             this.amount = amount;
 
-            let enter_amount =
-                (parseFloat(this.form.enter_amount) || 0) +
-                this.totalPayments();
+            // Debug: traza valores claves
+            try {
+                console.debug("[payment.enterAmount] start", {
+                    amount,
+                    form_enter_amount: this.form.enter_amount,
+                    currentPayments: JSON.parse(JSON.stringify(this.currentPayments || [])),
+                    totalPayments: this.totalPayments(),
+                    form_total: this.form.total
+                });
+            } catch (e) {
+                /* ignore */
+            }
+
+            let enter_amount = (parseFloat(this.form.enter_amount) || 0) + this.totalPayments();
             let differen = enter_amount - parseFloat(this.form.total);
 
             // Redondear a 2 decimales para evitar números extraños
@@ -3947,13 +3580,22 @@ export default {
                 this.form.difference = Number(differen.toFixed(2));
             } else if (this.form.difference >= 0) {
                 this.button_payment = false;
-                // parseFloat(this.form.enter_amount) - parseFloat(this.form.total);
             } else {
                 this.button_payment = true;
             }
 
             if (this.isCreditCash) {
                 this.button_payment = false;
+            }
+
+            try {
+                console.debug("[payment.enterAmount] end", {
+                    enter_amount,
+                    difference: this.form.difference,
+                    button_payment: this.button_payment
+                });
+            } catch (e) {
+                /* ignore */
             }
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
@@ -3973,17 +3615,29 @@ export default {
             return localStorage.setItem(key, JSON.stringify(obj));
         },
         inputAmount(amount = null) {
+            // Delegar el cálculo a enterAmount (fuente de verdad). Añadir trazas.
+            try {
+                console.debug("[payment.inputAmount] invoked", { amount, before_enter_amount: this.form.enter_amount });
+            } catch (e) {}
+
             this.enterAmount(amount);
-            this.form.difference = this.form.enter_amount - this.form.total;
+
+            // Ajustar button_payment según el resultado calculado en enterAmount
             if (isNaN(this.form.difference)) {
                 this.button_payment = true;
                 this.form.difference = "-";
-            } else if (this.form.difference >= 0) {
-                this.button_payment = false;
-                this.form.difference = this.amount - this.form.total;
             } else {
-                this.button_payment = true;
+                if (this.isCreditCash) {
+                    this.button_payment = false;
+                } else {
+                    this.button_payment = !(this.form.difference >= 0);
+                }
             }
+
+            try {
+                console.debug("[payment.inputAmount] result", { enter_amount: this.form.enter_amount, difference: this.form.difference, button_payment: this.button_payment });
+            } catch (e) {}
+
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
         },
         lStoPayment() {
@@ -5057,22 +4711,6 @@ export default {
         async filterSeries() {
             this.filterCustomers();
 
-            // let check = this.checkCustomers();
-            // if (!check && !this.started) {
-            //     let dcto = "DNI";
-            //     if (this.form.document_type_id == "01") {
-            //         dcto = "RUC";
-            //         this.form.document_type_id = "03";
-            //     } else {
-            //         this.form.document_type_id = "01";
-            //     }
-            //     this.$toast.warning(`Digite el número de ${dcto}`);
-
-            //     this.setSeries();
-            //     return;
-            // }
-            // this.started = false;
-
             if (this.form.document_type_id == "01") {
                 this.currentDocumentsType = [
                     ...this.documentsType.filter(f => f.description == "RUC")
@@ -5083,82 +4721,12 @@ export default {
             }
 
             this.setSeries();
-            //aqui
-            //factura solo ruc
-
-            //boletas solo dni
-            //note de venta todo
             let currentClient = null;
             if (this.value != null) {
                 currentClient = this.all_customers.find(
                     c => c.id == this.value
                 );
-
-                // if (currentClient.identity_document_type_id == "1") {
-                //     this.form.document_type_id = "03";
-                // }
             }
-
-            // if (
-            //     this.form.document_type_id == "01" &&
-            //     currentClient &&
-            //     currentClient.identity_document_type_id !== "6"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id == "6"
-            //     );
-            //     if (this.customers.length == 0) {
-            //         this.$toast.warning("Digite el número de RUC");
-            //         this.form.document_type_id = "03";
-
-            //         // this.customers = this.all_customers;
-            //     } else {
-            //         if (
-            //             currentClient &&
-            //             this.customers.some(c => c.id == currentClient.id)
-            //         ) {
-            //             this.form.customer_telephone = currentClient.phone;
-            //             return;
-            //         }
-
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else if (
-            //     this.form.document_type_id == "03" ||
-            //     this.form.document_type_id == "80"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id != "6"
-            //     );
-            //     if (this.form.total > 300) {
-            //         this.customers = this.customers.filter(
-            //             c => c.identity_document_type_id == "1"
-            //         );
-            //     }
-
-            //     if (
-            //         currentClient &&
-            //         this.customers.some(c => c.id == currentClient.id)
-            //     ) {
-            //         this.form.customer_telephone = currentClient.phone;
-            //         return;
-            //     }
-            //     let client = this.customers.find(c => {
-            //         return c.name.toLowerCase().includes("varios");
-            //     });
-            //     if (client) {
-            //         this.value = client.id;
-            //         this.form.customer_telephone = client.phone;
-            //     } else {
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else {
-            //     this.customers = this.all_customers;
-            // }
 
             this.customers = this.customers.filter(n => n.number != "88888888");
             this.customers = [
@@ -5403,5 +4971,164 @@ label {
         width: 90px !important;
         height: 36px !important;
     }
+}
+
+.input-container2 {
+    width: 100px;
+    /* Ancho del botón */
+    height: 50px;
+    /* Alto del botón */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    overflow: hidden;
+    /* Asegura que la imagen no sobresalga */
+    cursor: pointer;
+    /* Muestra el cursor interactivo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Sombra suave */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Transiciones suaves */
+}
+
+.input-container2:hover {
+    transform: scale(1.05);
+    /* Agranda ligeramente el botón al pasar el cursor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra más pronunciada */
+}
+
+.radio-tile2 {
+    background-size: cover;
+    /* Asegura que la imagen cubra todo el espacio */
+    background-position: center;
+    /* Centra la imagen */
+    width: 100%;
+    /* Ocupa todo el ancho del contenedor */
+    height: 100%;
+    /* Ocupa todo el alto del contenedor */
+    border-radius: 8px;
+    /* Coincide con el contenedor */
+}
+
+.container-fluid {
+    width: 100%;
+    /* Ocupa el ancho completo */
+    padding-right: 0px;
+    /* Padding interno para mantener contenido alineado */
+    padding-left: 0px;
+    /* Padding interno */
+    margin-right: auto;
+    /* Centra el contenedor en dispositivos grandes */
+    margin-left: auto;
+    /* Centra el contenedor en dispositivos grandes */
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+/* Para el icono de los botones */
+.custom-radio-button i {
+    color: inherit !important;
+    /* Asegura que el icono también herede el color */
+}
+
+.custom-select {
+    width: 70% !important;
+    /* Agregamos !important para asegurar que no se sobreescriba */
+}
+
+.el-scrollbar {
+    z-index: 2000 !important;
+}
+
+.c-width {
+    width: 80px !important;
+    padding: 0 !important;
+    margin-right: 0 !important;
+}
+
+.control-label,
+h4,
+h5,
+label {
+    color: #000;
+}
+
+/* Estilo por defecto para pantallas grandes (muestra el texto y el ícono) */
+.radio-buttons-group .el-radio-button {
+    padding: 5px 15px;
+    /* Ajusta el espacio entre íconos y texto */
+    display: flex;
+    align-items: center;
+}
+
+/* Oculta el texto en pantallas pequeñas, solo muestra los íconos */
+.radio-buttons-group .el-radio-button .radio-button-text {
+    margin-left: 10px;
+    /* Espacio entre el ícono y el texto */
+}
+
+/* Media query para pantallas de tamaño 1280x768px */
+@media (max-width: 1280px) and (max-height: 768px) {
+
+    /* Ajuste en los botones para pantallas pequeñas */
+    .radio-buttons-group .el-radio-button {
+        padding: 5px;
+        /* Reduce el padding en pantallas pequeñas */
+    }
+
+    .radio-buttons-group .el-radio-button .radio-button-text {
+        display: none;
+        /* Oculta el texto */
+    }
+
+    .radio-buttons-group .el-radio-button i {
+        font-size: 20px;
+        /* Ajusta el tamaño del ícono */
+    }
+
+    .radio-buttons-group .el-radio-button {
+        width: 40px;
+        /* Ajusta el tamaño del botón */
+        height: 40px;
+        /* Ajusta el tamaño del botón */
+    }
+}
+
+/* Media query para pantallas muy pequeñas (como móviles) */
+@media (max-width: 576px) {
+
+    /* Ajuste aún más pequeño en los íconos y botones */
+    .radio-buttons-group .el-radio-button i {
+        font-size: 18px;
+        /* Tamaño de ícono más pequeño */
+    }
+
+    .radio-buttons-group .el-radio-button {
+        width: 35px;
+        /* Ajusta el tamaño aún más pequeño */
+        height: 35px;
+    }
+}
+
+.responsive-btn {
+    transition: all 0.2s;
+}
+
+@media (max-width: 1280px) {
+    .responsive-btn {
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        width: 90px !important;
+        height: 36px !important;
+    }
+}
+
+.btn-inactive {
+    background-color: #e0e0e0 !important;
+    border-color: #e0e0e0 !important;
+    color: #222 !important;
+    cursor: not-allowed !important;
 }
 </style>
