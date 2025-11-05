@@ -63,7 +63,14 @@ export function inputReCalculateTotal() {
         }
 
         // total de la línea: base + igv + plastic taxes + charges - discounts
-        const line_total = _.round(line_total_value + line_igv + plastic + line_charge - line_discount, 2);
+        let line_total = _.round(line_total_value + line_igv + plastic + line_charge - line_discount, 2);
+
+        // If a pre-computed total per line exists (e.g. merged items set _total_line),
+        // prefer that authoritative value to avoid tiny rounding drifts between
+        // the ordens calculation and this payment recalculation.
+        if (row._total_line !== undefined && row._total_line !== null) {
+            line_total = safeNumber(row._total_line);
+        }
 
         // Acumular por tipo de afectación
         if (row.affectation_igv_type_id === "10") {
