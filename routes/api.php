@@ -3,6 +3,7 @@
 use App\CoreFacturalo\Services\Models\Person;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\System\SummaryCorrelativeController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\CompanyController;
@@ -74,8 +75,13 @@ if ($hostname) {
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
 
+        Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']);
+
+
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
+
+            Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
 
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
             Route::get('client-default', [PersonController::class, 'client_default']);
