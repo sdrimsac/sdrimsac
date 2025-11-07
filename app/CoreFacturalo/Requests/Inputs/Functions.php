@@ -159,7 +159,7 @@ class Functions
             : join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration]);
     } */
 
-    /* public static function identifier($soap_type_id, $date_of_issue, $model)
+    public static function identifier($soap_type_id, $date_of_issue, $model)
     {
         $same_rucs = CompanySameRuc::all();
         $path = explode('\\', $model);
@@ -194,9 +194,9 @@ class Functions
             Carbon::parse($date_of_issue)->format('Ymd'),
             $numeration
         ]);
-    } */
+    }
 
-    public static function identifier($soap_type_id, $date_of_issue, $model)
+    /* public static function identifier($soap_type_id, $date_of_issue, $model)
     {
         // Obtener RUC de la empresa actual
         $company = Company::first();
@@ -257,7 +257,7 @@ class Functions
             \Carbon\Carbon::parse($date_of_issue)->format('Ymd'),
             $numeration
         ]);
-    }
+    } */
 
     public static function valueKeyInArray($inputs, $key, $default = null)
     {
