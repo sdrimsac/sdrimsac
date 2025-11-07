@@ -51,13 +51,12 @@ class CompanyResource extends JsonResource
             'representative_number' => $this->representative_number,
             'representative_address' => $this->representative_address,
             'eslogan' => $this->eslogan,
-
             'pusher_app_key' => $this->pusher_app_key,
             'pusher_app_secret' => $this->pusher_app_secret,
             'pusher_app_id' => $this->pusher_app_id,
             'pusher_app_cluster' => $this->pusher_app_cluster,
-
-
+            'ose_user' => $this->ose_user,
+            'ose_password' => $this->ose_password,
             'soap_sunat_username' => $this->soap_sunat_username,
             'soap_sunat_password' => $this->soap_sunat_password,
             'api_sunat_id' => $this->api_sunat_id,

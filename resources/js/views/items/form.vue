@@ -699,9 +699,9 @@
                                         ">
                                             <div v-if="form.unit_type_id != 'ZZ'" class="col-md-4 center-el-checkbox">
                                                 <div class="form-group">
-                                                    <el-checkbox :disabled="recordId != null
-                                                        " v-model="form.has_color_size
-                                                            " style="color: black;">
+                                                    <el-checkbox  v-model="form.has_color_size
+                                                            " style="color: black;" @change="
+                                                                changeColorSizeEnabled">
                                                         Talla y Color
                                                         <el-tooltip class="item" effect="dark"
                                                             content="Ingresa talla y color del producto"
@@ -2066,6 +2066,116 @@ export default {
     }, */
 
     methods: {
+
+        changeColorSizeEnabled() {
+            // Solo verificar en edición
+            if (!this.recordId) return;
+
+            // Cuando el usuario activa la opción (marca el checkbox)
+            if (this.form.has_color_size) {
+                this.$http
+                    .get(`/items/has_stock/${this.recordId}`)
+                    .then(response => {
+                        // El backend puede devolver { has_stock: true/false } o { stock: number }
+                        const stockNum = response.data.stock != null ? Number(response.data.stock) : null;
+                        const hasStock = response.data.has_stock != null ? response.data.has_stock : (stockNum ? stockNum > 0 : false);
+
+                        if (hasStock) {
+                            const msg = stockNum != null
+                                ? `El producto tiene stock (${stockNum}). No puede activar Talla y Color mientras exista stock.`
+                                : `El producto tiene stock. No puede activar Talla y Color mientras exista stock.`;
+
+        
+                            this.$confirm(msg + "\n\n¿Desea quitar el stock para continuar?")
+                                .then(() => {
+                                    
+                                    this.$http.post(`/inventory/transaction`, {
+                                        IdLoteSelected: null,
+                                        color_size: [],
+                                        date_of_due: null,
+                                        has_color_size: false,
+                                        id: null,
+                                        inventory_transaction_id: "01",
+                                        item_id: this.recordId || this.form.id,
+                                        lot_code: null,
+                                        lots: [],
+                                        lots_enabled: false,
+                                        lots_group: [],
+                                        quantity: String(Number(this.form.stock || 0).toFixed(2)),
+                                        series_enabled: false,
+                                        type: "output",
+                                        warehouse_id:
+                                            this.form.warehouse_id || (this.warehouses && this.warehouses.length ? this.warehouses[0].id : 1)
+                                    })
+                                            .then(() => {
+                                                this.form.stock = 0;
+
+                                                if (Array.isArray(this.form.item_warehouses)) {
+                                                    this.form.item_warehouses = this.form.item_warehouses.map(w => ({
+                                                        ...w,
+                                                        stock: 0
+                                                    }));
+                                                }
+
+                                                if (Array.isArray(this.form.color_sizes) && this.form.color_sizes.length) {
+                                                    this.form.color_sizes = this.form.color_sizes.map(cs => ({
+                                                        ...cs,
+                                                        stock: 0
+                                                    }));
+                                                }
+
+                                                if (Array.isArray(this.form.lots) && this.form.lots.length) {
+                                                    this.form.lots = [];
+                                                }
+                                                this.form.series_enabled = false;
+                                                this.$toast.success('Stock eliminado y Color y talla actualizado');
+                                                this.form.has_color_size = true;
+
+                                                this.$forceUpdate();
+                                            })
+                                        .catch(error => {
+                                            console.error('Error al intentar quitar stock o actualizar color/talla:', error);
+                                            this.$toast.error('No se pudo quitar el stock o actualizar Color/Talla. Intente nuevamente.');
+                                            this.form.has_color_size = false;
+                                        });
+                                })
+                                .catch(() => {
+                                  
+                                    this.form.has_color_size = false;
+                                });
+                        } else {
+                            // Producto SIN stock: informar que es viable y pedir confirmación para convertir
+                            this.$confirm('Producto con stock cero. Es viable convertir a Talla y Color. ¿Desea continuar?')
+                                .then(() => {
+                                    // No se realiza petición al servidor en este caso; solo notificar y mantener la selección.
+                                    this.$toast.success('Color y talla habilitado (sin cambio en servidor)');
+                                    // Mantener el checkbox activado porque el usuario confirmó
+                                    this.form.has_color_size = true;
+                                })
+                                .catch(() => {
+                                    // Usuario canceló — revertir checkbox
+                                    this.form.has_color_size = false;
+                                });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al consultar stock:', error);
+                        // En caso de error al consultar, revertimos la acción por seguridad
+                        this.form.has_color_size = false;
+                        this.$toast.error('No se pudo verificar el stock. Intente nuevamente.');
+                    });
+            } else {
+                // Si desactiva Talla y Color, simplemente notificar al servidor
+                this.$http.get(`/items/has_stock/${this.recordId}`)
+                    .then(() => {
+                        this.$toast.error('Tiene  productos de Talla y Color no puede cambiar el estado mientras exista en stock.');
+                        this.form.has_color_size = true;
+                    })
+                    .catch(error => {
+                        console.error('Error al actualizar color y talla:', error);
+                    });
+            }
+        },
         syncMainUnitType() {
             // Solo para productos nuevos (sin recordId)
             if (this.recordId) return;

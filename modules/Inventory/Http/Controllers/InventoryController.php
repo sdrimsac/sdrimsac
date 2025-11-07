@@ -528,16 +528,6 @@ class InventoryController extends Controller
                 } elseif (isset($item->init_report)) {
                     $init_report = $item->init_report;
                 }
-
-                Log::info('Inventory CashStockMovement check', [
-                    'type' => $type,
-                    'request_init_report' => $request->input('init_report'),
-                    'item_init_report' => $item->init_report ?? null,
-                    'resolved_init_report' => $init_report,
-                    'item_id' => $item_id,
-                    'quantity' => $quantity,
-                ]);
-
                 // Si el item está marcado para reporte inicial (init_report), registrar movimiento en CashStockMovement
                 if ($type == 'input' && (int)$init_report === 1) {
                     // Determinar caja a usar: preferir la caja del usuario abierta, si no la última caja abierta

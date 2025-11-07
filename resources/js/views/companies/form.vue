@@ -36,7 +36,7 @@
                                             <i class="fas fa-building"></i> Razón Social
                                         </label>
                                         <vs-input color="#073f68" v-model="form.name" placeholder="Nombre de la empresa"
-                                            clearable style="width: 100%;" />
+                                            clearable style="width: 100%;" @input="toUppercase($event, 'name')" />
                                         <small class="text-danger" v-if="errors.name" v-text="errors.name[0]"></small>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
                                             </el-tooltip>
                                         </label>
                                         <vs-input color="#073f68" v-model="form.trade_name"
-                                            placeholder="Nombre comercial" clearable style="width: 100%;" />
+                                            placeholder="Nombre comercial" clearable style="width: 100%;" @input="toUppercase($event, 'trade_name')" />
                                         <small class="text-danger" v-if="errors.trade_name"
                                             v-text="errors.trade_name[0]"></small>
                                     </div>
@@ -645,7 +645,9 @@
                                                     }">
                                                         <label class="control-label">SOAP Usuario
                                                             <span class="text-danger">*</span></label>
-                                                        <el-input v-model="form.soap_username">
+                                                        <el-input v-model="form.soap_username"
+                                                            style="text-transform: none !important;"
+                                                            autocomplete="off">
                                                         </el-input>
                                                         <div class=" ">
                                                             <small>RUC + Usuario. Ejemplo:
@@ -676,12 +678,12 @@
                                             </div>
                                         </template>
                                         <div class="row" v-if="form.soap_send_id == '02'">
-                                            <div class="col-md-3">
+                                            <div class="col-md-10">
                                                 <div class="form-group" :class="{
                                                     'has-danger': errors.soap_url
                                                 }">
                                                     <label class="control-label">SOAP Url</label>
-                                                    <el-input v-model="form.soap_url">
+                                                    <el-input v-model="form.soap_url" style="text-transform: none !important;">
                                                     </el-input>
                                                     <small class="text-danger" v-if="errors.soap_url"
                                                         v-text="errors.soap_url[0]"></small>
@@ -720,8 +722,9 @@
                                                                 errors.soap_sunat_username
                                                         }" class="form-group">
                                                             <label class="control-label">SOAP Usuario</label>
-                                                            <el-input v-model="form.soap_sunat_username
-                                                                "></el-input>
+                                                            <el-input v-model="form.soap_sunat_username"
+                                                                style="text-transform: none !important;"
+                                                                autocomplete="off"></el-input>
                                                             <div class="sub-title">
                                                                 <small>RUC + Usuario. Ejemplo:
                                                                     20443618687ELUSUARIO</small>
@@ -739,8 +742,9 @@
                                                                 errors.soap_sunat_password
                                                         }" class="form-group">
                                                             <label class="control-label">SOAP Password</label>
-                                                            <el-input v-model="form.soap_sunat_password
-                                                                "></el-input>
+                                                            <el-input v-model="form.soap_sunat_password"
+                                                                style="text-transform: none !important;"
+                                                                show-password autocomplete="off"></el-input>
                                                             <small v-if="
                                                                 errors.soap_sunat_password
                                                             " class="form-control-feedback" v-text="errors
@@ -880,21 +884,6 @@
     /* Tamaño del icono */
 }
 </style>
-
-<!-- export default {
-    data() {
-        return {
-            activeTab: 'empresa',
-            // ...existing data...
-        };
-    },
-    methods: {
-        handleTabClick(tab) {
-            // Puedes agregar lógica si necesitas al cambiar de tab
-        },
-        // ...existing methods...
-    }
-}; -->
 
 <script>
 import Swal from "sweetalert2";
@@ -1230,6 +1219,10 @@ export default {
                 pusher_app_id: null,
                 pusher_app_cluster: null
             };
+        },
+        toUppercase(value, field) {
+            // Convierte el valor recibido a mayúsculas y lo asigna al campo del formulario
+            this.form[field] = value ? value.toUpperCase() : '';
         },
         submit() {
             this.loading_submit = true;

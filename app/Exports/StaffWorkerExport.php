@@ -14,12 +14,13 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize, WithChunkReading, WithCustomStartCell, WithStyles
 {
     use Exportable;
     protected $records;
-    protected $person;
+    /* protected $person; */
     protected $company;
     protected $establishment;
     protected $d_start;
@@ -27,6 +28,8 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
 
     public function records($records) {
         $this->records = $records;
+
+        Log::info('Asignando registros para exportación Excel', ['records' => $records]);
         
         return $this;
     }
@@ -37,11 +40,13 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
         return $this;
     }
 
-    public function person($person) {
+    /* public function person($person) {
         $this->person = $person;
+
+        Log::info('Asignando persona para exportación Excel', ['person' => $person]);
         
         return $this;
-    }
+    } */
 
     public function establishment($establishment)
     {
@@ -60,13 +65,18 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
     
     public function collection()
     {
-        // Espera que $this->records sea un array/colección con la estructura que indicaste
-        // Cada registro tiene: person_name, date_daily, entrance, exit, horas_trabajadas, overtime, amount_extra, lack, date_end_daily, pairs
         $data = collect();
 
         foreach ($this->records as $record) {
-            // Normalizar acceso tanto para arrays como para objetos
-            $personName = isset($record->person_name) ? $record->person_name : ($record['person_name'] ?? '');
+            // Resolve el nombre de la persona, puede venir como objeto `person`, como arreglo `person` o como campo plano `person_name`.
+            $personName = '';
+            if (isset($record->person)) {
+                $person = $record->person;
+                $personName = isset($person->name) ? $person->name : ($person['name'] ?? '');
+            } else {
+                $personName = isset($record->person_name) ? $record->person_name : ($record['person_name'] ?? '');
+            }
+
             $dateDaily = isset($record->date_daily) ? $record->date_daily : ($record['date_daily'] ?? '');
             $entrance = isset($record->entrance) ? $record->entrance : ($record['entrance'] ?? '');
             $exit = isset($record->exit) ? $record->exit : ($record['exit'] ?? '');
@@ -75,8 +85,6 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
             $amountExtra = isset($record->amount_extra) ? $record->amount_extra : ($record['amount_extra'] ?? '');
             $lack = isset($record->lack) ? $record->lack : ($record['lack'] ?? '');
             $dateEnd = isset($record->date_end_daily) ? $record->date_end_daily : ($record['date_end_daily'] ?? '');
-
-            // Pairs: concatenar entradas/salidas en una sola celda, p.ej. "18:40:09 - 03:02:22 (2025-10-01)"
             $pairsRaw = isset($record->pairs) ? $record->pairs : ($record['pairs'] ?? []);
             $pairsCollection = collect($pairsRaw)->map(function ($p) {
                 $entr = isset($p->entrance) ? $p->entrance : ($p['entrance'] ?? '');
@@ -90,15 +98,16 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
             $data->push([
                 'person_name' => $personName,
                 'date_daily' => $dateDaily,
-                'entrance' => $entrance,
-                'exit' => $exit,
-                // Mantener valores numéricos como números para que Excel los trate correctamente
+                /* 'entrance' => $entrance,
+                'exit' => $exit, */
+                'pairs' => $pairsString,
+                'date_end_daily' => $dateEnd,
                 'horas_trabajadas' => $horas !== '' ? round((float) $horas, 2) : null,
                 'overtime' => $overtime !== '' ? round((float) $overtime, 2) : null,
                 'amount_extra' => $amountExtra !== '' ? round((float) $amountExtra, 2) : null,
                 'lack' => is_numeric($lack) ? (int) $lack : $lack,
-                'date_end_daily' => $dateEnd,
-                'pairs' => $pairsString,
+                
+                
             ]);
         }
 
@@ -109,15 +118,17 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
     {
         return [
             'Nombre',
-            'Fecha',
-            'Entrada',
-            'Salida',
-            'Horas trabajadas',
+            'Fecha entrada',
+            /* 'Entrada',
+            'Salida', */
+            'Horas (entradas - salidas)',
+            'Fecha salida',
+            'Horas total trabajadas',
             'Horas extras',
             'Importe extra',
-            'Falta',
-            'Fecha fin',
-            'Pares (entradas - salidas)',
+            'Faltas',
+            
+            
         ];
     }
 

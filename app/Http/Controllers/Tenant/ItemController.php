@@ -219,6 +219,47 @@ class ItemController extends Controller
             'message' => 'Se actualizó el precio del producto'
         ];
     }
+
+    public function hasStock(Request $request, $id = null)
+    {
+        // Accept item id either via route parameter (/{id}) or via request input (item_id)
+        $item_id = $id ?? $request->input('item_id');
+        $warehouse_id = $request->input('warehouse_id', null);
+
+        $item = Item::find($item_id);
+
+        if (!$item) {
+            return response()->json(['success' => false, 'message' => 'Item no encontrado'], 404);
+        }
+
+        if ($warehouse_id) {
+            $item_warehouse = ItemWarehouse::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
+
+            $stock = $item_warehouse ? (float) $item_warehouse->stock : 0;
+            $has_stock = $stock > 0;
+
+            $has_color_size = ItemColorSize::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->exists();
+        } else {
+            // Suma stock en todos los almacenes
+            $stock = (float) ItemWarehouse::where('item_id', $item_id)->sum('stock');
+            $has_stock = $stock > 0;
+
+            $has_color_size = ItemColorSize::where('item_id', $item_id)->exists();
+        }
+
+        return response()->json([
+            'success' => true,
+            'has_stock' => $has_stock,
+            'stock' => $stock,
+            'has_color_size' => (bool) $has_color_size
+        ]);
+    }
+
+
     public function updatePriceCommercialTreatment(Request $request)
     {
         $commercial_treatment_id = $request->commercial_treatment_id;
@@ -2470,7 +2511,7 @@ class ItemController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'No se puede inhabilitar el producto. Todavía tiene stock en este almacén (' . $stock . ').'
-                ], 400);
+                ], 200);
             }
 
             // Si hay un solo almacén
@@ -2489,7 +2530,7 @@ class ItemController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'No se pudo inhabilitar el producto en el almacén único.'
-                    ], 400);
+                    ], 200);
                 }
             }
             // Si hay más de un almacén
@@ -2508,7 +2549,7 @@ class ItemController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'No se pudo inhabilitar el producto en el almacén seleccionado.'
-                    ], 400);
+                    ], 200);
                 }
             }
 

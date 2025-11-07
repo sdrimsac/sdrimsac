@@ -274,10 +274,9 @@ class InventoryController extends Controller
             $warehouse_id = $request->input('warehouse_id');
             $quantity = $request->input('quantity');
 
-            $item_warehouse = ItemWarehouse::firstOrNew([
-                'item_id' => $item_id,
-                'warehouse_id' => $warehouse_id
-            ]);
+            $item_warehouse = ItemWarehouse::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
             if ($item_warehouse->id) {
                 return [
                     'success' => false,
@@ -325,11 +324,20 @@ class InventoryController extends Controller
 
             $inventory_transaction = InventoryTransaction::findOrFail($inventory_transaction_id);
 
-            if ($type == 'output' && ($quantity > $item_warehouse->stock)) {
-                return  [
-                    'success' => false,
-                    'message' => 'La cantidad no puede ser mayor a la que se tiene en el almacén.'
-                ];
+            if ($type == 'output') {
+                if (!$item_warehouse) {
+                    return  [
+                        'success' => false,
+                        'message' => 'El producto no se encuentra en el almacén indicado.'
+                    ];
+                }
+
+                if ($quantity > $item_warehouse->stock) {
+                    return  [
+                        'success' => false,
+                        'message' => 'La cantidad no puede ser mayor a la que se tiene en el almacén.'
+                    ];
+                }
             }
 
             $inventory = new Inventory();
@@ -439,6 +447,24 @@ class InventoryController extends Controller
                     $lot = ItemLotsGroup::find($request->IdLoteSelected);
                     $lot->quantity = ($lot->quantity - $quantity);
                     $lot->save();
+                }
+            }
+
+            // Update item_warehouse stock
+            if ($type == 'input') {
+                if ($item_warehouse) {
+                    $item_warehouse->stock = ($item_warehouse->stock ?? 0) + $quantity;
+                } else {
+                    $item_warehouse = new ItemWarehouse();
+                    $item_warehouse->item_id = $item_id;
+                    $item_warehouse->warehouse_id = $warehouse_id;
+                    $item_warehouse->stock = $quantity;
+                }
+                $item_warehouse->save();
+            } else {
+                if ($item_warehouse) {
+                    $item_warehouse->stock = $item_warehouse->stock - $quantity;
+                    $item_warehouse->save();
                 }
             }
 

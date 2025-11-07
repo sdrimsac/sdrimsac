@@ -313,9 +313,25 @@ class StaffController extends Controller
 
                 $horasExtras = max(0, $horasTrabajadas - 8);
 
-                $horaBase = ($empleado->base_salary ?? 0) / 30 / 8;
+                // Obtener salario mensual: soporta atributos `base_salary` o `base-salary`.
+                // Cast a float para evitar problemas con strings vacíos o null.
+                $monthlySalary = 0.0;
+                if (isset($empleado->base_salary)) {
+                    $monthlySalary = (float) $empleado->base_salary;
+                } elseif (isset($empleado->{'base-salary'})) {
+                    $monthlySalary = (float) $empleado->{'base-salary'};
+                } elseif (isset($empleado->salary)) {
+                    // fallback por si se usa otro nombre
+                    $monthlySalary = (float) $empleado->salary;
+                }
+
+                // Hora base: salario mensual dividido por 30 días y 8 horas diarias
+                $horaBase = $monthlySalary / 30 / 8;
+
                 $montoExtra = 0;
-                if ($horasExtras > 0) {
+                // Solo calcular si hay horas extras y la hora base es mayor a 0
+                if ($horasExtras > 0 && $horaBase > 0) {
+                    // Primeras 2 horas con recargo 25%, siguientes con 35%
                     if ($horasExtras <= 2) {
                         $montoExtra = $horasExtras * $horaBase * 1.25;
                     } else {
@@ -392,10 +408,10 @@ class StaffController extends Controller
     {
         $company = Company::first();
         $records = $this->getRecords($request)->get();
-        $person = Person::find($request->person_id);
+        /* $person = Person::find($request->person_id); */
         return (new StaffWorkerExport)
             ->records($records)
-            ->person($person)
+            /* ->person($person) */
             ->company($company)
             ->download('Lista_de_personal_' . Carbon::now() . '.xlsx');
     }

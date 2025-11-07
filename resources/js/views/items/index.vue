@@ -550,49 +550,135 @@ export default {
             window.open(`/${this.resource}/export/barcode/print?id=${row.id}`);
         },
         clickDisableItem(id) {
+            // Pregunta por el almacén y si existe stock, ofrece quitarlo antes de inhabilitar
             this.getWarehouses().then(warehouses => {
                 swal.fire({
-                    title: "Inhabilitar Producto", // Título más claro
-                    icon: "warning", // Agregar icono de advertencia
+                    title: "Inhabilitar Producto",
+                    icon: "warning",
                     text: "¿En qué almacén desea inhabilitar el producto?",
                     input: "select",
                     inputOptions: warehouses,
                     inputPlaceholder: "Seleccionar almacén",
                     inputValue: "1",
                     confirmButtonText: "Si, Inhabilitar",
-                    confirmButtonColor: "#d33", // Color rojo para inhabilitar
+                    confirmButtonColor: "#d33",
                     showCancelButton: true,
                     cancelButtonText: "Cancelar",
                     showLoaderOnConfirm: true,
                     preConfirm: async selectedWarehouseId => {
                         if (!selectedWarehouseId) {
-                            Swal.showValidationMessage(
-                                "Debe seleccionar un almacén"
-                            );
+                            swal.showValidationMessage("Debe seleccionar un almacén");
                             return false;
                         }
 
                         try {
-                            const response = await this.disableItemInWarehouse(
-                                id,
-                                selectedWarehouseId
-                            );
-                            if (response.success) {
+                            // Intentamos inhabilitar primero
+                            const response = await this.disableItemInWarehouse(id, selectedWarehouseId);
+                            if (response && response.success) {
                                 return response;
-                            } else {
-                                Swal.showValidationMessage(response.message);
+                            }
+
+                            // Si no se pudo, y el mensaje indica que aún hay stock en ese almacén,
+                            // preguntamos si desea quitar el stock y luego reintentamos la inhabilitación
+                            const message = response && response.message ? String(response.message) : "";
+                            const hasStockMsg = /tiene stock|todav/i.test(message);
+
+                            if (hasStockMsg) {
+                                // extraer cantidad si viene entre paréntesis (ej: (9.0000))
+                                let qty = null;
+                                const m = message.match(/\(([\d\.,]+)\)/);
+                                if (m && m[1]) {
+                                    qty = parseFloat(m[1].replace(/,/g, "."));
+                                }
+
+                                const confirmRemove = await swal.fire({
+                                    title: "El producto tiene stock",
+                                    html: `${message}<br/><br/>¿Desea eliminar ese stock en este almacén y continuar con la inhabilitación?`,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Si, quitar stock",
+                                    cancelButtonText: "Cancelar",
+                                    focusConfirm: false,
+                                    showLoaderOnConfirm: true,
+                                    preConfirm: async () => {
+                                        // Realizar la transacción para quitar stock
+                                        try {
+                                            const payload = {
+                                                IdLoteSelected: null,
+                                                color_size: [],
+                                                date_of_due: null,
+                                                has_color_size: false,
+                                                id: null,
+                                                inventory_transaction_id: "01",
+                                                item_id: id,
+                                                lot_code: null,
+                                                lots: [],
+                                                lots_enabled: false,
+                                                lots_group: [],
+                                                quantity: String(qty !== null ? Number(qty).toFixed(2) : "0"),
+                                                series_enabled: false,
+                                                type: "output",
+                                                warehouse_id: selectedWarehouseId
+                                            };
+
+                                            // usar this.$http si está disponible, sino fetch
+                                            let tranRes;
+                                            if (this.$http && typeof this.$http.post === "function") {
+                                                tranRes = await this.$http.post(`/inventory/transaction`, payload);
+                                                // algunos wrappers ponen la data en tranRes.data
+                                                tranRes = tranRes && tranRes.data ? tranRes.data : tranRes;
+                                            } else {
+                                                const r = await fetch(`/inventory/transaction`, {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify(payload)
+                                                });
+                                                tranRes = await r.json();
+                                            }
+
+                                            if (tranRes && (tranRes.success === false || tranRes.success === undefined && tranRes.error)) {
+                                                throw new Error(tranRes.message || "No se pudo quitar el stock");
+                                            }
+
+                                            // una vez quitado el stock, reintentar inhabilitar
+                                            const retry = await this.disableItemInWarehouse(id, selectedWarehouseId);
+                                            if (retry && retry.success) {
+                                                return retry;
+                                            }
+
+                                            throw new Error(retry && retry.message ? retry.message : "No se pudo inhabilitar luego de quitar stock");
+                                        } catch (err) {
+                                            throw new Error(err.message || err);
+                                        }
+                                    }
+                                });
+
+                                if (confirmRemove && confirmRemove.isConfirmed) {
+                                    // el preConfirm del segundo modal ya devolvió el resultado final (o lanzó),
+                                    // Swal.fire espera el valor devuelto; como ya usamos swal internamente,
+                                    // devolver un objeto de éxito para que el flujo principal lo considere confirmado.
+                                    // Si el segundo modal devolvió valor en confirmRemove.value lo regresamos.
+                                    return confirmRemove.value || { success: true, message: "Inhabilitado luego de quitar stock" };
+                                }
+
+                                // si el usuario canceló quitar stock, mostramos mensaje de validación
+                                swal.showValidationMessage("Operación cancelada: el producto sigue teniendo stock en ese almacén");
                                 return false;
                             }
+
+                            // Caso general: mostrar el mensaje de error como validación
+                            swal.showValidationMessage(message || "No se pudo inhabilitar el producto");
+                            return false;
                         } catch (error) {
-                            Swal.showValidationMessage(`Error: ${error}`);
+                            swal.showValidationMessage(`Error: ${error}`);
                         }
                     },
-                    allowOutsideClick: () => !Swal.isLoading()
+                    allowOutsideClick: () => !swal.isLoading()
                 }).then(result => {
                     if (result.isConfirmed) {
-                        Swal.fire({
+                        swal.fire({
                             title: "¡Inhabilitado!",
-                            text: result.value.message,
+                            text: result.value && result.value.message ? result.value.message : "Operación realizada",
                             icon: "success"
                         });
                         this.$eventHub.$emit("reloadData");

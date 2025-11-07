@@ -70,7 +70,7 @@
 
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <slot name="heading"></slot>
                         </thead>
@@ -143,12 +143,12 @@ export default {
 
         ExportExcel() {
             const parameters = this.getQueryParameters();
-            const url = `staff/export-excel` + parameters;
+            const url = `/${this.resource}/export-excel${parameters ? '?' + parameters : ''}`;
             window.open(url, '_blank');
         },
         ExportPdf() {
             const parameters = this.getQueryParameters();
-            const url = `staff/export-pdf?` + parameters;
+            const url = `/${this.resource}/export-pdf${parameters ? '?' + parameters : ''}`;
             window.open(url, '_blank');
         },
         diasPersonal() {
