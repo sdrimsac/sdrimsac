@@ -717,9 +717,9 @@ class Facturalo
         $sender = in_array($this->type, ['summary', 'voided']) ? new SummarySender() : new BillSender();
         $sender->setClient($this->wsClient);
         $sender->setCodeProvider(new XmlErrorCodeProvider());
-        // Log::info('senderXmlSigned: '.$this->endpoint);
-        // Log::info('SOAPUSERNAME: '.$this->soapUsername);
-        // Log::info('SOAPPASSWORD: '.$this->soapPassword);
+        Log::info('senderXmlSigned: '.$this->endpoint);
+        Log::info('SOAPUSERNAME: '.$this->soapUsername);
+        Log::info('SOAPPASSWORD: '.$this->soapPassword);
         return $sender->send($this->document->filename, $this->xmlSigned);
     }
 
@@ -959,8 +959,8 @@ class Facturalo
 
         if ($this->isOse) {
             $this->endpoint = $this->company->soap_url;
-            /* $this->soapUsername = $this->company->ose_user;
-            $this->soapPassword = $this->company->ose_password; */
+            $this->soapUsername = $this->company->ose_user;
+            $this->soapPassword = $this->company->ose_password;
 
             //            dd($this->soapPassword);
         } else {
@@ -971,10 +971,15 @@ class Facturalo
                     break;
                 case 'dispatch':
                     $this->endpoint = ($this->isDemo) ? SunatEndpoints::GUIA_BETA : SunatEndpoints::GUIA_PRODUCCION;
+
+                    Log::info('Endpoint set to: '.$this->endpoint);
                     break;
                 default:
                     // $this->endpoint = ($this->isDemo)?SunatEndpoints::FE_BETA:SunatEndpoints::FE_PRODUCCION;
                     $this->endpoint = ($this->isDemo) ? SunatEndpoints::FE_BETA : ($this->configuration->sunat_alternate_server ? SunatEndpoints::FE_PRODUCCION_ALTERNATE : SunatEndpoints::FE_PRODUCCION);
+                     
+                    Log::info('Endpoint set to: '.$this->endpoint);
+                    
                     break;
             }
         }

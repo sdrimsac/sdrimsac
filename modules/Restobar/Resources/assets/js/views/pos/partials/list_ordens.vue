@@ -2261,8 +2261,6 @@ export default {
 
             try {
                 items.forEach(item => {
-                    // Log para depuración
-                    console.log('[DEBUG _attachItemDiscounts] Antes de calcular descuento:', item);
 
                     // Validar si existe el precio original correctamente
                     const originalPrice = Number(
@@ -2291,7 +2289,6 @@ export default {
                         if (item.food && item.food.item) {
                             item.food.item.total_discount = 0;
                         }
-                        console.log('[DEBUG _attachItemDiscounts] No hay descuento explícito, total_discount=0', item);
                         return;
                     }
 

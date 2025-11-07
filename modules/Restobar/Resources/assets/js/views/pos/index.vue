@@ -3496,20 +3496,8 @@ export default {
             // y en `formVariation` para que componentes hijos que lean `this.form.is_vip`
             // reciban el valor correcto (evita perderlo al hacer swap de forms).
             this.form.is_vip = !!form.is_vip;
-            console.log("this.form.is_vip seteada:", this.form.is_vip);
             this.formVariation.is_vip = !!form.is_vip;
-            console.log("this.formVariation.is_vip seteada:", this.formVariation.is_vip);
             // Loguear también lo que ve el componente hijo (si ya está montado)
-            try {
-                if (this.$refs.paymentComponent && this.$refs.paymentComponent.form) {
-                    console.log(
-                        '[DEBUG][index.vue] child paymentComponent.form.is_vip:',
-                        this.$refs.paymentComponent.form.is_vip
-                    );
-                }
-            } catch (e) {
-                console.warn('[DEBUG][index.vue] could not read child form.is_vip', e);
-            }
             this.orden_items = form;
             console.log("orden_items seteada:", this.orden_items);
             this.form.printDocument = form.printDocument;
@@ -3546,7 +3534,6 @@ export default {
                 //this.form.caja = true;
             }
             let { items } = form;
-            console.log("items recibidos en paymentsOrden:", items);
 
             this.ordens = [...items];
 
@@ -3611,7 +3598,6 @@ export default {
                 this.ordens[i].food.item.total_discount = discountValue;
                 // Preservar arreglo de descuentos si existe
                 this.ordens[i].food.item.discounts = item.discounts ? JSON.parse(JSON.stringify(item.discounts)) : [];
-                console.log("Descuento asignado al item:", this.ordens[i].food.item.total_discount, this.ordens[i].food.item.discounts);
                 // Guardar precio original si estaba y no lo teníamos
                 const possibleOriginalPrice = item.original_price || item.sale_unit_price_original || item.price_original || item.sale_unit_price_before || item.unit_price_before || null;
                 if (possibleOriginalPrice && !this.ordens[i].food.item.original_price) {
@@ -5214,7 +5200,6 @@ export default {
             this.setFormPosLocalStorage();
         },
         formatItems() {
-            console.log('[LOG] index.vue formatItems - percentage_igv:', this.percentage_igv, typeof this.percentage_igv);
             this.form.items = this.form.items.map(i => {
                 // Si vienen montos precalculados desde la lista de órdenes, respétalos
                 const comesPrecalc = (

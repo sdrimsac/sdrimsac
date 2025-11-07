@@ -1510,7 +1510,7 @@ class ItemController extends Controller
             DB::connection('tenant')->beginTransaction();
 
 
-            $all_establishment = $request->all_establishment;
+            $all_establishment = $request->all_establishment ?? false;
             $id = $request->input('id');
 
             $item = Item::firstOrNew(['id' => $id]);
@@ -1604,6 +1604,7 @@ class ItemController extends Controller
                     }
                 }
             }
+            Log::info("ver que dato llega all_establishment: " . $all_establishment);
 
             if ($all_establishment) {
                 $warehouses = Warehouse::all()->pluck('id');

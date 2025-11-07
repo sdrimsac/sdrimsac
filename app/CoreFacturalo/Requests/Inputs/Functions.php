@@ -7,7 +7,9 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\Series;
 use Carbon\Carbon;
 use Exception;
+use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Modules\Document\Models\SeriesConfiguration;
 
 class Functions
@@ -192,6 +194,39 @@ class Functions
             $numeration
         ]);
     }
+
+    /* public static function identifier($soap_type_id, $date_of_issue, $model)
+    {
+        // Prefijo según tipo de documento
+        $prefix = $soap_type_id === 'RA' ? 'RA' : 'RC';
+
+        $hostname = Website::query()
+            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+            ->first()
+            ->hostnames
+            ->first();
+
+        // Llamada al distribuidor para obtener correlativo
+        $response = Http::post("https://{$hostname->fqdn}/api/summaries/next-correlative", [
+            'ruc' => $ruc,
+            'type' => $prefix,
+            'tenant' => $tenant_name,
+        ]);
+
+        if (!$response->successful()) {
+            throw new \Exception('No se pudo obtener el correlativo del distribuidor');
+        }
+
+        // Correlativo recibido
+        $numeration = str_pad($response->json()['correlative'], 3, '0', STR_PAD_LEFT);
+
+        // Retornamos el identificador final
+        return join('-', [
+            $prefix,
+            Carbon::parse($date_of_issue)->format('Ymd'),
+            $numeration
+        ]);
+    } */
 
     public static function valueKeyInArray($inputs, $key, $default = null)
     {

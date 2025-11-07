@@ -3325,46 +3325,6 @@ export default {
         discountGlobal2() {
             return discountInputdiscountGlobal2.call(this);
         },
-        // aqui es donde se considera todo los metodos de pago
-        /* method_payment(method_pay) {
-            // Traza para depuración
-            try {
-                console.debug('[payment.method_payment] invoked', { method_pay, method_payments_model: this.method_payments });
-            } catch (e) {}
-
-            this.hasCreditCardCharge = false;
-            this.form.payment_condition_id = "01";
-            this.form.method_pay = method_pay;
-            this.form.afectar_caja = true;
-
-            // Actualizar form_payment.payment_method_type_id para controlar visibilidad de input efectivo
-            try {
-                const foundKey = Object.keys(this.paymentsValue).find(k => this.paymentsValue[k] === method_pay);
-                this.form_payment.payment_method_type_id = foundKey || '01';
-            } catch (e) {
-                this.form_payment.payment_method_type_id = '01';
-            }
-
-            if (this.configuration.credit_mode) {
-                if (
-                    method_pay == "TARJETA: IZYPAY" ||
-                    method_pay == "TARJETA: OPENPAY" ||
-                    method_pay == "TARJETA: NIUBIZ" ||
-                    method_pay == "Culqui"
-                ) {
-                    this.hasCreditCardCharge = true;
-                } else {
-                    this.chargeCredit.amount = 0;
-                }
-
-                this.calculateCharge();
-            }
-
-            // Solo limpiar operation_number si el método NO es Yape ni PLIN
-            if (method_pay !== "Yape" && method_pay !== "PLIN") {
-                this.operation_number = null;
-            }
-        }, */
 
         method_payment(method_pay) {
             this.hasCreditCardCharge = false;
@@ -3556,19 +3516,6 @@ export default {
         async enterAmount(amount = 0) {
             this.amount = amount;
 
-            // Debug: traza valores claves
-            try {
-                console.debug("[payment.enterAmount] start", {
-                    amount,
-                    form_enter_amount: this.form.enter_amount,
-                    currentPayments: JSON.parse(JSON.stringify(this.currentPayments || [])),
-                    totalPayments: this.totalPayments(),
-                    form_total: this.form.total
-                });
-            } catch (e) {
-                /* ignore */
-            }
-
             let enter_amount = (parseFloat(this.form.enter_amount) || 0) + this.totalPayments();
             let differen = enter_amount - parseFloat(this.form.total);
 
@@ -3588,15 +3535,6 @@ export default {
                 this.button_payment = false;
             }
 
-            try {
-                console.debug("[payment.enterAmount] end", {
-                    enter_amount,
-                    difference: this.form.difference,
-                    button_payment: this.button_payment
-                });
-            } catch (e) {
-                /* ignore */
-            }
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
         },
@@ -3615,11 +3553,7 @@ export default {
             return localStorage.setItem(key, JSON.stringify(obj));
         },
         inputAmount(amount = null) {
-            // Delegar el cálculo a enterAmount (fuente de verdad). Añadir trazas.
-            try {
-                console.debug("[payment.inputAmount] invoked", { amount, before_enter_amount: this.form.enter_amount });
-            } catch (e) {}
-
+          
             this.enterAmount(amount);
 
             // Ajustar button_payment según el resultado calculado en enterAmount
@@ -3633,10 +3567,6 @@ export default {
                     this.button_payment = !(this.form.difference >= 0);
                 }
             }
-
-            try {
-                console.debug("[payment.inputAmount] result", { enter_amount: this.form.enter_amount, difference: this.form.difference, button_payment: this.button_payment });
-            } catch (e) {}
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
         },

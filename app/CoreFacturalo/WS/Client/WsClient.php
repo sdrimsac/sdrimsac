@@ -17,14 +17,20 @@ class WsClient
     public function __construct($wsdl = '', $parameters = [])
     {
         if (empty($wsdl)) {
-            $wsdl = __DIR__.DIRECTORY_SEPARATOR.'Resources'.
-                            DIRECTORY_SEPARATOR.'wsdl'.
-                            DIRECTORY_SEPARATOR.'billService.wsdl';
-        }else if($wsdl === 'consultCdrStatus'){
-            $wsdl = __DIR__.DIRECTORY_SEPARATOR.'Resources'.
-                            DIRECTORY_SEPARATOR.'wsdl'.
-                            DIRECTORY_SEPARATOR.'billConsultService.wsdl';
+            $wsdl = __DIR__ . DIRECTORY_SEPARATOR . 'Resources' .
+                DIRECTORY_SEPARATOR . 'wsdl' .
+                DIRECTORY_SEPARATOR . 'billService.wsdl';
+        } else if ($wsdl === 'consultCdrStatus') {
+            $wsdl = __DIR__ . DIRECTORY_SEPARATOR . 'Resources' .
+                DIRECTORY_SEPARATOR . 'wsdl' .
+                DIRECTORY_SEPARATOR . 'billConsultService.wsdl';
         }
+
+        $parameters = array_merge($parameters, [
+            'trace' => true,
+            'exceptions' => true,
+        ]);
+
         $this->client = new SoapClient($wsdl, $parameters);
     }
 
@@ -56,5 +62,15 @@ class WsClient
     public function call($function, $arguments)
     {
         return $this->client->__soapCall($function, $arguments);
+    }
+
+    public function getLastRequest()
+    {
+        return $this->client->__getLastRequest();
+    }
+
+    public function getLastResponse()
+    {
+        return $this->client->__getLastResponse();
     }
 }
