@@ -196,121 +196,62 @@ class Functions
         ]);
     } */
 
-    /* public static function identifier($soap_type_id, $date_of_issue, $model)
-    {
-
-        //$same_rucs = CompanySameRuc::all();
-        $tenant_name = app(\Hyn\Tenancy\Environment::class)->tenant()->uuid;
-        $company = Company::first();
-        $ruc = $company->number;
-
-
-        // Prefijo según tipo de documento
-        $prefix = $soap_type_id === 'RA' ? 'RA' : 'RC';
-
-        $hostname = Website::query()
-            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
-            ->first()
-            ->hostnames
-            ->first();
-
-        // Llamada al distribuidor para obtener correlativo
-        // Determinar archivo CA para la verificación SSL (evita cURL error 77)
-        $caFile = ini_get('curl.cainfo') ?: ini_get('openssl.cafile') ?: env('CURL_CA_BUNDLE') ?: env('SSL_CERT_FILE');
-
-        if ($caFile && file_exists($caFile)) {
-            $verify = $caFile;
-        } else {
-            // En entorno local o con debug activado, permitimos desactivar la verificación
-            if (config('app.debug') || app()->environment('local')) {
-                $verify = false;
-            } else {
-                throw new \Exception("cURL CA bundle not found. Set 'curl.cainfo' / 'openssl.cafile' in php.ini or define CURL_CA_BUNDLE env var. Current path: {$caFile}");
-            }
-        }
-
-        // Construir opciones para el cliente HTTP
-        $options = ['verify' => $verify];
-
-        // Forzar TLSv1.2 cuando sea posible para evitar errores de versión SSL (cURL error 35)
-        if (defined('CURLOPT_SSLVERSION') && defined('CURL_SSLVERSION_TLSv1_2')) {
-            $options['curl'] = [
-                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
-            ];
-        }
-
-        $response = Http::withOptions($options)->post("https://{$hostname->fqdn}/api/summaries/next-correlative", [
-            'ruc' => $ruc,
-            'type' => $prefix,
-            'tenant' => $tenant_name,
-        ]);
-
-        if (!$response->successful()) {
-            throw new \Exception('No se pudo obtener el correlativo del distribuidor');
-        }
-
-        // Correlativo recibido
-        $numeration = str_pad($response->json()['correlative'], 3, '0', STR_PAD_LEFT);
-
-        // Retornamos el identificador final
-        return join('-', [
-            $prefix,
-            Carbon::parse($date_of_issue)->format('Ymd'),
-            $numeration
-        ]);
-    } */
-
     public static function identifier($soap_type_id, $date_of_issue, $model)
     {
-        $tenant_name = app(\Hyn\Tenancy\Environment::class)->tenant()->uuid;
+        // Obtener RUC de la empresa actual
         $company = Company::first();
         $ruc = $company->number;
 
-        // Prefijo según tipo de documento
+        // Prefijo según tipo de documento (RA o RC)
         $prefix = $soap_type_id === 'RA' ? 'RA' : 'RC';
 
-        $hostname = Website::query()
-            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
-            ->first()
-            ->hostnames
-            ->first();
+        // Nombre o UUID del tenant actual (solo informativo)
+        $origin_app = app(\Hyn\Tenancy\Environment::class)->tenant()->uuid;
 
-        /**
-         * Configurar el cliente HTTP igual que en otras partes del sistema
-         * Nota: 'verify' => false evita el error "cURL CA bundle not found"
-         */
-        $constructor_params = [
-            'base_uri' => "https://{$hostname->fqdn}",
-            'verify' => false, // Ignorar verificación SSL temporalmente
-        ];
+        // Conexión a la base central (fuera del tenant)
+        $connection = DB::connection('mysql');
 
-        $clientGuzzleHttp = new \GuzzleHttp\Client($constructor_params);
+        // Usamos transacción + lockForUpdate() para evitar duplicados concurrentes
+        $next_correlative = $connection->transaction(function () use ($connection, $ruc, $prefix, $origin_app) {
 
-        // Llamada al endpoint del distribuidor
-        $response = $clientGuzzleHttp->post('/api/summaries/next-correlative', [
-            'http_errors' => false,
-            'headers' => [
-                'Authorization' => 'Bearer ' . auth()->user()->api_token,
-                'Accept' => 'application/json',
-            ],
-            'form_params' => [
-                'ruc' => $ruc,
-                'type' => $prefix,
-                'tenant' => $tenant_name,
-            ]
-        ]);
+            // Buscar correlativo existente por RUC y tipo (no por origin_app)
+            $record = $connection->table('summary_correlatives')
+                ->where('ruc', $ruc)
+                ->where('type', $prefix)
+                ->lockForUpdate()
+                ->first();
 
-        // Validar respuesta
-        $body = json_decode($response->getBody(), true);
+            if ($record) {
+                // Incrementar correlativo
+                $next = (int)$record->correlative + 1;
 
-        if ($response->getStatusCode() !== 200 || !isset($body['correlative'])) {
-            throw new \Exception('No se pudo obtener el correlativo del distribuidor. Respuesta: ' . $response->getBody());
-        }
+                $connection->table('summary_correlatives')
+                    ->where('id', $record->id)
+                    ->update([
+                        'correlative' => $next,
+                        'updated_at' => now(),
+                    ]);
 
-        // Correlativo recibido
-        $numeration = str_pad($body['correlative'], 3, '0', STR_PAD_LEFT);
+                return $next;
+            } else {
+                // Crear nuevo registro con correlativo 1
+                $connection->table('summary_correlatives')->insert([
+                    'ruc' => $ruc,
+                    'type' => $prefix,
+                    'correlative' => 1,
+                    'origin_app' => $origin_app, // informativo, no afecta búsqueda
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-        // Retornar identificador final
+                return 1;
+            }
+        });
+
+        // El correlativo se mantiene sin ceros a la izquierda (1, 2, 3, ...)
+        $numeration = (string) $next_correlative;
+
+        // Retornar identificador final: RC-20251107-2
         return join('-', [
             $prefix,
             \Carbon\Carbon::parse($date_of_issue)->format('Ymd'),
