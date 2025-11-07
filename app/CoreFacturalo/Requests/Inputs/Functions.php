@@ -2,6 +2,7 @@
 
 namespace App\CoreFacturalo\Requests\Inputs;
 
+use App\Models\Tenant\Company;
 use App\Models\Tenant\CompanySameRuc;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Series;
@@ -158,7 +159,7 @@ class Functions
             : join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration]);
     } */
 
-    public static function identifier($soap_type_id, $date_of_issue, $model)
+    /* public static function identifier($soap_type_id, $date_of_issue, $model)
     {
         $same_rucs = CompanySameRuc::all();
         $path = explode('\\', $model);
@@ -193,10 +194,17 @@ class Functions
             Carbon::parse($date_of_issue)->format('Ymd'),
             $numeration
         ]);
-    }
+    } */
 
-    /* public static function identifier($soap_type_id, $date_of_issue, $model)
+    public static function identifier($soap_type_id, $date_of_issue, $model)
     {
+
+        //$same_rucs = CompanySameRuc::all();
+        $tenant_name = app(\Hyn\Tenancy\Environment::class)->tenant()->uuid;
+        $company = Company::first();
+        $ruc = $company->number;
+
+
         // Prefijo según tipo de documento
         $prefix = $soap_type_id === 'RA' ? 'RA' : 'RC';
 
@@ -207,7 +215,31 @@ class Functions
             ->first();
 
         // Llamada al distribuidor para obtener correlativo
-        $response = Http::post("https://{$hostname->fqdn}/api/summaries/next-correlative", [
+        // Determinar archivo CA para la verificación SSL (evita cURL error 77)
+        $caFile = ini_get('curl.cainfo') ?: ini_get('openssl.cafile') ?: env('CURL_CA_BUNDLE') ?: env('SSL_CERT_FILE');
+
+        if ($caFile && file_exists($caFile)) {
+            $verify = $caFile;
+        } else {
+            // En entorno local o con debug activado, permitimos desactivar la verificación
+            if (config('app.debug') || app()->environment('local')) {
+                $verify = false;
+            } else {
+                throw new \Exception("cURL CA bundle not found. Set 'curl.cainfo' / 'openssl.cafile' in php.ini or define CURL_CA_BUNDLE env var. Current path: {$caFile}");
+            }
+        }
+
+        // Construir opciones para el cliente HTTP
+        $options = ['verify' => $verify];
+
+        // Forzar TLSv1.2 cuando sea posible para evitar errores de versión SSL (cURL error 35)
+        if (defined('CURLOPT_SSLVERSION') && defined('CURL_SSLVERSION_TLSv1_2')) {
+            $options['curl'] = [
+                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
+            ];
+        }
+
+        $response = Http::withOptions($options)->post("https://{$hostname->fqdn}/api/summaries/next-correlative", [
             'ruc' => $ruc,
             'type' => $prefix,
             'tenant' => $tenant_name,
@@ -226,7 +258,7 @@ class Functions
             Carbon::parse($date_of_issue)->format('Ymd'),
             $numeration
         ]);
-    } */
+    }
 
     public static function valueKeyInArray($inputs, $key, $default = null)
     {
