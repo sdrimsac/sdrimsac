@@ -941,13 +941,15 @@
                         @endif
                     @endif
 
-                    <li>
-                        <a class="{{ $path[0] === 'report_cash_document' ? 'active' : '' }}"
-                            href="{{ route('reports.cash.report_exportable') }}">
-                            <i class="icofont-chart-line" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; ">Reporte de Ganancias Exportable</span>
-                        </a>
-                    </li>
+                    @if (!$roleService->isLogistic() && !$roleService->isLogistic() && !$roleService->isAccountant($user->worker_type_id))
+                        <li>
+                            <a class="{{ $path[0] === 'report_cash_document' ? 'active' : '' }}"
+                                href="{{ route('reports.cash.report_exportable') }}">
+                                <i class="icofont-chart-line" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Ganancias Exportable</span>
+                            </a>
+                        </li>
+                    @endif
 
                     {{-- Reporte Stock Valorizado de Productos --}}
                     @if ($user->type == 'superadmin' || ($config->stock_valorizado && !$roleService->isLogistic()))
@@ -969,7 +971,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || $config->stock_minino)
+                    @if ($config->stock_minimo && $roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
                                 href="{{ route('reports.stockmin.index') }}">
@@ -1028,13 +1030,14 @@
                         </li>
                     @endif
 
-                    <li>
-                        <hr style="border: 1px solid #021427;">
-                        <span class="label"
-                            style="font-size: 1em;  text-align: center; font-weight: bold;">Comprobantes</span>
-                    </li>
+
 
                     @if ($user->type == 'superadmin' || ($config->productos_vendidos && !$roleService->isLogistic()))
+                        <li>
+                            <hr style="border: 1px solid #021427;">
+                            <span class="label"
+                                style="font-size: 1em;  text-align: center; font-weight: bold;">Comprobantes</span>
+                        </li>
                         <li>
                             <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                                 href="{{ route('tenant.ventas.index') }}">
@@ -1236,7 +1239,9 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant || ($config->restobar_home && !$roleService->isAccountant($user->worker_type_id)))
+    @if (
+        $config->restaurant ||
+            ($config->restobar_home && !$roleService->isAccountant($user->worker_type_id) && $roleService->isLogistic()))
 
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
