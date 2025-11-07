@@ -196,7 +196,7 @@ class Functions
         ]);
     } */
 
-    public static function identifier($soap_type_id, $date_of_issue, $model)
+    /* public static function identifier($soap_type_id, $date_of_issue, $model)
     {
 
         //$same_rucs = CompanySameRuc::all();
@@ -256,6 +256,64 @@ class Functions
         return join('-', [
             $prefix,
             Carbon::parse($date_of_issue)->format('Ymd'),
+            $numeration
+        ]);
+    } */
+
+    public static function identifier($soap_type_id, $date_of_issue, $model)
+    {
+        $tenant_name = app(\Hyn\Tenancy\Environment::class)->tenant()->uuid;
+        $company = Company::first();
+        $ruc = $company->number;
+
+        // Prefijo según tipo de documento
+        $prefix = $soap_type_id === 'RA' ? 'RA' : 'RC';
+
+        $hostname = Website::query()
+            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+            ->first()
+            ->hostnames
+            ->first();
+
+        /**
+         * Configurar el cliente HTTP igual que en otras partes del sistema
+         * Nota: 'verify' => false evita el error "cURL CA bundle not found"
+         */
+        $constructor_params = [
+            'base_uri' => "https://{$hostname->fqdn}",
+            'verify' => false, // Ignorar verificación SSL temporalmente
+        ];
+
+        $clientGuzzleHttp = new \GuzzleHttp\Client($constructor_params);
+
+        // Llamada al endpoint del distribuidor
+        $response = $clientGuzzleHttp->post('/api/summaries/next-correlative', [
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'Bearer ' . auth()->user()->api_token,
+                'Accept' => 'application/json',
+            ],
+            'form_params' => [
+                'ruc' => $ruc,
+                'type' => $prefix,
+                'tenant' => $tenant_name,
+            ]
+        ]);
+
+        // Validar respuesta
+        $body = json_decode($response->getBody(), true);
+
+        if ($response->getStatusCode() !== 200 || !isset($body['correlative'])) {
+            throw new \Exception('No se pudo obtener el correlativo del distribuidor. Respuesta: ' . $response->getBody());
+        }
+
+        // Correlativo recibido
+        $numeration = str_pad($body['correlative'], 3, '0', STR_PAD_LEFT);
+
+        // Retornar identificador final
+        return join('-', [
+            $prefix,
+            \Carbon\Carbon::parse($date_of_issue)->format('Ymd'),
             $numeration
         ]);
     }
