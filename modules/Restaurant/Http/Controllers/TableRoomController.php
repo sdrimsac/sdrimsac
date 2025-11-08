@@ -2977,6 +2977,7 @@ class TableRoomController extends Controller
         if (isset($data['cleaning_start_date']) && ($data['cleaning_start_date'] === 'undefined' || $data['cleaning_start_date'] === 'null')) {
             $data['cleaning_start_date'] = null;
         }
+        $data['is_vip'] = $request->boolean('is_vip');
 
         $table->fill($data);
 
