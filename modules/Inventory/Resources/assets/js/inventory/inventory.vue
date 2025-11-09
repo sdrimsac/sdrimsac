@@ -3,12 +3,12 @@
     <div class="container-fluid p-l-0 p-r-0">
         <div class="card mb-0">
             
-                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                        <i class="fas fa-truck-loading" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                        Stock de Productos
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                    <h5 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="fas fa-truck-loading" style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                        Stock de Productos 
                         <!-- Listado de {{ title }} -->
-                    </h4>
+                    </h5>
                 </div>
 
             
@@ -45,7 +45,7 @@
                         <th class="text-white text-center">Stock</th>
                         <th class="text-white text-center" v-if="configuration.kardex_regularizate">Stock Real</th>
                     </tr>
-                    <tr slot-scope="{ index, row }">
+                    <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td class="text-center">{{ index }}</td>
                         <td class="text-left">
                             {{ row.item_fulldescription }}

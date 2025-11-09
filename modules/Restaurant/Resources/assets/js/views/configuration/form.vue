@@ -1,562 +1,356 @@
-<!-- Nueva mesa -->
-<!-- Nueva Habitacion -->
+<!-- Nueva Mesa - Habitación  - Billar-->
+
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @close="close"
-        @open="create"
-        append-to-body
-        :close-on-click-modal="false"
-        class="rounded-dialog"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" append-to-body
+        :close-on-click-modal="false" class="rounded-dialog" :width="dialogWidth">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <br />
                 <div class="row">
                     <div v-if="type === 'caja/observations'" class="col-md-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.description }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.description }">
                             <label class="control-label">
                                 <i class="fas fa-info-circle mr-2"></i>
                                 Producto
                             </label>
-                            <el-select
-                                v-model="form.item_id"
-                                clearable
-                                filterable
-                                placeholder="Seleccione un producto"
-                            >
-                                <el-option
-                                    v-for="(data, index) in items"
-                                    :key="index"
-                                    :label="data.description"
-                                    :value="data.id"
-                                ></el-option>
+                            <el-select v-model="form.item_id" clearable filterable placeholder="Seleccione un producto">
+                                <el-option v-for="(data, index) in items" :key="index" :label="data.description"
+                                    :value="data.id"></el-option>
                             </el-select>
                             <!-- <el-input v-model="form.description"></el-input> -->
-                            <small
-                                class="text-danger"
-                                v-if="errors.description"
-                                v-text="errors.description[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
                         </div>
                     </div>
-                    <div
-                        v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
-                        class="col-md-12"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.description }"
-                        >
+                    <div v-if="type !== 'caja/tables' && type !== 'caja/rooms'" class="col-md-12">
+                        <div class="form-group" :class="{ 'has-danger': errors.description }">
                             <label class="control-label">
                                 <i class="fas fa-info-circle mr-2"></i>
                                 Descripción
                             </label>
                             <el-input v-model="form.description"></el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.description"
-                                v-text="errors.description[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
                         </div>
                     </div>
-                    <div
-                        v-if="
-                            type == 'caja/areas' &&
-                                configurations.multiple_boxes === 1
-                        "
-                        class="col-md-6"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.printer }"
-                        >
+                    <div v-if="
+                        type == 'caja/areas' &&
+                        configurations.multiple_boxes === 1
+                    " class="col-md-6">
+                        <div class="form-group" :class="{ 'has-danger': errors.printer }">
                             <label class="control-label">
                                 <i class="fas fa-print mr-2"></i> Impresora
                             </label>
                             <el-input v-model="form.printer"></el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.printer"
-                                v-text="errors.printer[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.printer" v-text="errors.printer[0]"></small>
                         </div>
                     </div>
-                    <div
-                        v-if="
-                            type == 'caja/areas' &&
-                                configurations.multiple_boxes === 1
-                        "
-                        class="col-md-6"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.printer }"
-                        >
+                    <div v-if="
+                        type == 'caja/areas' &&
+                        configurations.multiple_boxes === 1
+                    " class="col-md-6">
+                        <div class="form-group" :class="{ 'has-danger': errors.printer }">
                             <label class="control-label">
                                 <i class="fas fa-copy mr-2"></i> Nº COPIAS
                             </label>
                             <el-input v-model="form.copies"></el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.copies"
-                                v-text="errors.copies[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.copies" v-text="errors.copies[0]"></small>
                         </div>
                     </div>
-                    <template
-                        v-if="type == 'caja/tables' || type == 'caja/rooms'"
-                    >
+                    <template v-if="type == 'caja/tables' || type == 'caja/rooms'">
                         <div class="col-md-4">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.number }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.number }">
                                 <label class="control-label">
                                     <i class="fas fa-hashtag mr-2"></i>
-                                    Número de
-                                    {{
-                                        // type == "caja/tables" ? "mesa" : type === 'billar' ? 'mesa billar' : "habitación"
-                                        //type === 'caja/tables' ? 'mesa' : 'habitacion' : 'Mesa Billar'
-                                        getLabelText(type)
-                                    }}
+                                    Número
+                                    <!-- // type == "caja/tables" ? "mesa" : type === 'billar' ? 'mesa billar' : "habitación"
+                                        //type === 'caja/tables' ? 'mesa' : 'habitacion' : 'Mesa Billar' -->
+                                    <!-- {{ getLabelText(type) }} -->
                                 </label>
-                                <el-input v-model="form.number"></el-input>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.number"
-                                    v-text="errors.number[0]"
-                                ></small>
+                                <el-input v-model="form.number" maxlength="4" minlength="1" show-word-limit
+                                    @input="form.number = (form.number || '').toString().slice(0, 4)"></el-input>
+                                <small class="form-control-feedback" v-if="errors.number"
+                                    v-text="errors.number[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Torre -->
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.tower_id }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.tower_id }">
                                 <label class="control-label">
                                     <i class="fas fa-building mr-2"></i> Torre
                                 </label>
-                                <el-select
-                                    v-model="form.tower_id"
-                                    @change="filterFloorsByTower(form.tower_id)"
-                                >
-                                    <el-option
-                                        v-for="(data, index) in towers"
-                                        :key="index"
-                                        :label="data.name"
-                                        :value="data.id"
-                                    ></el-option>
+                                <el-select v-model="form.tower_id" @change="filterFloorsByTower(form.tower_id)">
+                                    <el-option v-for="(data, index) in towers" :key="index" :label="data.name"
+                                        :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.tower_id"
-                                    v-text="errors.tower_id[0]"
-                                ></small>
+                                <small class="form-control-feedback" v-if="errors.tower_id"
+                                    v-text="errors.tower_id[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Piso -->
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.floor_id }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.floor_id }">
                                 <label class="control-label">
                                     <i class="fas fa-layer-group mr-2"></i> Piso
                                 </label>
                                 <el-select v-model="form.floor_id">
-                                    <el-option
-                                        v-for="(data, index) in floors"
-                                        :key="index"
-                                        :label="data.name"
-                                        :value="data.id"
-                                    ></el-option>
+                                    <el-option v-for="(data, index) in floors" :key="index" :label="data.name"
+                                        :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.floor_id"
-                                    v-text="errors.floor_id[0]"
-                                ></small>
+                                <small class="form-control-feedback" v-if="errors.floor_id"
+                                    v-text="errors.floor_id[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Tipo Habitación -->
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.table_type_id }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.table_type_id }">
                                 <label class="control-label">
                                     <i class="fas fa-bed mr-2"></i> Tipo
                                 </label>
-                                <el-select
-                                    v-model="form.table_type_id"
-                                    @change="updatePrice"
-                                >
-                                    <el-option
-                                        v-for="(data, index) in types"
-                                        :key="index"
-                                        :label="data.name"
-                                        :value="data.id"
-                                    ></el-option>
+                                <el-select v-model="form.table_type_id" @change="updatePrice">
+                                    <el-option v-for="(data, index) in types" :key="index" :label="data.name"
+                                        :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.table_type_id"
-                                    v-text="errors.table_type_id[0]"
-                                ></small>
+                                <small class="form-control-feedback" v-if="errors.table_type_id"
+                                    v-text="errors.table_type_id[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Precio de Habitación -->
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.price }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.price }">
                                 <label class="control-label">
                                     <i class="fas fa-dollar-sign mr-2"></i>
                                     Precio
                                 </label>
-                                <el-input
-                                    v-model="form.price"
-                                    type="number"
-                                ></el-input>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.price"
-                                    v-text="errors.price[0]"
-                                ></small>
+                                <el-input v-model="form.price" type="number"></el-input>
+                                <small class="form-control-feedback" v-if="errors.price"
+                                    v-text="errors.price[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Precio de Habitación mensual -->
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.month_price }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.month_price }">
                                 <label class="control-label">
                                     <i class="fas fa-calendar-alt mr-2"></i>
                                     Precio mensual
                                 </label>
-                                <el-input
-                                    v-model="form.month_price"
-                                    type="number"
-                                ></el-input>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.month_price"
-                                    v-text="errors.month_price[0]"
-                                ></small>
+                                <el-input v-model="form.month_price" type="number"></el-input>
+                                <small class="form-control-feedback" v-if="errors.month_price"
+                                    v-text="errors.month_price[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Estado de la Mesa -->
                         <div class="col-md-4">
-                            <div
-                                class="form-group"
-                                :class="{
-                                    'has-danger': errors.status_table_id
-                                }"
-                            >
+                            <div class="form-group" :class="{
+                                'has-danger': errors.status_table_id
+                            }">
                                 <label class="control-label">
                                     <i class="fas fa-info-circle mr-2"></i>
-                                    Estado de
-                                    {{
-                                        //type == "caja/tables" ? "mesa" : "habitación"
-                                        getLabelText(type)
-                                    }}
+                                    Estado
+                                    <!-- {{ getLabelText(type) }} -->
                                 </label>
-                                <el-select
-                                    :disabled="recordId != null"
-                                    v-model="form.status_table_id"
-                                >
-                                    <el-option
-                                        v-for="(data, index) in statusTable"
-                                        :key="index"
-                                        :label="data.description"
-                                        :value="data.id"
-                                    ></el-option>
+                                <!-- Asegura que por defecto se seleccione el primer elemento si es nuevo -->
+                                <div v-if="!recordId && (form.status_table_id === null || form.status_table_id === undefined) && statusTable.length"
+                                    style="display:none">
+                                    {{ form.status_table_id = statusTable[0].id }}
+                                </div>
+                                <el-select :disabled="recordId != null" v-model="form.status_table_id">
+                                    <el-option v-for="(data, index) in statusTable" :key="index"
+                                        :label="data.description" :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.status_table_id"
-                                    v-text="errors.status_table_id[0]"
-                                ></small>
+                                <small class="form-control-feedback" v-if="errors.status_table_id"
+                                    v-text="errors.status_table_id[0]"></small>
                             </div>
                         </div>
+
+                        <!-- Área de la Mesa -->
                         <div class="col-md-4">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.area_id }"
-                            >
+                            <div class="form-group" :class="{ 'has-danger': errors.area_id }">
                                 <label class="control-label">
                                     <i class="fas fa-map-marker-alt mr-2"></i>
-                                    Área de
-                                    {{
-                                        //type == "caja/tables" ? "mesa" : "habitación"
-                                        getLabelText(type)
-                                    }}
+                                    Área
+                                    <!-- {{  getLabelText(type)}} -->
                                 </label>
-                                <el-select v-model="form.area_id">
-                                    <el-option
-                                        v-for="(data, index) in areas"
-                                        :key="index"
-                                        :label="data.description"
-                                        :value="data.id"
-                                    ></el-option>
+                                <div v-if="!form.area_id && areas && areas.length" style="display:none">
+                                    {{form.area_id = (areas.find(a => a.description && a.description.toUpperCase() ===
+                                    'MESA') || areas[3]).id }}
+                                </div>
+                                <el-select v-model="form.area_id" placeholder="Seleccione un área">
+                                    <el-option v-for="(data, index) in areas" :key="index" :label="data.description"
+                                        :value="data.id">
+                                    </el-option>
                                 </el-select>
-                                <small
-                                    class="text-danger"
-                                    v-if="errors.area_id"
-                                    v-text="errors.area_id[0]"
-                                ></small>
+                                <small class="text-danger" v-if="errors.area_id" v-text="errors.area_id[0]"></small>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.zone_id }"
-                            >
+
+                        <!-- Ubicación -->
+                        <div class="col-md-4 ">
+                            <div class="form-group" :class="{ 'has-danger': errors.zone_id }">
                                 <label class="control-label">
                                     <i class="fas fa-map-marker-alt mr-2"></i>
-                                    Ubicación de
-                                    {{
-                                        //type == "caja/tables" ? "mesa" : "habitación"
-                                        getLabelText(type)
-                                    }}
+                                    Ubicación
+                                    <!-- {{ getLabelText(type)}} -->
                                 </label>
                                 <el-select v-model="form.zone_id">
-                                    <el-option
-                                        v-for="(data, index) in zones"
-                                        :key="index"
-                                        :label="data.name"
-                                        :value="data.id"
-                                    ></el-option>
+                                    <el-option v-for="(data, index) in zones" :key="index" :label="data.name"
+                                        :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="text-danger"
-                                    v-if="errors.zone_id"
-                                    v-text="errors.zone_id[0]"
-                                ></small>
+                                <small class="text-danger" v-if="errors.zone_id" v-text="errors.zone_id[0]"></small>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div
-                                class="form-group"
-                                :class="{
-                                    'has-danger': errors.establishment_id
-                                }"
-                            >
+
+                        <!-- Establecimiento -->
+                        <div class="col-md-4 ">
+                            <div class="form-group" :class="{
+                                'has-danger': errors.establishment_id
+                            }">
                                 <label class="control-label">
                                     <i class="fas fa-store mr-2"></i>
                                     Establecimiento
                                 </label>
                                 <el-select v-model="form.establishment_id">
-                                    <el-option
-                                        v-for="(data, index) in establishments"
-                                        :key="index"
-                                        :label="data.description"
-                                        :value="data.id"
-                                    ></el-option>
+                                    <el-option v-for="(data, index) in establishments" :key="index"
+                                        :label="data.description" :value="data.id"></el-option>
                                 </el-select>
-                                <small
-                                    class="text-danger"
-                                    v-if="errors.establishment_id"
-                                    v-text="errors.establishment_id[0]"
-                                ></small>
+                                <small class="text-danger" v-if="errors.establishment_id"
+                                    v-text="errors.establishment_id[0]"></small>
                             </div>
                         </div>
-                        <div
-                            class="col-md-4"
-                            v-if="
-                                type == 'caja/tables' 
-                            "
-                        >
-                            <label for="">Es Mesa VIP</label>
-                            <el-checkbox
-                                v-model="form.is_vip"
-                                label="VIP"
-                            >
-                                <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa
-                                VIP?
+
+                        <!-- Es Mesa VIP -->
+                        <div class="col-md-4 mt-3" v-if="type == 'caja/tables'">
+                            <!-- <label for="">Es Mesa VIP</label> -->
+                            <el-checkbox v-model="form.is_vip" label="VIP">
+                                <i class="fas fa-crown mr-2" style="color: #FFD700; font-size: 1.2em;"></i>
+                                ¿Es Mesa VIP?
                             </el-checkbox>
                         </div>
-                        <template
-                            v-if="
-                                type == 'caja/rooms' && all_services.length > 0
-                            "
-                        >
-                            <div class="col-12 my-2">
-                                la
-                                <el-checkbox
-                                    v-model="form.has_frigobar"
-                                    label="Frigobar"
-                                >
-                                    <i class="fas fa-snowflake mr-2"></i> ¿Tiene
-                                    frigobar?
-                                </el-checkbox>
-                            </div>
-                            <div class="col-12">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.all_services
-                                    }"
-                                >
+                        <!-- Frigobar -->
+                        <div class="col-4" v-if="type == 'caja/rooms' && all_services.length > 0">
+                            <el-checkbox v-model="form.has_frigobar" label="Frigobar">
+                                <i class="fas fa-snowflake mr-2" style="color: #FFD700; font-size: 1.2em;"></i>
+                                ¿Tiene Frigobar?
+                            </el-checkbox>
+                        </div>
+
+                        <!-- Servicios -->
+                        <template v-if="type == 'caja/rooms' && all_services.length > 0">
+                            <div class="card col-4 mx-auto my-2" style="padding: 4px;">
+                                <div class="form-group" :class="{ 'has-danger': errors.all_services }">
                                     <label class="control-label">
-                                        <i
-                                            class="fas fa-concierge-bell mr-2"
-                                        ></i>
-                                        Servicios
+                                        <i class="fas fa-gift mr-2" style="color: #ff6f61;"></i>
+                                        Promociones
                                     </label>
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <el-tag role="button" :type="data.selected ? 'success' : 'primary'
+                                            " style="margin-right:5px;margin-top:5px"
+                                            v-for="(data, idx) in all_services" :key="idx" :disable-transitions="true"
+                                            @click="selectService(idx)">
+                                            {{ data.name.toUpperCase() }}
+                                        </el-tag>
+                                    </div>
                                 </div>
-                            </div>
-                            <div
-                                class="d-flex flex-wrap justify-content-center p-2"
-                            >
-                                <el-tag
-                                    role="button"
-                                    :type="
-                                        data.selected ? 'success' : 'primary'
-                                    "
-                                    style="margin-right:5px;margin-top:5px"
-                                    v-for="(data, idx) in all_services"
-                                    :key="idx"
-                                    :disable-transitions="true"
-                                    @click="selectService(idx)"
-                                    >{{ data.name.toUpperCase() }}</el-tag
-                                >
                             </div>
                         </template>
+
+                        <!-- Detalles de la Habitación -->
                         <template v-if="type == 'caja/rooms'">
-                            <div class="col-12">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.description
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-list mr-2"></i>
-                                        Contiene
-                                    </label>
-                                    <el-input
-                                        v-model="detail"
-                                        type="textarea"
-                                        readonly
-                                        :rows="3"
-                                    ></el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.description"
-                                        v-text="errors.description[0]"
-                                    ></small>
+                            <div class="col-12 mt-1">
+                                <div class="card p-1">
+                                    <div class="card-body">
+                                        <div class="row">3
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3" :class="{ 'has-danger': errors.description }">
+                                                    <label class="control-label">
+                                                        <i class="fas fa-list mr-2"></i>
+                                                        En esta Habitación Tenemos:
+                                                    </label>
+                                                    <!-- <el-input v-model="detail" type="textarea" readonly :autosize="{ minRows: 4, maxRows: 8 }"></el-input> -->
+
+                                                    <!-- Previsualización coloreada de cada detalle para diferenciarlos -->
+                                                    <div class="mt-2 d-flex flex-wrap">
+                                                        <el-tag v-for="(word, idx) in detailsArray" :key="idx" :style="{
+                                                            backgroundColor: ['#f56c6c', '#e6a23c', '#67c23a', '#409eff', '#909399', '#ff7eb6', '#7ee8fa'][idx % 7],
+                                                            color: '#ffffff',
+                                                            marginRight: '6px',
+                                                            marginBottom: '6px'
+                                                        }">
+                                                            {{ word }}
+                                                        </el-tag>
+                                                    </div>
+                                                    <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="mt-1 d-flex flex-wrap justify-content-center">
+                                                    <el-tag role="button" :type="data.selected ? 'success' : 'primary'"
+                                                        style="margin-right:5px;margin-top:5px" v-for="(data, idx) in tags" :key="idx"
+                                                        :disable-transitions="true" @click.prevent="select(idx)">
+                                                        {{ data.description }}
+                                                    </el-tag>
+
+                                                    <template v-if="tags.length == 0">
+                                                        <div class="text-center w-100">
+                                                            <el-tag type="danger" :disable-transitions="true">
+                                                                <span>
+                                                                    Para Agregar uno Nuevo escribir y Click Nuevo
+                                                                </span>
+                                                            </el-tag>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" mt-2 d-flex justify-content-end align-items-center">
+                                            <div class="col-10">
+                                                <el-input class="input-new-tag" @input="search" v-model="newTag"
+                                                    placeholder="Nuevo Accesorio." size="medium">
+                                                </el-input>
+                                            </div>
+                                            <div class="col-2">
+                                                <el-button class="btn_guardarsmall" type="primary"
+                                                    style="margin-left: 10px;" @click="handleInputConfirm">Nuevo
+                                                </el-button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div
-                                class="d-flex flex-wrap justify-content-center p-2"
-                            >
-                                <el-tag
-                                    role="button"
-                                    :type="
-                                        data.selected ? 'success' : 'primary'
-                                    "
-                                    style="margin-right:5px;margin-top:5px"
-                                    v-for="(data, idx) in tags"
-                                    :key="idx"
-                                    :disable-transitions="true"
-                                    @click.prevent="select(idx)"
-                                    >{{ data.description }}</el-tag
-                                >
-                                <template v-if="tags.length == 0">
-                                    <el-tag
-                                        type="danger"
-                                        :disable-transitions="true"
-                                    >
-                                        <span>
-                                            PRESIONE
-                                            <b>+ AGREGAR</b> PARA GUARDARLA
-                                        </span>
-                                    </el-tag>
-                                </template>
-                            </div>
-                            <div
-                                class="d-flex justify-content-end align-items-center"
-                            >
-                                <div class="col-md-3 col-lg-3 col-6">
-                                    <el-input
-                                        class="input-new-tag"
-                                        @input="search"
-                                        v-model="newTag"
-                                        placeholder="Nueva obs.."
-                                        size="medium"
-                                    ></el-input>
-                                </div>
-                                <div>
-                                    <el-button
-                                        class="button-new-tag"
-                                        size="small"
-                                        style="margin-left: 10px;"
-                                        type="primary"
-                                        @click="handleInputConfirm"
-                                        >+ Agregar</el-button
-                                    >
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
+
+                            <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label class="control-label">
                                         <i class="fas fa-images mr-2"></i>
                                         Imágenes de la habitación (Máximo 5)
                                     </label>
-                                    <div
-                                        class="d-block"
-                                        v-if="
-                                            form.images &&
-                                                getTotalImagesCount < 5
-                                        "
-                                    >
-                                        <input
-                                            type="file"
-                                            ref="fileInput"
-                                            accept="image/*"
-                                            class="d-none"
-                                            @change="handleImageUpload"
-                                        />
-                                        <button
-                                            @click.prevent="
-                                                $refs.fileInput.click()
-                                            "
-                                            class="btn btn-primary"
-                                        >
+                                    <div class="d-block" v-if="form.images && getTotalImagesCount < 5">
+                                        <input type="file" ref="fileInput" accept="image/*" class="d-none"
+                                            @change="handleImageUpload" />
+                                        <button @click.prevent=" 
+                                            $refs.fileInput.click()
+                                            " class="btn_guardarsmall">
                                             <i class="fas fa-plus mr-2"></i>
-                                            Agregar imagen ({{
-                                                5 - getTotalImagesCount
-                                            }}
-                                            restantes)
+                                            Agregar Imágen ({{5 - getTotalImagesCount}} restantes)
                                         </button>
                                     </div>
                                     <div class="d-flex flex-wrap gap-2 mt-2">
-                                        <div
-                                            v-for="(image,
-                                            index) in form.images"
-                                            :key="index"
-                                        >
-                                            <div
-                                                class="position-relative me-2 mb-2"
-                                            >
-                                                <img
-                                                    :src="
-                                                        image.preview ||
-                                                            image.url
-                                                    "
-                                                    class="img-thumbnail"
-                                                    style="width: 100px; height: 100px; object-fit: cover;"
-                                                />
-                                                <button
-                                                    @click.prevent="
-                                                        removeImageLocal(index)
-                                                    "
-                                                    class="btn btn-danger btn-sm position-absolute"
-                                                    style="top: -10px; right: -10px;"
-                                                >
+                                        <div v-for="(image,
+                                            index) in form.images" :key="index">
+                                            <div class="position-relative me-2 mb-2">
+                                                <img :src="image.preview ||
+                                                    image.url
+                                                    " class="img-thumbnail"
+                                                    style="width: 100px; height: 100px; object-fit: cover;" />
+                                                <button @click.prevent="
+                                                    removeImageLocal(index)
+                                                    " class="btn btn-danger btn-sm position-absolute"
+                                                    style="top: -10px; right: -10px;">
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
@@ -567,43 +361,28 @@
                                         Formatos permitidos: JPG, PNG. Tamaño
                                         máximo: 10MB
                                     </small>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.images"
-                                        v-text="errors.images[0]"
-                                    ></small>
+                                    <small class="text-danger" v-if="errors.images" v-text="errors.images[0]"></small>
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <div
-                                    class="form-group"
-                                    v-if="
-                                        form.images_uploaded &&
-                                            form.images_uploaded.length > 0
-                                    "
-                                >
+                                <div class="form-group" v-if="
+                                    form.images_uploaded &&
+                                    form.images_uploaded.length > 0
+                                ">
                                     <label class="control-label">
                                         <i class="fas fa-images mr-2"></i>
                                         Imágenes subidas
                                     </label>
                                 </div>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <div
-                                        v-for="(image,
-                                        index) in form.images_uploaded"
-                                        :key="index"
-                                        class="position-relative me-2 mb-2"
-                                    >
-                                        <img
-                                            :src="image.image_path"
-                                            class="img-thumbnail"
-                                            style="width: 100px; height: 100px; object-fit: cover;"
-                                        />
-                                        <button
-                                            @click.prevent="removeImage(index)"
+                                    <div v-for="(image,
+                                        index) in form.images_uploaded" :key="index"
+                                        class="position-relative me-2 mb-2">
+                                        <img :src="image.image_path" class="img-thumbnail"
+                                            style="width: 100px; height: 100px; object-fit: cover;" />
+                                        <button @click.prevent="removeImage(index)"
                                             class="btn btn-danger btn-sm position-absolute"
-                                            style="top: -10px; right: -10px;"
-                                        >
+                                            style="top: -10px; right: -10px;">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
@@ -613,24 +392,18 @@
                     </template>
                 </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"
-                    >Cancelar</el-button
-                >
-                <el-button
-                    type="primary"
-                    icon="fas fa-save fa-lg"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    >Guardar</el-button
-                >
+            <div class="form-actions pt-2 pb-2 d-flex justify-content-end">
+                <el-button class="btn_cancelarsmall" type="danger" icon="fas fa-times fa-lg" @click.prevent="close">
+                    Cancelar
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" icon="fas fa-save fa-lg" native-type="submit"
+                    :loading="loading_submit" style="margin-left:10px">
+                    Guardar
+                </el-button>
             </div>
         </form>
 
-        <mini-bar
-            :showDialog.sync="showMinibar"
-            :table_id="recordId"
-        ></mini-bar>
+        <mini-bar :showDialog.sync="showMinibar" :table_id="recordId"></mini-bar>
     </el-dialog>
 </template>
 
@@ -639,6 +412,7 @@
     border-radius: 10px;
     overflow: hidden;
 }
+
 .gap-2 {
     gap: 0.5rem;
 }
@@ -684,7 +458,9 @@ export default {
             detail: null,
             details: [],
             items: [],
-            showMinibar: false
+            showMinibar: false,
+            // ancho responsivo del diálogo: '90%' si ventana <= 900px, sino '60%'
+            dialogWidth: '60%'
         };
     },
     computed: {
@@ -704,7 +480,24 @@ export default {
     created() {
         this.initForm();
     },
+    mounted() {
+        // Establecer valor inicial y suscribir al resize
+        this.handleResize();
+        window.addEventListener('resize', this.handleResize);
+    },
+    beforeDestroy() {
+        // Limpiar listener al destruir componente
+        window.removeEventListener('resize', this.handleResize);
+    },
     methods: {
+        handleResize() {
+            try {
+                this.dialogWidth = window.innerWidth <= 1200 ? '90%' : '60%';
+            } catch (e) {
+                // En entornos sin window (SSR) fallback a 60%
+                this.dialogWidth = '60%';
+            }
+        },
         parseId(val) {
             const n = Number(val);
             return isNaN(n) ? val : n;
@@ -731,6 +524,29 @@ export default {
                 case "caja/rooms":
                     return "habitación";
             }
+        },
+        // Return a plural label for dialog titles, e.g. 'Mesas' or 'Habitaciones'
+        getEntityLabelPlural() {
+            switch (this.type) {
+                case "caja/tables":
+                    return "Mesas";
+                case "caja/rooms":
+                    return "Habitaciones";
+                case "caja/areas":
+                    return "Áreas";
+                default:
+                    return "";
+            }
+        },
+        // Compute the full dialog title depending on recordId (new vs modify) and entity
+        getDialogTitle() {
+            const entity = this.getEntityLabelPlural();
+            if (entity && entity.length > 0) {
+                return this.recordId
+                    ? `Modificar Registro de ${entity}`
+                    : `Nuevo Registro de ${entity}`;
+            }
+            return this.recordId ? "Modificar Registro" : "Nuevo Registro";
         },
         minibar() {
             this.showMinibar = true;
@@ -817,7 +633,7 @@ export default {
             this.form = {
                 table_type_id: null,
                 establishment_id: null,
-                area_id: null,
+                area_id: 5,
                 has_frigobar: false,
                 is_delivery: false,
                 is_vip: false,
@@ -865,13 +681,13 @@ export default {
         async getItems() {
             if (this.type == "caja/observations") {
                 const response = await this.$http("/caja/observations/items");
-            if (response.status == 200) {
-                const { items } = response.data;
-                this.items = items;
+                if (response.status == 200) {
+                    const { items } = response.data;
+                    this.items = items;
 
-            } else {
-                this.$toast.warning("Ocurrió un error");
-            }
+                } else {
+                    this.$toast.warning("Ocurrió un error");
+                }
 
             }
         },
@@ -938,9 +754,8 @@ export default {
                 await this.getTables();
             }
             this.getDetails();
-            this.titleDialog = this.recordId
-                ? "Modificar Registro"
-                : "Nuevo Registro";
+            // Set contextual, pluralized dialog title (e.g. 'Nuevo Registro de Mesas')
+            this.titleDialog = this.getDialogTitle();
             this.initForm();
             if (this.recordId) {
                 const response = await this.$http.get(

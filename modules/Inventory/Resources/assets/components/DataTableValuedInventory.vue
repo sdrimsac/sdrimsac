@@ -1,133 +1,61 @@
+<!-- Stock de Productos -->
 <template>
     <div>
         <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-8 d-flex" style="gap: 15px;">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Almacén</label>
-                                        <el-select
-                                            v-model="form.warehouse_id"
-                                            clearable
-                                            filterable
-                                            style="width: 100%;"
-                                        >
-                                            <el-option
-                                                v-for="option in warehouses"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Categoría</label>
-                                        <el-select
-                                            v-model="form.category_id"
-                                            clearable
-                                            filterable
-                                            style="width: 100%;"
-                                        >
-                                            <el-option
-                                                v-for="option in categories"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.name"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label class="control-label">Producto </label>
-                                        <el-input
-                                            placeholder="Ingrese Producto a Buscar"
-                                            v-model="form.item_id"
-                                            clearable
-                                            style="width: 100%;"
-                                            prefix-icon="el-icon-search"
-                                            @input="getRecords"
-                                        >
-                                        </el-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                
-                                <div
-                                        class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center"
-                                    >
-                                    <el-button
-                                        class="submit"
-                                        type="primary"
-                                        @click.prevent="getRecordsByFilter"
-                                        :loading="loading_submit"
-                                        style="font-size: 16px; border-radius: 8px; padding: 10px 20px; transition: transform 0.2s; display: flex; align-items: center; gap: 8px;"
-                                        @mousedown="handleButtonPress"
-                                        @mouseup="handleButtonRelease"
-                                        @mouseleave="handleButtonRelease"
-                                        @mouseover="handleButtonHover"
-                                        @mouseout="handleButtonRelease"
-                                    >
-                                        <i class="el-icon-search" style="font-size: 20px;"></i>
-                                        Buscar
-                                    </el-button>
-                                        <template v-if="records.length > 0">
-                                           
-                                            <el-button
-                                                class="submit"
-                                                type="danger"
-                                                @click.prevent="clickDownload('pdf')"
-                                                style="font-size: 16px; border-radius: 8px; padding: 10px 20px; transition: transform 0.2s; display: flex; align-items: center; gap: 8px;"
-                                                @mousedown="handleButtonPress"
-                                                @mouseup="handleButtonRelease"
-                                                @mouseleave="handleButtonRelease"
-                                                @mouseover="handleButtonHover"
-                                                @mouseout="handleButtonRelease"
-                                            >
-                                                <i class="fa fa-file-pdf" style="font-size: 20px;"></i> Exportar PDF
-                                            </el-button>
-                                            <el-button
-                                                class="submit"
-                                                type="success"
-                                                @click.prevent="clickDownload('excel')"
-                                                style="font-size: 16px; border-radius: 8px; padding: 10px 20px; transition: transform 0.2s; display: flex; align-items: center; gap: 8px;"
-                                                @mousedown="handleButtonPress"
-                                                @mouseup="handleButtonRelease"
-                                                @mouseleave="handleButtonRelease"
-                                                @mouseover="handleButtonHover"
-                                                @mouseout="handleButtonRelease"
-                                            >
-                                                <i class="fa fa-file-excel" style="font-size: 20px;"></i> Exportar Excel
-                                            </el-button>
-                                        </template>
-                                        
-                                    </div>
 
-                            </div>
-                            
+            <div class="row mb-1">
+                <div class="col-md-8 d-flex" style="gap: 15px;">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <!-- <label class="control-label">Producto </label> -->
+                            <el-input placeholder="Ingrese Productor" v-model="form.item_id" clearable
+                                style="width: 100%;" prefix-icon="el-icon-search" @input="getRecords">
+                            </el-input>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <!-- <label class="control-label">Almacén</label> -->
+                            <el-select v-model="form.warehouse_id" clearable filterable placeholder="Almacén"
+                                style="width: 100%;">
+                                <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <!-- <label class="control-label">Categoría</label> -->
+                            <el-select v-model="form.category_id" clearable filterable placeholder="Categoría"
+                                style="width: 100%;">
+                                <el-option v-for="option in categories" :key="option.id" :value="option.id"
+                                    :label="option.name"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+
                 </div>
-                <br />
-                <div v-if="pagination.total > 0">
-                    <el-pagination
-                        @current-change="handlePageChange"
-                        layout="total, prev, pager, next"
-                        :total="pagination.total"
-                        :current-page="pagination.current_page"
-                        :page-size="pagination.per_page"
-                    >
-                    </el-pagination>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                        <el-button class="btn_guardarsmall" type="primary" @click.prevent="getRecordsByFilter"
+                            :loading="loading_submit">
+                            <i class="el-icon-search"></i>
+                            Buscar
+                        </el-button>
+                        <template v-if="records.length > 0">
+                            <el-button class="btn_pdfsmall" type="danger" @click.prevent="clickDownload('pdf')">
+                                <i class="fa fa-file-pdf"></i> PDF
+                            </el-button>
+                            <el-button class="btn_excelsmall" type="success" @click.prevent="clickDownload('excel')">
+                                <i class="fa fa-file-excel"></i> Excel
+                            </el-button>
+                        </template>
+
+                    </div>
+
                 </div>
-                <br />
+
             </div>
-            
 
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -136,21 +64,13 @@
                             <slot name="heading"></slot>
                         </thead>
                         <tbody>
-                            <slot
-                                v-for="(row, index) in records"
-                                :row="row"
-                                :index="customIndex(index)"
-                            ></slot>
+                            <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
                         </tbody>
                     </table>
                     <div v-if="pagination.total > 0">
-                        <el-pagination
-                            @current-change="handlePageChange"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        >
+                        <el-pagination @current-change="handlePageChange" layout="total, prev, pager, next"
+                            :total="pagination.total" :current-page="pagination.current_page"
+                            :page-size="pagination.per_page">
                         </el-pagination>
                     </div>
                 </div>
@@ -207,11 +127,11 @@ export default {
         await this.getRecords();
     },
     methods: {
-            handlePageChange(page) {
-                this.pagination.current_page = page;
-                this.getRecords();
-            },
-            async clickDownload(type) {
+        handlePageChange(page) {
+            this.pagination.current_page = page;
+            this.getRecords();
+        },
+        async clickDownload(type) {
             let query = queryString.stringify({
                 ...this.form
             });

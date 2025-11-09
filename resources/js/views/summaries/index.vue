@@ -14,8 +14,10 @@
         </div>
         <div class="card">
             <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
-                <i class="fas fa-file-alt text-white mr-4"></i>
-                <h6 class="my-0 text-white"> Listado de resúmenes</h6>
+                <i class="fas fa-file-alt text-white" style="margin-right: 16px; font-size: 1.2em;"></i>
+                <h5 class="my-0 text-white" style="font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-weight:600; font-size:1.05rem; letter-spacing:0.2px;">
+                    Listado de Resúmenes de Boletas Electrónicas
+                </h5>
             </div>
             <div class="data-table-visible-columns d-flex align-items-center">
                 <button  class="btn_guardarsmall" type="primary"

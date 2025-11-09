@@ -43,7 +43,7 @@
       <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
           <!-- Cancelar -->
           <el-button
-              class="btn-cancel btn-cancel:hover"
+              class="btn_cancelarsmall"
               icon="fas fa-times fa-lg"
               @click="close"
           >
@@ -51,7 +51,7 @@
           </el-button>
 
           <el-button
-              class="btn-save btn-save:hover"
+              class="btn_guardarsmall"
               icon="fas fa-paper-plane fa-lg"
               type="primary"
               native-type="submit"

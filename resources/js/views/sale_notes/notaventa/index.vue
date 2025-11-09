@@ -1,28 +1,8 @@
 <!-- Modulo de Notas de Venta -->
 <template>
   <div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Comprobante Nota de Venta</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashbodard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Nota de Venta</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Container-fluid starts-->
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="card mb-0">
+    <div class="container-fluid ">
+      <div class="card ">
         <div class="card-header bg-primary">
           <h4 class="my-0 text-white">
             <i class="fas fa-file-alt"></i>
@@ -32,34 +12,43 @@
         <div class="card-body">
           <data-table :resource="resource">
             <tr slot="heading" class="bg-primary">
-              <th class="text-white">#</th>
-              <th class="text-white text-center">Numero</th>
-              <th class="text-white text-center">Fecha Emisión</th>
-              <th class="text-center text-white">Establecimiento</th>
-              <th class="text-center text-white">Codigo Interno</th>
-              <th class="text-center text-white">Producto</th>
-              <th class="text-center text-white">Cantidad</th>
-              <th class="text-center text-white">Precio</th>
-              <th class="text-white text-end">Total</th>
+              <th class="text-white" style="width:5%;">#</th>
+              <th class="text-white text-center" style="width:10%;">Comprobante</th>
+              <th class="text-center text-white" style="width:10%;">Tienda</th>
+              <th class="text-left text-white" style="width:30%;">Cliente</th>
+              <th class="text-left text-white" style="width:30%;">Producto</th>
+              <th class="text-center text-white" style="width:7%;">Cantidad</th>
+              <th class="text-center text-white" style="width:8%;">Precio</th>
+              <th class="text-white text-end" style="width:10%;">Total</th>
             </tr>
 
             <tr></tr>
             <template slot-scope="{ index_, row }">
-              <tr v-for="(item, index) in row.items" :key="'item-' + (row.id || index_) + '-' + index">
+              <tr v-for="(item, index) in row.items" :key="'item-' + (row.id || index_) + '-' + index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                 <td>{{  index == 0 ? index_ : '' }}</td>
-                <td  class="text-center">{{ row.series }}-{{ row.alone_number }}</td>
-
-                <td class="text-center">{{ row.date_of_issue }}
+                <td  class="text-center">
+                  {{ row.series }}-{{ row.alone_number }}
+                  <br>
+                  {{ row.date_of_issue }}
                   <template>
                   <br />
                   <small>{{ row.time_of_issue }}</small>
                 </template>
                 </td>
                 <td class="text-center">{{ row.establishment_description }}</td>
-                <td class="text-center">{{ item.item.internal_id }}</td>
-                <td class="text-center">{{ item.item.description }}</td>
-                <td class="textcenter">{{ parseFloat(item.quantity).toFixed(2) }}</td>
-                <td class="text-center">{{ parseFloat(item.unit_value).toFixed(2) }}</td>
+                <td class="text-left">
+                          {{ row.client_number }}
+                  <br>
+                          <span style="font-weight: bold; font-size: 1.15em;">{{ row.client_name }}</span>
+                </td>
+                <td class="text-left">
+                  <span style="font-weight: bold; font-size: 1.1em;">{{ item.item.internal_id }}</span>
+                  <br>
+                  <span style="font-weight: bold; font-size: 1.15em;">{{ item.item.description }}</span>
+                </td>
+                
+                <td class="text-center">{{ parseFloat(item.quantity).toFixed(2) }}</td>
+                <td class="text-end">{{ parseFloat(item.unit_value).toFixed(2) }}</td>
                 <td class="text-end">{{ parseFloat(item.total).toFixed(2) }}</td>
               </tr>
             </template>
@@ -69,11 +58,7 @@
     </div>
   </div>
 </template>
-<style>
-td {
-  color: #000;
-}
-</style>
+
 <script>
 import DataTable from "../../../components/DataTableSaleNoteVenta.vue";
 export default {

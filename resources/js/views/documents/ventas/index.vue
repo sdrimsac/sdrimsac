@@ -1,80 +1,80 @@
 <!-- Listado de Comprobante de Pago -->
 <template>
   <div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Productos Vendidos</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashboard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Documentos - Productos Vendidos</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Container-fluid starts-->
-    <div class="container-fluid p-l-0 p-r-0">
+    <div class="container-fluid">
       <div class="row">
         <!-- <div class="col-sm-12"> -->
-        <div class="card mb-0">
+        <div class="card">
           <div class="card-header bg-primary rounded-top">
-            <h4 class="my-0 text-white">
-              <i class></i>
-              Productos Vendidos por Documentos
-            </h4>
+            <h5 class="my-0 text-white">
+              <i class="icofont-barcode text-white" title="Series"></i>
+              Productos Vendidos con CPE
+            </h5>
           </div>
 
           <div class="card-body">
             <data-table :resource="resource" class="table-striped">
               <tr slot="heading" class="bg-primary">
-                <th class="text-white">#</th>
-                <th class="text-white">Numero</th>
-                <th class="text-white">Fecha Emision</th>
-                <th class="text-white">Establecimiento</th>
-                <th class="text-white text-center">Cliente</th>
-                <th class="text-white text-center">Dni</th>
-                <th class="text-white">Codigo Interno</th>
-                <th v-if="configuration.health_network" class="text-white">Categoria Principal</th>
-                <th class="text-white">Producto</th>
-                <th class="text-white">Cantidad</th>
-                <th class="text-white text-end">Precio</th>
-                <th class="text-white text-end">Total</th>
+                <th class="text-white" style="width:1%;">#</th>
+                <th class="text-white" style="width:15%;">Número</th>
+                <!-- <th class="text-white">Fecha Emisión</th> -->
+                <th class="text-white" style="width:10%;">Tienda</th>
+                <th class="text-white text-left" style="width:21%;">Cliente</th>
+                <!-- <th class="text-white text-center">Dni</th> -->
+                <!-- <th class="text-white">Código Interno</th>
+                <th v-if="configuration.health_network" class="text-white">Categoría Principal</th> -->
+                <th class="text-white" style="width:12%;">Producto</th>
+                <th class="text-white" style="width:8%;">Cantidad</th>
+                <th class="text-white text-end" style="width:15%;">Precio</th>
+                <th class="text-white text-end" style="width:15%;">Total</th>
                 <!-- <th class="text-white text-end">
                                         Pendiente
                 </th>-->
-                <th class="text-white text-end"></th>
+                <!-- <th class="text-white text-end"></th> -->
               </tr>
 
               <tr></tr>
               <template slot-scope="{ index_, row }">
-                <tr v-for="(item, index) in row.items" :key="'item-' + row.id + '-'+ index">
+                <tr
+                  v-for="(item, index) in row.items"
+                  :key="'item-' + row.id + '-' + index"
+                  :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' } "
+                  
+                  >
                   <td>
-                    {{
-                    index == 0 ? index_ : ''
-                    }}
+                    {{index == 0 ? index_ : ''}}
                   </td>
-                  <td>{{ row.number_full }}</td>
-                  <td class="text-center">
+                  <td>
+                    <span style="font-weight:700; font-size:1.1em;">{{ row.number_full }}</span>
+                    <br />
                     {{ row.date_of_issue }}
                     <template>
                       <br />
                       <small>{{ row.time_of_issue }}</small>
                     </template>
                   </td>
+                  <!-- <td class="text-center">
+                    
+                  </td> -->
                   <td>{{ row.establishment_description }}</td>
-                  <td class="text-center"> {{ row.customer.name }} </td>
-                  <td class="text-center"> {{ row.customer.number }} </td>
-                  <td>{{ item.item.internal_id }}</td>
+
+                  <td class="text-left">
+                      <span style="font-weight:700; font-size:1.1em;">{{ row.customer.number }}</span>
+                     <br>
+                      <span style="font-weight:600; font-size:1.05em; font-family: Arial, Helvetica, sans-serif; color:#222;">
+                        {{ row.customer.name }}
+                      </span>
+                     
+                    
+                  </td>
+                  <!-- <td class="text-center"></td> -->
+                  <!-- <td></td> -->
                   <td v-if="configuration.health_network">{{ item.item.barcode }}</td>
-                  <td>{{ item.item.description }}</td>
+                  <td class="text-left">
+                    {{ item.item.internal_id }}
+                    <br />
+                    {{ item.item.description }}
+                  </td>
                   <td>{{ parseFloat(item.quantity).toFixed(2) }}</td>
                   <td class="text-end">{{ parseFloat(item.unit_value).toFixed(2) }}</td>
                   <td class="text-end">{{ parseFloat(item.total).toFixed(2) }}</td>
@@ -83,7 +83,6 @@
             </data-table>
           </div>
         </div>
-        <!-- </div> -->
       </div>
     </div>
   </div>

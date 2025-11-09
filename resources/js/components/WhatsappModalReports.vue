@@ -1,28 +1,20 @@
 <template>
-    <el-dialog
-        @close="close"
-        @open="open"
-        append-to-body
-        width="30%"
-        title="Enviar Reporte de Ganacias por WhatsApp"
-        :visible="showWhatsappForm"
-    >
-        <div class="p-3" v-loading="loading" element-loading-text="Enviando..">
+    <el-dialog @close="close" @open="open" append-to-body width="40%" title="Enviar Reporte"
+        :visible="showWhatsappForm">
+        <div class="p-1" v-loading="loading" element-loading-text="Enviando..">
             <div class="d-flex">
-            <div class="flex-grow-1 me-2" style="flex: 0 0 70%;">
-                <label for="" style="font-size: 1.2em;">Número de WhatsApp</label>
-                <el-input v-model="number" style="width:100%"></el-input>
-            </div>
-            <div class="d-flex align-items-end" style="flex: 0 0 30%;">
-                <el-button  @click="send" 
-                            style="width: 100%;"
-                            class="submit btn_whatsapp" 
-                            type="success"
-                    >
-                            <i class="icofont-brand-whatsapp"></i> 
-                            Enviar
-                </el-button>
-            </div>
+                <div class="flex-grow-1 me-2" style="flex: 0 0 70%;">
+                    <label for="" style="font-size: 1em;">Ingrese Número de WhatsApp Válido</label>
+                    <el-input v-model="number" inputmode="numeric" type="text" placeholder="Ingrese 9 dígitos"
+                        :maxlength="9" show-word-limit @input="number = String($event).replace(/\D/g, '').slice(0, 9)"
+                        style="width:100%"></el-input>
+                </div>
+                <div class="d-flex align-items-center justify-content-center" style="flex: 0 0 30%;">
+                    <el-button @click="send" style="width: 100%; max-width: 160px;" class="btn_whatsappsmall" type="success">
+                        <i class="icofont-brand-whatsapp"></i>
+                        Enviar
+                    </el-button>
+                </div>
             </div>
         </div>
     </el-dialog>
@@ -73,7 +65,7 @@ export default {
                 this.$toast.error("No se pudo obtener la configuración");
             }
         },
-        open() {},
+        open() { },
         socketWhatsappConfig() {
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
@@ -155,11 +147,11 @@ export default {
                 this.loading = true;
                 let b64 = await this.getBase64FromUrl(this.resource);
                 let extension = ".pdf";
-             
+
                 b64 = b64.split(",")[1];
                 this.socket.emit("sendFile", {
                     file: b64,
-                    name: `${this.message.split(" ").join("-")}${this.message.includes(".xlsx") ? "":extension}`,
+                    name: `${this.message.split(" ").join("-")}${this.message.includes(".xlsx") ? "" : extension}`,
                     number: `51${this.number}`,
                     sender: this.sender
                 });

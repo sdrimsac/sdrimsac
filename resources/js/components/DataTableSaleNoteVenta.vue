@@ -1,16 +1,39 @@
 <template>
     <div>
         <div class="row ">
-            <div class="col-md-12 col-lg-12 col-xl-12 ">
+            <div class="col-13">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-2 col-md-2">
-                        <label for="serie">Serie</label>
+                    <div class="col-4" style="padding:2px">
+                        <div class="form-group">
+                            <!-- <label class="control-label w-100"
+                                >Establecimiento</label
+                            > -->
+                            <el-select
+                                v-model="search.establishment_id"
+                                @change="getRecords"
+                                popper-class="el-select-establishment"
+                                filterable
+                                clearable
+                                placeholder="Establecimiento"
+                            >
+                                <el-option
+                                    v-for="option in establishments"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label for="serie">Serie</label> -->
                         <el-select
                             @change="getRecords"
                             placeholder="Serie"
                             v-model="search.series"
                             filterable
                             clearable
+                            aria-placeholder="Serie"
                         >
                             <el-option
                                 v-for="option in series"
@@ -20,11 +43,11 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-lg-2 col-md-2">
+                    <div class="col-2" style="padding:2px">
                         <div class="form-group">
-                            <label class="control-label w-100">Número Nota Venta</label>
+                            <!-- <label class="control-label w-100">Número Nota Venta</label> -->
                             <el-input
-                                placeholder="Ingresar"
+                                placeholder="Número"
                                 v-model="search.number"
                                 @input="getRecords"
                             >
@@ -35,20 +58,59 @@
                             ></el-input>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <label for="date_start">Fecha Emision</label>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label for="state_type_id">Estado</label> -->
+
+                        <el-select
+                            clearable
+                            v-model="search.state_type_id"
+                            placeholder="Estado"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in state_types"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div
+                        class="col-2"
+                        style="padding:2px"
+                    >
+                        <div class="form-group">
+                            <!-- <label class="control-label w-100">Usuario</label> -->
+                            <el-select
+                                v-model="search.user_id"
+                                filterable
+                                clearable
+                                @change="getRecords"
+                                placeholder="Usuario"
+                            >
+                                <el-option
+                                    v-for="(option, idx) in users"
+                                    :key="idx"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label for="date_start">Fecha Emision</label> -->
                         <el-date-picker
                             v-model="search.date_start"
                             type="date"
                             style="width: 100%;"
-                            placeholder="Fecha inicial"
+                            placeholder="F. Emisión"
                             value-format="yyyy-MM-dd"
                             @change="getRecords"
                         >
                         </el-date-picker>
                     </div>
-                    <div class="col-md-2 col-lg-3">
-                        <label for="date_end">Mes</label>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label for="date_end">Mes</label> -->
 
                         <el-date-picker
                             v-model="search.date_end"
@@ -61,26 +123,26 @@
                         >
                         </el-date-picker>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <label class="control-label w-100">Año</label>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label class="control-label w-100">Año</label> -->
                         <el-date-picker
                             v-model="search.year"
                             type="year"
                             style="width: 100%;"
-                            placeholder="Buscar"
+                            placeholder="Año"
                             value-format="yyyy"
                             @change="getRecords"
                         ></el-date-picker>
                     </div>
-                    <div class="col-md-3 col-lg-3">
-                        <label for="seller_id">Vendedor</label>
+                    <div class="col-2" style="padding:2px">
+                        <!-- <label for="seller_id">Vendedor</label> -->
 
                         <el-select
                             clearable
                             v-model="search.seller_id"
                             class="border-left rounded-left border-info w-100"
                             popper-class="el-select-customers"
-                            placeholder="Seleccione un Asesor - Vendedor"
+                            placeholder="Vendedor"
                             @change="getRecords"
                         >
                             <el-option
@@ -91,8 +153,8 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-3 col-lg-3">
-                        <label for="customer_id">Cliente</label>
+                    <div class="col-4" style="padding:2px">
+                        <!-- <label for="customer_id">Cliente</label> -->
 
                         <el-select
                             v-model="search.customer_id"
@@ -101,7 +163,7 @@
                             class="border-left rounded-left border-info"
                             popper-class="el-select-customers"
                             dusk="customer_id"
-                            placeholder="Escriba el nombre o número de documento del cliente"
+                            placeholder="Cliente"
                             :remote-method="searchRemoteCustomers"
                             :loading="loading_search"
                             @change="getRecords"
@@ -114,26 +176,10 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-2 col-lg-2">
-                        <label for="state_type_id">Estado</label>
-
-                        <el-select
-                            clearable
-                            v-model="search.state_type_id"
-                            placeholder="Seleccione un estado"
-                            @change="getRecords"
-                        >
-                            <el-option
-                                v-for="(option, idx) in state_types"
-                                :key="idx"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
-                        </el-select>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
+                    
+                    <div class="col-3" style="padding:2px">
                         <div class="form-group">
-                            <label class="control-label w-100">Productos</label>
+                            <!-- <label class="control-label w-100">Productos</label> -->
                             <el-input
                                 placeholder="Ingrese nombre del producto"
                                 v-model="search.description"
@@ -148,15 +194,17 @@
                         </div>
                     </div>
                     <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                        class="col-3"
+                        style="padding:2px"
                     >
                         <div class="form-group">
-                            <label class="control-label w-100">Categoría</label>
+                            <!-- <label class="control-label w-100">Categoría</label> -->
                             <el-select
                                 v-model="search.category_id"
                                 filterable
                                 clearable
                                 @change="getRecords"
+                                placeholder="Categoría"
                             >
                                 <el-option
                                     v-for="(option, idx) in categories"
@@ -167,64 +215,19 @@
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
-                    >
-                        <div class="form-group">
-                            <label class="control-label w-100">Usuario</label>
-                            <el-select
-                                v-model="search.user_id"
-                                filterable
-                                clearable
-                                @change="getRecords"
-                            >
-                                <el-option
-                                    v-for="(option, idx) in users"
-                                    :key="idx"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Establecimiento</label
-                            >
-                            <el-select
-                                v-model="search.establishment_id"
-                                @change="getRecords"
-                                popper-class="el-select-establishment"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in establishments"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
+                    
+                    
+                    <div class="col-6 d-flex justify-content-end" style="padding:2px">
                         <el-button
+                        class="btn_excelsmall"
                             type="success"
-                            icon="el-icon-download"
+                           
                             size="small"
                             v-if="records.length > 0"
                             @click="exportRecords"
                             :disabled="!search.date_start && !search.date_end && !search.customer_id && !search.year"
                         >
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="debe seleccionar al menos una fecha unico o mes para poder exportar a excel"
-                                placement="top-start"
-                            >
-                                <i class="fa fa-download"></i>
-                            </el-tooltip>
+                            <i class="fa fa-file-excel"></i>
                             Exportar
                         </el-button>
                     </div>
@@ -268,9 +271,34 @@
 </template>
 
 <style>
-td {
-    color: #000;
+input[disabled],
+input[readonly],
+input[type="date"][disabled],
+input[type="date"][readonly],
+.el-input.is-disabled .el-input__inner,
+.el-input__inner[disabled],
+.el-input__inner[readonly],
+.el-date-editor.is-disabled .el-date-editor__input,
+.el-date-editor .el-input__inner[disabled],
+.el-date-editor .el-input__inner[readonly],
+.el-date-editor__input[disabled],
+.el-date-editor__input[readonly],
+.el-input-number.is-disabled .el-input-number__decrease,
+.el-input-number.is-disabled .el-input-number__increase,
+.el-input-number.is-disabled .el-input-number__inner,
+input[disabled]::placeholder,
+input[readonly]::placeholder,
+input[type="date"][disabled]::placeholder,
+input[type="date"][readonly]::placeholder,
+.el-input__inner[disabled]::placeholder,
+.el-input__inner[readonly]::placeholder,
+.el-date-editor__input[disabled]::placeholder,
+.el-date-editor__input[readonly]::placeholder {
+  color: #073f68 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #073f68 !important;
 }
+
 </style>
 <script>
 import moment from "moment";

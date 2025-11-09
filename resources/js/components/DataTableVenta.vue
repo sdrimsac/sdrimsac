@@ -1,341 +1,207 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
-                        <div class="form-group">
-                            <label class="control-label font-custom">
-                                <strong>Filtros de busqueda</strong>
-                            </label>
-                            <template v-if="!see_more">
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                >
-                                    <strong>[+ Ver más]</strong>
-                                </a>
-                            </template>
-                            <template v-else>
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                >
-                                    <strong>[- Ver menos]</strong>
-                                </a>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2" v-if="see_more">
-                    <div class="col-lg-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Tipo comprobante</label
-                            >
-                            <el-select
-                                v-model="search.document_type_id"
-                                @change="changeDocumentType"
-                                popper-class="el-select-document_type"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in document_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Serie</label>
-                            <el-select
-                                v-model="search.series"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in series"
-                                    :key="option.number"
-                                    :value="option.number"
-                                    :label="option.label"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Número</label>
-                            <el-input
-                                placeholder="Ingresar"
-                                v-model="search.number"
-                                clearable
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Mes</label>
-                            <el-date-picker
-                                v-model="search.d_end"
-                                type="month"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM"
-                                format="MM/yyyy"
-                                :picker-options="pickerOptionsDates"
-                                @change="changeEndDate"
-                            ></el-date-picker>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <label class="control-label w-100"
-                            >Fecha de emisión</label
-                        >
-                        <el-date-picker
-                            v-model="search.date_of_issue"
-                            type="date"
-                            style="width: 100%;"
-                            placeholder="Buscar"
-                            value-format="yyyy-MM-dd"
-                            @change="changeDateOfIssue"
-                        ></el-date-picker>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <label class="control-label w-100">Año</label>
-                        <el-date-picker
-                            v-model="search.year"
-                            type="year"
-                            style="width: 100%;"
-                            placeholder="Buscar"
-                            value-format="yyyy"
-                            @change="changeDateOfIssue"
-                        ></el-date-picker>
-                    </div>
-                    <div class="col-lg-4 col-md-4 ">
-                        <div class="form-group">
-                            <label class="control-label w-100">Clientes</label>
 
-                            <el-select
-                                v-model="search.customer_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o número de documento"
-                                :remote-method="searchRemoteCustomers"
-                                :loading="loading_search"
-                            >
-                                <el-option
-                                    v-for="option in customers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Condición de pago</label
-                            >
-                            <el-select
-                                v-model="search.payment_condition_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in payment_conditions"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label w-100">Productos</label>
-                            <el-select
-                                class="w-100"
-                                v-model="search.item_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o código interno"
-                                :remote-method="searchRemoteItems"
-                                :loading="loading_search_item"
-                            >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label w-100"
+
+
+            <div class="row ">
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100"
                                 >Establecimiento</label
-                            >
-                            <el-select
-                                v-model="search.establishments"
-                                @change="changestablishment"
-                                popper-class="el-select-establishment"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in establishments"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Categoría</label>
-                            <el-select
-                                v-model="search.category_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in categories"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Unidad De Medida</label
-                            >
-                            <el-select
-                                v-model="search.unit_type_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in unit_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Usuarios</label
-                            >
-                            <el-select
-                                v-model="search.user_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="user in users"
-                                    :key="user.id"
-                                    :value="user.id"
-                                    :label="user.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div
-                        class="col-lg-3 col-md-3 col-md-3 col-sm-12"
-                        style="margin-top:29px"
-                    >
-                        <el-button
-                            class="submit"
-                            type="primary"
-                            @click.prevent="getRecordsByFilter"
-                            :loading="loading_submit"
-                            icon="el-icon-search"
-                            >Buscar</el-button
-                        >
-                        <el-button
-                            class="submit"
-                            type="info"
-                            @click.prevent="cleanInputs"
-                            icon="el-icon-delete"
-                            >Limpiar</el-button
-                        >
-                        <el-button
-                            class="submit"
-                            type="success"
-                            v-if="records.length > 0"
-                            @click.prevent="exportRecordsVentas"
-                            icon="el-icon-download"
-                            :disabled="
-                                !search.d_end &&
-                                    !search.date_of_issue &&
-                                    !search.customer_id &&
-                                    !search.year
-                            "
-                            >Exportar</el-button
-                        >
+                            > -->
+                        <el-select v-model="search.establishments" @change="changestablishment"
+                            popper-class="el-select-establishment" filterable clearable placeholder="Establecimiento">
+                            <el-option v-for="option in establishments" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
                     </div>
                 </div>
-            </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100"
+                                >Comprobante</label
+                            > -->
+                        <el-select v-model="search.document_type_id" @change="changeDocumentType"
+                            popper-class="el-select-document_type" filterable clearable placeholder="Comprobante">
+                            <el-option v-for="option in document_types" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                </div>
 
-            <div class="col-md-12">
-                <div id="scroll1" style="overflow-x: auto">
-                    <div style="height: 20px"></div>
-                </div>
-                <div
-                    class="table-responsive"
-                    id="scroll2"
-                    style="overflow-x: auto"
-                >
-                    <table class="table table-striped" v-loading="loading">
-                        <thead>
-                            <slot name="heading"></slot>
-                        </thead>
-                        <tbody>
-                            <slot
-                                v-for="(row, index) in records"
-                                :row="row"
-                                :index_="customIndex(index)"
-                            ></slot>
-                        </tbody>
-                    </table>
-                    <div>
-                        <el-pagination
-                            @current-change="getRecords"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        ></el-pagination>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Serie</label> -->
+                        <el-select v-model="search.series" filterable clearable placeholder="Serie">
+                            <el-option v-for="option in series" :key="option.number" :value="option.number"
+                                :label="option.label"></el-option>
+                        </el-select>
                     </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Número</label> -->
+                        <el-input placeholder="Número" v-model="search.number" clearable>
+                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Mes</label> -->
+                        <el-date-picker v-model="search.d_end" type="month" style="width: 100%;" placeholder="Mes"
+                            value-format="yyyy-MM" format="MM/yyyy" :picker-options="pickerOptionsDates"
+                            @change="changeEndDate"></el-date-picker>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <!-- <label class="control-label w-100"
+                            >Fecha de emisión</label
+                        > -->
+                    <el-date-picker v-model="search.date_of_issue" type="date" style="width: 100%;"
+                        placeholder="F. Emisión" value-format="yyyy-MM-dd" @change="changeDateOfIssue"></el-date-picker>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <!-- <label class="control-label w-100">Año</label> -->
+                    <el-date-picker v-model="search.year" type="year" style="width: 100%;" placeholder="Año"
+                        value-format="yyyy" @change="changeDateOfIssue"></el-date-picker>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Clientes</label> -->
+                        <el-select v-model="search.customer_id" filterable remote popper-class="el-select-customers"
+                            clearable placeholder="Cliente" :remote-method="searchRemoteCustomers"
+                            :loading="loading_search">
+                            <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100"
+                                >Condición de pago</label
+                            > -->
+                        <el-select v-model="search.payment_condition_id" filterable clearable placeholder="Condición">
+                            <el-option v-for="option in payment_conditions" :key="option.id" :value="option.id"
+                                :label="option.name"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Productos</label> -->
+                        <el-select class="w-100" v-model="search.item_id" filterable remote
+                            popper-class="el-select-customers" clearable placeholder="Producto"
+                            :remote-method="searchRemoteItems" :loading="loading_search_item">
+                            <el-option v-for="option in items" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100">Categoría</label> -->
+                        <el-select v-model="search.category_id" filterable clearable placeholder="Categoría">
+                            <el-option v-for="option in categories" :key="option.id" :value="option.id"
+                                :label="option.name"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100"
+                                >Unidad De Medida</label
+                            > -->
+                        <el-select v-model="search.unit_type_id" filterable clearable placeholder="Unidad de Medida">
+                            <el-option v-for="option in unit_types" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="col-3" style="padding:2px">
+                    <div class="form-group">
+                        <!-- <label class="control-label w-100"
+                                >Usuarios</label
+                            > -->
+                        <el-select v-model="search.user_id" filterable clearable placeholder="Usuario">
+                            <el-option v-for="user in users" :key="user.id" :value="user.id"
+                                :label="user.name"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="col-9 mt-2">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <el-button class="btn_guardarsmall" type="primary" @click.prevent="getRecordsByFilter"
+                            :loading="loading_submit" icon="el-icon-search">Buscar</el-button>
+
+                        <el-button class="btn_cancelarsmall" type="danger" @click.prevent="cleanInputs"
+                            icon="el-icon-delete" style="margin-left:8px">Limpiar</el-button>
+
+                        <el-button class="btn_excelsmall" type="success" v-if="records.length > 0"
+                            @click.prevent="exportRecordsVentas" icon="fa fa-file-excel"
+                            :disabled="!search.d_end && !search.date_of_issue && !search.customer_id && !search.year"
+                            style="margin-left:8px">Exportar</el-button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div id="scroll1" style="overflow-x: auto">
+                <div style="height: 20px"></div>
+            </div>
+            <div class="table-responsive" id="scroll2" style="overflow-x: auto">
+                <table class="table table-striped" v-loading="loading">
+                    <thead>
+                        <slot name="heading"></slot>
+                    </thead>
+                    <tbody>
+                        <slot v-for="(row, index) in records" :row="row" :index_="customIndex(index)"></slot>
+                    </tbody>
+                </table>
+                <div>
+                    <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
+                        :total="pagination.total" :current-page.sync="pagination.current_page"
+                        :page-size="pagination.per_page"></el-pagination>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 <style>
+input[disabled],
+input[readonly],
+input[type="date"][disabled],
+input[type="date"][readonly],
+.el-input.is-disabled .el-input__inner,
+.el-input__inner[disabled],
+.el-input__inner[readonly],
+.el-date-editor.is-disabled .el-date-editor__input,
+.el-date-editor .el-input__inner[disabled],
+.el-date-editor .el-input__inner[readonly],
+.el-date-editor__input[disabled],
+.el-date-editor__input[readonly],
+.el-input-number.is-disabled .el-input-number__decrease,
+.el-input-number.is-disabled .el-input-number__increase,
+.el-input-number.is-disabled .el-input-number__inner,
+input[disabled]::placeholder,
+input[readonly]::placeholder,
+input[type="date"][disabled]::placeholder,
+input[type="date"][readonly]::placeholder,
+.el-input__inner[disabled]::placeholder,
+.el-input__inner[readonly]::placeholder,
+.el-date-editor__input[disabled]::placeholder,
+.el-date-editor__input[readonly]::placeholder {
+  color: #073f68 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #073f68 !important;
+}
+
+
 .font-custom {
     font-size: 15px !important;
 }
@@ -594,10 +460,10 @@ export default {
         },
         cargalo() {
             $("#scroll1 div").width($(".table").width());
-            $("#scroll1").on("scroll", function() {
+            $("#scroll1").on("scroll", function () {
                 $("#scroll2").scrollLeft($(this).scrollLeft());
             });
-            $("#scroll2").on("scroll", function() {
+            $("#scroll2").on("scroll", function () {
                 $("#scroll1").scrollLeft($(this).scrollLeft());
             });
         }

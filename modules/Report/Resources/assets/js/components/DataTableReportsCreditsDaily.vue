@@ -2,15 +2,17 @@
     <div>
         <div class="row" v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
-                <div class="row">
-                    <div class="d-flex" style="margin-top:29px">
-                        <span style="margin-right:5px">
+                
+                    <div class="d-flex mb-1" >
+                        <span style="margin-right:15px">
                             <strong class="h4">
-                                Fecha : {{ form.date }}
+                                <span class="font-custom" style="font-size:30px; font-weight:700; font-family:'Helvetica Neue', Arial, sans-serif; margin-left:12px;">
+                                    Fecha: {{ form.date }}
+                                </span>
                             </strong>
                         </span>
                         <el-button
-                            class="submit"
+                            class="btn_guardarsmall"
                             type="primary"
                             @click.prevent="getRecordsByFilter"
                             :loading="loading_submit"
@@ -20,22 +22,23 @@
 
                         <template v-if="records.length > 0">
                             <el-button
-                                class="submit"
+                                class="btn_excelsmall"
                                 type="success"
                                 @click.prevent="clickDownload('excel_today')"
-                                ><i class="fa fa-file-excel"></i> Exporta Excel
-                                Pagos de hoy</el-button
-                            >
+                                ><i class="fa fa-file-excel"></i>
+                                Pagos de HOY
+                            </el-button>
+
                             <el-button
-                                class="submit"
+                                class="btn_excelsmall"
                                 type="success"
-                                @click.prevent="clickDownload('excel')"
-                                ><i class="fa fa-file-excel"></i> Exporta Excel
-                                atrasados</el-button
+                                @click.prevent="clickDownload('excel')">
+                                <i class="fa fa-file-excel"></i> 
+                                Pagos Atrasados</el-button
                             >
                         </template>
                     </div>
-                </div>
+                
             </div>
 
             <div class="col-md-12">
@@ -61,11 +64,13 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-end">
-                                    <strong>Totales</strong>
+                                    <strong style="font-size:24px; font-weight:700;">Totales</strong>
                                 </td>
                                 <!-- <td class="text-end">{{ totals.acum_quote.toFixed(2) }}</td> -->
                                 <td class="text-end">
-                                    {{ totals.acum_unpaid.toFixed(2) }}
+                                    <strong style="font-size:30px; font-weight:700;">
+                                        {{ (totals.acum_unpaid || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F') }}
+                                    </strong>
                                 </td>
                             </tr>
                         </tfoot>

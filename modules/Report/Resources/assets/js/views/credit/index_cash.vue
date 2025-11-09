@@ -1,29 +1,29 @@
 <template>
-    <div class="card mb-0 pt-2 pt-md-0">
+    <div class="card ">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Crédito hogar/efectivo aa</h6>
+            <h5 class="my-0 text-white">Ganancias Crédito Hogar - Efectivo</h5>
         </div>
         <div class="card mb-0">
             <div class="card-body" v-show="type == 'is_cash'">
                 <data-table :resource="resource"
                 :type.sync="type"
                 >
-                    <tr slot="heading">
-                        <th>#</th>
-                        <th class="text-center">CANT.</th>
-                        <th class="text-center">CREDI EFECTIVO</th>
-                        <th class="text-center">%</th>
-                        <th class="text-center">TIPO</th>
-                        <th class="text-center">GANANCIA %</th>
-                        <th class="text-end">MORA</th>
-                        <th class="text-end">UTILIDAD</th>
+                    <tr slot="heading" style="background-color: #073f68; color: #fff;">
+                        <th class="text-white">#</th>
+                        <th class="text-center text-white text-capitalize">Cant.</th>
+                        <th class="text-center text-white text-capitalize">Credi Efectivo</th>
+                        <th class="text-center text-white">%</th>
+                        <th class="text-center text-white text-capitalize">Tipo</th>
+                        <th class="text-center text-white text-capitalize">Ganancia %</th>
+                        <th class="text-end text-white text-capitalize">Mora</th>
+                        <th class="text-end text-white text-capitalize">Utilidad</th>
                     </tr>
 
                     <tr></tr>
-                    <tr slot-scope="{ index, row }">
+                    <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ index }}</td>
                         <td class="text-center">{{ row.count }}</td>
-                        <td class="text-center">{{ row.total }}</td>
+                        <td class="text-center">{{ Number(row.total).toFixed(2) }}</td>
                         <td class="text-center">{{ row.tasa }}</td>
                         <td class="text-center">{{ row.type_payment }}</td>
                         <td class="text-center">{{ Number(row.gain).toFixed(2) }}</td>
@@ -36,26 +36,26 @@
                     <data-table-product resource="reports/credits/cash_credit_product"
                 :type.sync="type"
                 >
-                    <tr slot="heading">
-                        <th>#</th>
-                        <th class="text-center">CANT.</th>
-                        <th class="text-center">CREDI HOGAR</th>
-                        <th class="text-center">PC</th>
-                        <th class="text-center">PRODUCTO</th>
-                        <th class="text-center">%</th>
-                        <th class="text-center">TIPO</th>
-                        <th class="text-center">GANANCIA %</th>
-                        <th class="text-end">MORA</th>
-                        <th class="text-end">UTILIDAD</th>
+                    <tr slot="heading" style="background-color: #073f68; color: #fff;">
+                        <th class="text-white">#</th>
+                        <th class="text-center text-white text-capitalize">Cant.</th>
+                        <th class="text-center text-white text-capitalize">Credi Hogar</th>
+                        <th class="text-center text-white text-capitalize">Compra</th>
+                        <th class="text-left text-white text-capitalize">Producto</th>
+                        <th class="text-center text-white text-capitalize">%</th>
+                        <th class="text-center text-white text-capitalize">Tipo</th>
+                        <th class="text-center text-white text-capitalize">Ganancia %</th>
+                        <th class="text-end text-white text-capitalize">Mora</th>
+                        <th class="text-end text-white text-capitalize">Utilidad</th>
                     </tr>
 
                     <tr></tr>
-                    <tr slot-scope="{ index, row }">
+                    <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ index }}</td>
                         <td class="text-center">{{ row.count }}</td>
-                        <td class="text-center">{{ row.total }}</td>
-                        <td class="text-center">{{ row.purchase_unit_price }}</td>
-                        <td class="text-center">{{ row.product }}</td>
+                        <td class="text-right">{{ Number(row.total).toFixed(2) }}</td>
+                        <td class="text-right">{{ Number(row.purchase_unit_price).toFixed(2) }}</td>
+                        <td class="text-left">{{ row.product }}</td>
                         <td class="text-center">{{ row.tasa }}</td>
                         <td class="text-center">{{ row.type_payment }}</td>
                         <td class="text-center">{{ Number(row.gain).toFixed(2) }}</td>

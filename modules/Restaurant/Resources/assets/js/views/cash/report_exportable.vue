@@ -1,22 +1,15 @@
+<!-- Exportar Reporte De Ganancia Por Almacén Administrador Reporte -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card mb-0">
-                    <div
-                        class="card-header bg-primary d-flex align-items-center"
-                        style="padding: 15px;"
-                    >
-                        <h4
-                            class="my-0 text-white d-flex align-items-center"
-                            style="font-size: 1.5rem; font-weight: bold;"
-                        >
-                            <i
-                                class="fa fa-file-export"
-                                style="font-size: 2rem; margin-right: 0.5rem;"
-                            ></i>
+                    <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                        <h5 class="my-0 text-white d-flex align-items-center"
+                            style="font-size: 1rem; font-weight: bold;">
+                            <i class="fa fa-file-export" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                             Exportar Reporte De Ganancia Por Almacén
-                        </h4>
+                        </h5>
                     </div>
                 </div>
 
@@ -26,76 +19,46 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Almacén</label>
-                                    <el-select
-                                        v-model="form.establishment_id"
-                                        clearable
-                                        filterable
-                                    >
-                                        <el-option
-                                            v-for="option in warehouses"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        >
+                                    <el-select v-model="form.establishment_id" clearable filterable>
+                                        <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
+                                            :label="option.description">
                                         </el-option>
                                     </el-select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label"
-                                        >Fecha Inicio</label
-                                    >
-                                    <el-date-picker
-                                        style="width:100%;"
-                                        v-model="form.date_start"
-                                        value-format="yyyy-MM-dd"
-                                        @change="checkDate"
-                                    >
+                                    <label class="control-label">Fecha Inicio</label>
+                                    <el-date-picker style="width:100%;" v-model="form.date_start"
+                                        value-format="yyyy-MM-dd" @change="checkDate">
                                     </el-date-picker>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label"
-                                        >Fecha Final</label
-                                    >
-                                    <el-date-picker
-                                        style="width:100%;"
-                                        v-model="form.date_end"
-                                        value-format="yyyy-MM-dd"
-                                        @change="checkDate"
-                                    >
+                                    <label class="control-label">Fecha Final</label>
+                                    <el-date-picker style="width:100%;" v-model="form.date_end"
+                                        value-format="yyyy-MM-dd" @change="checkDate">
                                     </el-date-picker>
                                 </div>
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
-                                <el-button
-                                    class="submit"
-                                    type="success"
-                                    @click.prevent="clickDownload('excel')"
-                                    :loading="loading_excel"
-                                    icon="el-icon-download"
-                                >
+                                <el-button class="btn_excelsmall" type="success" @click.prevent="clickDownload('excel')"
+                                    :loading="loading_excel" icon="fa fa-file-excel">
                                     {{
                                         loading_excel
-                                            ? "Generando reporte..."
-                                            : "Exportar a Excel ganancia"
+                                            ? "Generando ....."
+                                            : "Ganancia V1"
                                     }}
                                 </el-button>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <el-button
-                                    class="submit"
-                                    type="success"
-                                    @click.prevent="clickDownloadDiscount('excel')"
-                                    :loading="loading_excel_discount"
-                                    icon="el-icon-download"
-                                >
+
+                                <el-button class="btn_excelsmall" type="success"
+                                    @click.prevent="clickDownloadDiscount('excel')" :loading="loading_excel_discount"
+                                    icon="fa fa-file-excel">
                                     {{
                                         loading_excel_discount
-                                            ? "Generando reporte con descuento..."
-                                            : "Exportar a Excel ganancia con descuento"
+                                            ? "Generando....."
+                                            : "Ganancia V2"
                                     }}
                                 </el-button>
                             </div>

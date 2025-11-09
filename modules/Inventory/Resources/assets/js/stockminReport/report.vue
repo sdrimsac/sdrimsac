@@ -1,113 +1,75 @@
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Reporte de Stock Minimo</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="#">Reporte</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Stock Minimo</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">
-                        Listado de productos con stock minimo
-                    </h6>
+                    <h5 class="my-0 text-white">
+                        <i class="el-icon-warning" style="color:#ffc107; margin-right:8px" title="Stock mínimo"></i>
+                        Productos con Stock Mínimo
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="col-md-12 col-lg-12 col-xl-12 ">
                         <div class="row mt-2">
                             <div class="col-md-3">
-                                <h3 class=" text-muted ">
+                                <!-- <h3 class=" text-muted ">
                                     Buscar
-                                </h3>
+                                </h3> -->
 
-                                <el-input
-                                    ref="input_itemMobil"
-                                    size="small"
-                                    v-model="input_searchItems"
-                                    placeholder="Ingrese aca Un Producto"
-                                >
-                                    <el-button
-                                        slot="append"
-                                        icon="el-icon-search"
-                                    ></el-button>
+                                <el-input ref="input_itemMobil" size="small" v-model="input_searchItems"
+                                    placeholder="Ingrese Producto">
+                                    <el-button slot="append" icon="el-icon-search" style="background-color: #073f68; color: #ffffff; border-color: #073f68;"></el-button>
                                 </el-input>
                             </div>
 
                             <div class="col-md-3" style="align-self: self-end;">
                                 <div class="form-group">
                                     <label class="control-label"> </label>
-                                    <el-button
-                                        type="primary"
-                                        size="small"
-                                        @click="showOrdenCompra"
-                                    >
-                                        Ver Ordenes de Compra
+                                    <el-button class="btn_guardarsmall" type="primary" @click="showOrdenCompra">
+                                        <i class="el-icon-view" style="margin-right:8px"></i>
+                                        Ver O.C.
                                     </el-button>
                                 </div>
                             </div>
                             <div class="col-md-3" style="align-self: self-end;">
                                 <div class="form-group">
                                     <label class="control-label"> </label>
-                                    <el-button
-                                        type="primary"
-                                        size="small"
-                                        @click="newOrdenCompra"
-                                    >
-                                        Generar Orden de Compra
+                                    <el-button class="btn_guardarsmall" type="primary" size="small" @click="newOrdenCompra">
+                                        <i class="el-icon-plus" style="margin-right:8px"></i>
+                                        Generar O.C.
                                     </el-button>
                                 </div>
                             </div>
                             <div class="col-md-3" style="align-self: self-end;">
                                 <div class="form-group">
                                     <label class="control-label"> </label>
-                                    <el-button
-                                        type="primary"
-                                        size="small"
-                                        @click="newOrdenCompraMasiva"
-                                    >
-                                        Generar Orden de Compra Masiva
+                                    <el-button class="btn_guardarsmall" type="primary" size="small" @click="newOrdenCompraMasiva">
+                                        <i class="el-icon-s-order" style="margin-right:8px"></i>
+                                        Generar O.C. Masiva
                                     </el-button>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <data-table
-                                ref="DataTable"
-                                :input_searchItems.sync="this.input_searchItems"
-                            >
-                                <tr slot="heading">
-                                    <th>#</th>
-                                    <th>Acciones</th>
-                                    <th>Descripcion</th>
-                                    <th class="text-end">Stok Minimo</th>
-                                    <th class="text-end">Stock en Almacen</th>
-                                    <th class="text-end">Almacen</th>
+                            <data-table ref="DataTable" :input_searchItems.sync="this.input_searchItems">
+                                <tr slot="heading" style="background-color:#073f68; color:#ffffff;">
+                                    <th style="color:#ffffff;">#</th>
+                                    <th style="color:#ffffff;">Acciones</th>
+                                    <th style="color:#ffffff;">Producto</th>
+                                    <th class="text-end" style="color:#ffffff;">Stok Minimo</th>
+                                    <th class="text-end" style="color:#ffffff;">Stock en Almacen</th>
+                                    <th class="text-end" style="color:#ffffff;">Almacen</th>
                                 </tr>
 
                                 <tr></tr>
-                                <tr slot-scope="{ index, row }">
+                                <tr slot-scope="{ index, row }"  :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                                     <td>{{ index }}</td>
                                     <td>
-                                        <button
-                                            v-if="row.has_orden_compra == 0"
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-info"
-                                            @click.prevent="
+                                        <button v-if="row.has_orden_compra == 0" type="button"
+                                            class="btn_guardarsmall" @click.prevent="
                                                 verProveedores(row.id)
-                                            "
-                                        >
+                                                ">
                                             Proveedores
                                         </button>
                                     </td>
@@ -124,51 +86,31 @@
                 </div>
             </div>
         </div>
-        <el-dialog
-            title="Lista de precios de Compra"
-            :visible.sync="showDialogVerProveedores"
-            width="75%"
-            @close="showDialogVerProveedores = false"
-        >
+        <el-dialog title="Lista de precios de Compra" :visible.sync="showDialogVerProveedores" width="100%"
+            @close="showDialogVerProveedores = false">
             <h3 style=" margin-top: 20px;">{{ `Producto: ${ProdDesc}` }}</h3>
-            <div
-                class="row container table-responsive col-md-12"
-                id="showDataprovDesc"
-            >
-                <table
-                    class="table table-hover table-striped table-condensed  table-responsive"
-                    style="width:100%;     white-space: nowrap;"
-                >
-                    <thead>
+            <div class="row container table-responsive col-md-12" id="showDataprovDesc">
+                <table class="table table-hover table-striped table-condensed  table-responsive"
+                    style="width:100%;     white-space: nowrap;">
+                    <thead style="background-color:#073f68;">
                         <tr>
-                            <th>
-                                Acciones
-                            </th>
-                            <th>
-                                Precio De Compra
-                            </th>
-                            <th>Fecha</th>
-                            <th>
-                                Nombre Del Proveedor
-                            </th>
+                            <th style="color:#ffffff">Acciones</th>
+                            <th style="color:#ffffff">Precio De Compra</th>
+                            <th style="color:#ffffff">Fecha</th>
+                            <th style="color:#ffffff">Nombre Del Proveedor</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(data, idx) in recordsDescProv" :key="idx">
+                        <tr v-for="(data, idx) in recordsDescProv" :key="idx"  :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                             <td>
-                                <el-button
-                                    class="btn btn-primary"
-                                    @click.prevent="
-                                        insertAprovisionar(
-                                            data.persona_id,
-                                            data.item_id,
-                                            data.unit_price
-                                        )
-                                    "
-                                    :loading="loading_submit"
-                                >
-                                    {{ `Aprovisionar ` }}</el-button
-                                >
+                                <el-button class="btn_guardarsmall" @click.prevent="
+                                    insertAprovisionar(
+                                        data.persona_id,
+                                        data.item_id,
+                                        data.unit_price
+                                    )
+                                    " :loading="loading_submit">
+                                    {{ `Aprovisionar ` }}</el-button>
                             </td>
                             <td>{{ data.unit_price }}</td>
                             <td>{{ data.date_of_issue }}</td>
@@ -178,25 +120,15 @@
                 </table>
             </div>
             <span slot="footer">
-                <el-button @click="showDialogVerProveedores = false"
-                    >Cancel</el-button
-                >
+                <el-button @click="showDialogVerProveedores = false">Cancel</el-button>
             </span>
         </el-dialog>
 
-        <generar-orden-compra
-            @callBrotherMethod="callMethod"
-            :showGenOrdenCompra.sync="showGenOrdenCompra"
-        >
+        <generar-orden-compra @callBrotherMethod="callMethod" :showGenOrdenCompra.sync="showGenOrdenCompra">
         </generar-orden-compra>
-        <genOrdenCompraMasiva
-            @callBrotherMethod="callMethod"
-            :showOrdenCompraMasiva.sync="showOrdenCompraMasiva"
-        >
+        <genOrdenCompraMasiva @callBrotherMethod="callMethod" :showOrdenCompraMasiva.sync="showOrdenCompraMasiva">
         </genOrdenCompraMasiva>
-        <show-ordenes-compra
-            :showdialogOrdenesCompra.sync="showdialogOrdenesCompra"
-        >
+        <show-ordenes-compra :showdialogOrdenesCompra.sync="showdialogOrdenesCompra">
         </show-ordenes-compra>
     </div>
 </template>
@@ -204,9 +136,11 @@
 .el-dialog__header {
     background-color: var(--primary) !important;
 }
+
 .el-dialog__title {
     color: var(--light-text) !important;
 }
+
 .el-dialog__headerbtn .el-dialog__close {
     color: white !important;
 }
@@ -224,7 +158,7 @@ const GenerarOrdenCompra = () =>
 
 
 export default {
-    components: { DataTable, GenerarOrdenCompra, ShowOrdenesCompra , genOrdenCompraMasiva},
+    components: { DataTable, GenerarOrdenCompra, ShowOrdenesCompra, genOrdenCompraMasiva },
     props: ["stablecimientos", "categoria"],
     data() {
         return {
@@ -242,8 +176,8 @@ export default {
             loading_submit: false,
             showGenOrdenCompra: false,
             showdialogOrdenesCompra: false,
-            input_searchItems: "", 
-            showOrdenCompraMasiva: false 
+            input_searchItems: "",
+            showOrdenCompraMasiva: false
         };
     },
     methods: {
@@ -310,8 +244,8 @@ export default {
         callMethod() {
             this.$refs.DataTable.getRecords();
         },
-        newOrdenCompraMasiva(){
-            this.showOrdenCompraMasiva = true 
+        newOrdenCompraMasiva() {
+            this.showOrdenCompraMasiva = true
         }
     }
 };

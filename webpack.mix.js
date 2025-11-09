@@ -1,5 +1,6 @@
 const mix = require("laravel-mix");
-
+const path = require("path"); // <--- AÑADIDO (¡Muy importante!)
+const { VueLoaderPlugin } = require("vue-loader"); // <--- AÑADIDO
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

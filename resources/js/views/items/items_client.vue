@@ -1,149 +1,96 @@
 <template>
   <div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Reporte de productos por cliente</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashboard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Productos por cliente</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="card mb-0">
-        <div class="card-header bg-primary">
-          <h6 class="my-0 text-white">Productos por cliente</h6>
+
+    <div class="container-fluid ">
+      <div class="card">
+        <div class="card-header bg-primary" style="padding:10px;">
+          <h5 class="my-0 text-white">
+            <i class="fa fa-cubes text-white mr-2" aria-hidden="true"></i>
+            <i class="fa fa-user text-white mr-2" aria-hidden="true"></i>
+            Reporte de Productos X Cliente
+          </h5>
         </div>
         <div class="card-body">
           <div class="col-md-12 col-lg-12 col-xl-12">
+            <div class="row ">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <!-- <label class="control-label">
+                    Producto
+                  </label> -->
+                  <el-select class="w-100" v-model="form.item_id" filterable remote popper-class="el-select-customers"
+                    clearable placeholder="Producto/Código Interno" :remote-method="searchRemoteItems"
+                    :loading="loading_search_item">
+                    <el-option v-for="option in items" :key="option.id" :value="option.id"
+                      :label="option.description"></el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <!-- <label class="control-label">
+                    Cliente
+                  </label> -->
+                  <el-select class="w-100" v-model="form.customer_id" filterable remote
+                    popper-class="el-select-customers" clearable placeholder="Cliente/DNI/RUC"
+                    :remote-method="searchRemoteCustomers" :loading="loading_search_item">
+                    <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                      :label="option.name"></el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <!-- <label class="control-label">Fecha Inicio</label> -->
+                  <el-date-picker style="width:100%;" v-model="form.date_start" value-format="yyyy-MM-dd"
+                    placeholder="F.Incio" @change="checkDate"></el-date-picker>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <!-- <label class="control-label">Fecha Final</label> -->
+                  <el-date-picker style="width:100%;" v-model="form.date_end" value-format="yyyy-MM-dd"
+                    placeholder="F.Final" @change="checkDate"></el-date-picker>
+                </div>
+              </div>
+
+            </div>
+
             <div class="row mt-2">
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <div class="form-group">
-                  <label class="control-label">Almacen</label>
-                  <el-select v-model="form.establishment_id" clearable filterable>
-                    <el-option
-                      v-for="option in warehouses"
-                      :key="option.id"
-                      :value="option.id"
-                      :label="option.description"
-                    ></el-option>
-                  </el-select>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="control-label">Categoria</label>
-                  <el-select v-model="form.categoria_id" clearable filterable>
-                    <el-option
-                      v-for="option in categories"
-                      :key="option.id"
-                      :value="option.id"
-                      :label="option.name"
-                    ></el-option>
-                  </el-select>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="control-label">Producto</label>
-                  <el-select
-                    class="w-100"
-                    v-model="form.item_id"
-                    filterable
-                    remote
-                    popper-class="el-select-customers"
-                    clearable
-                    placeholder="Nombre o código interno"
-                    :remote-method="searchRemoteItems"
-                    :loading="loading_search_item"
-                  >
-                    <el-option
-                      v-for="option in items"
-                      :key="option.id"
-                      :value="option.id"
-                      :label="option.description"
-                    ></el-option>
+                  <!-- <label class="control-label">Almacén</label> -->
+                  <el-select v-model="form.establishment_id" clearable filterable placeholder="Almacén">
+                    <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
+                      :label="option.description"></el-option>
                   </el-select>
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="form-group">
-                  <label class="control-label">Fecha Inicio</label>
-                  <el-date-picker
-                    style="width:100%;"
-                    v-model="form.date_start"
-                    value-format="yyyy-MM-dd"
-                    @change="checkDate"
-                  ></el-date-picker>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <label class="control-label">Fecha Final</label>
-                  <el-date-picker
-                    style="width:100%;"
-                    v-model="form.date_end"
-                    value-format="yyyy-MM-dd"
-                    @change="checkDate"
-                  ></el-date-picker>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="control-label">Cliente</label>
-                  <el-select
-                    class="w-100"
-                    v-model="form.customer_id"
-                    filterable
-                    remote
-                    popper-class="el-select-customers"
-                    clearable
-                    placeholder="Nombre o documento"
-                    :remote-method="searchRemoteCustomers"
-                    :loading="loading_search_item"
-                  >
-                    <el-option
-                      v-for="option in customers"
-                      :key="option.id"
-                      :value="option.id"
-                      :label="option.name"
-                    ></el-option>
+                  <!-- <label class="control-label">Categoría</label> -->
+                  <el-select v-model="form.categoria_id" clearable filterable placeholder="Categoría">
+                    <el-option v-for="option in categories" :key="option.id" :value="option.id"
+                      :label="option.name"></el-option>
                   </el-select>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 col-md-3 col-sm-12 d-flex align-items-center">
-                <el-button
-                  class="submit"
-                  type="primary"
-                  @click.prevent="getRecordsByFilter"
-                  :loading="loading_submit"
-                  icon="el-icon-search"
-                >Buscar</el-button>
+              <div class="col-6 d-flex align-items-center justify-content-end">
+                <el-button class="btn_guardarsmall ml-2" type="primary" @click.prevent="getRecordsByFilter"
+                  :loading="loading_submit" icon="el-icon-search">
+                  Buscar
+                </el-button>
                 <template v-if="records.length > 0">
-                  <!-- <el-button
-                                        class="submit"
-                                        type="danger"
-                                        @click.prevent="clickDownload('pdf')"
-                                        ><i class="fa fa-file-pdf"></i>
-                                        PDF</el-button
-                  >-->
-                  <el-button class="submit" type="success" @click.prevent="clickDownload('excel')">
+                  <el-button class="btn_pdfsmall ml-2" type="danger" @click.prevent="clickDownload('pdf')"><i
+                      class="fa fa-file-pdf"></i>
+                    PDF</el-button>
+                  <el-button class="btn_excelsmall ml-2" type="success" @click.prevent="clickDownload('excel')">
                     <i class="fa fa-file-excel"></i>
-                    EXCEL
+                    Excel
                   </el-button>
-                  <el-button class="submit" type="success" @click.prevent="openWhastappForm()">
+                  <el-button class="btn_whatsappsmall ml-2" type="success" @click.prevent="openWhastappForm()">
                     <i class="icofont-brand-whatsapp"></i>
-                    WHATSAPP
+                    WhatsApp
                   </el-button>
                 </template>
               </div>
@@ -153,88 +100,94 @@
             <div class="table-responsive">
               <table class="table">
                 <thead>
-                  <tr slot="heading">
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Total</th>
-                    <th>Unidades</th>
+                  <tr slot="heading" style="background:#073f68;color:#fff;">
+                    <th class="text-white" style="width:6%; min-width:36px; white-space:nowrap;">#</th>
+                    <th class="text-white" style="width:65%;">Cliente</th>
+                    <th class="text-white text-center" style="width:10%;">Unidades</th>
+                    <th class="text-white text-right" style="width:10%;">Total</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(row, index) in records" :key="index">
-                    <td>{{ index + 1 }}</td>
                     <td>
-                      {{ row.customer_name }}
+                      <span
+                        style="display:inline-block; font-size:1.25rem; font-weight:700; background:#073f68; color:#fff; padding:6px 10px; border-radius:6px; min-width:36px; text-align:center;">
+                        {{ index + 1 }}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        style="display:inline-block; font-size:1.2rem; padding:6px 10px; background:#e8f4ff; border-radius:6px; font-weight:600; color:#073f68;">
+                        {{ row.customer_name }}
+                      </span>
                       <template v-if="row.items">
                         <div class="col-12">
                           <table class="table">
                             <thead>
-                              <tr>
-                                <th>Cant</th>
-                                <th>Desc.</th>
-                                <th>Doc.</th>
-                                <th>Fecha</th>
-                                <th>Monto</th>
+                              <tr slot="heading" style="background:#1e5a85;color:#fff;">
+                                <th class="text-white" style="width:12%; min-width:80px; white-space:nowrap;">CPE</th>
+                                <th class="text-white text-center" style="width:8%; min-width:60px;">Cant</th>
+                                <th class="text-white" style="width:20%; min-width:100px;">Producto</th>
+                                <th class="text-white text-center" style="width:15%; min-width:110px;">Fecha</th>
+                                <th class="text-white text-right" style="width:15%; min-width:90px;">Monto</th>
                               </tr>
                             </thead>
-                            <tr
-                              v-for="(item,
-                                                            idx) in row.items"
-                              :key="idx"
-                            >
-                              <td>
-                                <small>
-                                  {{
-                                  item.quantity
-                                  }}
-                                </small>
-                              </td>
+                            <tbody>
+                              <tr v-for="(item, idx) in row.items" :key="idx"
+                                :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f7f7f7' }">
+                                <td class="align-middle" style="white-space:nowrap; padding: .35rem .75rem;">
+                                  <small>
+                                    <span style="font-size:1rem; font-weight:700; color:#073f68;">
+                                      {{ item.document }}
+                                    </span>
+                                  </small>
+                                </td>
 
-                              <td width="40%">
-                                <small>
-                                  {{
-                                  item.description
-                                  }}
-                                  <span
-                                    v-if="item.selectedAncho && item.selectedGrosor && item.selectedLargo"
-                                  >- {{ item.selectedAncho }}x{{ item.selectedGrosor}}x{{ item.selectedLargo}}</span>
-                                </small>
-                              </td>
-                              <td>
-                                <small>
-                                  {{
-                                  item.document
-                                  }}
-                                </small>
-                              </td>
+                                <td class="align-middle text-center" style="width:80px; padding: .35rem .75rem;">
+                                  <small>{{ isNaN(Number(item.quantity)) ? '0.00' : Number(item.quantity).toFixed(2)
+                                    }}</small>
+                                </td>
 
-                              <td>
-                                <small>
-                                  {{
-                                  item.date_of_issue
-                                  }}
-                                </small>
-                              </td>
-                              <td>
-                                <small>{{item.total}}</small>
-                              </td>
-                            </tr>
+                                <td class="align-middle" style="width:40%; padding: .35rem .75rem;">
+                                  <small class="d-block text-truncate" style="max-width:100%;">
+                                    {{ item.description }}
+                                    <span v-if="item.selectedAncho && item.selectedGrosor && item.selectedLargo">
+                                      - {{ item.selectedAncho }}x{{ item.selectedGrosor }}x{{ item.selectedLargo }}
+                                    </span>
+                                  </small>
+                                </td>
+
+                                <td class="align-middle text-center" style="width:120px; padding: .35rem .75rem;">
+                                  <small>{{ item.date_of_issue }}</small>
+                                </td>
+
+                                <td class="align-middle text-right" style="width:100px; padding: .35rem .75rem;">
+                                  <small>{{ isNaN(Number(item.total)) ? '0.00' : Number(item.total).toFixed(2)
+                                    }}</small>
+                                </td>
+                              </tr>
+                            </tbody>
                           </table>
                         </div>
                       </template>
                     </td>
                     <td>
-                      {{
-                      row.total.toLocaleString(
-                      "es-PE",
-                      {
-                      style: "currency",
-                      currency: "PEN"
-                      }
-                      )
-                      }}
+                      <span style="display:inline-block; font-size:1.25rem; font-weight:700;">
+                        {{ isNaN(Number(row.quantity)) ? '0.00' : Number(row.quantity).toFixed(2) }}
+                      </span>
                     </td>
-                    <td>{{ row.quantity }}</td>
+                    <td>
+                      <span style="display:inline-block; font-size:1.25rem; font-weight:700;">
+                        {{
+                          row.total.toLocaleString("es-PE", {
+                            style: "currency",
+                            currency: "PEN"
+                          })
+                        }}
+                      </span>
+                    </td>
+                    
                   </tr>
                 </tbody>
               </table>
@@ -244,13 +197,11 @@
         </div>
       </div>
     </div>
-    <whatsapp-form-report
-      :message.sync="messageReport"
-      :resource="resourceReport"
-      :showWhatsappForm.sync="showWhatsappForm"
-    ></whatsapp-form-report>
+    <whatsapp-form-report :message.sync="messageReport" :resource="resourceReport"
+      :showWhatsappForm.sync="showWhatsappForm"></whatsapp-form-report>
   </div>
 </template>
+
 
 <script>
 import { deletable } from "../../mixins/deletable";
@@ -338,9 +289,8 @@ export default {
     },
     openWhastappForm() {
       this.messageReport = `Reporte de productos por cliente ${this.form
-        .date_start || ""} ${
-        this.form.date_end ? this.form.date_end : ""
-      }.xlsx`;
+        .date_start || ""} ${this.form.date_end ? this.form.date_end : ""
+        }.xlsx`;
       console.log(this.messageReport);
       this.resourceReport = `/report_product_client/report/excel?${this.getQueryParameters()}`;
       console.log(this.resourceReport);
@@ -439,8 +389,7 @@ export default {
           this.$toast.error(
             "La fecha final no puede ser menor a la fecha de inicio"
           );
-          re;
-          turn;
+          return;
         }
       }
       this.loading_submit = true;
@@ -527,3 +476,32 @@ export default {
   }
 };
 </script>
+<style>
+input[disabled],
+input[readonly],
+input[type="date"][disabled],
+input[type="date"][readonly],
+.el-input.is-disabled .el-input__inner,
+.el-input__inner[disabled],
+.el-input__inner[readonly],
+.el-date-editor.is-disabled .el-date-editor__input,
+.el-date-editor .el-input__inner[disabled],
+.el-date-editor .el-input__inner[readonly],
+.el-date-editor__input[disabled],
+.el-date-editor__input[readonly],
+.el-input-number.is-disabled .el-input-number__decrease,
+.el-input-number.is-disabled .el-input-number__increase,
+.el-input-number.is-disabled .el-input-number__inner,
+input[disabled]::placeholder,
+input[readonly]::placeholder,
+input[type="date"][disabled]::placeholder,
+input[type="date"][readonly]::placeholder,
+.el-input__inner[disabled]::placeholder,
+.el-input__inner[readonly]::placeholder,
+.el-date-editor__input[disabled]::placeholder,
+.el-date-editor__input[readonly]::placeholder {
+  color: #073f68 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #073f68 !important;
+}
+</style>

@@ -2,238 +2,93 @@
     <div>
         <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
-                <div class="row mt-2">
-                    <div class="col-md-3">
-                        <label class="control-label"
-                            >Periodo (Fecha de emisión)</label
-                        >
-                        <el-select v-model="form.period" @change="changePeriod">
-                            <el-option
-                                key="month"
-                                value="month"
-                                label="Por mes"
-                            ></el-option>
-                            <el-option
-                                key="between_months"
-                                value="between_months"
-                                label="Entre meses"
-                            ></el-option>
-                            <el-option
-                                key="date"
-                                value="date"
-                                label="Por fecha"
-                            ></el-option>
-                            <el-option
-                                key="between_dates"
-                                value="between_dates"
-                                label="Entre fechas"
-                            ></el-option>
-                        </el-select>
-                    </div>
-                    <template
-                        v-if="
-                            form.period === 'month' ||
-                                form.period === 'between_months'
-                        "
-                    >
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Mes de</label>
-                            <el-date-picker
-                                v-model="form.month_start"
-                                type="month"
-                                class="w-100"
-                                @change="changeDisabledMonths"
-                                value-format="yyyy-MM"
-                                format="MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_months'">
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Mes al</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.month_end"
-                                type="month"
-                                :picker-options="pickerOptionsMonths"
-                                value-format="yyyy-MM"
-                                format="MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template
-                        v-if="
-                            form.period === 'date' ||
-                                form.period === 'between_dates'
-                        "
-                    >
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Fecha del</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_start"
-                                type="date"
-                                @change="changeDisabledDates"
-                                value-format="yyyy-MM-dd"
-                                format="dd/MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_dates'">
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Fecha al</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_end"
-                                type="date"
-                                :picker-options="pickerOptionsDates"
-                                value-format="yyyy-MM-dd"
-                                format="dd/MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-
-                
-
+                <div class="row ">
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">
                             <label class="w-100 control-label">
                                 Clientes
                             </label>
 
-                            <el-select
-                                class="w-100"
-                                v-model="form.person_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o número de documento"
-                                :remote-method="searchRemotePersons"
-                                :loading="loading_search"
-                                @change="changePersons"
-                            >
-                                <el-option
-                                    v-for="option in persons"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <el-select class="w-100" v-model="form.person_id" filterable remote
+                                popper-class="el-select-customers" clearable placeholder="Nombre o número de documento"
+                                :remote-method="searchRemotePersons" :loading="loading_search" @change="changePersons">
+                                <el-option v-for="option in persons" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
-
-                    <!-- <div
-                        :class="
-                            resource == 'reports/sales' ||
-                            resource == 'reports/purchases'
-                                ? 'col-lg-3 col-md-3'
-                                : 'col-lg-2 col-md-2'
-                        "
-                        v-if="applyCustomer"
-                    >
-                        <div class="form-group">
-                            <label class="w-100 control-label">
-                                Usuarios
-                            </label>
-
-                            <el-select
-                                class="w-100"
-                                v-model="form.seller_id"
-                                filterable
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre usuario"
-                            >
-                                <el-option
-                                    v-for="option in sellers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
+                    <div class="col-md-2">
+                        <label class="control-label">Período</label>
+                        <el-select v-model="form.period" @change="changePeriod">
+                            <el-option key="month" value="month" label="Por mes"></el-option>
+                            <el-option key="between_months" value="between_months" label="Entre meses"></el-option>
+                            <el-option key="date" value="date" label="Por fecha"></el-option>
+                            <el-option key="between_dates" value="between_dates" label="Entre fechas"></el-option>
+                        </el-select>
+                    </div>
+                    <template v-if="
+                        form.period === 'month' ||
+                        form.period === 'between_months'
+                    ">
+                        <div class="col-md-2">
+                            <label class="w-100 control-label">Mes de</label>
+                            <el-date-picker v-model="form.month_start" type="month" class="w-100"
+                                @change="changeDisabledMonths" value-format="yyyy-MM" format="MM/yyyy"
+                                :clearable="false"></el-date-picker>
                         </div>
-                    </div> -->
-
-                    <!-- <div
-                        :class="
-                            resource == 'reports/sales' ||
-                            resource == 'reports/purchases'
-                                ? 'col-lg-2 col-md-2'
-                                : 'col-lg-2 col-md-2'
-                        "
-                        v-if="applyCustomer"
-                    >
-                        <div class="form-group">
-                            <label class="w-100 control-label">
-                                Tipo de Reporte
-                            </label>
-
-                            <el-select
-                                class="w-100"
-                                v-model="form.typeresult"
-                                filterable
-                                popper-class="el-select-customers"
-                                clearable
-                            >
-                                <el-option
-                                    label="Detallado"
-                                    value="Detallado"
-                                ></el-option>
-                                <el-option
-                                    label="Resumen"
-                                    value="Resumen"
-                                ></el-option>
-                            </el-select>
+                    </template>
+                    <template v-if="form.period === 'between_months'">
+                        <div class="col-md-2">
+                            <label class="w-100 control-label">Mes al</label>
+                            <el-date-picker class="w-100" v-model="form.month_end" type="month"
+                                :picker-options="pickerOptionsMonths" value-format="yyyy-MM" format="MM/yyyy"
+                                :clearable="false"></el-date-picker>
                         </div>
-                    </div> -->
+                    </template>
+                    <template v-if="
+                        form.period === 'date' ||
+                        form.period === 'between_dates'
+                    ">
+                        <div class="col-md-2">
+                            <label class="w-100 control-label">Fecha del</label>
+                            <el-date-picker class="w-100" v-model="form.date_start" type="date"
+                                @change="changeDisabledDates" value-format="yyyy-MM-dd" format="dd/MM/yyyy"
+                                :clearable="false"></el-date-picker>
+                        </div>
+                    </template>
+                    <template v-if="form.period === 'between_dates'">
+                        <div class="col-md-2">
+                            <label class="w-100 control-label">Fecha al</label>
+                            <el-date-picker class="w-100" v-model="form.date_end" type="date"
+                                :picker-options="pickerOptionsDates" value-format="yyyy-MM-dd" format="dd/MM/yyyy"
+                                :clearable="false"></el-date-picker>
+                        </div>
+                    </template>
 
-                    <div class="d-flex" style="margin-top:29px">
-                        <el-button
-                            class="submit"
-                            type="primary"
-                            @click.prevent="getRecordsByFilter"
-                            :loading="loading_submit"
-                            icon="el-icon-search"
-                            >Buscar</el-button
-                        >
 
-                        <template
-                            v-if="
-                                records.length > 0 &&
-                                    resource !== 'reports/document-detractions'
-                            "
-                        >
-                            <el-button
-                                class="submit"
-                                type="danger"
-                                icon="el-icon-tickets"
-                                @click.prevent="clickDownload('pdf')"
-                                >Exportar PDF</el-button
-                            >
+                    <div class="col-12 ml-auto d-flex justify-content-end align-items-center mt-1 mb-1">
+                        <div class="d-flex align-items-center">
+                            <el-button class="btn_guardarsmall" type="primary" @click.prevent="getRecordsByFilter"
+                                :loading="loading_submit" icon="el-icon-search">Buscar</el-button>
 
-                            <el-button
-                                class="submit"
-                                type="success"
-                                @click.prevent="clickDownload('excel')"
-                                ><i class="fa fa-file-excel"></i> Exportal
-                                Excel</el-button
-                            >
-                            <el-button
-                                v-if="resource !== 'reports/promotions'"
-                                class="submit"
-                                @click.prevent="clickOpenWhatsapp"
-                                ><i class="fa fa-whatsapp"></i> Enviar
-                                whatsapp</el-button
-                            >
-                        </template>
+                            <template v-if="records.length > 0 && resource !== 'reports/document-detractions'">
+                                <el-button class="btn_pdfsmall ml-2" type="danger" icon="el-icon-tickets"
+                                    @click.prevent="clickDownload('pdf')">Exportar PDF</el-button>
+
+                                <el-button class="btn_excelsmall ml-2" type="success" @click.prevent="clickDownload('excel')">
+                                    <i class="fa fa-file-excel"></i> Exportar Excel
+                                </el-button>
+
+                                <el-button v-if="resource !== 'reports/promotions'" class="btn_whatsappsmall ml-2" type="success"
+                                    @click.prevent="clickOpenWhatsapp">
+                                    <i class="fab fa-whatsapp"></i>
+                                    
+                                    whatsapp</el-button>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-1 mb-4"></div>
+                
             </div>
 
             <div class="col-md-12">
@@ -243,24 +98,15 @@
                             <slot name="heading"></slot>
                         </thead>
                         <tbody>
-                            <slot
-                                v-for="(row, index) in records"
-                                :row="row"
-                                :index="customIndex(index)"
-                            ></slot>
+                            <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
                         </tbody>
-                        <tfoot
-                            v-if="
-                                resource == 'reports/sales' ||
-                                    resource == 'reports/purchases'
-                            "
-                        >
+                        <tfoot v-if="
+                            resource == 'reports/sales' ||
+                            resource == 'reports/purchases'
+                        ">
                             <tr>
-                                <td
-                                    :colspan="
-                                        resource == 'reports/sales' ? 7 : 8
-                                    "
-                                ></td>
+                                <td :colspan="resource == 'reports/sales' ? 7 : 8
+                                    "></td>
                                 <td><strong>Totales PEN</strong></td>
 
                                 <td>{{ totals.acum_total_taxed }}</td>
@@ -268,11 +114,8 @@
                                 <td>{{ totals.acum_total }}</td>
                             </tr>
                             <tr>
-                                <td
-                                    :colspan="
-                                        resource == 'reports/sales' ? 7 : 8
-                                    "
-                                ></td>
+                                <td :colspan="resource == 'reports/sales' ? 7 : 8
+                                    "></td>
                                 <td><strong>Totales USD</strong></td>
 
                                 <td>{{ totals.acum_total_taxed_usd }}</td>
@@ -282,23 +125,16 @@
                         </tfoot>
                     </table>
                     <div>
-                        <el-pagination
-                            @current-change="getRecords"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        >
+                        <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
+                            :total="pagination.total" :current-page.sync="pagination.current_page"
+                            :page-size="pagination.per_page">
                         </el-pagination>
                     </div>
                 </div>
             </div>
         </div>
-        <whatsapp-form-report
-            :message.sync="messageReport"
-            :resource="resourceReport"
-            :showWhatsappForm.sync="showWhatsappForm"
-        >
+        <whatsapp-form-report :message.sync="messageReport" :resource="resourceReport"
+            :showWhatsappForm.sync="showWhatsappForm">
         </whatsapp-form-report>
     </div>
 </template>
@@ -530,7 +366,7 @@ export default {
         clickDownload(type) {
             let query = queryString.stringify({
                 ...this.form,
-                isFromAdmin:this.isFromAdmin
+                isFromAdmin: this.isFromAdmin
             });
             window.open(`/${this.resource}/${type}/?${query}`, "_blank");
         },
@@ -582,7 +418,7 @@ export default {
                 .then(response => {
                     this.records = response.data.data;
                     //sort records by dues property (int) in descending order
-                    this.records.sort(function(a, b) {
+                    this.records.sort(function (a, b) {
                         return b.dues - a.dues;
                     });
 
@@ -601,7 +437,7 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
-                isFromAdmin:this.isFromAdmin,
+                isFromAdmin: this.isFromAdmin,
                 page: this.pagination.current_page,
                 limit: this.limit,
                 ...this.form

@@ -35,6 +35,10 @@ class SaleNoteVentaCollection extends ResourceCollection
                 'number' =>$row->series."-". $row->number,
                 'series' => $row->series,
                 'alone_number' => $row->number,
+                // Agregar descripción del cliente: "documento - nombre"
+                'client_description' => ($row->customer) ? ($row->customer->number . ' - ' . $row->customer->name) : null,
+                'client_number' => ($row->customer) ? $row->customer->number : null,
+                'client_name' => ($row->customer) ? $row->customer->name : null,
                 'items' => $row->items->map(function ($item){
                     return [
                         'item_id' => $item->id,

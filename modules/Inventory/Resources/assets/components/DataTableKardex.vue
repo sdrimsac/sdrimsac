@@ -126,9 +126,10 @@
 <script>
 import moment from "moment";
 import queryString from "query-string";
+import { mapActions } from 'vuex';
 
 export default {
-  props: ["establecimiento", "resource", "invertirOrden"],
+  props: ["establecimiento", "resource", "invertirOrden", "configurations"],
   data() {
     return {
       max_quantity: false,
@@ -178,6 +179,7 @@ export default {
     this.parsedMaxQuantity();
   },
   methods: {
+    ...mapActions(["loadConfiguration"]),
     maxQuantityFormat(
       qty,
       max_quantity,
