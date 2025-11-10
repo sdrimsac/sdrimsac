@@ -393,9 +393,8 @@
                                 </div>
                                 <div class="radio-tile-group2 flex-wrap">
                                     <div class="input-container2 border rounded-sm">
-                                        <input
-                                            :disabled="form_payment.is_bank || disablePayments"
-                                            id="cash" v-model="method_payments" class="radio-button2" type="radio"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="cash"
+                                            v-model="method_payments" class="radio-button2" type="radio"
                                             name="method_payment" value="01" @change="method_payment('Efectivo')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat">
@@ -404,9 +403,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.culqi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="culqui" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="02"
-                                            @change="method_payment('Culqui')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="culqui"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="02" @change="method_payment('Culqui')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat">
                                             <div class="icon bike-icon"></div>
@@ -414,8 +413,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.izipay">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="05" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="05" @change="
                                                 method_payment(
                                                     'TARJETA: IZYPAY'
                                                 )
@@ -427,8 +427,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.openpay">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="07" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="07" @change="
                                                 method_payment(
                                                     'TARJETA: OPENPAY'
                                                 )
@@ -440,8 +441,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.nubiz">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="06" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="06" @change="
                                                 method_payment(
                                                     'TARJETA: NIUBIZ'
                                                 )
@@ -453,9 +455,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.yape">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="yape" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="03"
-                                            @change="method_payment('Yape')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="yape"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="03" @change="method_payment('Yape')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat">
                                             <div class="icon bike-icon"></div>
@@ -470,9 +472,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.plin">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="04"
-                                            @change="method_payment('PLIN')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="04" @change="method_payment('PLIN')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; ">
                                             <div class="icon bike-icon"></div>
@@ -480,8 +482,9 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.didi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="08" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="08" @change="
                                                 method_payment('DIDI FOOD')
                                                 " />
                                         <div class="radio-tile2"
@@ -492,8 +495,9 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.pedidosya">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="09" @change="
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="09" @change="
                                                 method_payment('PEDIDOS YA')
                                                 " />
                                         <div class="radio-tile2"
@@ -504,9 +508,9 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.rappi">
-                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="10"
-                                            @change="method_payment('RAPPI')" />
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin"
+                                            v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="10" @change="method_payment('RAPPI')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; ">
                                             <div class="icon bike-icon"></div>
@@ -677,7 +681,7 @@
                             <div class="d-flex align-items-end mb-2">
                                 <div class="me-2" style="flex: 1 1 0;">
                                     <label class="control-label fw-bold">Ingrese Monto {{ currencyTypeActive.symbol
-                                    }}</label>
+                                        }}</label>
                                     <el-input id="inputTotal" ref="enter_amount" v-model="form.enter_amount"
                                         @blur="diferen()" @input="enterAmount()" class="me-1">
                                     </el-input>
@@ -749,7 +753,7 @@
                                             <td>
                                                 <strong v-if="!isNaN(paymnt.amount)">{{
                                                     Number(paymnt.amount).toFixed(2)
-                                                }}</strong>
+                                                    }}</strong>
                                             </td>
                                             <td>
                                                 <el-tooltip content="Eliminar pago" placement="top">
@@ -941,7 +945,7 @@
                                     <span>OP. EXONERADAS:</span>
                                     <span class="text-end" style="min-width: 90px;">{{
                                         Number(form.total_exonerated).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <div v-if="form.total_taxed > 0" class="d-flex justify-content-between">
                                     <template v-if="affectation_optional_id === '10'">
@@ -975,7 +979,7 @@
                                 <div class="d-flex justify-content-between">
                                     <span>IGV:</span>
                                     <span class="text-end" style="min-width: 90px;">{{ Number(form.total_igv).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <div v-if="form.difference > 0" class="d-flex justify-content-between">
                                     <span>VUELTO:</span>
@@ -987,7 +991,7 @@
                                     <span>TOTAL A PAGAR:</span>
                                     <span class="text-end fw-bold" style="min-width: 90px;">{{
                                         Number(form.total).toFixed(2)
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <!-- Mensaje de motivo de cambio de afectación -->
                                 <div v-if="affectation_optional_id === '10'" class="mt-2 p-2 border rounded bg-light">
@@ -2504,28 +2508,62 @@ export default {
             return items;
         },
         setItemsNewPrice(prices) {
-            let copyPrices = [...prices];
-            let items = [...this.form.items.map(m => m.item)];
+            console.log("Estableciendo nuevos precios para los items:", prices);
+            // Normalize incoming prices to numeric array (safe coercion)
+            let copyPrices = Array.isArray(prices)
+                ? prices.map(p => {
+                      const n = Number(p);
+                      return Number.isFinite(n) ? n : 0;
+                  })
+                : [];
+
+            // Get the raw item objects (some form.items entries may wrap original in .item)
+            let originalItems = (this.form.items || []).map(m => (m && m.item) ? m.item : m);
+            // Shallow-clone each item so we don't mutate originals referenced elsewhere
+            let items = originalItems.map(it => ({ ...it }));
+
             for (let i = 0; i < items.length; i++) {
                 const item = items[i];
-                if (item.cOlPrice) {
-                    item.sale_unit_price = item.cOlPrice;
-                    item.cOlPrice = null;
-                    item.cNewPrice = null;
-                }
-                const quantity = item.quantity;
-                let sum = copyPrices.splice(0, 1).reduce((a, b) => a + b, 0);
-                let newPrice = sum / quantity;
-                item.cOlPrice = item.sale_unit_price;
-                item.cNewPrice = newPrice;
-                item.sale_unit_price = Number(item.sale_unit_price) + newPrice;
+
+                // Ensure numeric values
+                const quantity = Number(item.quantity) || 1;
+                const currentSale = Number(item.sale_unit_price) || 0;
+
+                // Determine base price: prefer cOlPrice if present (previous original), otherwise use current sale
+                const basePrice = (item.cOlPrice !== undefined && item.cOlPrice !== null && item.cOlPrice !== "")
+                    ? Number(item.cOlPrice)
+                    : currentSale;
+
+                // Take the next part from prices (use shift for clarity)
+                const part = copyPrices.length ? copyPrices.shift() : 0;
+                const newPrice = (Number(part) || 0) / (quantity || 1);
+
+                // Set fields on the cloned item only; round to 2 decimals
+                item.cOlPrice = basePrice;
+                item.cNewPrice = Number(newPrice.toFixed(2));
+                item.sale_unit_price = Number((basePrice + newPrice).toFixed(2));
+
+                // Update line totals so recalculation uses the new unit price.
+                // recalculateTotal gives precedence to _total_line if present,
+                // so keep it in sync to avoid stale values.
+                const computedLineTotal = Number((item.sale_unit_price * quantity).toFixed(2));
+                item._total_line = computedLineTotal;
+                item.total = computedLineTotal;
+
+                // Helpful debug log per item
+                console.log(`setItemsNewPrice -> item[${i}] id=${item.id} qty=${quantity} base=${basePrice} part=${part} newPrice=${item.cNewPrice} sale_unit_price=${item.sale_unit_price}`);
             }
+            console.log("Items after setting new prices:", items);
+
             return items;
         },
+        
         toFixedTwoNumber(number) {
             return Number(number.toFixed(2));
         },
         divideCharge(parts) {
+
+            console.log("Dividiendo cargo en partes:", parts);
             let { total_charge: amount } = this.chargeCredit;
             let part = amount / parts;
             let decimal = this.toFixedTwoNumber(part);
@@ -2535,9 +2573,11 @@ export default {
             if (difference != 0) {
                 array[0] = this.toFixedTwoNumber(array[0] + Number(difference));
             }
+            console.log("Array after adjustment:", array);
             return array;
         },
-        calculateCharge() {
+        /* calculateCharge() {
+            console.log("Calculando cargo de tarjeta...");
             if (this.form.original_total == undefined) {
                 this.form.original_total = this.form.total;
             }
@@ -2566,9 +2606,67 @@ export default {
             items = this.formatItems(items);
             this.form.items = items;
             this.reCalculateTotal();
+            // Si la distribución por items no afectó el total (p. ej. por estructura distinta),
+            // aplicar cargo global como respaldo para que la comisión se refleje.
+            try {
+                const expectedTotal = Number(this.form.original_total || 0) + Number(this.chargeCredit.total_charge || 0);
+                // si la diferencia entre el total actual y el esperado es mayor a 0.01, aplicar cargo global
+                if (Number(this.chargeCredit.total_charge) > 0 && Math.abs(Number(this.form.total) - expectedTotal) > 0.01) {
+                    this.chargeGlobal();
+                }
+            } catch (e) {
+                // Si ocurre algún problema, aplicar cargo global para no perder la comisión
+                if (Number(this.chargeCredit.total_charge) > 0) {
+                    this.chargeGlobal();
+                }
+            }
+            this.form.enter_amount = this.form.total;
+            this.enterAmount();
+        }, */
+
+        calculateCharge() {
+            console.log("Calculando cargo de tarjeta...sddsdasdasdasd");
+            if (this.form.original_total == undefined) {
+                this.form.original_total = this.form.total;
+            }
+            const originalTotal = this.form.original_total;
+            let { amount, credit_type } = this.chargeCredit;
+            if (credit_type == "1") {
+                this.chargeCredit.total_charge = originalTotal * (amount / 100);
+            } else {
+                this.chargeCredit.total_charge = Number(amount);
+            }
+            console.log("Total charge calculated:", this.chargeCredit.total_charge);
+            this.chargeCredit.total_charge = Number(
+                this.chargeCredit.total_charge.toFixed(2)
+            );
+            console.log("Total charge after rounding:", this.chargeCredit.total_charge);
+            if (this.form.total < this.chargeCredit.total_charge) {
+                this.chargeCredit.total_charge = 0;
+                this.chargeCredit.amount = 0;
+                this.$toast.error(
+                    "El monto a adicionar no puede ser mayor al total"
+                );
+                // this.reCalculateTotal();
+                // return;
+            }
+            console.log("Total charge after rounding: ADASDASDADASD", this.chargeCredit.total_charge);
+
+            let prices = this.divideCharge(this.form.items.length);
+            let items = this.setItemsNewPrice(prices);
+            items = this.formatItems(items);
+            this.form.items = items;
+            console.log("Items after setting new prices and formatting:", this.form.items);
+            
+            this.reCalculateTotal();
+            // Aplicar cargo global para que el total refleje la comisión calculada
+            /* if (this.chargeCredit && Number(this.chargeCredit.total_charge) > 0) {
+                this.chargeGlobal();
+            } */
             this.form.enter_amount = this.form.total;
             this.enterAmount();
         },
+
         openDialogPerson() {
             if (this.configuration.college) {
                 if (
@@ -3777,8 +3875,14 @@ export default {
                 } else {
                     this.chargeCredit.amount = 0;
                 }
+                console.log("method_pay asdasdasdas", method_pay);
+                console.log(
+                    "this.hasCreditCardCharge asdasdasdas",
+                    this.hasCreditCardCharge
+                );
 
                 this.calculateCharge();
+
             }
             if (method_pay !== "Yape" || method_pay !== "PLIN") {
                 this.operation_number = null;
@@ -3806,16 +3910,26 @@ export default {
         },
 
         chargeGlobal() {
-            let base = parseFloat(this.form.total);
-            let amount = parseFloat(this.chargeCredit.total_charge);
-            let factor = _.round(amount / base, 5);
-            // console.log(base,factor, amount)
+            // Eliminar cargo global previo (tipo 50) si existe y ajustar el total
+            let prevCharge = Number(this.form.total_charge || 0);
+            if (prevCharge > 0) {
+                this.form.total = _.round(this.form.total - prevCharge, 2);
+                this.form.total_charge = 0;
+                this.form.charges = (this.form.charges || []).filter(
+                    c => c.charge_type_id !== "50"
+                );
+            }
+
+            let base = parseFloat(this.form.total) || 0;
+            let amount = parseFloat(this.chargeCredit.total_charge) || 0;
             if (amount > 0) {
+                let factor = base > 0 ? _.round(amount / base, 5) : 0;
                 this.form.total_charge = _.round(amount, 2);
                 this.form.total = _.round(
-                    this.form.total + this.form.total_charge,
+                    (this.form.total || 0) + this.form.total_charge,
                     2
                 );
+                this.form.charges = this.form.charges || [];
                 this.form.charges.push({
                     charge_type_id: "50",
                     description:
@@ -3827,7 +3941,15 @@ export default {
             }
         },
         deleteChargeGlobal() {
+            // Eliminar cargo global tipo 50 y ajustar total
+            let prevCharge = Number(this.form.total_charge || 0);
+            if (prevCharge > 0) {
+                this.form.total = _.round(this.form.total - prevCharge, 2);
+            }
             this.form.total_charge = 0;
+            this.form.charges = (this.form.charges || []).filter(
+                c => c.charge_type_id !== "50"
+            );
         },
         deleteDiscountGlobal() {
             // console.log("disque borrando");
@@ -4472,23 +4594,23 @@ export default {
             form.items = form.items.map(flattenItem);
             // --- Fin sincronización ---
             // form.date_of_issue = moment().format("YYYY-MM-DD");
-                if (form.document_type_id === "80") {
-                    form.prefix = "NV";
-                    // Consider split payments (currentPayments) and floating point tolerance
-                    try {
-                        const entered = (parseFloat(this.form.enter_amount) || 0) +
-                            (this.currentPayments || []).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
-                        const total = parseFloat(this.form.total) || 0;
-                        form.paid = Math.abs(entered - total) < 0.01;
-                    } catch (e) {
-                        // fallback to simple comparison
-                        form.paid = this.form.total == this.form.enter_amount;
-                    }
-                    this.resource_documents = "sale-notes";
-                    console.log("es nota de venta paso por aqui");
-                    this.resource_payments = "sale_note_payments";
-                    this.resource_options = this.resource_documents;
-                } else {
+            if (form.document_type_id === "80") {
+                form.prefix = "NV";
+                // Consider split payments (currentPayments) and floating point tolerance
+                try {
+                    const entered = (parseFloat(this.form.enter_amount) || 0) +
+                        (this.currentPayments || []).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+                    const total = parseFloat(this.form.total) || 0;
+                    form.paid = Math.abs(entered - total) < 0.01;
+                } catch (e) {
+                    // fallback to simple comparison
+                    form.paid = this.form.total == this.form.enter_amount;
+                }
+                this.resource_documents = "sale-notes";
+                console.log("es nota de venta paso por aqui");
+                this.resource_payments = "sale_note_payments";
+                this.resource_options = this.resource_documents;
+            } else {
                 form.prefix = null;
                 this.resource_documents = "documents";
                 this.resource_payments = "document_payments";

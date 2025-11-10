@@ -402,8 +402,6 @@ class InventoryController extends Controller
 
     public function store_transaction(InventoryRequest $request)
     {
-
-        Log::info('Iniciando store_transaction en InventoryController', $request->all());
         $result = DB::connection('tenant')->transaction(function () use ($request) {
             // dd($request->all());
             $type = $request->input('type');

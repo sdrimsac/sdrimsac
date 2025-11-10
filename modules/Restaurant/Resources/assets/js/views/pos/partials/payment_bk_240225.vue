@@ -2753,6 +2753,7 @@ export default {
             return Number(number.toFixed(2));
         },
         divideCharge(parts) {
+            console.log("parts dsadadfdfsdsfsdfdf", parts);
             let { total_charge: amount } = this.chargeCredit;
             let part = amount / parts;
             let decimal = this.toFixedTwoNumber(part);

@@ -313,7 +313,7 @@
                                     v-text="errors.district_id[0]"></small>
                             </div>
                         </div>
-                        <div class="col-12 mt-2">
+                        <div class="col-12 mt-2" v-if="configuration.restobar_home">
                             <el-checkbox v-model="form.is_staff">¿ES personal de la empresa?</el-checkbox>
                         </div>
                         <div class="col-12 mt-2" v-if="form.is_staff">

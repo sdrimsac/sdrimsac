@@ -3369,9 +3369,6 @@ class CashController extends Controller
 
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
 
-        /* if ($cash->principal == 1) { */
-        // Aggregate amounts per payment method. Consider `type` as well because sales
-        // may be stored with type=1 (sale) but incomes/expenses flags may be 0.
         $totalsByMethod = Box::select(
             'method',
             DB::raw("SUM(CASE WHEN (type = 1 OR incomes = 1) THEN amount ELSE 0 END) as total_incomes"),
@@ -3380,13 +3377,11 @@ class CashController extends Controller
             ->where('cash_id', $id)
             ->groupBy('method')
             ->get();
-        /* } else { */
 
         $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
             ->where('cash_id', $id)
             ->where('expenses', 0)
             ->get();
-        /* } */
 
         if ($cash->principal == 1) {
 
@@ -3398,8 +3393,6 @@ class CashController extends Controller
                 ->where('method', 'Efectivo')
                 ->sum('amount');
         }
-
-
 
         $all_cash = $all_cash->map(function ($item) {
 
@@ -3432,7 +3425,7 @@ class CashController extends Controller
         $cash->save();
 
         if ($cash->principal == 1) {
-            Log::info('Generando ajustes de apertura de caja al cerrar');
+            /* Log::info('Generando ajustes de apertura de caja al cerrar'); */
             if (isset($totalsByMethod) && $totalsByMethod->count() > 0) {
                 foreach ($totalsByMethod as $tm) {
                     $method_name = $tm->method ?? 'Efectivo';

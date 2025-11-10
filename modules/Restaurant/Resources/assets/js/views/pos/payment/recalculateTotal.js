@@ -14,10 +14,9 @@ export function inputReCalculateTotal() {
     let total_unaffected = 0;
     let total_free = 0;
     let total_igv = 0;
-    let total_value = 0; // base values (without IGV)
-    let total = 0; // grand total (base + igv + other taxes + charges - discounts)
+    let total_value = 0;
+    let total = 0;
     let total_plastic_bag_taxes = 0;
-    /* console.log("Items antes del cálculo:", JSON.stringify(this.form.items)); */
     if (
         this.affectation_optional_id != null &&
         this.affectation_optional_id != undefined &&
@@ -29,26 +28,18 @@ export function inputReCalculateTotal() {
         );
     }
 
-    // Recalcular por cada línea de item de forma clara y predecible
     this.form.items.forEach(row => {
         const qty = safeNumber(row.quantity);
         const line_charge = safeNumber(row.total_charge);
         const line_discount = safeNumber(row.total_discount);
         const plastic = safeNumber(row.total_plastic_bag_taxes);
 
-        // Determinar base (valor sin IGV) de la línea. Si ya viene como total_value
-        // lo usamos; en algunos casos la línea puede venir con precio con IGV incluido
-        // (affectation ids 11-16), en cuyo caso separamos la base y el IGV.
         let line_total_value = safeNumber(row.total_value);
         let line_igv = safeNumber(row.total_igv);
 
-        // Preferir el precio bruto si está disponible. Muchos flujos rellenan
-        // row.total (precio bruto) — usarlo evita recomputar base/IGV y pérdidas
-        // por redondeos intermedios. Si no existe, computar desde total_value.
         const gross = safeNumber(row.total);
         if (gross > 0) {
-            // Si el precio viene con IGV incluido (11-16 o cuando el item indica has_igv),
-            // descomponer la base e IGV de forma consistente para totales parciales.
+           
             const igvRate = this.toNumber(this.percentage_igv) / 100 || 0;
             if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id) && igvRate > 0) {
                 const base = gross / (1 + igvRate);
@@ -73,8 +64,6 @@ export function inputReCalculateTotal() {
             // usar gross como total de línea (antes de cargos/desc)
             var line_total = gross + plastic + line_charge - line_discount;
         } else {
-            // Si no hay gross, calcular desde total_value y total_igv
-            // Si la línea tiene un tipo que indica precio incluye IGV (11-16)
             const igvRate = this.toNumber(this.percentage_igv) / 100 || 0;
             if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id)) {
                 if (igvRate > 0) {
@@ -93,14 +82,9 @@ export function inputReCalculateTotal() {
                 }
             }
 
-            // total de la línea: base + igv + plastic taxes + charges - discounts
-            // NO redondear por línea; acumular con precisión y redondear al final.
             var line_total = line_total_value + line_igv + plastic + line_charge - line_discount;
         }
 
-        // If a pre-computed total per line exists (e.g. merged items set _total_line),
-        // prefer that authoritative value to avoid tiny rounding drifts between
-        // the ordens calculation and this payment recalculation.
         if (row._total_line !== undefined && row._total_line !== null) {
             line_total = safeNumber(row._total_line);
         }
