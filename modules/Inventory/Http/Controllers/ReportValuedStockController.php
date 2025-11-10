@@ -92,6 +92,7 @@ class ReportValuedStockController extends Controller
     {
         $categoria_id = $request->categoria_id;
         $establishment_id = $request->establishment_id;
+        $item_id = $request->item_id;
         $config = Configuration::first();
         $item_id_variation = $config->item_variation_id;
         $all_items = ItemWarehouse::query();
@@ -109,7 +110,11 @@ class ReportValuedStockController extends Controller
         if($establishment_id){
             $all_items = $all_items->where('warehouse_id', $establishment_id);
         }
-
+        if($item_id){
+            $all_items = $all_items->whereHas('item', function ($query) use ($item_id) {
+                $query->where('id', $item_id);
+            });
+        }
        
         return new ReportValuedStockCollection($all_items->paginate(20));
     }

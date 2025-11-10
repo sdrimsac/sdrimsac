@@ -2167,9 +2167,25 @@ export default {
             } else {
                 // Si desactiva Talla y Color, simplemente notificar al servidor
                 this.$http.get(`/items/has_stock/${this.recordId}`)
-                    .then(() => {
-                        this.$toast.error('Tiene  productos de Talla y Color no puede cambiar el estado mientras exista en stock.');
-                        this.form.has_color_size = true;
+                    .then(response => {
+                        const stockNum = response.data.stock != null ? Number(response.data.stock) : null;
+                        const hasStock = response.data.has_stock != null ? response.data.has_stock : (stockNum ? stockNum > 0 : false);
+
+                        if (hasStock) {
+                            const msg = stockNum != null
+                                ? `El producto tiene stock (${stockNum}). No puede desactivar Talla y Color mientras exista stock.`
+                                : `El producto tiene stock. No puede desactivar Talla y Color mientras exista stock.`;
+
+                            this.$toast.error(msg);
+                            this.form.has_color_size = true;
+                                
+                            return;
+                        } else {
+                            // Producto SIN stock: proceder a desactivar
+                            this.$toast.success('Color y talla sin stock puede cambiar');
+                            this.form.has_color_size = false;
+                            return;
+                        }
                     })
                     .catch(error => {
                         console.error('Error al actualizar color y talla:', error);
@@ -2179,7 +2195,6 @@ export default {
         syncMainUnitType() {
             // Solo para productos nuevos (sin recordId)
             if (this.recordId) return;
-
             const newRow = {
                 id: null,
                 unique_code: this.form.internal_id,

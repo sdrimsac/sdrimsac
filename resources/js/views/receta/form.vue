@@ -104,8 +104,8 @@
                                     <small class="form-control-feedback" v-if="
                                         errors.sale_affectation_igv_type_id
                                     " v-text="errors
-                                                .sale_affectation_igv_type_id[0]
-                                            "></small>
+                                        .sale_affectation_igv_type_id[0]
+                                        "></small>
                                 </div>
                             </div>
                             <!-- Almacen  -->
@@ -193,8 +193,8 @@
                                             <small class="form-control-feedback" v-if="
                                                 errors.sale_affectation_igv_type_id
                                             " v-text="errors
-                                                        .sale_affectation_igv_type_id[0]
-                                                    "></small>
+                                                .sale_affectation_igv_type_id[0]
+                                                "></small>
                                         </div>
                                     </div>
                                 </div>
@@ -310,24 +310,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <!-- <div
-                        class="col-md-3"
-                        v-show="recordId == null && form.unit_type_id != 'ZZ'"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.stock }"
-                        >
-                            <label class="control-label">Stock Inicial</label>
-                            <el-input v-model="form.stock"></el-input>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.stock"
-                                v-text="errors.stock[0]"
-                            ></small>
-                        </div>
-                    </div> -->
-
                             <div class="row col-md-12">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -340,6 +322,38 @@
                                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                         </el-upload>
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <table class="table table-striped table-bordered" style="background-color: #fff;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Leyenda</th>
+                                                <th>medida</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1/2 oz</td>
+                                                <td>14.78 ml</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1 0z</td>
+                                                <td>29.57 ml</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3/4 oz</td>
+                                                <td>22.18 ml</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2 oz</td>
+                                                <td>59.15 ml</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3 oz</td>
+                                                <td>88.72 ml</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 

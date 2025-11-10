@@ -190,12 +190,15 @@ class InventoryController extends Controller
     {
         $value = $request->value;
         $records = Item::with(['warehouses', 'itemwarehouses.warehouse'])
-            ->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])
+            ->where('item_type_id', '01')
+            ->where('unit_type_id', '!=', 'ZZ')
+            ->where('promotions_items', 0) // excluir items en promoción
+            ->where('is_set', 0) // excluir items que son set
             ->whereNotIsSet()
             ->where(function ($query) use ($value) {
-                $query->where('description', 'like', '%' . $value . '%')
-                    ->orWhere('internal_id', 'like', '%' . $value . '%')
-                    ->orWhere('barcode', 'like', '%' . $value . '%');
+            $query->where('description', 'like', '%' . $value . '%')
+                ->orWhere('internal_id', 'like', '%' . $value . '%')
+                ->orWhere('barcode', 'like', '%' . $value . '%');
             })
             ->take(25)
             ->get();
@@ -399,6 +402,8 @@ class InventoryController extends Controller
 
     public function store_transaction(InventoryRequest $request)
     {
+
+        Log::info('Iniciando store_transaction en InventoryController', $request->all());
         $result = DB::connection('tenant')->transaction(function () use ($request) {
             // dd($request->all());
             $type = $request->input('type');
@@ -563,16 +568,68 @@ class InventoryController extends Controller
                     }
                 }
             } else {
-                foreach ($color_size as $row) {
-                    if (isset($row["quantity"]) && $row["quantity"] > 0) {
-                        $quantity = $row["quantity"];
-                        $id = $row["id"];
-                        $item_color_size = ItemColorSize::findOrFail($id);
-                        $item_color_size->stock = $item_color_size->stock - $quantity;
-                        $item_color_size->save();
+
+                if ($request->has('has_color_size') && $request->input('has_color_size') && count($color_size) == 0) {
+                    try {
+                        $colorSizes = ItemColorSize::where('item_id', $item_id)
+                            ->when($warehouse_id, function ($q) use ($warehouse_id) {
+                                return $q->where('warehouse_id', $warehouse_id);
+                            })
+                            ->get();
+
+                        foreach ($colorSizes as $cs) {
+                            $cs->stock = 0;
+                            $quantity = $cs->stock;
+                            $id = $cs->id;
+                            $item_color_size = ItemColorSize::findOrFail($id);
+                            $cs->save();
+                        }
+                    } catch (Exception $e) {
+                        Log::warning('Error al poner a cero ItemColorSize en salida', ['error' => $e->getMessage(), 'item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
+                    }
+                } else {
+                    foreach ($color_size as $row) {
+                        if (isset($row["quantity"]) && $row["quantity"] > 0) {
+                            $quantity = $row["quantity"];
+                            $id = $row["id"];
+                            $item_color_size = ItemColorSize::findOrFail($id);
+                            $item_color_size->stock = $item_color_size->stock - $quantity;
+                            $item_color_size->save();
+                        }
                     }
                 }
-                foreach ($lots as $lot) {
+
+                if ($request->has('series_enabled') && $request->input('series_enabled') && count($lots) == 0) {
+                    try {
+                        $series = ItemLot::where('item_id', $item_id)
+                            ->when($warehouse_id, function ($q) use ($warehouse_id) {
+                                return $q->where('warehouse_id', $warehouse_id);
+                            })
+                            ->get();
+
+                        foreach ($series as $s) {
+                            $s->has_sale = true;
+                            $s->state = 'Inactivo';
+                            $s->save();
+                        }
+                    } catch (Exception $e) {
+                        Log::warning('Error al poner a cero ItemLot en salida', ['error' => $e->getMessage(), 'item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
+                    }
+                } else {
+                    foreach ($lots as $lot) {
+
+                        if ($lot['has_sale']) {
+
+                            $item_lot = ItemLot::findOrFail($lot['id']);
+                            // $item_lot->delete();
+                            $item_lot->has_sale = true;
+                            $item_lot->state = 'Inactivo';
+                            $item_lot->save();
+                        }
+                    }
+                }
+
+                /* foreach ($lots as $lot) {
 
                     if ($lot['has_sale']) {
 
@@ -582,7 +639,7 @@ class InventoryController extends Controller
                         $item_lot->state = 'Inactivo';
                         $item_lot->save();
                     }
-                }
+                } */
 
                 if (isset($request->IdLoteSelected)) {
                     $lot = ItemLotsGroup::find($request->IdLoteSelected);

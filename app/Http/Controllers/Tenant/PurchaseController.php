@@ -1822,6 +1822,8 @@ class PurchaseController extends Controller
                     ->whereNotIsSet()
                     ->whereIsActive()
                     ->where('unit_type_id', '!=', 'ZZ')
+                    ->where('promotions_items', 0)
+                    ->where('is_set', 0)
                     ->orderBy('description')
                     ->take(20)
                     ->get();

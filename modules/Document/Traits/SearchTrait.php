@@ -10,11 +10,12 @@ trait SearchTrait
     public function getItemsServices($request){
 
         $items = Item::query();
+
         if($request->input){
             $items = $items->where('description','like', "%{$request->input}%")
                         ->orWhere(function ($subquery) use ($request){
                             $subquery->where('internal_id','like', "%{$request->input}%")
-                            ->orWhere('barcode','like', "%{$request->input}%");
+                                     ->orWhere('barcode','like', "%{$request->input}%");
                         });
         }
         if($request->items_id){
@@ -22,7 +23,8 @@ trait SearchTrait
         }
                     
         $items = $items->where('unit_type_id','ZZ')
-                    ->whereNotIsSet()
+                    ->where('promotions_items', 0) // exclude promotion items
+                    ->where('is_set', 0)           // exclude sets
                     ->whereIsActive()
                     ->whereHas('warehouse', function($query) {
                         $query->where('active', 1);
@@ -36,24 +38,28 @@ trait SearchTrait
     public function getItemsNotServices($request){
 
         $items = Item::query();
+
         if($request->input){
-            $items = $items->where('description','like', "%{$request->input}%")
-            ->orWhere(function ($subquery) use ($request){
-                $subquery->where('internal_id','like', "%{$request->input}%")
-                ->orWhere('barcode','like', "%{$request->input}%");
+            $items = $items->where(function ($subquery) use ($request){
+                $subquery->where('description','like', "%{$request->input}%")
+                         ->orWhere('internal_id','like', "%{$request->input}%")
+                         ->orWhere('barcode','like', "%{$request->input}%");
             });
         }
+
         if($request->items_id){
             $items = $items->whereIn('id', $request->items_id);
         }
 
-        $items = $items->whereNotIsSet()
-                    ->whereIsActive()
-                    ->whereHas('warehouse', function($query) {
-                        $query->where('active', 1);
-                    }, '>=', 1) // Ensures at least one active warehouse exists
-                    ->orderBy('description')
-                    ->get();
+        // Exclude items that are part of promotions or are sets
+        $items = $items->where('promotions_items', 0)
+                       ->where('is_set', 0)
+                       ->whereIsActive()
+                       ->whereHas('warehouse', function($query) {
+                           $query->where('active', 1);
+                       }, '>=', 1) // Ensures at least one active warehouse exists
+                       ->orderBy('description')
+                       ->get();
 
         return $items;
     }

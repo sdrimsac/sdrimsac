@@ -125,7 +125,7 @@
                                                         v-if="row.warehouses.some(warehouse => warehouse.active)"
                                                         type="warning" size="mini"
                                                         class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                        @click.prevent="clickDisableItem(row.id)">
+                                                        @click.prevent="clickDisableItem(row)">
                                                         <i class="fas fa-toggle-off fa-lg me-2"></i> Inhabilitar
                                                     </el-button>
                                                     <el-button v-else type="success" size="mini"
@@ -549,8 +549,9 @@ export default {
 
             window.open(`/${this.resource}/export/barcode/print?id=${row.id}`);
         },
-        clickDisableItem(id) {
+        clickDisableItem(row) {
             // Pregunta por el almacén y si existe stock, ofrece quitarlo antes de inhabilitar
+            const id = row && row.id ? row.id : null;
             this.getWarehouses().then(warehouses => {
                 swal.fire({
                     title: "Inhabilitar Producto",
@@ -607,16 +608,16 @@ export default {
                                                 IdLoteSelected: null,
                                                 color_size: [],
                                                 date_of_due: null,
-                                                has_color_size: false,
+                                                has_color_size: row.has_color_size,
                                                 id: null,
                                                 inventory_transaction_id: "01",
-                                                item_id: id,
+                                                item_id: row.id,
                                                 lot_code: null,
                                                 lots: [],
-                                                lots_enabled: false,
+                                                lots_enabled: row.lots_enabled,
                                                 lots_group: [],
                                                 quantity: String(qty !== null ? Number(qty).toFixed(2) : "0"),
-                                                series_enabled: false,
+                                                series_enabled: row.series_enabled,
                                                 type: "output",
                                                 warehouse_id: selectedWarehouseId
                                             };

@@ -30,13 +30,39 @@
                                     </el-select>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label"
+                                        >Producto</label
+                                    >
+                                    <el-select
+                                        v-model="form.item_id"
+                                        clearable
+                                        filterable
+                                    >
+                                        <el-option
+                                            v-for="option in items"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
 
-                            <div class="col-lg-6 col-md-6 col-md-6 col-sm-12 d-flex align-items-end">
-                                <el-button class="btn_guardarsmall" type="primary" @click.prevent="getRecordsByFilter"
-                                    :loading="loading_submit" icon="el-icon-search">
-                                    Buscar
-                                </el-button>
-                                
+                            <div
+                                class="col-lg-3 col-md-8 col-md-8 col-sm-12
+                            d-flex align-items-end
+                            "
+                            >
+                                <el-button
+                                    class="submit"
+                                    type="primary"
+                                    @click.prevent="getRecordsByFilter"
+                                    :loading="loading_submit"
+                                    icon="el-icon-search"
+                                    >Buscar</el-button
+                                >
                                 <template v-if="records.length > 0">
                                     <el-button class="btn_excelsmall" type="success" @click.prevent="clickDownload('excel')">
                                         <i class="fa fa-file-excel"></i>
@@ -212,6 +238,7 @@ export default {
             form: {},
             records: [],
             categories: [],
+            items: [],
             pagination: {},
             showWhatsappForm: false
         };
@@ -220,6 +247,7 @@ export default {
         await this.$http.get(`/reports/inventory/tables`).then(response => {
             this.warehouses = response.data.warehouses;
             this.categories = response.data.categories;
+            this.items = response.data.items;
         });
         await this.getRecords();
     },

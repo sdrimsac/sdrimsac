@@ -42,28 +42,61 @@ export function inputReCalculateTotal() {
         let line_total_value = safeNumber(row.total_value);
         let line_igv = safeNumber(row.total_igv);
 
-        // Si la línea tiene un tipo que indica precio incluye IGV (11-16)
-        if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id)) {
-            // Descomponer precio que incluye IGV en base + igv
+        // Preferir el precio bruto si está disponible. Muchos flujos rellenan
+        // row.total (precio bruto) — usarlo evita recomputar base/IGV y pérdidas
+        // por redondeos intermedios. Si no existe, computar desde total_value.
+        const gross = safeNumber(row.total);
+        if (gross > 0) {
+            // Si el precio viene con IGV incluido (11-16 o cuando el item indica has_igv),
+            // descomponer la base e IGV de forma consistente para totales parciales.
             const igvRate = this.toNumber(this.percentage_igv) / 100 || 0;
-            if (igvRate > 0) {
-                // base = total_value / (1 + igvRate)
-                const base = _.round(line_total_value / (1 + igvRate), 8);
-                const igvFromIncluded = _.round(line_total_value - base, 2);
-                line_igv = igvFromIncluded;
-                line_total_value = _.round(base, 2);
-            }
-        } else {
-            // Si no viene total_igv calculado y es tipo gravado (10), calcularlo
-            if (row.affectation_igv_type_id === "10") {
-                line_igv = _.round(line_total_value * (this.toNumber(this.percentage_igv) / 100), 2);
+            if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id) && igvRate > 0) {
+                const base = gross / (1 + igvRate);
+                line_igv = gross - base;
+                line_total_value = base;
+            } else if (row.affectation_igv_type_id === "10") {
+                // gravado pero gross provided means gross == base + igv
+                if (igvRate > 0) {
+                    const base = gross / (1 + igvRate);
+                    line_igv = gross - base;
+                    line_total_value = base;
+                } else {
+                    line_igv = 0;
+                    line_total_value = gross;
+                }
             } else {
+                // no gravado
                 line_igv = 0;
+                line_total_value = gross;
             }
-        }
 
-        // total de la línea: base + igv + plastic taxes + charges - discounts
-        let line_total = _.round(line_total_value + line_igv + plastic + line_charge - line_discount, 2);
+            // usar gross como total de línea (antes de cargos/desc)
+            var line_total = gross + plastic + line_charge - line_discount;
+        } else {
+            // Si no hay gross, calcular desde total_value y total_igv
+            // Si la línea tiene un tipo que indica precio incluye IGV (11-16)
+            const igvRate = this.toNumber(this.percentage_igv) / 100 || 0;
+            if (["11", "12", "13", "14", "15", "16"].includes(row.affectation_igv_type_id)) {
+                if (igvRate > 0) {
+                    // base = total_value / (1 + igvRate)
+                    const base = line_total_value / (1 + igvRate);
+                    const igvFromIncluded = line_total_value - base;
+                    line_igv = igvFromIncluded;
+                    line_total_value = base;
+                }
+            } else {
+                // Si no viene total_igv calculado y es tipo gravado (10), calcularlo
+                if (row.affectation_igv_type_id === "10") {
+                    line_igv = line_total_value * (this.toNumber(this.percentage_igv) / 100);
+                } else {
+                    line_igv = 0;
+                }
+            }
+
+            // total de la línea: base + igv + plastic taxes + charges - discounts
+            // NO redondear por línea; acumular con precisión y redondear al final.
+            var line_total = line_total_value + line_igv + plastic + line_charge - line_discount;
+        }
 
         // If a pre-computed total per line exists (e.g. merged items set _total_line),
         // prefer that authoritative value to avoid tiny rounding drifts between
@@ -112,10 +145,12 @@ export function inputReCalculateTotal() {
         total_discount: total_discount
     }); */
 
-    // this.form.total = _.round(total, 2)
+    // Mostrar valor crudo antes de redondear para depuración
+    console.log('[RECALC] pre-round total (raw):', total, 'total_igv:', total_igv, 'total_value:', total_value);
     // El total ya fue acumulado en `total` (que incluye base + igv + plastic + charges - discounts)
-    this.form.total = _.round(total, 2);
-   // console.log("Total final calculado:", this.form.total);
+    // Añadir un pequeño epsilon y usar toFixed para evitar que 59.99999999 quede 59.99 por efectos de punto flotante
+    this.form.total = Number((total + 1e-8).toFixed(2));
+    console.log('[RECALC] total asignado (rounded):', this.form.total);
 
     if (this.discount_amount) {
         if (!this.original_totals_snapshot) {

@@ -88,7 +88,8 @@ class ReportInventoryController extends Controller
         $warehouses = Warehouse::select('id', 'description')->get();
         $categories = CategoryItem::orderBy('name','asc')->get();
         $configuration = Configuration::first();
-        return compact('warehouses','categories', 'configuration');
+        $items = Item::get();
+        return compact('warehouses','categories', 'configuration', 'items');
     }
     public function search(Request $request) {
   
