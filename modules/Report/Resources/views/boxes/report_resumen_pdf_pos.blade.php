@@ -1602,18 +1602,18 @@
             @endphp
 
             <div style="text-align:center;">
-                @if(count($groups) > 0)
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">
-                                <span class="f12">
-                                    PRODUCTOS DADOS A CRÉDITO
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
+                @if (count($groups) > 0)
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="4">
+                                    <span class="f12">
+                                        PRODUCTOS DADOS A CRÉDITO
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
                 @endif
 
                 @foreach ($groups as $group)
@@ -2087,7 +2087,10 @@
             @endif
         @endif
 
-        @if (count($stock_init_report) > 0)
+        @if ($configuration->pollo_cuartos)
+
+            @if (count($stock_init_report['product']) > 0)
+            {{-- @dd($stock_init_report['product']) --}}
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
                     STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
@@ -2123,31 +2126,96 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($stock_init_report as $product)
+                        @foreach ($stock_init_report['product'] as $product)
                             <tr>
                                 <td class="f19 center">
-                                    {{ $product['codigo'] ?? 'N/A' }}
+                                    {{ $product['item_id'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19">
-                                    {{ $product['producto'] ?? 'N/A' }}
+                                    {{ $product['name'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
                                     {{ $product['initial_stock'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['purchases'] ?? 'N/A' }}
+                                    {{ $product['compras_estimadas'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right" style="color: red;">
-                                    {{ $product['sold_quantity'] ?? 'N/A' }}
+                                    {{ $product['difference'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['current_stock'] ?? 'N/A' }}
+                                    {{ $product['actual_stock'] ?? 'N/A' }}
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        @endif
+        @else
+            @if (count($stock_init_report) > 0)
+                <div style="text-align:center;">
+                    <span style="font-size: 18px !important;">
+                        STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
+                    </span>
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="left">
+                                    <span class="f12">
+                                        STOCK DE PRODUCTOS
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="f19">CÓDIGO</span>
+                                </th>
+                                <th>
+                                    <span class="f19">PRODUCTO</span>
+                                </th>
+                                <th>
+                                    <span class="f19">STOCK INICIAL</span>
+                                </th>
+                                <th>
+                                    <span class="f19">COMPRA REALIZADA</span>
+                                </th>
+                                <th>
+                                    <span class="f19">CANTIDAD VENDIDO</span>
+                                </th>
+                                <th>
+                                    <span class="f19">STOCK ACTUAL</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($stock_init_report as $product)
+                                <tr>
+                                    <td class="f19 center">
+                                        {{ $product['codigo'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="f19">
+                                        {{ $product['producto'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="f19 right">
+                                        {{ $product['initial_stock'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="f19 right">
+                                        {{ $product['purchases'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="f19 right" style="color: red;">
+                                        {{ $product['sold_quantity'] ?? 'N/A' }}
+                                    </td>
+                                    <td class="f19 right">
+                                        {{ $product['current_stock'] ?? 'N/A' }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
         @endif
 
         @if ($configuration->image_comand)
