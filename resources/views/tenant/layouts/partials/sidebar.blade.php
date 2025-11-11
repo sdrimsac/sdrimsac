@@ -1239,7 +1239,7 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($user->type == 'superadmin' || $user->type == 'admin' || $config->restaurant || ($config->restobar_home && !$roleService->isAccountant($user->getAttribute('worker_type_id')) && $roleService->isLogistic()))
+    @if ($config->restaurant || ($config->restobar_home && !$roleService->isAccountant($user->getAttribute('worker_type_id')) && $roleService->isLogistic()))
     
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
