@@ -407,7 +407,8 @@ class SaleNoteController extends Controller
             $food = Food::where('item_id', $item_id)->first();
             $quantity = $item->quantity;
             $price = $item->unit_price;
-            $series = $item->item->lots;
+            //$series = $item->item->lots;
+            $series = $item->item->lots ?? [];
             $lotes = [];
             $result[] = [
                 "id" => $item->id,

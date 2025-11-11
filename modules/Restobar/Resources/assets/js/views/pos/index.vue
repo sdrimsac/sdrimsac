@@ -3,24 +3,6 @@
     <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
         <!-- Hora y Fecha del sistema -->
         <div class="row" style="margin-top: 10px;">
-            <!-- <div class="row">
-                <div class="col-4" v-if="limitAmount">
-                    <div :class="[
-                        `alert alert-${limitAmount.color}`,
-                        'pos-alert-warning'
-                    ]"
-                        style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;">
-                        <i class="fas fa-exclamation-triangle me-2" style="font-size: 1.3em; color: #ff9800;"></i>
-                        <p style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;" :class="{
-                            'blink-alert-text':
-                                limitAmount.tipo === 'critico'
-                        }">
-                            {{ limitAmount.mensaje }}
-                        </p>
-                    </div>
-                </div>
-            </div> -->
-
             <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
                 <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
                     <div class="card-body p-1">
@@ -131,16 +113,6 @@
                                     </template>
                                 </div>
                                 <div class="d-flex align-items-center" style="gap:12px; flex-wrap:nowrap;">
-                                    <!-- <el-tooltip content="Crear Productos" placement="top">
-                                        <button
-                                            class="btn_guardarsmall d-flex align-items-center justify-content-center"
-                                            type="button"
-                                            @click="createdNewLibrary"
-                                            style="height:42px; min-width:42px; padding:0 10px;">
-                                            <i class="fas fa-box-open" style="font-size:18px;"></i>
-                                            
-                                        </button>
-                                    </el-tooltip> -->
 
                                     <el-tooltip content="Historial" placement="top">
                                         <button

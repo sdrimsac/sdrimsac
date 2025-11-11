@@ -4233,9 +4233,9 @@ export default {
                     this.clientTableData.customer_id
                 ); */
             }
-            if (!this.configuration.maderera && !this.divided_items) {
+            /* if (!this.configuration.maderera && !this.divided_items) {
                 form_submit.items = this.mergeItems(form_submit.items);
-            }
+            } */
             // Adjuntar discounts por item (tipo 00) antes de emitir
             this._attachItemDiscounts(form_submit.items);
             console.log("ver form_submit ver los datos que pase", form_submit.items);

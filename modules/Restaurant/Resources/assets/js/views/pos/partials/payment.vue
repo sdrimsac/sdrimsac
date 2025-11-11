@@ -2508,7 +2508,7 @@ export default {
             return items;
         },
         setItemsNewPrice(prices) {
-            console.log("Estableciendo nuevos precios para los items:", prices);
+           /*  console.log("Estableciendo nuevos precios para los items:", prices); */
             // Normalize incoming prices to numeric array (safe coercion)
             let copyPrices = Array.isArray(prices)
                 ? prices.map(p => {
@@ -2551,9 +2551,9 @@ export default {
                 item.total = computedLineTotal;
 
                 // Helpful debug log per item
-                console.log(`setItemsNewPrice -> item[${i}] id=${item.id} qty=${quantity} base=${basePrice} part=${part} newPrice=${item.cNewPrice} sale_unit_price=${item.sale_unit_price}`);
+                /* console.log(`setItemsNewPrice -> item[${i}] id=${item.id} qty=${quantity} base=${basePrice} part=${part} newPrice=${item.cNewPrice} sale_unit_price=${item.sale_unit_price}`); */
             }
-            console.log("Items after setting new prices:", items);
+            /* console.log("Items after setting new prices:", items); */
 
             return items;
         },
@@ -2563,7 +2563,7 @@ export default {
         },
         divideCharge(parts) {
 
-            console.log("Dividiendo cargo en partes:", parts);
+           /*  console.log("Dividiendo cargo en partes:", parts); */
             let { total_charge: amount } = this.chargeCredit;
             let part = amount / parts;
             let decimal = this.toFixedTwoNumber(part);
@@ -2573,7 +2573,7 @@ export default {
             if (difference != 0) {
                 array[0] = this.toFixedTwoNumber(array[0] + Number(difference));
             }
-            console.log("Array after adjustment:", array);
+            /* console.log("Array after adjustment:", array); */
             return array;
         },
         /* calculateCharge() {
@@ -2625,7 +2625,7 @@ export default {
         }, */
 
         calculateCharge() {
-            console.log("Calculando cargo de tarjeta...sddsdasdasdasd");
+           /*  console.log("Calculando cargo de tarjeta...sddsdasdasdasd"); */
             if (this.form.original_total == undefined) {
                 this.form.original_total = this.form.total;
             }
@@ -2636,11 +2636,11 @@ export default {
             } else {
                 this.chargeCredit.total_charge = Number(amount);
             }
-            console.log("Total charge calculated:", this.chargeCredit.total_charge);
+            /* console.log("Total charge calculated:", this.chargeCredit.total_charge); */
             this.chargeCredit.total_charge = Number(
                 this.chargeCredit.total_charge.toFixed(2)
             );
-            console.log("Total charge after rounding:", this.chargeCredit.total_charge);
+           /*  console.log("Total charge after rounding:", this.chargeCredit.total_charge); */
             if (this.form.total < this.chargeCredit.total_charge) {
                 this.chargeCredit.total_charge = 0;
                 this.chargeCredit.amount = 0;
@@ -2650,13 +2650,13 @@ export default {
                 // this.reCalculateTotal();
                 // return;
             }
-            console.log("Total charge after rounding: ADASDASDADASD", this.chargeCredit.total_charge);
+            /* console.log("Total charge after rounding: ADASDASDADASD", this.chargeCredit.total_charge); */
 
             let prices = this.divideCharge(this.form.items.length);
             let items = this.setItemsNewPrice(prices);
             items = this.formatItems(items);
             this.form.items = items;
-            console.log("Items after setting new prices and formatting:", this.form.items);
+           /*  console.log("Items after setting new prices and formatting:", this.form.items); */
             
             this.reCalculateTotal();
             // Aplicar cargo global para que el total refleje la comisión calculada
