@@ -39,6 +39,13 @@ class ReportValuedStockController extends Controller
         $config = Configuration::first();
         $item_id_variation = $config->item_variation_id;
         $all_items = ItemWarehouse::query();
+
+        $all_items = $all_items->whereHas('item', function ($query) {
+            $query->where('active', 1)
+                  ->where('promotions_items', '<>', 1)
+                  ->where('is_set', '<>', 1);
+        });
+        
         if ($categoria_id) {
             $all_items = $all_items->whereHas('item', function ($query) use ($categoria_id) {
                 $query->where('category_id', $categoria_id);
@@ -96,6 +103,14 @@ class ReportValuedStockController extends Controller
         $config = Configuration::first();
         $item_id_variation = $config->item_variation_id;
         $all_items = ItemWarehouse::query();
+
+        // Excluir items inactivos, de promoción o sets
+        $all_items = $all_items->whereHas('item', function ($query) {
+            $query->where('active', 1)
+                  ->where('promotions_items', '<>', 1)
+                  ->where('is_set', '<>', 1);
+        });
+
         if ($categoria_id) {
             $all_items = $all_items->whereHas('item', function ($query) use ($categoria_id) {
                 $query->where('category_id', $categoria_id);
@@ -115,7 +130,7 @@ class ReportValuedStockController extends Controller
                 $query->where('id', $item_id);
             });
         }
-       
+
         return new ReportValuedStockCollection($all_items->paginate(20));
     }
     public function report_cash_(Request $request)

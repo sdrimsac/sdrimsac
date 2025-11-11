@@ -123,11 +123,28 @@ class ItemClientProductExport implements FromArray, WithHeadings, ShouldAutoSize
         $sheet->mergeCells('A3:B3');
         $sheet->mergeCells('C3:H3');
 
-        $sheet->setCellValue('A1', 'Reporte de productos por cliente');
-        $sheet->setCellValue('A2', 'Empresa: "' . $this->company->name . '"');
-        $sheet->setCellValue('C2', 'Fechas:' . Carbon::parse($this->date_start)->format('d-m-y') . ' - ' . Carbon::parse($this->date_end)->format('d-m-y'));
-        $sheet->setCellValue('A3', 'Ruc:' . $this->company->number);
-        $sheet->setCellValue('C3', 'Establecimiento:' . $this->establishment->address . ' - ' . $this->establishment->department->description . ' - ' . $this->establishment->district->description);
+    $sheet->setCellValue('A1', 'Reporte de productos por cliente');
+
+    // Safe access to company and establishment to avoid "property of non-object" errors
+    $companyName = (isset($this->company) && is_object($this->company)) ? ($this->company->name ?? '') : '';
+    $companyNumber = (isset($this->company) && is_object($this->company)) ? ($this->company->number ?? '') : '';
+
+    $sheet->setCellValue('A2', 'Empresa: "' . $companyName . '"');
+
+    $startDate = $this->date_start ? Carbon::parse($this->date_start)->format('d-m-y') : '';
+    $endDate = $this->date_end ? Carbon::parse($this->date_end)->format('d-m-y') : '';
+    $sheet->setCellValue('C2', 'Fechas:' . $startDate . ' - ' . $endDate);
+
+    $sheet->setCellValue('A3', 'Ruc:' . $companyNumber);
+
+    $est = (isset($this->establishment) && is_object($this->establishment)) ? $this->establishment : null;
+    $estAddress = ($est && isset($est->address)) ? $est->address : '';
+    $deptDesc = ($est && isset($est->department) && is_object($est->department)) ? ($est->department->description ?? '') : '';
+    $distDesc = ($est && isset($est->district) && is_object($est->district)) ? ($est->district->description ?? '') : '';
+
+    $estParts = array_filter([$estAddress, $deptDesc, $distDesc]);
+    $estText = implode(' - ', $estParts);
+    $sheet->setCellValue('C3', 'Establecimiento:' . $estText);
 
         return [
             1 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCDCDC']]],

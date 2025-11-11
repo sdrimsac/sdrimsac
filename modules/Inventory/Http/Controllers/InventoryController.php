@@ -168,7 +168,7 @@ class InventoryController extends Controller
                 })->orderBy('item.description');
         }
 
-        return new InventoryCollection($records->paginate(config('tenant.items_per_page')));
+       return new InventoryCollection($records->paginate(config('tenant.items_per_page')));
     }
 
     public function tables()

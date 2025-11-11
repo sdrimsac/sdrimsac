@@ -620,7 +620,7 @@
                                         </el-input>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 col-xl-3 px-2">
+                                <div class="col-12 col-lg-6 col-xl-3 px-2" v-if="configuration.comission_item">
                                     <div class="form-group">
                                         <label class="control-label d-flex align-items-center">
                                             <i class="fa fa-box fa-lg me-2"></i>

@@ -98,11 +98,12 @@
           </div>
           <div class="col-md-12">
             <div class="table-responsive">
-              <table class="table">
+              <table class="table tabble-striped">
                 <thead>
                   <tr slot="heading" style="background:#073f68;color:#fff;">
                     <th class="text-white" style="width:6%; min-width:36px; white-space:nowrap;">#</th>
                     <th class="text-white" style="width:65%;">Cliente</th>
+                    <th class="text-white" style="width:10%;">Ver Productos</th>
                     <th class="text-white text-center" style="width:10%;">Unidades</th>
                     <th class="text-white text-right" style="width:10%;">Total</th>
 
@@ -121,7 +122,7 @@
                         style="display:inline-block; font-size:1.2rem; padding:6px 10px; background:#e8f4ff; border-radius:6px; font-weight:600; color:#073f68;">
                         {{ row.customer_name }}
                       </span>
-                      <template v-if="row.items">
+                      <!-- <template v-if="row.items">
                         <div class="col-12">
                           <table class="table">
                             <thead>
@@ -170,7 +171,23 @@
                             </tbody>
                           </table>
                         </div>
-                      </template>
+                      </template> -->
+                    </td>
+                    <td>
+                      <el-tooltip content="Ver productos del cliente" placement="top">
+                        <el-badge :value="row.items ? row.items.length : 0" class="mr-2">
+                          <el-button
+                            type="primary"
+                            size="small"
+                            @click.prevent="FormProducts(row.customer_id)"
+                            aria-label="Ver productos"
+                            style="display:flex; align-items:center; gap:8px; font-weight:600; border-radius:8px;"
+                          >
+                            <i class="el-icon-view"></i>
+                            Productos
+                          </el-button>
+                        </el-badge>
+                      </el-tooltip>
                     </td>
                     <td>
                       <span style="display:inline-block; font-size:1.25rem; font-weight:700;">
@@ -199,6 +216,8 @@
     </div>
     <whatsapp-form-report :message.sync="messageReport" :resource="resourceReport"
       :showWhatsappForm.sync="showWhatsappForm"></whatsapp-form-report>
+
+  <form-client :showDialog.sync="showDialogFomClient" :customerId="recordId" :items="modalClientItems" @fetch-items="onFetchItemsForClient"></form-client>
   </div>
 </template>
 
@@ -209,12 +228,14 @@ import { deletable } from "../../mixins/deletable";
 import queryString from "query-string";
 import moment from "moment";
 import WhatsappFormReport from "../../components/WhatsappModalReports.vue";
+import FormClient from "../items/form_client.vue";
 export default {
   mixins: [deletable],
-  components: { WhatsappFormReport },
+  components: { WhatsappFormReport, FormClient },
   props: ["typeUser", "user", "fromAdmin", "cajaopen"],
   data() {
     return {
+      showDialogFomClient: false,
       customers: [],
       loading_search_item: false,
       totalGeneral: null,
@@ -242,6 +263,8 @@ export default {
       timer: null,
 
       items: []
+      ,
+      modalClientItems: []
     };
   },
   async created() {
@@ -252,6 +275,19 @@ export default {
     });
   },
   methods: {
+    FormProducts(customerId) {
+      // find the record for this customer and set modal items
+      this.recordId = customerId;
+      const rec = this.records.find(r => r.customer_id == customerId);
+      this.modalClientItems = rec && rec.items ? rec.items : [];
+      this.showDialogFomClient = true;
+    },
+
+    // handle fetch-items event from modal (in case modal requests parent to provide items)
+    onFetchItemsForClient(customerId) {
+      const rec = this.records.find(r => r.customer_id == customerId);
+      this.modalClientItems = rec && rec.items ? rec.items : [];
+    },
     searchRemoteCustomers(input) {
       if (input.length > 0) {
         this.loading_search = true;
