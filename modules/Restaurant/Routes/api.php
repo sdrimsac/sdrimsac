@@ -482,9 +482,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
 
-
             Route::get('dashboard/tables/{area_id}', 'DashboardController@tables');
-            //
             Route::post('pos/orden_payment', 'PosController@payment');
             Route::get('pos/search_orden', 'PosController@search');
             Route::get('pos/listtables', 'PosController@listtables');
@@ -493,6 +491,7 @@ Route::prefix('caja')->group(function () {
             Route::get('pos/item/{id}', [PosController::class, 'itemNew']);
             Route::get('record/{id}', 'OrdenController@record');
             Route::get('record-worker/{id}', 'OrdenController@recordWorker');
+            Route::get('re-print-ticket/{id}', 'OrdenController@recordWorkerRePrint');
 
             //ORDERS
             Route::post('send-orden', 'OrdenController@store');
