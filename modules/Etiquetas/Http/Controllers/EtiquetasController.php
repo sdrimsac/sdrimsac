@@ -483,9 +483,9 @@ class EtiquetasController extends Controller
 
                 // Calculate purchase price with IGV if needed
                 $purchase_price = $row->purchase_unit_price;
-                if ($row->purchase_affectation_igv_type_id === "10") {
+                /* if ($row->purchase_affectation_igv_type_id === "10") {
                     $purchase_price = $purchase_price * 1.18;
-                }
+                } */
 
                 if ((int)$row->codes_family === 1) {
                     $barcodes = $row->item_codes()
