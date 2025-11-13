@@ -131,10 +131,23 @@
                                     <?php
                                     $iteration++;
                                     $conteo++;
-                                    if ($values->stock > 0) {
-                                        $importe = $importe + $values->purchase_unit_price * $values->stock;
+                                    // determine warehouse index for stock (match Excel logic)
+                                    $iw = 0;
+                                    if (isset($warehouse_id) && $warehouse_id) {
+                                        if (isset($values->warehouses) && count($values->warehouses) > 0) {
+                                            foreach ($values->warehouses as $k => $w) {
+                                                if ($w->warehouse_id == $warehouse_id) {
+                                                    $iw = $k;
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
-                                    
+                                    $stock_for_calc = isset($values->warehouses[$iw]) ? $values->warehouses[$iw]->stock : ($values->stock ?? 0);
+                                    if ($stock_for_calc > 0) {
+                                        $importe = $importe + $values->purchase_unit_price * $stock_for_calc;
+                                    }
+
                                     ?>
                                     <tr>
                                         <td class="celda center" width="30px">{{ $iteration }}</td>
@@ -175,27 +188,25 @@
                                                 @endif
                                             @endisset
                                         </td>
-                                        <td class="celda center">{{ $values->stock ?? '0.00' }}</td>
+                                        <td class="celda center">{{ $stock_for_calc ?? '0.00' }}</td>
                                         <td class="celda center">{{ number_format($values->purchase_unit_price, 2) }}
                                         </td>
                                         <td class="celda  center">
                                             {{ number_format($values->sale_unit_price, 2) ?? '0.00' }}</td>
-                                        @if ($values->stock > 0)
+                                        @if ($stock_for_calc > 0)
                                             <td class="celda  center">
-                                                {{ number_format($values->purchase_unit_price * $values->stock, 2) ?? '0.00' }}
+                                                {{ number_format($values->purchase_unit_price * $stock_for_calc, 2) ?? '0.00' }}
                                             </td>
                                         @else
                                             <td class="celda  center">0</td>
                                         @endif
-                                        @if ($values->stock > 0)
+                                        @if ($stock_for_calc > 0)
                                             <?php
                                             $conteo++;
-                                            if ($values->stock > 0) {
-                                                $importe_utilidad = $importe_utilidad + ($values->sale_unit_price - $values->purchase_unit_price) * $values->stock;
-                                            }
+                                            $importe_utilidad = $importe_utilidad + ($values->sale_unit_price - $values->purchase_unit_price) * $stock_for_calc;
                                             ?>
                                             <td class="celda  center">
-                                                {{ number_format(($values->sale_unit_price - $values->purchase_unit_price) * $values->stock, 2) ?? '0.00' }}
+                                                {{ number_format(($values->sale_unit_price - $values->purchase_unit_price) * $stock_for_calc, 2) ?? '0.00' }}
                                             </td>
                                         @else
                                             <td class="celda  center">0</td>
@@ -232,11 +243,24 @@
                         @foreach ($reports as $key => $value)
                             @foreach ($value['item'] as $values)
                                 <?php
-                                if ($values->stock > 0) {
-                                    $importe = $importe + $values->purchase_unit_price * $values->stock;
+                                // determine warehouse index for stock
+                                $iw = 0;
+                                if (isset($warehouse_id) && $warehouse_id) {
+                                    if (isset($values->warehouses) && count($values->warehouses) > 0) {
+                                        foreach ($values->warehouses as $k => $w) {
+                                            if ($w->warehouse_id == $warehouse_id) {
+                                                $iw = $k;
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
-                                if ($values->stock > 0) {
-                                    $importe_utilidad = $importe_utilidad + ($values->sale_unit_price - $values->purchase_unit_price) * $values->stock;
+                                $stock_for_calc = isset($values->warehouses[$iw]) ? $values->warehouses[$iw]->stock : ($values->stock ?? 0);
+                                if ($stock_for_calc > 0) {
+                                    $importe = $importe + $values->purchase_unit_price * $stock_for_calc;
+                                }
+                                if ($stock_for_calc > 0) {
+                                    $importe_utilidad = $importe_utilidad + ($values->sale_unit_price - $values->purchase_unit_price) * $stock_for_calc;
                                 }
                                 ?>
                             @endforeach

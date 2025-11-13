@@ -2,6 +2,7 @@
 
 @section('content')
 
-    <tenant-documents-note :user="{{ json_encode(auth()->user()) }}" :document_affected="{{ json_encode($document_affected) }}" :configuration="{{ $configuration }}"></tenant-documents-note>
+    {{-- Use @json to safely inline the document object as a JS expression --}}
+    <tenant-documents-note :user='@json(auth()->user())' :document_affected='@json($document_affected)' :configuration='@json($configuration)'></tenant-documents-note>
 
 @endsection

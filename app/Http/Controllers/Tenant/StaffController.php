@@ -17,7 +17,10 @@ use App\Models\Tenant\CreditList;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemPromotion;
+use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\JobPosition;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Person;
 use App\Models\Tenant\PersonAttendance;
@@ -25,6 +28,7 @@ use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
 use App\Models\Tenant\WorkerAdvance;
+use App\Models\Tenant\WorkerConsumption;
 use App\Models\Tenant\WorkerDailySummari;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -106,6 +110,28 @@ class StaffController extends Controller
         ];
     }
 
+    /**
+     * Update only the job position for a person (partial update).
+     * Expects: person_id, job_position_id (nullable)
+     */
+    public function updateJobPosition(Request $request)
+    {
+        try {
+            $record = WorkerDailySummari::find($request->input('worker_daily_summary_id'));
+            if (!$record) {
+                return response()->json(['success' => false, 'message' => 'Registro diario no encontrado'], 404);
+            }
+
+            $record->job_position_id = $request->input('job_position_id') ?? null;
+            $record->save();
+
+            return response()->json(['success' => true, 'data' => $record]);
+        } catch (\Exception $e) {
+            Log::error('updateJobPosition error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el cargo diario'], 500);
+        }
+    }
+
     public function receipt($id)
     {
         $credit_list = CreditList::find($id);
@@ -180,7 +206,7 @@ class StaffController extends Controller
         $month = $request->input('month', now()->format('m'));
         $year = $request->input('year', now()->format('Y'));
 
-        $empleados = Person::where('is_staff', true)->get();
+        $empleados = Person::where('is_staff', true)->whereNotNull('job_position_id')->get();
         $startOfMonth = Carbon::createFromDate($year, $month, 1)->startOfDay();
         $endOfMonth = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->addDay();
 
@@ -194,7 +220,6 @@ class StaffController extends Controller
                 ->orderBy('date_time_attendance')
                 ->get();
 
-            // Construir lista con Carbon, tipo y registro original
             $marks = $registros->map(function ($r) {
                 if (!empty($r->date_time_attendance)) {
                     $dt = Carbon::parse($r->date_time_attendance);
@@ -210,7 +235,6 @@ class StaffController extends Controller
                 ];
             })->filter()->values();
 
-            // Eliminar duplicados cercanos (misma marca repetida)
             $filtered = [];
             foreach ($marks as $m) {
                 if (empty($filtered)) {
@@ -219,9 +243,7 @@ class StaffController extends Controller
                 }
                 $last = end($filtered);
                 $diffSeconds = $last['dt']->diffInSeconds($m['dt']);
-                // si la diferencia es menor o igual a 5 segundos consideramos duplicado
                 if ($diffSeconds <= 5 && $last['type'] === $m['type']) {
-                    // omitimos duplicado
                     continue;
                 }
                 $filtered[] = $m;
@@ -229,17 +251,12 @@ class StaffController extends Controller
 
             $pairsByDate = [];
             $unpairedByDate = [];
-
-            // Emparejar buscando preferentemente un INGRESO seguido de SALIDA
             $i = 0;
             $count = count($filtered);
             while ($i < $count) {
                 $start = $filtered[$i];
-
-                // buscar siguiente marca que sea salida o al menos distinta a la actual
                 $end = null;
                 for ($j = $i + 1; $j < $count; $j++) {
-                    // preferimos emparejar ingreso->salida
                     if ($start['type'] && strpos($start['type'], 'ing') !== false) {
                         if (isset($filtered[$j]['type']) && strpos($filtered[$j]['type'], 'sal') !== false) {
                             $end = $filtered[$j];
@@ -247,7 +264,6 @@ class StaffController extends Controller
                             break;
                         }
                     } else {
-                        // si start no es ingreso, aceptamos la siguiente marca distinta
                         $end = $filtered[$j];
                         $i = $j + 1;
                         break;
@@ -255,7 +271,6 @@ class StaffController extends Controller
                 }
 
                 if ($end === null) {
-                    // no hay pareja -> registramos un par con exit null
                     $dateKey = $start['dt']->toDateString();
                     $unpairedByDate[$dateKey] = true;
                     if (!isset($pairsByDate[$dateKey])) {
@@ -267,12 +282,10 @@ class StaffController extends Controller
                         'minutes' => 0,
                         'exit_date' => null,
                     ];
-                    // avanzar un paso
                     $i++;
                     continue;
                 }
 
-                // Asegurar que end es posterior a start (manejo turno nocturno)
                 $endDt = $end['dt'];
                 $startDt = $start['dt'];
                 if ($endDt->lt($startDt)) {
@@ -293,16 +306,12 @@ class StaffController extends Controller
                 ];
             }
 
-            // Guardar/actualizar resumen diario por cada fecha calculada
-
             foreach ($pairsByDate as $fecha => $data) {
                 $workedMinutes = $data['minutes'];
                 $horasTrabajadas = $workedMinutes / 60;
 
-                // obtener pares para este dia
                 $pairs_array = $data['pairs'] ?? [];
 
-                // fecha de salida: usamos la exit_date del último par si existe
                 $fecha_salida = $fecha;
                 if (!empty($pairs_array)) {
                     $lastPair = end($pairs_array);
@@ -313,33 +322,29 @@ class StaffController extends Controller
 
                 $horasExtras = max(0, $horasTrabajadas - 8);
 
-                // Obtener salario mensual: soporta atributos `base_salary` o `base-salary`.
-                // Cast a float para evitar problemas con strings vacíos o null.
                 $monthlySalary = 0.0;
                 if (isset($empleado->base_salary)) {
                     $monthlySalary = (float) $empleado->base_salary;
                 } elseif (isset($empleado->{'base-salary'})) {
                     $monthlySalary = (float) $empleado->{'base-salary'};
                 } elseif (isset($empleado->salary)) {
-                    // fallback por si se usa otro nombre
                     $monthlySalary = (float) $empleado->salary;
                 }
-
-                // Hora base: salario mensual dividido por 30 días y 8 horas diarias
                 $horaBase = $monthlySalary / 30 / 8;
 
                 $montoExtra = 0;
-                // Solo calcular si hay horas extras y la hora base es mayor a 0
                 if ($horasExtras > 0 && $horaBase > 0) {
-                    // Primeras 2 horas con recargo 25%, siguientes con 35%
                     if ($horasExtras <= 2) {
                         $montoExtra = $horasExtras * $horaBase * 1.25;
                     } else {
                         $montoExtra = (2 * $horaBase * 1.25) + (($horasExtras - 2) * $horaBase * 1.35);
                     }
                 }
-
-                $falta = ($workedMinutes == 0) || (!empty($unpairedByDate[$fecha]));
+                $falta = ($horasTrabajadas < 8);
+                $minutesMissing = 0;
+                if ($falta) {
+                    $minutesMissing = max(0, 480 - $workedMinutes);
+                }
 
                 WorkerDailySummari::updateOrCreate(
                     [
@@ -347,15 +352,18 @@ class StaffController extends Controller
                         'date_daily' => $fecha
                     ],
                     [
-                        // guardamos los pares para que la UI muestre intervalos separados
                         'pairs' => $pairs_array,
                         'entrance' => null,
                         'exit' => null,
-                        'horas_trabajadas' => round($horasTrabajadas, 2),
+                        'job_position_id' => $empleado->job_position_id,
+                        'horas_trabajadas' => gmdate('H:i:s', $workedMinutes * 60),
                         'overtime' => round($horasExtras, 2),
                         'amount_extra' => round($montoExtra, 2),
                         'lack' => $falta,
                         'date_end_daily' => $fecha_salida,
+                        'extra_time_two' => gmdate('H:i:s', ($horasExtras > 2 ? 2 : $horasExtras) * 3600),
+                        'extra_time_three' => gmdate('H:i:s', ($horasExtras > 2 ? $horasExtras - 2 : 0) * 3600),
+                        'lack_time' => $falta ? gmdate('H:i:s', $minutesMissing * 60) : null,
                     ]
                 );
             }
@@ -369,33 +377,64 @@ class StaffController extends Controller
 
     public function getRecords(Request $request)
     {
+
+        Log::info('getRecords called with request: ' . json_encode($request->all()));
+        $waTable = (new WorkerAdvance)->getTable();
+        $wdTable = (new WorkerDailySummari)->getTable();
+        $advancesSub = DB::connection('tenant')->table($waTable)
+            ->select(
+                "{$waTable}.person_id",
+                DB::raw("DATE({$waTable}.date_time_advance) as adv_date"),
+                DB::raw("SUM({$waTable}.amount) as advances_sum")
+            )
+            ->groupBy("{$waTable}.person_id", DB::raw("DATE({$waTable}.date_time_advance)"));
+
         $query = WorkerDailySummari::with('person')
+            ->leftJoinSub($advancesSub, 'wa', function ($join) use ($wdTable) {
+                $join->on("{$wdTable}.person_id", '=', 'wa.person_id')
+                    ->on("{$wdTable}.date_daily", '=', 'wa.adv_date');
+            })
+            ->select("{$wdTable}.*", DB::raw("COALESCE(wa.advances_sum, 0) as advances"))
             ->whereHas('person', function ($q) {
                 $q->where('is_staff', true);
             });
-
-        if ($request->filled('date')) {
-            $query->where('date_daily', $request->date);
-        }
-
-        if ($request->filled('date_day')) {
-            $query->where('date_daily', $request->date_day);
-        }
-
         if ($request->filled('person_id')) {
-            $query->where('person_id', $request->person_id);
+            $query->where("{$wdTable}.person_id", $request->person_id);
+        }
+        if ($request->filled('date_day')) {
+            $query->whereDate("{$wdTable}.date_daily", $request->date_day);
         }
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
-            $query->whereBetween('date_daily', [$request->from_date, $request->to_date]);
+            $from = Carbon::parse($request->from_date)->format('Y-m-d');
+            $to = Carbon::parse($request->to_date)->format('Y-m-d');
+            $query->whereBetween("{$wdTable}.date_daily", [$from, $to]);
         }
 
-        $records = $query->orderBy('date_daily', 'desc');
+        if ($request->filled('month')) {
+            [$year, $month] = explode('-', $request->month);
+            $query->whereYear("{$wdTable}.date_daily", $year)
+                ->whereMonth("{$wdTable}.date_daily", $month);
+        }
 
-        //return StaffPersonWorkerCollection::collection($records);
+        if ($request->filled('date')) {
+            $dateVal = $request->date;
+            if (preg_match('/^\d{4}-\d{2}-00$/', $dateVal)) {
+                $dateVal = substr($dateVal, 0, 7);
+            }
+            if (preg_match('/^\d{4}-\d{2}$/', $dateVal)) {
+                [$y, $m] = explode('-', $dateVal);
+                $query->whereYear("{$wdTable}.date_daily", $y)
+                    ->whereMonth("{$wdTable}.date_daily", $m);
+            } else {
+                $query->whereDate("{$wdTable}.date_daily", $dateVal);
+            }
+        }
+        $records = $query->orderBy("{$wdTable}.date_daily", 'desc');
+
         return $records;
-        //return new StaffPersonWorkerCollection($records);
     }
+
 
     public function recordsWorker(Request $request)
     {
@@ -408,10 +447,8 @@ class StaffController extends Controller
     {
         $company = Company::first();
         $records = $this->getRecords($request)->get();
-        /* $person = Person::find($request->person_id); */
         return (new StaffWorkerExport)
             ->records($records)
-            /* ->person($person) */
             ->company($company)
             ->download('Lista_de_personal_' . Carbon::now() . '.xlsx');
     }
@@ -480,28 +517,89 @@ class StaffController extends Controller
             'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
     }
+
     function update_stock($credit_list)
     {
+        Log::info('update_stock called for CreditList ID: ' . $credit_list->id);
         $orden = Orden::find($credit_list->orden_id);
         $items = $orden->orden_items;
         $warehouse = $this->findWarehouse();
+
         foreach ($items as $orden_item) {
             $food_id = $orden_item->food_id;
+            Log::info('Processing orden_item with food_id: ' . $food_id);
             $quantity = $orden_item->quantity * -1;
             $food = Food::find($food_id);
             $item_id = $food->item_id;
             $item = Item::find($item_id);
-            if ($item->unit_type_id  !== 'ZZ') {
-                if (!$item->is_set && !$item->promotion_items) {
+            Log::info('Processing item with item_id: ' . $item_id);
 
+            if ($item->unit_type_id !== 'ZZ') {
+
+                Log::info('Updating stock for item_id: ' . $item_id . ' with quantity: ' . $quantity);
+                if (!$item->is_set && !$item->promotion_items) {
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
+                    Log::info('Creating inventory kardex for item_id: ' . $item_id . ' with quantity: ' . $quantity);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
-                } else {
+                    Log::info('Stock updated for item_id: ' . $item_id);
+
+                    // 2️⃣ Item tipo set
+                } elseif ($item->is_set) {
+                    $item_sets = ItemSet::where('set_id', $item_id)->get();
+                    foreach ($item_sets as $set_item) {
+                        // Multiplicar por -1 para descontar stock (salida)
+                        $total_quantity = $set_item->quantity * $orden_item->quantity * -1;
+                        Log::info("update_stock: set item_component={$set_item->individual_item_id} qty={$total_quantity}");
+                        $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
+                        try {
+                            $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
+                        } catch (Exception $e) {
+                            Log::error('updateStock error for set component: ' . $e->getMessage());
+                            throw $e;
+                        }
+                    }
+
+                    // 3️⃣ Item de promoción
+                } elseif ($item->promotion_items) {
+                    $promotion_items = ItemPromotion::where('item_id', $item_id)->get();
+                    foreach ($promotion_items as $promo_item) {
+                        // Cada registro en items_promotions tiene 'promotion_item_id' y 'quantity' (cantidad por promoción)
+                        $promo_item_obj = Item::find($promo_item->promotion_item_id);
+                        $promo_quantity = isset($promo_item->quantity) ? floatval($promo_item->quantity) : 1;
+
+                        if ($promo_item_obj && $promo_item_obj->is_set) {
+                            // Si el item de la promoción es un set, descontar los insumos del set
+                            $set_items = ItemSet::where('set_id', $promo_item_obj->id)->get();
+                            foreach ($set_items as $set_item) {
+                                // multiplicar por la cantidad dentro del set, por la cantidad de promo y por la cantidad ordenada
+                                $total_quantity = $set_item->quantity * $promo_quantity * $orden_item->quantity * -1;
+                                Log::info("update_stock: promo(set) component={$set_item->individual_item_id} qty={$total_quantity}");
+                                $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
+                                try {
+                                    $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
+                                } catch (Exception $e) {
+                                    Log::error('updateStock error for promo set component: ' . $e->getMessage());
+                                    throw $e;
+                                }
+                            }
+                        } else {
+                            // Item normal dentro de la promoción: descontar promo_quantity * orden quantity
+                            $total_quantity = $promo_quantity * $orden_item->quantity * -1;
+                            Log::info("update_stock: promo item={$promo_item->promotion_item_id} qty={$total_quantity}");
+                            $this->createInventoryKardex($promo_item_obj->id, $total_quantity, $warehouse->id, $credit_list);
+                            try {
+                                $this->updateStock($promo_item_obj->id, $total_quantity, $warehouse->id);
+                            } catch (Exception $e) {
+                                Log::error('updateStock error for promo item: ' . $e->getMessage());
+                                throw $e;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
+    
     public function send_credit(Request $request)
     {
         $configuration = Configuration::firstOrFail();
@@ -527,110 +625,7 @@ class StaffController extends Controller
             ]);
             $orden_items_ids = [];
             $orden_items_ids_for_kitchen = [];
-            /* foreach ($items as $item) {
-                $orden_item = new OrdenItem;
-                $orden_item->food_id = $item['food']['id'];
-                $orden_item->observations = $item['observation'] ?? '-';
-                $orden_item->quantity = $item['quantity'];
-                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
-                $orden_item->price = $item['price'];
-                $orden_item->user_id = $user_id;
-                $orden_item->orden_id = $orden->id;
-                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
-                $orden_item->status_orden_id = 1;
-                $orden_item->date = Carbon::today();
-                $orden_item->time = date('H:i:s');
-                $orden_item->area_id = $item['food']['area_id'];
-                $orden_item->save();
 
-                // Set area_id and multiply quantities like OrdenController
-                $promotion_items = null;
-                if (!empty($item['promotion_items'])) {
-                    $promotion_items = $item['promotion_items'];
-                } elseif (!empty($item['food']['promotion_items'])) {
-                    $promotion_items = $item['food']['promotion_items'];
-                } elseif (!empty($item['food']['item']['promotion_items'])) {
-                    $promotion_items = $item['food']['item']['promotion_items'];
-                }
-
-                // Si el item trae promotion_items (es una promoción) — puede venir en distintas rutas/niveles — normalizamos y guardamos los detalles
-                // Posibles ubicaciones: $item['promotion_items'], $item['food']['promotion_items'], $item['food']['item']['promotion_items']
-                $promotion_items = null;
-                if (!empty($item['promotion_items'])) {
-                    $promotion_items = $item['promotion_items'];
-                } elseif (!empty($item['food']['promotion_items'])) {
-                    $promotion_items = $item['food']['promotion_items'];
-                } elseif (!empty($item['food']['item']['promotion_items'])) {
-                    $promotion_items = $item['food']['item']['promotion_items'];
-                }
-
-                if (!empty($promotion_items)) {
-                    Log::info('Guardando promotion_items para orden_item_id: ' . $orden_item->id);
-                    try {
-                        // promotion_items puede venir como Collection o array
-                        if ($promotion_items instanceof \Illuminate\Support\Collection) {
-                            $promotion_items = $promotion_items->toArray();
-                        }
-
-                        foreach ($promotion_items as $p_item) {
-                            // Diferentes formas posibles del detalle de promoción
-                            $detail_item_id = null;
-                            if (isset($p_item['item']['id'])) {
-                                $detail_item_id = $p_item['item']['id'];
-                            } elseif (isset($p_item['id'])) {
-                                $detail_item_id = $p_item['id'];
-                            } elseif (isset($p_item['item_id'])) {
-                                $detail_item_id = $p_item['item_id'];
-                            }
-
-                            $detail_description = $p_item['description'] ?? ($p_item['item']['description'] ?? ($p_item['name'] ?? null));
-                            $detail_quantity = $p_item['quantity'] ?? ($p_item['item_quantity'] ?? ($p_item['quantity_item'] ?? 1));
-
-                            // Multiplicar la cantidad del detalle por la cantidad del item padre (comportamiento consistente con OrdenController)
-                            $detail_quantity_final = $detail_quantity * (float) $orden_item->quantity;
-
-                            // Determinar área del detalle: preferir la que venga en el input, luego la del item registrado, por último la del item padre
-                            $area_id_from_input = data_get($p_item, 'item.area_id');
-                            $area_id_for_detail = $area_id_from_input ?? null;
-                            if (empty($area_id_for_detail) && $detail_item_id) {
-                                try {
-                                    $sub_item = Item::find($detail_item_id);
-                                    if ($sub_item && isset($sub_item->area_id)) {
-                                        $area_id_for_detail = $sub_item->area_id;
-                                    }
-                                } catch (\Exception $e) {
-                                    $area_id_for_detail = null;
-                                }
-                            }
-                            if (empty($area_id_for_detail)) {
-                                $area_id_for_detail = $orden_item->area_id ?? null;
-                            }
-
-                            $user_id_for_detail = $user_id ?? null;
-
-                            OrderItemDetail::create([
-                                'orden_item_id' => $orden_item->id,
-                                'item_id' => $detail_item_id,
-                                'description' => $detail_description,
-                                'quantity' => $detail_quantity_final,
-                                'area_id' => $area_id_for_detail,
-                                'user_id' => $user_id_for_detail,
-                            ]);
-                        }
-                    } catch (\Exception $ex) {
-                        // No queremos que falle todo el envío de crédito por un detalle de promoción
-                        Log::error('Error guardando promotion_items en order_item_details: ' . $ex->getMessage());
-                    }
-                }
-                $orden_items_ids[] = $orden_item->id;
-                $orden_items_ids_for_kitchen[] = [
-                    "orden_id" => $orden_item->id,
-                    "area_id" => $orden_item->area_id
-                ];
-
-
-                event(new OrdenEvent($orden_item->id));
-            } */
             foreach ($items as $item) {
                 $orden_item = new OrdenItem;
                 $orden_item->food_id = $item['food']['id'];
@@ -693,7 +688,6 @@ class StaffController extends Controller
                             'user_id' => $user_id_for_detail,
                         ]);
 
-                        // 🔹 También agregar detalle de promoción al array de impresión
                         $orden_items_ids_for_kitchen[] = [
                             "orden_id" => $orden_item->id,
                             "area_id" => $area_id_for_detail
@@ -719,7 +713,6 @@ class StaffController extends Controller
                 }
             }
 
-            Log::info('Áreas únicas para impresión en cocina:dadadadfsdqsfgsdgdf ');
             $credit_list =  CreditList::create([
                 'cash_id' => $cash_id,
                 'orden_id' => $orden->id,
@@ -729,11 +722,17 @@ class StaffController extends Controller
                 'observation' => $request->ref,
                 'paid' => false,
             ]);
+            $worker_consumptions =  WorkerConsumption::create([
+                'person_id' => $customer_id,
+                'amount' => $orden->getTotal(),
+                'date_time_consumption' => now(),
+                'obervation' => $request->ref,
+            ]);
 
-            Log::info("CreditList creado con ID:4ertetertertertert");
+            Log::info("CreditList creado con ID:4ertetertertertert", $credit_list->toArray());
             $this->update_stock($credit_list);
 
-            Log::info("Intentando imprimir crédito para CreditList ID DAFSDFSDFSDFDF: {$credit_list->id}");
+            //Log::info("Intentando imprimir crédito para CreditList ID DAFSDFSDFSDFDF: {$credit_list->id}");
 
             event(new PrintEvent($credit_list->id, 'S', true, null, []));
             sleep(1);
@@ -868,22 +867,16 @@ class StaffController extends Controller
     }
     public function tables()
     {
-        /* $printers = Area::whereNotNull('printer')->get()
-            ->transform(function ($row, $key) {
-                return [
-                    'id' => $row->id,
-                    'description' => $row->description,
-                    'printer' => $row->printer,
-                ];
-            }); */
-        $persons = Person::all();
+        $persons = Person::where('is_staff', 1)->select('id', 'name')->get();
         $establishments = Establishment::all();
+        $job_positions = JobPosition::all();
         /* $series = Series::all(); */
         return [
             'success' => true,
             /* 'printers' => $printers, */
             'establishments' => $establishments,
-            'persons' => $persons
+            'persons' => $persons,
+            'job_positions' => $job_positions,
             /* 'series' => $series, */
         ];
     }

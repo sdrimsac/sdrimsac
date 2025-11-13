@@ -51,37 +51,29 @@ Route::prefix('caja')->group(function () {
     Route::get('documents/data_table', [DocumentController::class, 'data_table']);
     Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', [OrdenController::class, 'printTicket']);
-
     Route::get('/delivery/ticket', [OrdenController::class, 'DeliveryOrden']);
-
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);
     Route::post('workers/uploads', [WorkerController::class, 'upload']);
     Route::get('workers/images/{workers}', [WorkerController::class, 'images']);
     Route::get('workers/authenticated-user', [WorkerController::class, 'getAuthenticatedUser']);
-
     Route::get('report-boxes', 'BoxesController@report')->name('restaurant.report.boxes');
     Route::get('report-boxes/tables', 'BoxesController@tables');
-
     Route::get('report-boxes/cashes_salud', 'BoxesController@cashes_salud');
     Route::get('report-boxes/cashes_salud_single', 'BoxesController@cashes_salud_single');
     Route::post('report-boxes/save_info_pharmacy/{id}', 'BoxesController@save_info_pharmacy');
     Route::get('report-boxes/reports_resumen_type', 'BoxesController@reports_resumen_type');
     Route::get('report-boxes/reports_resumen_type_usd', 'BoxesController@reports_resumen_type_usd');
     Route::get('report-boxes/reports_resumen_type_page', 'BoxesController@reports_resumen_type_page');
-
     Route::delete('report-boxes/delete-report/{id}', 'BoxesController@deleteReport');
-
     Route::get('report-boxes/reports_resumen_yape', 'BoxesController@reports_resumen_yape');
     Route::get('cash/balance-final/{date_closed}', 'BoxesController@balance_final');
-
     Route::get('report-boxes/reports_categoria_type', 'BoxesController@reports_categoria_type');
     Route::get('report-boxes/reports_type', [BoxesController::class, 'reports_type']);
     Route::get('report-boxes/reports_bancario_type', 'BoxesController@reports_bancario_type');
     Route::get('report-boxes/reports', 'BoxesController@reports_results');
     Route::get('report-product-warehouse-w', [WorkerController::class, 'report_products_w']);
-
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
 
@@ -496,10 +488,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash/search/customers', [CashController::class, 'searchCustomers']);
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
-
-
             Route::get('dashboard/tables/{area_id}', 'DashboardController@tables');
-            //
             Route::post('pos/orden_payment', 'PosController@payment');
             Route::get('pos/search_orden', 'PosController@search');
             Route::get('pos/listtables', 'PosController@listtables');
@@ -508,7 +497,6 @@ Route::prefix('caja')->group(function () {
             Route::get('pos/item/{id}', [PosController::class, 'itemNew']);
             Route::get('record/{id}', 'OrdenController@record');
             Route::get('record-worker/{id}', 'OrdenController@recordWorker');
-
             Route::get('re-print-ticket/{id}', 'OrdenController@recordWorkerRePrint');
 
 

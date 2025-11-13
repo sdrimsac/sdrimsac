@@ -3421,6 +3421,16 @@ class DocumentController extends Controller
             $query->where('description', 'like', "%{$request->input}%")
                 ->orWhere('internal_id', 'like', "%{$request->input}%");
         });
+
+        // Excluir items que son promociones o sets
+        $items = $items->where(function($q){
+            $q->where('promotions_items', '<>', 1)
+              ->orWhereNull('promotions_items');
+        })->where(function($q){
+            $q->where('is_set', '<>', 1)
+              ->orWhereNull('is_set');
+        });
+
         if ($request->series) {
             $items = $items->where('series_enabled', 1);
         }

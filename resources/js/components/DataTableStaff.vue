@@ -9,7 +9,7 @@
                         <label for="">Buscar Personal</label>
                         <el-select ref="cliente" filterable remote clearable popper-class="el-select-customers"
                             dusk="customer_id" placeholder="Ingrese Personal / Cliente"
-                            :remote-method="searchRemoteCustomers" @change="changeCustomer" v-model="search.person_id">
+                            :remote-method="searchRemoteCustomers" @change="changeCustomer" v-model="form.person_id">
                             <el-option v-for="option in persons" :key="option.id" :value="option.id"
                                 :label="option.name"></el-option>
                         </el-select>
@@ -18,7 +18,7 @@
 
                     <div class="col-md-2 col-lg-2 col-12">
                         <label for="">Seleccione Establecimiento</label>
-                        <el-select v-model="search.establishment_id" placeholder="Seleccione Establecimiento" clearable
+                        <el-select v-model="form.establishment_id" placeholder="Seleccione Establecimiento" clearable
                             filterable @change="changeCustomer">
                             <el-option v-for="item in establishments" :key="item.id" :label="item.description"
                                 :value="item.id"></el-option>
@@ -130,12 +130,10 @@ export default {
     async mounted() {
 
         await this.$http
-            // .get(`/${_.head(column_resource)}/columns`)
             .get(`/${this.resource}/tables`)
             .then(response => {
                 this.establishments = response.data.establishments;
                 this.persons = response.data.persons
-                // this.search.column = _.head(Object.keys(this.columns));
             });
         await this.getRecords();
     },

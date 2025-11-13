@@ -26,6 +26,7 @@ use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\JobPosition;
 use App\Models\Tenant\PersonParient;
 use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\Warehouse;
@@ -302,7 +303,8 @@ class PersonController extends Controller
 
     public function tables()
     {
-        $users = User::orderBy('name')->get();
+        $job_positions = JobPosition::all();
+        $users = User::orderBy('name')->select('id', 'name')->get();
         $parent = PersonParient::all();
         // $item_unit_types = ItemUnitType::
         $item_unit_types = ItemUnitType::pluck('description')->unique()->values();
@@ -316,6 +318,7 @@ class PersonController extends Controller
         $zones = ClientZone::all();
         $configuration = Configuration::first();
         $locations = $this->getLocationCascade();
+    
         $api_service_token = config('configuration.api_service_token');
         $api_factiliza_token = config('configuration.api_factiliza_token');
         return compact(
@@ -333,6 +336,7 @@ class PersonController extends Controller
             'api_service_token',
             'users',
             'parent',
+            'job_positions'
         );
     }
 

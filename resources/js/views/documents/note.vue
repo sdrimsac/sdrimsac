@@ -6,8 +6,8 @@
                 Nueva Nota de Crédito ({{ document.series }}-{{ document.number }})
             </h4>
         </div>
-        <div class="card-body">
-            <form autocomplete="off" @submit.prevent="submit">
+        <div class="card-body" :class="{ 'document-generated': documentGenerated }">
+            <form autocomplete="off" @submit.prevent="submit" :class="{ 'form-disabled': documentGenerated }">
                 <div class="form-body">
                     <!-- <div class="row">
                         <div class="col-md-12 text-end">
@@ -257,12 +257,16 @@
                         
                     </div>
                 </div>
-                <div class="form-actions d-flex justify-content-end pt-2 pb-2">
-                    <el-button class="btn_cancelarsmall" type="primary" @click.prevent="close()">Cancelar</el-button>
-                    <el-button class="btn_guardarsmall" type="primary" native-type="submit" :loading="loading_submit"
-                        v-if="form.items.length > 0 && form.total > 0">Generar</el-button>
-                </div>
             </form>
+            
+            <!-- Botones fuera del formulario para que no se deshabiliten -->
+            <div class="form-actions d-flex justify-content-end pt-2 pb-2">
+                <el-button class="btn_cancelarsmall" type="primary" @click.prevent="close()">
+                    {{ documentGenerated ? 'Cerrar' : 'Cancelar' }}
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" @click.prevent="submit" :loading="loading_submit"
+                    v-if="form.items.length > 0 && form.total > 0 && !documentGenerated">Generar</el-button>
+            </div>
         </div>
 
         <document-form-item :showDialog.sync="showDialogAddItem" :recordItem="recordItem"
@@ -309,7 +313,8 @@ export default {
             document: {},
             operation_types: [],
             is_contingency: false,
-            isCreditNote: true
+            isCreditNote: true,
+            documentGenerated: false // Controla si ya se generó el documento
         };
     },
     computed: {
@@ -318,6 +323,7 @@ export default {
         }
     },
     created() {
+        this.checkDocumentStatus();
         this.initComponent();
     },
     mounted() { },
@@ -355,6 +361,7 @@ export default {
         },
         async initForm() {
             this.errors = {};
+            
             this.form = {
                 user_id: 1,
                 affect_cash: false,
@@ -376,20 +383,21 @@ export default {
                 total_prepayment: this.document.total_prepayment,
                 total_charge: this.document.total_charge,
                 total_discount: 0,
-                total_exportation: this.document.total_exportation,
-                total_free: this.document.total_free,
-                total_taxed: this.document.total_taxed,
-                total_unaffected: this.document.total_unaffected,
-                total_exonerated: this.document.total_exonerated,
-                total_igv: this.document.total_igv,
+                total_exportation: 0, // Se recalculará
+                total_free: 0, // Se recalculará  
+                total_taxed: 0, // Se recalculará
+                total_unaffected: 0, // Se recalculará
+                total_exonerated: 0, // Se recalculará
+                total_igv: 0, // Se recalculará
+                total_base_igv: 0, // Se recalculará - agregado
                 total_base_isc: this.document.total_base_isc,
                 total_isc: this.document.total_isc,
                 total_base_other_taxes: this.document.total_base_other_taxes,
                 total_other_taxes: this.document.total_other_taxes,
                 total_plastic_bag_taxes: this.document.total_plastic_bag_taxes,
-                total_taxes: this.document.total_taxes,
-                total_value: this.document.total_value,
-                total: this.document.total,
+                total_taxes: 0, // Se recalculará
+                total_value: 0, // Se recalculará
+                total: 0, // Se recalculará
                 items: this.document.items,
                 affected_document_id: this.document.id,
                 note_credit_or_debit_type_id: null,
@@ -402,10 +410,98 @@ export default {
             };
 
             await this.form.items.forEach(item => {
-                item.input_unit_price_value = item.unit_price;
+                
+                // Si el documento original tiene descuentos, calcular el precio unitario efectivo
+                if (this.hasDiscounts) {
+                    
+                    // Verificar si este item específico tiene descuento
+                    let itemHasDiscount = parseFloat(item.total_discount) > 0;
+                    
+                    if (itemHasDiscount) {
+                        // Caso 1: El item tiene descuento específico
+                        let totalAfterDiscount = parseFloat(item.total) - parseFloat(item.total_discount);
+                        let effectiveUnitPrice = totalAfterDiscount / parseFloat(item.quantity);
+                        
+                        item.input_unit_price_value = _.round(effectiveUnitPrice, 2);
+                        item.unit_price = _.round(effectiveUnitPrice, 2);
+                        
+                        // Recalcular valores basados en el precio efectivo
+                        let subtotal = parseFloat(item.quantity) * effectiveUnitPrice;
+                        
+                        // Determinar el tipo de afectación del IGV
+                        if (item.affectation_igv_type_id === "10") { // Gravado
+                            item.total_value = _.round(subtotal / 1.18, 2);
+                            item.total_igv = _.round(subtotal - item.total_value, 2);
+                            item.total = _.round(subtotal, 2);
+                            item.total_base_igv = _.round(item.total_value, 2); // Agregar para gravado
+                            item.unit_value = _.round(effectiveUnitPrice / 1.18, 6); // Valor unitario sin IGV
+                        } else {
+                            // Para productos exonerados, inafectos, etc.
+                            item.total_value = _.round(subtotal, 2);
+                            item.total_igv = 0;
+                            item.total = _.round(subtotal, 2);
+                            item.total_base_igv = _.round(subtotal, 2); // Agregar para exonerado/inafecto
+                            item.unit_value = _.round(effectiveUnitPrice, 6); // Valor unitario (sin IGV ya que está exonerado)
+                        }
+                        
+                        // Resetear descuentos ya que están incluidos en el nuevo precio
+                        item.total_discount = 0;
+                        item.total_charge = 0;
+                        
+                    } else {
+                        // Caso 2: El descuento está a nivel general del documento
+                        
+                        // Calcular la proporción de descuento para este item
+                        let documentSubtotal = parseFloat(this.document_affected.total_taxed) + 
+                                             parseFloat(this.document_affected.total_exonerated) + 
+                                             parseFloat(this.document_affected.total_unaffected);
+                        let documentDiscount = parseFloat(this.document_affected.total_discount);
+                        let discountRate = documentDiscount / documentSubtotal;
+                        
+                        
+                        // Aplicar la proporción de descuento a este item
+                        let itemSubtotal = parseFloat(item.total);
+                        let itemDiscountAmount = itemSubtotal * discountRate;
+                        let totalAfterDiscount = itemSubtotal - itemDiscountAmount;
+                        let effectiveUnitPrice = totalAfterDiscount / parseFloat(item.quantity);
+                        
+                        
+                        item.input_unit_price_value = _.round(effectiveUnitPrice, 2);
+                        item.unit_price = _.round(effectiveUnitPrice, 2);
+                        
+                        // Recalcular valores basados en el precio efectivo
+                        let subtotal = parseFloat(item.quantity) * effectiveUnitPrice;
+                        
+                        // Determinar el tipo de afectación del IGV
+                        if (item.affectation_igv_type_id === "10") { // Gravado
+                            item.total_value = _.round(subtotal / 1.18, 2);
+                            item.total_igv = _.round(subtotal - item.total_value, 2);
+                            item.total = _.round(subtotal, 2);
+                            item.total_base_igv = _.round(item.total_value, 2); // Agregar para gravado
+                            item.unit_value = _.round(effectiveUnitPrice / 1.18, 6); // Valor unitario sin IGV
+                        } else {
+                            // Para productos exonerados, inafectos, etc.
+                            item.total_value = _.round(subtotal, 2);
+                            item.total_igv = 0;
+                            item.total = _.round(subtotal, 2);
+                            item.total_base_igv = _.round(subtotal, 2); // Agregar para exonerado/inafecto
+                            item.unit_value = _.round(effectiveUnitPrice, 6); // Valor unitario (sin IGV ya que está exonerado)
+                        }
+                        
+                        item.total_discount = 0;
+                        item.total_charge = 0;
+                    
+                    }
+                } else {
+                    
+                    item.input_unit_price_value = item.unit_price;
+                }
                 item.additional_information = null;
                 item.IdLoteSelected = item.item.IdLoteSelected;
             });
+            
+            // Recalcular totales después de ajustar precios por descuentos
+            this.calculateTotal();
             this.validateHasDiscounts();
         },
         clickAddItemNote() {
@@ -558,6 +654,7 @@ export default {
             this.form.total_unaffected = _.round(total_unaffected, 2);
             this.form.total_free = _.round(total_free, 2);
             this.form.total_igv = _.round(total_igv, 2);
+            this.form.total_base_igv = _.round(total_taxed + total_exonerated + total_unaffected + total_exportation, 2); // Base para IGV
             this.form.total_value = _.round(total_value, 2);
             this.form.total_taxes = _.round(total_igv, 2);
             this.form.total_plastic_bag_taxes = _.round(
@@ -567,30 +664,27 @@ export default {
             // this.form.total = _.round(total, 2)
             this.form.total =
                 _.round(total, 2) + this.form.total_plastic_bag_taxes;
+                
+            // Debug logs para verificar los cálculos
+            console.log('Calculated totals:', {
+                total_taxed: this.form.total_taxed,
+                total_exonerated: this.form.total_exonerated,
+                total_unaffected: this.form.total_unaffected,
+                total_exportation: this.form.total_exportation,
+                total_base_igv: this.form.total_base_igv,
+                total_igv: this.form.total_igv,
+                total: this.form.total
+            });
         },
         async validateHasDiscounts() {
             console.log(this.isCreditNote, " ", this.hasDiscounts);
+            // Ya no necesitamos limpiar los productos porque ahora calculamos automáticamente 
+            // los precios con descuento incluido en initForm()
             if (this.isCreditNote && this.hasDiscounts) {
-                const result = await Swal.fire({
-                    title: "¿Desea afectar la caja origen donde fue emitido el documento?",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "Sí",
-                    cancelButtonText: "No",
-                    reverseButtons: true
-                });
-                if (result.isConfirmed) {
-                    this.form.affect_cash = true;
-                } else {
-                    this.form.affect_cash = false;
-                }
-            }
-            if (this.isCreditNote && this.hasDiscounts) {
-                this.$toast.error(
-                    "El comprobante relacionado tiene descuentos, debe agregar los productos"
+                // Mensaje informativo sobre el ajuste automático
+                this.$toast.info(
+                    "Descuentos detectados: Los precios han sido ajustados automáticamente al valor efectivamente pagado"
                 );
-                this.form.items = [];
-                this.calculateTotal();
             }
         },
         async submit() {
@@ -622,8 +716,21 @@ export default {
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
+                        // Marcar el documento como generado para evitar múltiples generaciones
+                        this.documentGenerated = true;
+                        
+                        // Guardar en localStorage para persistir después de recargas
+                        const affectedDocumentId = this.form.affected_document_id;
+                        if (affectedDocumentId) {
+                            const generatedKey = `document_generated_${affectedDocumentId}`;
+                            localStorage.setItem(generatedKey, 'true');
+                        }
+                        
+                        // Mostrar mensaje de éxito
+                        this.$toast.success("Nota de crédito generada exitosamente");
+                        
                         if (!this.external) {
-                            this.resetForm();
+                            // No resetear el formulario, solo almacenar el ID y mostrar opciones
                             this.documentNewId = response.data.data.id;
                             this.showDialogOptions = true;
                         } else {
@@ -662,7 +769,39 @@ export default {
                     this.form.customer_id = this.document.customer_id;
                 });
         },
+        checkDocumentStatus() {
+            // Verificar si ya existe una nota de crédito para este documento
+            const affectedDocumentId = this.document_affected?.id;
+            if (affectedDocumentId) {
+                // Verificar en localStorage si ya se generó
+                const generatedKey = `document_generated_${affectedDocumentId}`;
+                const wasGenerated = localStorage.getItem(generatedKey);
+                
+                if (wasGenerated === 'true') {
+                    this.documentGenerated = true;
+                    console.log('Document was already generated, blocking form');
+                }
+                
+                // Alternativamente, podrías hacer una consulta al backend para verificar
+                // si ya existe una nota de crédito para este documento
+                /*
+                this.$http.get(`/documents/check-credit-note/${affectedDocumentId}`)
+                .then(response => {
+                    if (response.data.has_credit_note) {
+                        this.documentGenerated = true;
+                    }
+                });
+                */
+            }
+        },
         close() {
+            // Opcional: limpiar el localStorage al cerrar correctamente
+            // const affectedDocumentId = this.document_affected?.id;
+            // if (affectedDocumentId) {
+            //     const generatedKey = `document_generated_${affectedDocumentId}`;
+            //     localStorage.removeItem(generatedKey);
+            // }
+            
             if (this.external) {
                 this.$emit("close");
             } else {
@@ -724,5 +863,32 @@ export default {
 .ct-desc-sub {
     font-size: 0.95em;
     color: #555;
+}
+
+/* Estilos para documento generado */
+.document-generated {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f7ef 100%);
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    position: relative;
+}
+
+.document-generated::before {
+    content: "✓ DOCUMENTO GENERADO EXITOSAMENTE";
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 12px;
+    z-index: 10;
+}
+
+.form-disabled {
+    pointer-events: none;
+    opacity: 0.7;
 }
 </style>

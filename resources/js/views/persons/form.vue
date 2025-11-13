@@ -321,6 +321,14 @@
                             <el-input-number v-model="form.base_salary" controls-position="right" :min="1"
                                 :max="999999"></el-input-number>
                         </div>
+                        <div class="col-12 mt-2" v-if="form.is_staff">
+                            <label for="base_salary">Seleccione puesto asignado</label>
+                            <el-select v-model="form.job_position_id" filterable clearable
+                                placeholder="Seleccione un puesto">
+                                <el-option v-for="job in jobs" :key="job.id" :label="job.name"
+                                    :value="job.id"></el-option>
+                            </el-select>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -623,6 +631,7 @@ export default {
             person_types: [],
             identity_document_types: [],
             all_users: [],
+            jobs: [],
             configuration: {},
 
             item_unit_types: [],
@@ -662,6 +671,7 @@ export default {
             this.item_unit_types_general = response.data.item_unit_types;
             this.item_unit_types = this.item_unit_types_general;
             this.parent = response.data.parent;
+            this.jobs = response.data.job_positions;
             console.log(
                 "🚀 ~ file: form.vue ~ line 153 ~ created ~ parent",
                 this.parent

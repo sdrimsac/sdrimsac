@@ -55,13 +55,8 @@ if ($hostname) {
             Route::post('efectivo', [App\Http\Controllers\Tenant\SearchController::class, 'efectivo']);
             Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
-
-            //para el excel con datos
             Route::get('report_cash/report_document/{type}', [CashController::class, 'report_cash_export_document']);
-
             Route::get('report_cash/report_document_discount/{type}', [CashController::class, 'report_cash_export_document_discount']);
-            //Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
-            /* Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']); */
             Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
 
             Route::get('staff/export-excel', [StaffController::class, 'ExportExcel']);
@@ -207,8 +202,7 @@ if ($hostname) {
                     Route::get('/records', [StaffController::class, 'recordsWorker']);
                     Route::post('/adelanto', [StaffController::class, 'adelanto']);
                     Route::post('/send-credit', [StaffController::class, 'send_credit']);
-
-
+                    Route::post('/update-job-position', [StaffController::class, 'updateJobPosition']);
                 });
                 Route::prefix('/sellers')->group(function () {
                     //
@@ -507,9 +501,12 @@ if ($hostname) {
                 // Route::get('drivers/{type}/records', [App\Http\Controllers\Tenant\UserController::class, 'records']);
                 // Route::delete('drivers/{user}', [App\Http\Controllers\Tenant\UserController::class, 'destroy']);
 
-
-
-
+                //para los sueldos de las personal
+                Route::get('job_positions/record/{id}', [App\Http\Controllers\Tenant\JobPositionController::class, 'record']);
+                Route::get('job_positions/records', [App\Http\Controllers\Tenant\JobPositionController::class, 'records']);
+                Route::post('job_positions', [App\Http\Controllers\Tenant\JobPositionController::class, 'store']);
+                Route::delete('job_positions/{id}', [App\Http\Controllers\Tenant\JobPositionController::class, 'destroy']);
+                Route::put('job_positions/{id}', [App\Http\Controllers\Tenant\JobPositionController::class, 'update']);
                 //ChargeDiscounts
                 Route::get('charge_discounts', [App\Http\Controllers\Tenant\ChargeDiscountController::class, 'index'])->name('tenant.charge_discounts.index')->middleware('just.admin');
                 Route::get('charge_discounts/records/{type}', [App\Http\Controllers\Tenant\ChargeDiscountController::class, 'records']);

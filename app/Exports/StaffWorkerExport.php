@@ -86,28 +86,91 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
             $lack = isset($record->lack) ? $record->lack : ($record['lack'] ?? '');
             $dateEnd = isset($record->date_end_daily) ? $record->date_end_daily : ($record['date_end_daily'] ?? '');
             $pairsRaw = isset($record->pairs) ? $record->pairs : ($record['pairs'] ?? []);
-            $pairsCollection = collect($pairsRaw)->map(function ($p) {
+
+            // Normalize pairs to array of arrays with keys entrance, exit, minutes, exit_date
+            $normalizedPairs = collect($pairsRaw)->map(function ($p) {
                 $entr = isset($p->entrance) ? $p->entrance : ($p['entrance'] ?? '');
                 $ext = isset($p->exit) ? $p->exit : ($p['exit'] ?? '');
+                $minutes = isset($p->minutes) ? $p->minutes : ($p['minutes'] ?? null);
                 $date = isset($p->exit_date) ? $p->exit_date : ($p['exit_date'] ?? '');
-                return trim("{$entr} - {$ext} ({$date})");
-            })->filter()->values();
+                return [
+                    'entrance' => $entr,
+                    'exit' => $ext,
+                    'minutes' => $minutes,
+                    'exit_date' => $date,
+                ];
+            })->values();
 
-            $pairsString = $pairsCollection->isEmpty() ? '' : $pairsCollection->implode(' | ');
+            // total minutes from pairs
+            $totalMinutes = $normalizedPairs->reduce(function ($carry, $p) {
+                $m = isset($p['minutes']) && is_numeric($p['minutes']) ? (int) $p['minutes'] : 0;
+                return $carry + $m;
+            }, 0);
+
+            // format minutes to HH:MM:SS
+            $formatMinutesToTime = function ($minutes) {
+                if ($minutes === null || $minutes === '') return '';
+                $h = floor($minutes / 60);
+                $m = $minutes % 60;
+                return sprintf('%02d:%02d:00', $h, $m);
+            };
+
+            $tHoras = $formatMinutesToTime($totalMinutes);
+            $hn_decimal = $totalMinutes > 0 ? round($totalMinutes / 60, 2) : ($horas !== '' ? round((float) $horas, 2) : 0);
+
+            // get first entrance and last exit if available
+            $firstEntrance = '';
+            $lastExit = '';
+            if ($normalizedPairs->isNotEmpty()) {
+                $first = $normalizedPairs->first();
+                $last = $normalizedPairs->last();
+                $firstEntrance = $first['entrance'] ?? '';
+                $lastExit = $last['exit'] ?? '';
+            }
+
+            // pairs JSON (raw)
+            $pairsJson = empty($pairsRaw) ? '' : json_encode($pairsRaw, JSON_UNESCAPED_UNICODE);
+
+            // created_at / updated_at fallbacks
+            $createdAt = isset($record->created_at) ? $record->created_at : ($record['created_at'] ?? '');
+            $updatedAt = isset($record->updated_at) ? $record->updated_at : ($record['updated_at'] ?? '');
+
+            // day name in Spanish from date_daily
+            $dayName = '';
+            try {
+                if (!empty($dateDaily)) {
+                    $d = Carbon::parse($dateDaily);
+                    $map = [1=>'Lunes',2=>'Martes',3=>'Miercoles',4=>'Jueves',5=>'Viernes',6=>'Sabado',7=>'Domingo'];
+                    $dayName = $map[(int)$d->format('N')];
+                }
+            } catch (\Exception $e) {
+                $dayName = '';
+            }
 
             $data->push([
-                'person_name' => $personName,
+                // best-effort columns to match the sample image / pasted rows
+                'id' => isset($record->id) ? $record->id : ($record['id'] ?? ''),
+                'person_id' => isset($record->person_id) ? $record->person_id : ($record['person_id'] ?? ''),
+                'area_id' => isset($record->area_id) ? $record->area_id : ($record['area_id'] ?? ''),
+                'turn' => isset($record->turn) ? $record->turn : ($record['turn'] ?? ''),
+                'weekday' => $dayName,
+                'entrance' => $firstEntrance,
+                'exit' => $lastExit,
+                't_horas' => $tHoras,
+                '+hn_f' => $hn_decimal,
+                's' => $amountExtra !== '' ? round((float) $amountExtra, 2) : null,
+                'extra_2h_amount' => isset($record->extra_2h_amount) ? $record->extra_2h_amount : ($record['extra_2h_amount'] ?? ''),
+                'extra_2h_time' => isset($record->extra_2h_time) ? $record->extra_2h_time : ($record['extra_2h_time'] ?? ''),
+                'extra_3h_amount' => isset($record->extra_3h_amount) ? $record->extra_3h_amount : ($record['extra_3h_amount'] ?? ''),
+                'extra_3h_time' => isset($record->extra_3h_time) ? $record->extra_3h_time : ($record['extra_3h_time'] ?? ''),
+                'faltante' => is_numeric($lack) ? $formatMinutesToTime((int)$lack) : ($lack ?: ''),
+                /* 'created_at' => $createdAt,
+                'updated_at' => $updatedAt, */
                 'date_daily' => $dateDaily,
-                /* 'entrance' => $entrance,
-                'exit' => $exit, */
-                'pairs' => $pairsString,
                 'date_end_daily' => $dateEnd,
-                'horas_trabajadas' => $horas !== '' ? round((float) $horas, 2) : null,
-                'overtime' => $overtime !== '' ? round((float) $overtime, 2) : null,
-                'amount_extra' => $amountExtra !== '' ? round((float) $amountExtra, 2) : null,
-                'lack' => is_numeric($lack) ? (int) $lack : $lack,
-                
-                
+                /* 'pairs_json' => $pairsJson, */
+                'tardanza' => isset($record->tardanza) ? $record->tardanza : ($record['tardanza'] ?? ''),
+                'ausencia' => isset($record->ausencia) ? $record->ausencia : ($record['ausencia'] ?? ''),
             ]);
         }
 
@@ -117,18 +180,25 @@ class StaffWorkerExport implements FromCollection, WithHeadings, ShouldAutoSize,
     public function headings(): array
     {
         return [
-            'Nombre',
-            'Fecha entrada',
-            /* 'Entrada',
-            'Salida', */
-            'Horas (entradas - salidas)',
-            'Fecha salida',
-            'Horas total trabajadas',
-            'Horas extras',
-            'Importe extra',
-            'Faltas',
-            
-            
+            'id',
+            'person_id',
+            'area_id',
+            'Turno',
+            'Dia',
+            'Ingreso',
+            'Salida',
+            'T. HORAS',
+            '+HN (F)',
+            'S/',
+            '+ 2H 25% (S/)',
+            '2H tiempo',
+            '+ 3H 35% (S/)',
+            '3H tiempo',
+            ' horas faltante',
+            'fecha ingreso',
+            'fecha salida',
+            'tardanza',
+            'ausencia',  
         ];
     }
 

@@ -10,8 +10,17 @@
             LISTADO DE PERSONAL
           </h3>
         </div>
-        <div class="data-table-visible-columns">
-          <el-button type="button" class="btn_buscar" style="margin-right: 5px;" @click.prevent="clickDownloadExcel">
+        <div class="data-table-visible-columns" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
+            @click.prevent="clickCreateAdelanto">
+            ADELANTOS DEL PERSONAL
+          </el-button>
+          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
+            @click.prevent="clickCreateSalary">
+            SALARIOS DEL PERSONAL
+          </el-button>
+          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
+            @click.prevent="clickDownloadExcel">
             Import Excel del personal
           </el-button>
         </div>
@@ -24,41 +33,37 @@
               <th class="text-white" style="width: 150px;">Horas Trabajadas</th>
               <th class="text-white" style="width: 100px;"> Fecha y Hora de salida</th>
               <th class="text-white" style="width: 100px;">Horas Trabajadas</th>
-              <th class="text-white" style="width: 120px;">Total Horas Extras</th>
-              <th class="text-white" style="width: 120px;">Saldo Extra</th>
+              <th class="text-white" style="width: 120px;">Horas Extras 25%</th>
+              <th class="text-white" style="width: 120px;">Horas Extras 35%</th>
+              <th class="text-white" style="width: 120px;">Horas Faltante</th>
               <th class="text-white" style="width: 100px;">Adelantos</th>
               <th class="text-white text-center" style="width: 100px;">Acciones</th>
             </tr>
             <tr slot-scope="{ index, row }">
               <td>{{ index + 1 }}</td>
-              <td>{{ row.person_name }}</td>
+              <td>{{ row.person_name }} <br>
+                <small style="color:#6b7280;">{{ row.job_position }}</small>
+              </td>
               <td>{{ row.date_daily }}</td>
               <td>
-                <div v-if="row.pairs" style="display:flex; flex-direction:column; gap:6px;">
+                <div
+                  v-if="row.pairs"
+                  style="display:inline-block; vertical-align:top; width:auto; max-width:360px;"
+                >
                   <div
-                    v-for="(p, i) in (typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs)"
-                    :key="i"
-                    style="display:flex; justify-content:space-between; align-items:center; padding:6px 8px; background:#f7f9fb; border-radius:6px; border:1px solid #e3e7ea;"
+                  v-for="(p, i) in (typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs)"
+                  :key="i"
+                  style="display:flex; justify-content:flex-start; align-items:center; gap:6px; padding:8px; background:#f7f9fb; border-radius:6px; border:1px solid #e3e7ea; width:auto; margin-bottom:6px;"
                   >
-                    <div style="display:flex; flex-direction:column;">
-                      <div style="font-size:0.95rem; color:#222;">
-                        <strong style="margin-right:6px;">{{ p.entrance }}</strong>
-                        <span style="opacity:0.6; margin:0 6px;">→</span>
-                        <strong style="margin-left:6px;">{{ p.exit }}</strong>
-                      </div>
-                      <small style="color:#6b7280;">{{ p.exit_date }}</small>
-                    </div>
-                    <div style="font-weight:600; white-space:nowrap; color:#111;">
-                      {{ Math.floor((p.minutes||0)/60) }}h {{ ('0' + ((p.minutes||0)%60)).slice(-2) }}m
-                    </div>
+                  <div style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+                    <strong style="font-size:0.95rem; color:#222;">{{ p.entrance }}</strong>
+                    <span style="opacity:0.6;"><=></span>
+                    <strong style="font-size:0.95rem; color:#222;">{{ p.exit }}</strong>
+                    <span style="opacity:0.6;">→</span>
+                    <strong style="font-size:0.95rem; color:#222;">
+                    {{ Math.floor((p.minutes || 0) / 60) }}h {{ ('0' + ((p.minutes || 0) % 60)).slice(-2) }}m
+                    </strong>
                   </div>
-
-                  <div style="display:flex; justify-content:space-between; padding:6px 8px; margin-top:4px; background:#eef2f6; border-radius:6px; border:1px solid #dde6eb; font-weight:700;">
-                    <div>Total</div>
-                    <div>
-                      {{ Math.floor(((typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs).reduce((s,p)=>s+(p.minutes||0),0))/60) }}h
-                      {{ ('0' + (((typeof row.pairs === 'string' ? JSON.parse(row.pairs) : row.pairs).reduce((s,p)=>s+(p.minutes||0),0))%60)).slice(-2) }}m
-                    </div>
                   </div>
                 </div>
 
@@ -66,19 +71,26 @@
               </td>
               <td>{{ row.date_end_daily }}</td>
               <td>{{ row.horas_trabajadas }}</td>
-              <td>{{ Number(row.overtime).toFixed(2) }}</td>
-              <td>{{ Number(row.amount_extra).toFixed(2) }}</td>
+              <td>{{ row.extra_time_two }}</td>
+              <td>{{ row.extra_time_three }}</td>
+              <td>{{ row.lack_time }}</td>
               <td class="text-center">
-                <!-- <div style="display: flex; gap: 5px; flex-wrap: wrap;"> -->
-                <el-button type="primary" gradient animation-type="scale"
-                  style="min-width: 32px; height: 32px; padding: 0; margin-right: 5px;"
-                  @click.native.prevent="clickAdelanto(row)">
-                  <i class="fa fa-money-bill-wave"></i>
-                </el-button>
-                <!-- <el-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                  @click.prevent="clickCreate(row.id)">
-                  <i class="fa fa-edit"></i>
-                </el-button> -->
+                {{ Number(row.advances).toFixed(2) }}
+              </td>
+              <td>
+                <!-- Bind per-row: when the user changes the select we call handleActionChange(row, value) -->
+                <el-select
+                  :value="row.job_position_id || null"
+                  placeholder="Acciones"
+                  @change="value => handleActionChange(row, value)"
+                >
+                  <el-option
+                     v-for="job_position in job_positions"
+                     :key="job_position.id"
+                     :label="job_position.name"
+                     :value="job_position.id"
+                  ></el-option>
+                </el-select>
               </td>
             </tr>
           </data-table>
@@ -86,7 +98,8 @@
       </div>
     </div>
     <import-excel :showDialog.sync="showDialogImportExcel"></import-excel>
-    <adelanto :showDialog.sync="showDialogAdelanto" :person_id="person_id"></adelanto>
+    <adelanto :showDialog.sync="showDialogAdelanto" :person_id.sync="person_id"></adelanto>
+    <salary :showDialog.sync="showDialogSalary"></salary>
   </div>
 </template>
 <script>
@@ -94,6 +107,7 @@ import DataTable from "../../components/DataTableStaff.vue";
 import { deletable } from "../../mixins/deletable";
 import ImportExcel from "./partials/import_excel.vue";
 import Adelanto from "./partials/adelanto.vue";
+import Salary from "./partials/salary.vue";
 
 export default {
   props: ["typeUser"],
@@ -101,10 +115,12 @@ export default {
   components: {
     DataTable,
     ImportExcel,
-    Adelanto
+    Adelanto,
+    Salary
   },
   data() {
     return {
+      showDialogSalary: false,
       showDialogAdelanto: false,
       showDialogImportExcel: false,
       showDialog: false,
@@ -116,8 +132,12 @@ export default {
       staff: [],
       title: null,
       establishments: [],
+          job_positions: [],
+          job_position_id: null,
       document_types: [],
-      ListSoldItems: []
+      ListSoldItems: [],
+      persons: [],
+      selectedAction: null
     };
   },
 
@@ -144,61 +164,63 @@ export default {
     this.getTables();
   },
   methods: {
+
+    clickCreateAdelanto() {
+      this.showDialogAdelanto = true;
+    },
+
+    clickCreateSalary() {
+      this.showDialogSalary = true;
+    },
+
     clickDownloadExcel() {
       this.showDialogImportExcel = true;
     },
 
     getProd(id) {
       this.ListProdId = id;
-      console.log("Ver el id del vendedor:", id);
       this.showDialogProd = true;
     },
     async getTables() {
       const response = await this.$http(`${this.resource}/tables`);
       console.log(response);
-      const { establishments, document_types } = response.data;
+      const { establishments, job_positions } = response.data;
       this.establishments = establishments;
-      this.document_types = document_types;
-      // this.establishments = response.data.data.establishments;
+      this.job_positions = job_positions;
+
     },
     getData() {
       this.$http.get(`/${this.resource}/records`).then(response => {
-        console.log("Datos de vendedores:", response.data.data);
-        console.log("Primer registro de vendedores:", response.data.data && response.data.data.length ? response.data.data[0] : null);
         this.records = response.data.data;
       });
     },
 
     clickAdelanto(row = null) {
-      console.log('clickAdelanto row:', row);
       const person_id = row && (row.person_id || row.person?.id || row.id) ? (row.person_id || row.person?.id || row.id) : null;
       this.person_id = person_id;
-      console.log('ver si llega el id', this.person_id);
+      /* console.log('ver si llega el id', this.person_id); */
       this.showDialogAdelanto = true;
     },
+    async handleActionChange(row, value) {
+      // Update the job_position for the daily worker summary record (row.id)
+      if (!row || !row.id) {
+        this.$message({ message: 'Registro diario no disponible', type: 'warning' });
+        return;
+      }
 
-    clickCreate(recordId = null) {
-      // Open the create/edit dialog for staff records
-      this.recordId = recordId;
-      this.showDialog = true;
-    },
-
-    clickDelete(id) {
-      this.destroy(`/${this.resource}/delete/${id}`).then(() =>
-        this.$eventHub.$emit("reloadData")
-      );
-    },
-
-    clickDisable(id) {
-      this.disable(`/${this.resource}/enabled/${0}/${id}`).then(() =>
-        this.$eventHub.$emit("reloadData")
-      );
-    },
-
-    clickEnable(id) {
-      this.enable(`/${this.resource}/enabled/${1}/${id}`).then(() =>
-        this.$eventHub.$emit("reloadData")
-      );
+      try {
+        const payload = { worker_daily_summary_id: row.id, job_position_id: value };
+        const response = await this.$http.post('/staff/update-job-position', payload);
+        if (response && response.data && response.data.success) {
+          this.$message({ message: 'Cargo de trabajo actualizado', type: 'success' });
+          this.$eventHub.$emit('reloadData');
+        } else {
+          this.$message({ message: (response && response.data && response.data.message) || 'No se pudo actualizar el cargo', type: 'warning' });
+        }
+      } catch (error) {
+        console.error('Error updating job position', error);
+        this.$message({ message: 'Error al actualizar el cargo', type: 'error' });
+      }
     }
   }
 };

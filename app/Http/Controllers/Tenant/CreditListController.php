@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 
 class CreditListController extends Controller
 {
-    public function getData($request)
+    /* public function getData($request)
     {
         $establishment_id = $request->establishment_id;
         $person_id = $request->person_id;
@@ -51,7 +51,6 @@ class CreditListController extends Controller
                 }
                 if ($date) {
                     $date = Carbon::parse($date)->format('m');
-                    //date es un inicio de un mes, deseo buscar registros con esos mes en la columna created_at
                     $qq->whereMonth('created_at', $date);
                 }
                 if ($paid !== null) {
@@ -61,8 +60,44 @@ class CreditListController extends Controller
         });
         $orden_items->orderBy('date', 'asc');
         return $orden_items;
+    } */
+
+    public function getData($request)
+    {
+        $establishment_id = $request->establishment_id;
+        $person_id = $request->person_id;
+        $date = $request->date;
+        $paid = $request->paid == "0" ? false : true;
+
+        $orden_items = OrdenItem::with([
+            'orden',                      // información del pedido
+            'orden.credit_list',          // información de la lista de crédito
+            'orden.credit_list.customer'  // información del cliente
+        ])
+            ->whereHas('orden.credit_list', function ($q) use ($establishment_id, $person_id, $date, $paid) {
+                $q->where('customer_id', $person_id);
+
+                if ($establishment_id) {
+                    $q->where('establishment_id', $establishment_id);
+                }
+
+                if ($date) {
+                    $month = Carbon::parse($date)->month;
+                    $q->whereMonth('created_at', $month);
+                }
+
+                if ($paid !== null) {
+                    $q->where('paid', $paid);
+                }
+            })
+            ->orderBy('date', 'asc');
+
+        Log::info('Consulta generada en getData(): ' . $orden_items->toSql());
+
+        return $orden_items;
     }
-    
+
+
     public function download(Request $request)
     {
         $company = Company::first();
@@ -118,7 +153,8 @@ class CreditListController extends Controller
             'records' => $records,
         ];
     }
-    public function recordByPersonTotal(Request $request) {
+    public function recordByPersonTotal(Request $request)
+    {
         try {
             $data = $this->getData($request);
             // Verificar si $data es un objeto y obtener los resultados
@@ -127,7 +163,7 @@ class CreditListController extends Controller
                 $total = $data->get()->sum(function ($row) {
                     return $row->quantity * $row->price;
                 });
-    
+
                 return [
                     'success' => true,
                     'total' => $total,
@@ -253,32 +289,32 @@ class CreditListController extends Controller
             ]);
             $orden_items_ids = [];
             $orden_items_ids_for_kitchen = [];
-                    foreach ($items as $item) {
-                        $orden_item = new OrdenItem;
-                        $orden_item->food_id = $item['food']['id'];
-                        $orden_item->observations = $item['observation'] ?? '-';
-                        $orden_item->quantity = $item['quantity'];
-                        $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
-                        $orden_item->price = $item['price'];
-                        $orden_item->user_id = $user_id;
-                        $orden_item->orden_id = $orden->id;
-                        $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
-                        $orden_item->status_orden_id = 1;
-                        $orden_item->date = Carbon::today();
-                        $orden_item->time = date('H:i:s');
-                        $orden_item->area_id = $item['food']['area_id'];
-                        $orden_item->save();
-                
-                        // Set area_id and multiply quantities like OrdenController
-                        $promotion_items = null;
-                        if (!empty($item['promotion_items'])) {
-                            $promotion_items = $item['promotion_items'];
-                        } elseif (!empty($item['food']['promotion_items'])) {
-                            $promotion_items = $item['food']['promotion_items'];
-                        } elseif (!empty($item['food']['item']['promotion_items'])) {
-                            $promotion_items = $item['food']['item']['promotion_items'];
-                        }
-                
+            foreach ($items as $item) {
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $item['food']['id'];
+                $orden_item->observations = $item['observation'] ?? '-';
+                $orden_item->quantity = $item['quantity'];
+                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+                $orden_item->price = $item['price'];
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->save();
+
+                // Set area_id and multiply quantities like OrdenController
+                $promotion_items = null;
+                if (!empty($item['promotion_items'])) {
+                    $promotion_items = $item['promotion_items'];
+                } elseif (!empty($item['food']['promotion_items'])) {
+                    $promotion_items = $item['food']['promotion_items'];
+                } elseif (!empty($item['food']['item']['promotion_items'])) {
+                    $promotion_items = $item['food']['item']['promotion_items'];
+                }
+
                 // Si el item trae promotion_items (es una promoción) — puede venir en distintas rutas/niveles — normalizamos y guardamos los detalles
                 // Posibles ubicaciones: $item['promotion_items'], $item['food']['promotion_items'], $item['food']['item']['promotion_items']
                 $promotion_items = null;

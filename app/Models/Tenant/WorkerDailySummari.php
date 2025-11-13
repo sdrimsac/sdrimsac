@@ -24,6 +24,10 @@ class WorkerDailySummari extends Model
         'pairs',
         'date_daily',
         'date_end_daily',
+        'job_position_id',
+        'extra_time_two',
+        'extra_time_three',
+        'lack_time',
         'created_at',
         'updated_at',
     ];
@@ -40,5 +44,9 @@ class WorkerDailySummari extends Model
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id');
+    }
+    public function job_position()
+    {
+        return $this->belongsTo(JobPosition::class, 'job_position_id');
     }
 }

@@ -20,6 +20,7 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country'];
     protected $fillable = [
+        'job_position_id',
         'base_salary',
         'is_staff',
         'image_extra1',
@@ -189,7 +190,8 @@ class Person extends ModelTenant
             'has_discount' => $this->has_discount ?? null,
             'discount_type' => $this->discount_type ?? null,
             'discount_amount' => $this->discount_amount ?? null,
-            'location_id' => $location_id
+            'location_id' => $location_id,
+            'job_position_id' => $this->job_position_id,
         ];
         // Si existen relaciones de hijos y padres, agregarlas
         if ($childrens == true) {
@@ -270,6 +272,11 @@ class Person extends ModelTenant
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function job_position()
+    {
+        return $this->belongsTo(JobPosition::class, 'job_position_id');
     }
 
     public function province()
