@@ -780,6 +780,15 @@
                     <span class="label" style="font-size: 1em; ">Tratamiento Personal</span>
                 </a>
             </li>
+            @if ($config->credit_list && !$roleService->isLogistic())
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
+                        href="{{ route('tenant.credit_list.index') }}">
+                        <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span class="label" style="font-size: 1em; ">Lista de crédito Acuenta</span>
+                    </a>
+                </li>
+            @endif
     </ul>
     </li>
     @endif
@@ -1020,7 +1029,7 @@
                     @endif
 
                     {{-- Reporte Lista de Crédito REVISAR --}}
-                    @if ($config->credit_list && !$roleService->isLogistic())
+                    {{-- @if ($config->credit_list && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                                 href="{{ route('tenant.credit_list.index') }}">
@@ -1028,7 +1037,7 @@
                                 <span class="label" style="font-size: 1em; ">Lista de crédito Acuenta</span>
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
 
 
 
@@ -1239,8 +1248,76 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant || ($config->restobar_home && !$roleService->isAccountant($user->getAttribute('worker_type_id')) && $roleService->isLogistic()))
-    
+    @if ($config->restaurant && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) && !$roleService->isLogistic()))
+        <li>
+            <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                <i class="icofont-restaurant" style="font-size: 2em; color: #ffffff; margin-right: 10px;"></i>
+                <span class="label" style="font-size: 1em; color: #ffffff;">Restaurante</span>
+            </a>
+
+            <ul id="restaurantUl" class="collapse">
+                @if ($config->restaurant || ($config->restobar_home && !$roleService->isLogistic()))
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
+                            href="{{ route('restaurant.tables') }}">
+                            <i class="icofont-dining-table" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Mesas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
+                            href="{{ route('restaurant.status_orden') }}">
+                            <i class="icofont-read-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Estados de pedidos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                            href="{{ route('restaurant.status_table') }}">
+                            <i class="icofont-ui-settings" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Estados de mesas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'observations' ? 'active' : '' }}"
+                            href="{{ route('restaurant.observations') }}">
+                            <i class="icofont-comment" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Observaciones</span>
+                        </a>
+                    </li>
+                @endif
+                <li>
+                    <a class="{{ $path[0] === 'receta' && $path[1] === '' ? 'active' : '' }}"
+                        href="{{ route('tenant.receta.index') }}">
+                        <i class="icofont-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span style="font-size: 1em; ">Receta</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ $path[0] === 'promotions' && $path[1] === '' ? 'active' : '' }}"
+                        href="{{ route('tenant.promotions.index') }}">
+                        <i class="icofont-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span style="font-size: 1em; ">Promociones</span>
+                    </a>
+                </li>
+                @if ($config->restaurant || ($config->restobar_home && !$roleService->isLogistic()))
+                    <li>
+                        <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.mozo.index') }}">
+                            <i class="icofont-waiter" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Mozo vendedores</span>
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </li>
+    @endif
+
+    @if ($config->restobar_home && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) && !$roleService->isLogistic()))
+
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
