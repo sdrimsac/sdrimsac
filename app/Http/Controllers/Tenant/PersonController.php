@@ -41,6 +41,46 @@ use Illuminate\Support\Facades\Storage;
 class PersonController extends Controller
 {
 
+    /**
+     * Verifica si existe una persona con el mismo número de documento
+     */
+    private function checkDuplicateNumber($number, $type, $excludeId = null)
+    {
+        $query = Person::where('number', $number)->where('type', $type);
+        
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        
+        return $query->first();
+    }
+
+    /**
+     * Método de debug para verificar duplicados de números
+     */
+    public function debugDuplicates($number, $type)
+    {
+        $persons = Person::where('number', $number)
+                        ->where('type', $type)
+                        ->get();
+                        
+        return response()->json([
+            'number' => $number,
+            'type' => $type,
+            'count' => $persons->count(),
+            'persons' => $persons->map(function($person) {
+                return [
+                    'id' => $person->id,
+                    'number' => $person->number,
+                    'name' => $person->name,
+                    'type' => $person->type,
+                    'created_at' => $person->created_at,
+                    'user_id' => $person->user_id
+                ];
+            })
+        ]);
+    }
+
     public function generateNumber()
     {
         $regex = '/^1[0-9]{7}$/';
@@ -394,9 +434,41 @@ class PersonController extends Controller
                     ];
                 }
             }
+            
             $id = $request->input('id');
-            $person = Person::firstOrNew(['id' => $id]);
-            if ($id) {
+            $number = $request->input('number');
+            $type = $request->input('type');
+            
+            // Validación adicional para evitar duplicados de número usando el método helper
+            if (!$id) {
+                $existingPerson = $this->checkDuplicateNumber($number, $type);
+                                       
+                if ($existingPerson) {
+                    Log::warning('Intento de duplicar número de documento', [
+                        'number' => $number,
+                        'type' => $type,
+                        'existing_person_id' => $existingPerson->id,
+                        'user_id' => auth()->id()
+                    ]);
+                    
+                    return [
+                        'success' => false,
+                        'message' => 'Ya existe una persona registrada con el número de documento: ' . $number,
+                    ];
+                }
+                
+                // Crear nueva persona
+                $person = new Person();
+            } else {
+                // Buscar persona existente para editar
+                $person = Person::find($id);
+                if (!$person) {
+                    return [
+                        'success' => false,
+                        'message' => 'Persona no encontrada',
+                    ];
+                }
+                
                 $is_clientes_varios = $this->isClientesVarios($person);
                 if ($is_clientes_varios) {
                     return [
@@ -404,12 +476,41 @@ class PersonController extends Controller
                         'message' => 'El cliente no puede ser editado',
                     ];
                 }
+                
+                // Verificar que no exista otro registro con el mismo número (excepto el actual)
+                $existingPerson = $this->checkDuplicateNumber($number, $type, $id);
+                                       
+                if ($existingPerson) {
+                    Log::warning('Intento de actualizar con número de documento duplicado', [
+                        'number' => $number,
+                        'type' => $type,
+                        'existing_person_id' => $existingPerson->id,
+                        'current_person_id' => $id,
+                        'user_id' => auth()->id()
+                    ]);
+                    
+                    return [
+                        'success' => false,
+                        'message' => 'Ya existe otra persona registrada con el número de documento: ' . $number,
+                    ];
+                }
             }
+            
             $person->fill($request->all());
             $user_id = auth()->id();
             $person->user_id = $user_id;
 
             $person->save();
+            
+            Log::info('Persona guardada exitosamente', [
+                'person_id' => $person->id,
+                'number' => $person->number,
+                'type' => $person->type,
+                'name' => $person->name,
+                'user_id' => $user_id,
+                'was_new' => !$id
+            ]);
+            
             $temp_path = $request->input('temp_path');
             UnitTypePerson::where('customer_id', $person->id)->delete();
             $item_unit_types = $request->input('item_unit_types');

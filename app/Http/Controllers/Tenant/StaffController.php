@@ -468,9 +468,8 @@ class StaffController extends Controller
 
     private function updateStock($item_id, $quantity, $warehouse_id)
     {
-
-        // $inventory_configuration = InventoryConfiguration::firstOrFail();
         $configuration = Configuration::firstOrFail();
+        
         if ($configuration->college) {
 
             $item_warehouse = ItemWarehouse::where('item_id', $item_id)->first();
@@ -481,16 +480,19 @@ class StaffController extends Controller
 
             $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
         }
-        //$item=Item::findOrFail($item_id);
-        //     $item->stock=$item_warehouse->stock + $quantity;
+        
+        $old_stock = $item_warehouse->stock;
         $item_warehouse->stock = $item_warehouse->stock + $quantity;
+        
         if ($quantity < 0 && $item_warehouse->item->unit_type_id !== 'ZZ') {
             if (($configuration->sales_stock) && ($item_warehouse->stock < 0)) {
-
+             
                 throw new Exception("El producto {$item_warehouse->item->description} no tiene suficiente stock!");
             }
         }
+        
         $item_warehouse->save();
+        //Log::info('ItemWarehouse saved successfully');
         // $item-save();
     }
     function findWarehouse()
@@ -506,7 +508,9 @@ class StaffController extends Controller
     }
     function createInventoryKardex($item_id, $quantity, $warehouse_id, $credit_list)
     {
-        InventoryKardex::create([
+        //Log::info('createInventoryKardex called with item_id: ' . $item_id . ', quantity: ' . $quantity . ', warehouse_id: ' . $warehouse_id);
+        
+        $kardex = InventoryKardex::create([
             'inventory_kardexable_id' => $credit_list->id,
             'inventory_kardexable_type' => 'App\Models\Tenant\CreditList',
             'item_id' => $item_id,
@@ -516,6 +520,8 @@ class StaffController extends Controller
             'type' => 'output',
             'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
+        
+        //Log::info('InventoryKardex created successfully with ID: ' . $kardex->id);
     }
 
     function update_stock($credit_list)
@@ -527,74 +533,73 @@ class StaffController extends Controller
 
         foreach ($items as $orden_item) {
             $food_id = $orden_item->food_id;
-            Log::info('Processing orden_item with food_id: ' . $food_id);
             $quantity = $orden_item->quantity * -1;
             $food = Food::find($food_id);
             $item_id = $food->item_id;
             $item = Item::find($item_id);
-            Log::info('Processing item with item_id: ' . $item_id);
+            $promotion_count = ItemPromotion::where('item_id', $item_id)->count();
+            $set_components_count = ItemSet::where('item_id', $item_id)->count();
 
             if ($item->unit_type_id !== 'ZZ') {
-
-                Log::info('Updating stock for item_id: ' . $item_id . ' with quantity: ' . $quantity);
-                if (!$item->is_set && !$item->promotion_items) {
+                $has_real_promotions = $promotion_count > 0;
+                
+                // 1️⃣ Item normal (no es set ni promoción)
+                if (!$item->is_set && !$has_real_promotions) {
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
-                    Log::info('Creating inventory kardex for item_id: ' . $item_id . ' with quantity: ' . $quantity);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
-                    Log::info('Stock updated for item_id: ' . $item_id);
-
-                    // 2️⃣ Item tipo set
                 } elseif ($item->is_set) {
-                    $item_sets = ItemSet::where('set_id', $item_id)->get();
-                    foreach ($item_sets as $set_item) {
-                        // Multiplicar por -1 para descontar stock (salida)
-                        $total_quantity = $set_item->quantity * $orden_item->quantity * -1;
-                        Log::info("update_stock: set item_component={$set_item->individual_item_id} qty={$total_quantity}");
-                        $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
-                        try {
-                            $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
-                        } catch (Exception $e) {
-                            Log::error('updateStock error for set component: ' . $e->getMessage());
-                            throw $e;
-                        }
-                    }
-
-                    // 3️⃣ Item de promoción
-                } elseif ($item->promotion_items) {
-                    $promotion_items = ItemPromotion::where('item_id', $item_id)->get();
-                    foreach ($promotion_items as $promo_item) {
-                        // Cada registro en items_promotions tiene 'promotion_item_id' y 'quantity' (cantidad por promoción)
-                        $promo_item_obj = Item::find($promo_item->promotion_item_id);
-                        $promo_quantity = isset($promo_item->quantity) ? floatval($promo_item->quantity) : 1;
-
-                        if ($promo_item_obj && $promo_item_obj->is_set) {
-                            // Si el item de la promoción es un set, descontar los insumos del set
-                            $set_items = ItemSet::where('set_id', $promo_item_obj->id)->get();
-                            foreach ($set_items as $set_item) {
-                                // multiplicar por la cantidad dentro del set, por la cantidad de promo y por la cantidad ordenada
-                                $total_quantity = $set_item->quantity * $promo_quantity * $orden_item->quantity * -1;
-                                Log::info("update_stock: promo(set) component={$set_item->individual_item_id} qty={$total_quantity}");
-                                $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
-                                try {
-                                    $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
-                                } catch (Exception $e) {
-                                    Log::error('updateStock error for promo set component: ' . $e->getMessage());
-                                    throw $e;
-                                }
-                            }
-                        } else {
-                            // Item normal dentro de la promoción: descontar promo_quantity * orden quantity
-                            $total_quantity = $promo_quantity * $orden_item->quantity * -1;
-                            Log::info("update_stock: promo item={$promo_item->promotion_item_id} qty={$total_quantity}");
-                            $this->createInventoryKardex($promo_item_obj->id, $total_quantity, $warehouse->id, $credit_list);
+                    $item_sets = ItemSet::where('item_id', $item_id)->get();
+                    
+                    if ($item_sets->count() == 0) {
+                        $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
+                        $this->updateStock($item_id, $quantity, $warehouse->id);
+                    } else {
+                        foreach ($item_sets as $set_item) {
+                            $total_quantity = $set_item->quantity * $orden_item->quantity * -1;
+                            $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
                             try {
-                                $this->updateStock($promo_item_obj->id, $total_quantity, $warehouse->id);
+                                $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
                             } catch (Exception $e) {
-                                Log::error('updateStock error for promo item: ' . $e->getMessage());
+                                Log::error('updateStock error for set component: ' . $e->getMessage());
                                 throw $e;
                             }
                         }
                     }
+
+                // 3️⃣ Item de promoción
+                } elseif ($has_real_promotions) {
+                    $promotion_items = ItemPromotion::where('item_id', $item_id)->get();
+                    
+                    foreach ($promotion_items as $promo_item) {
+                        $promo_item_obj = Item::find($promo_item->promotion_item_id);
+                        $promo_quantity = isset($promo_item->quantity) ? floatval($promo_item->quantity) : 1;
+
+                        if ($promo_item_obj && $promo_item_obj->is_set) {
+                            $set_items = ItemSet::where('item_id', $promo_item_obj->id)->get();
+                            foreach ($set_items as $set_item) {
+                                $total_quantity = $set_item->quantity * $promo_quantity * $orden_item->quantity * -1;
+                                $this->createInventoryKardex($set_item->individual_item_id, $total_quantity, $warehouse->id, $credit_list);
+                                try {
+                                    $this->updateStock($set_item->individual_item_id, $total_quantity, $warehouse->id);
+                                } catch (Exception $e) {
+                                    throw $e;
+                                }
+                            }
+                        } else {
+                            $total_quantity = $promo_quantity * $orden_item->quantity * -1;
+                         
+                            $this->createInventoryKardex($promo_item_obj->id, $total_quantity, $warehouse->id, $credit_list);
+                            try {
+                                $this->updateStock($promo_item_obj->id, $total_quantity, $warehouse->id);
+                            } catch (Exception $e) {
+                                //Log::error('updateStock error for promo item: ' . $e->getMessage());
+                                throw $e;
+                            }
+                        }
+                    }
+                } else {
+                    $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
+                    $this->updateStock($item_id, $quantity, $warehouse->id);
                 }
             }
         }

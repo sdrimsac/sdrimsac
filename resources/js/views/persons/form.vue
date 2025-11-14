@@ -1075,7 +1075,7 @@ export default {
                         this.errors = error.response.data.errors;
                         this.$showSAlert(
                             "ALERTA",
-                            "Por favor, revise los campos e intente nuevamente.",
+                            "Cliente ya registrado.",
                             "error"
                         );
                     } else {

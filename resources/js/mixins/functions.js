@@ -217,13 +217,34 @@ export const serviceNumber = {
                 // console.log(response.data.data)
                 if (response.data.success) {
                     let data = response.data.data;
-                    this.form.name = data.nombre_completo;
-                    this.form.trade_name = data.trade_name;
-                    this.form.address = data.address;
-                    this.form.department_id = data.department_id;
-                    this.form.province_id = data.province_id;
-                    this.form.district_id = data.district_id;
-                    this.form.phone = data.phone;
+                    
+                    // Manejo específico para respuesta de Factiliza (DNI)
+                    if (data.nombre_completo) {
+                        this.form.name = data.nombre_completo;
+                        
+                        // Si hay dirección disponible
+                        if (data.direccion) {
+                            this.form.address = data.direccion;
+                        } else if (data.direccion_completa) {
+                            this.form.address = data.direccion_completa;
+                        }
+                        
+                        // Manejo de ubigeo
+                        if (data.ubigeo_sunat) {
+                            this.setLocationByUbigeo(data.ubigeo_sunat);
+                        } else if (data.ubigeo && Array.isArray(data.ubigeo) && data.ubigeo.length >= 3) {
+                            this.setLocationByUbigeo(data.ubigeo[2]);
+                        }
+                    } else {
+                        // Respuesta tradicional
+                        this.form.name = data.nombre_completo || data.name;
+                        this.form.trade_name = data.trade_name;
+                        this.form.address = data.address;
+                        this.form.department_id = data.department_id;
+                        this.form.province_id = data.province_id;
+                        this.form.district_id = data.district_id;
+                        this.form.phone = data.phone;
+                    }
                 } else {
                     this.$showSAlert({
                         title: "ERROR",
@@ -280,7 +301,48 @@ export const serviceNumber = {
                      
                         this.form.name = last_name + ", " + name;
                     
+                    } else if (this.form.identity_document_type_id === "1") {
+                        // Manejo específico para DNI con respuesta de Factiliza
+                        if (data.nombre_completo) {
+                            // Respuesta de Factiliza
+                            this.form.name = data.nombre_completo;
+                            
+                            // Si hay dirección disponible
+                            if (data.direccion) {
+                                this.form.address = data.direccion;
+                            } else if (data.direccion_completa) {
+                                this.form.address = data.direccion_completa;
+                            }
+                            
+                            // Manejo de ubigeo - usar el de SUNAT si está disponible
+                            if (data.ubigeo_sunat) {
+                                // Buscar departamento, provincia y distrito por ubigeo SUNAT
+                                this.setLocationByUbigeo(data.ubigeo_sunat);
+                            } else if (data.ubigeo && Array.isArray(data.ubigeo) && data.ubigeo.length >= 3) {
+                                // Si viene como array, usar el ubigeo completo
+                                this.setLocationByUbigeo(data.ubigeo[2]);
+                            }
+                        } else {
+                            // Respuesta tradicional
+                            if(this.form.workers){
+                                let firstName = data.nombres.split(" ")[0];
+                                this.form.name = firstName + " " + data.apellido_paterno;
+                            }else{
+                                this.form.name = data.name;
+                            }
+                            this.form.trade_name = data.trade_name;
+                            this.form.address = data.address;
+                            if(!this.form.workers){
+                                this.form.department_id = data.department_id;
+                                this.form.province_id = data.province_id;
+                                this.form.district_id = data.district_id;
+                                this.form.phone = data.phone;
+                                this.filterProvinces();
+                                this.filterDistricts();
+                            }
+                        }
                     } else {
+                        // Para RUC u otros tipos de documento
                         if(this.form.workers){
                             let firstName = data.nombres.split(" ")[0];
                             this.form.name = firstName + " " + data.apellido_paterno;
@@ -316,6 +378,43 @@ export const serviceNumber = {
                 });
             }
             this.loading_search = false;
+        },
+        setLocationByUbigeo(ubigeo) {
+            // Método para establecer departamento, provincia y distrito basado en ubigeo
+            if (!ubigeo) return;
+            
+            // El ubigeo tiene formato: DDPPDD (6 dígitos)
+            // DD = Departamento, PP = Provincia, DD = Distrito
+            const ubigeoStr = ubigeo.toString().padStart(6, '0');
+            const departmentCode = ubigeoStr.substring(0, 2);
+            const provinceCode = ubigeoStr.substring(0, 4);
+            const districtCode = ubigeoStr;
+            
+            // Buscar y establecer departamento
+            if (this.all_departments) {
+                const department = this.all_departments.find(d => d.code === departmentCode);
+                if (department) {
+                    this.form.department_id = department.id;
+                    this.filterProvinces();
+                    
+                    // Buscar y establecer provincia
+                    if (this.provinces) {
+                        const province = this.provinces.find(p => p.code === provinceCode);
+                        if (province) {
+                            this.form.province_id = province.id;
+                            this.filterDistricts();
+                            
+                            // Buscar y establecer distrito
+                            if (this.districts) {
+                                const district = this.districts.find(d => d.code === districtCode);
+                                if (district) {
+                                    this.form.district_id = district.id;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         async searchServiceNumber() {
             if (this.form.number === "") {

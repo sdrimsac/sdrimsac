@@ -972,13 +972,11 @@ class Facturalo
                 case 'dispatch':
                     $this->endpoint = ($this->isDemo) ? SunatEndpoints::GUIA_BETA : SunatEndpoints::GUIA_PRODUCCION;
 
-                    Log::info('Endpoint set to: '.$this->endpoint);
                     break;
                 default:
                     // $this->endpoint = ($this->isDemo)?SunatEndpoints::FE_BETA:SunatEndpoints::FE_PRODUCCION;
                     $this->endpoint = ($this->isDemo) ? SunatEndpoints::FE_BETA : ($this->configuration->sunat_alternate_server ? SunatEndpoints::FE_PRODUCCION_ALTERNATE : SunatEndpoints::FE_PRODUCCION);
-                     
-                    Log::info('Endpoint set to: '.$this->endpoint);
+                    
                     
                     break;
             }

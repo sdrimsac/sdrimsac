@@ -20,7 +20,7 @@ class ServiceData
         if ($exchange_rate) {
             return $exchange_rate->sale;
         }
-        Log::warning('No se encontró el tipo de cambio para la fecha: ' . $date."haciendo consulta");
+        Log::warning('No se encontró el tipo de cambio para la fecha: ' . $date . "haciendo consulta");
         $url_api_peru = config('app.api_peru_service_url');
         $token_api_peru = config('app.api_peru_service_token');
         $full_url_api_peru = $url_api_peru . "/tipo_de_cambio";
@@ -52,7 +52,7 @@ class ServiceData
 
         $full_url_api_peru = $url_api_peru . "/" . $type . "/" . $number . "?api_token=" . $token_api_peru;
         $client2 = new Client(['base_uri' => $full_url_api_peru, 'verify' => false]);
-        
+
         try {
             $res2 = $client2->request('GET', $full_url_api_peru);
             $response2 = json_decode($res2->getBody()->getContents(), true);
@@ -68,36 +68,40 @@ class ServiceData
             Log::warning('Peru API failed: ' . $exception->getMessage());
         }
 
-        // Fallback to Factiliza API if Peru API doesn't have data or fails
         $url_api_factiliza = config('app.api_factiliza_service_url');
         $token_api_factiliza = config('app.api_factiliza_service_token');
 
         if ($url_api_factiliza && $token_api_factiliza) {
             try {
-                // Factiliza API has different endpoint structure
                 if ($type == 'dni') {
-                    $endpoint = "/v1/dni/info/" . $number;
+                    $endpoint = "/v1/dni/info/{$number}";
                 } elseif ($type == 'ruc') {
-                    $endpoint = "/v1/ruc/info/" . $number;
+                    $endpoint = "/v1/ruc/info/{$number}";
                 } else {
-                    $endpoint = "/v1/" . $type . "/info/" . $number;
+                    $endpoint = "/v1/{$type}/info/{$number}";
                 }
 
-                Log::info('Factiliza API endpoint: ' . $endpoint);
-                
-                $full_url_factiliza = $url_api_factiliza . $endpoint;
+                // Elimina slash adicional
+                $base = rtrim($url_api_factiliza, '/');
+                $full_url_factiliza = $base . $endpoint;
+
+                Log::info("Factiliza API endpoint: $full_url_factiliza");
+
                 $client_factiliza = new Client(['verify' => false]);
-                $res_factiliza = $client_factiliza->request('GET', $full_url_factiliza, [
+
+                $res_factiliza = $client_factiliza->get($full_url_factiliza, [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token_api_factiliza,
+                        'Authorization' => "Bearer {$token_api_factiliza}",
                         'Accept' => 'application/json'
                     ]
                 ]);
-                $response_factiliza = json_decode($res_factiliza->getBody()->getContents(), true);
 
-                if (isset($response_factiliza["data"]) && !empty($response_factiliza["data"])) {
-                    if ($type == 'ruc') {
-                        $response_factiliza['data']['direccion'] = $response_factiliza['data']['direccion_completa'];
+                $response_factiliza = json_decode($res_factiliza->getBody(), true);
+
+                if (!empty($response_factiliza['data'])) {
+                    if ($type === 'ruc') {
+                        $response_factiliza['data']['direccion'] =
+                            $response_factiliza['data']['direccion_completa'];
                     }
                     return $response_factiliza;
                 }

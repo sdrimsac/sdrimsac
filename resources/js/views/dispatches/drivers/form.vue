@@ -344,7 +344,32 @@ export default {
         searchCustomer() {
             this.searchServiceNumberByType();
         },
-        searchNumber(data) {
+        /**
+         * Normaliza las respuestas de diferentes APIs de consulta DNI/RUC
+         * para que tengan la misma estructura
+         */
+        normalizeApiResponse(rawData) {
+            // Verificar si los datos están dentro de una propiedad 'data'
+            const data = rawData.data || rawData;
+            
+            // Estructura normalizada
+            const normalized = {
+                numero: data.numero || '',
+                nombre_completo: data.nombre_completo || '',
+                nombres: data.nombres || '',
+                apellido_paterno: data.apellido_paterno || '',
+                apellido_materno: data.apellido_materno || '',
+                
+                // Campos adicionales para RUC
+                nombre_o_razon_social: data.nombre_o_razon_social || data.nombre_completo || '',
+            };
+
+            return normalized;
+        },
+        searchNumber(rawData) {
+            // Normaliza los datos antes de procesarlos
+            const data = this.normalizeApiResponse(rawData);
+            
             this.form.name =
                 this.form.identity_document_type_id === "1"
                     ? data.nombre_completo

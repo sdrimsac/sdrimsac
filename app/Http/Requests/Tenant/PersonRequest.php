@@ -16,25 +16,29 @@ class PersonRequest extends FormRequest
     {
         $id = $this->input('id');
         $type = $this->input('type');
+        
         return [
             'number' => [
                 'required',
                 Rule::unique('tenant.persons')->where(function ($query) use($id, $type) {
-                    return $query->where('type', $type)
-                                 ->where('id', '<>' ,$id);
+                    $query->where('type', $type);
+                    if ($id) {
+                        $query->where('id', '!=', $id);
+                    }
+                    return $query;
                 })
             ],
             'name' => [
                 'required',
-                // Rule::unique('persons')->where(function ($query) use($id, $type) {
-                //     return $query->where('type', $type)
-                //                  ->where('id', '<>' ,$id);
-                // })
             ],
             'alias' => [
+                'nullable',
                 Rule::unique('tenant.persons')->where(function ($query) use($id, $type) {
-                    return $query->where('type', $type)
-                                 ->where('id', '<>' ,$id);
+                    $query->where('type', $type);
+                    if ($id) {
+                        $query->where('id', '!=', $id);
+                    }
+                    return $query;
                 })
             ],
                 
