@@ -46,22 +46,71 @@ class ServiceData
 
     public static function service($type, $number)
     {
-
+        // Try Peru API first
         $url_api_peru = config('app.api_peru_service_url');
         $token_api_peru = config('app.api_peru_service_token');
 
         $full_url_api_peru = $url_api_peru . "/" . $type . "/" . $number . "?api_token=" . $token_api_peru;
         $client2 = new Client(['base_uri' => $full_url_api_peru, 'verify' => false]);
-        $res2 = $client2->request('GET', $full_url_api_peru);
-        $response2 = json_decode($res2->getBody()->getContents(), true);
+        
+        try {
+            $res2 = $client2->request('GET', $full_url_api_peru);
+            $response2 = json_decode($res2->getBody()->getContents(), true);
 
-
-        if ($type == 'ruc' && isset($response2["data"])) {
-
-            $response2['data']['direccion'] = $response2['data']['direccion_completa'];
+            // If Peru API has data, process and return it
+            if (isset($response2["data"]) && !empty($response2["data"])) {
+                if ($type == 'ruc') {
+                    $response2['data']['direccion'] = $response2['data']['direccion_completa'];
+                }
+                return $response2;
+            }
+        } catch (RequestException $exception) {
+            Log::warning('Peru API failed: ' . $exception->getMessage());
         }
-        return $response2;
+
+        // Fallback to Factiliza API if Peru API doesn't have data or fails
+        $url_api_factiliza = config('app.api_factiliza_service_url');
+        $token_api_factiliza = config('app.api_factiliza_service_token');
+
+        if ($url_api_factiliza && $token_api_factiliza) {
+            try {
+                // Factiliza API has different endpoint structure
+                if ($type == 'dni') {
+                    $endpoint = "/v1/dni/info/" . $number;
+                } elseif ($type == 'ruc') {
+                    $endpoint = "/v1/ruc/info/" . $number;
+                } else {
+                    $endpoint = "/v1/" . $type . "/info/" . $number;
+                }
+
+                Log::info('Factiliza API endpoint: ' . $endpoint);
+                
+                $full_url_factiliza = $url_api_factiliza . $endpoint;
+                $client_factiliza = new Client(['verify' => false]);
+                $res_factiliza = $client_factiliza->request('GET', $full_url_factiliza, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token_api_factiliza,
+                        'Accept' => 'application/json'
+                    ]
+                ]);
+                $response_factiliza = json_decode($res_factiliza->getBody()->getContents(), true);
+
+                if (isset($response_factiliza["data"]) && !empty($response_factiliza["data"])) {
+                    if ($type == 'ruc') {
+                        $response_factiliza['data']['direccion'] = $response_factiliza['data']['direccion_completa'];
+                    }
+                    return $response_factiliza;
+                }
+            } catch (RequestException $exception) {
+                Log::warning('Factiliza API failed: ' . $exception->getMessage());
+            }
+        }
+
+        // Return empty response if both APIs fail or have no data
+        return ['data' => null, 'message' => 'No data found in both APIs'];
     }
+
+
     public function validar_cpe($file)
     {
         try {
