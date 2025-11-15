@@ -524,6 +524,8 @@ Route::prefix('caja')->group(function () {
             //ACT. MESAS
             Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea');
 
+            Route::get('tables/recordsByAreaDelivery/{area_id}', 'TableController@recordsByAreaDelivery');
+
             /* Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea'); */
             //Promociones 
             Route::post('pos/processPromo', 'PromocionPorItemController@processPromo');
