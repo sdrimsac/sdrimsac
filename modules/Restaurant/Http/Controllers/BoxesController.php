@@ -3199,49 +3199,64 @@ class BoxesController extends Controller
         $company_number = $company->number;
 
         // Check if PDF exists and cash is closed
-        $path = storage_path('app/public/report_yape_pdf_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        $path = storage_path('app/public/report_yape_plin_pdf_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         $cash = Cash::find($cash_id);
 
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
 
-        $yape_boxes = Box::with(['document.person', 'saleNote.person'])
-            ->select('id', 'document_id', 'sale_note_id', 'date', 'amount')
+        // Obtener todas las transacciones de Yape y PLIN
+        $digital_boxes = Box::with(['document.customer', 'saleNote.customer'])
+            ->select('id', 'document_id', 'sale_note_id', 'date', 'amount', 'method')
             ->where('cash_id', $cash_id)
-            ->where('method', 'Yape')
+            ->whereIn('method', ['Yape', 'PLIN'])
             ->where('state', 0)
             ->orderBy('date', 'asc')
             ->get();
 
-        $processed_transactions = [];
-        $total_amount = 0;
+        // Separar transacciones por método de pago
+        $yape_transactions = [];
+        $plin_transactions = [];
+        $yape_total = 0;
+        $plin_total = 0;
 
-        foreach ($yape_boxes as $box) {
+        foreach ($digital_boxes as $box) {
+            $transaction_data = null;
+
             if ($box->document_id && $box->document) {
-                $processed_transactions[] = [
+                $transaction_data = [
                     'type' => 'Comprobante',
                     'number' => $box->document->number_full,
-                    //'customer' => $box->document->customer->name,
                     'customer' => optional($box->document->customer)->name,
-
                     'date_of_issue' => Carbon::parse($box->document->date_of_issue)->format('d/m/Y'),
                     'time_of_issue' => Carbon::parse($box->document->time_of_issue)->format('H:i:s'),
-                    'amount' => number_format($box->amount, 2)
+                    'amount' => number_format($box->amount, 2),
+                    'amount_raw' => $box->amount
                 ];
-                $total_amount += $box->amount;
             }
 
             if ($box->sale_note_id && $box->saleNote) {
-                $processed_transactions[] = [
+                $transaction_data = [
                     'type' => 'Nota de Venta',
                     'number' => $box->saleNote->number_full,
-                    'customer' => $box->saleNote->customer->name,
+                    'customer' => optional($box->saleNote->customer)->name,
                     'date_of_issue' => Carbon::parse($box->saleNote->date_of_issue)->format('d/m/Y'),
                     'time_of_issue' => Carbon::parse($box->saleNote->time_of_issue)->format('H:i:s'),
-                    'amount' => number_format($box->amount, 2)
+                    'amount' => number_format($box->amount, 2),
+                    'amount_raw' => $box->amount
                 ];
-                $total_amount += $box->amount;
+            }
+
+            // Clasificar por método de pago
+            if ($transaction_data) {
+                if ($box->method == 'Yape') {
+                    $yape_transactions[] = $transaction_data;
+                    $yape_total += $box->amount;
+                } elseif ($box->method == 'PLIN') {
+                    $plin_transactions[] = $transaction_data;
+                    $plin_total += $box->amount;
+                }
             }
         }
 
@@ -3265,17 +3280,31 @@ class BoxesController extends Controller
                 'date_opening' => $cash->date_opening . ' ' . $cash->time_opening,
                 'date_closed' => $cash->date_closed . ' ' . $cash->time_closed,
             ],
-            'summary' => [
-                'total_transactions' => count($processed_transactions),
-                'total_amount' => number_format($total_amount, 2)
+            // Datos separados para Yape
+            'yape_data' => [
+                'transactions' => $yape_transactions,
+                'total_transactions' => count($yape_transactions),
+                'total_amount' => number_format($yape_total, 2)
             ],
-            'transactions' => $processed_transactions
+            // Datos separados para PLIN
+            'plin_data' => [
+                'transactions' => $plin_transactions,
+                'total_transactions' => count($plin_transactions),
+                'total_amount' => number_format($plin_total, 2)
+            ],
+            // Resumen general
+            'summary' => [
+                'total_transactions' => count($yape_transactions) + count($plin_transactions),
+                'total_amount' => number_format($yape_total + $plin_total, 2),
+                'yape_total' => number_format($yape_total, 2),
+                'plin_total' => number_format($plin_total, 2)
+            ]
         ];
 
-        $pdf = PDF::loadView('report::boxes.report_yape_pdf', $data)
+        $pdf = PDF::loadView('report::boxes.report_yape_plin_pdf', $data)
             ->setPaper('a4');
 
-        return $pdf->stream('Reporte_Yape_' . date('YmdHis') . '.pdf');
+        return $pdf->stream('Reporte_Yape_PLIN_' . date('YmdHis') . '.pdf');
     }
 
     public function reports_resumen_type(Request $request)
