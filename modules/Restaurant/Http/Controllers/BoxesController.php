@@ -3207,7 +3207,7 @@ class BoxesController extends Controller
         }
 
         // Obtener todas las transacciones de Yape y PLIN
-        $digital_boxes = Box::with(['document.customer', 'saleNote.customer'])
+        $digital_boxes = Box::with(['document.person', 'saleNote.person'])
             ->select('id', 'document_id', 'sale_note_id', 'date', 'amount', 'method')
             ->where('cash_id', $cash_id)
             ->whereIn('method', ['Yape', 'PLIN'])
