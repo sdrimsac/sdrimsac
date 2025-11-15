@@ -52,16 +52,27 @@
                     </div>
                     <div class="col-2">
                         <button type="button" class="btn btn-primary" @click="diasPersonal">
-                            Generar datos de personal
+                            Generar Dias Personal
                         </button>
                     </div>
                     <div class="col-2">
-                        <button type="button" class="btn btn-primary" @click="ExportExcel">
+                        <button type="button" class="btn btn-success d-inline-flex align-items-center" @click="ExportExcel">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="margin-right:8px" aria-hidden="true" focusable="false">
+                                <rect x="0" y="0" width="16" height="16" rx="2" ry="2" fill="#217346"/>
+                                <path d="M4 3 L12 13 M12 3 L4 13" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
                             exportar a excel
                         </button>
                     </div>
                     <div class="col-2">
-                        <button type="button" class="btn btn-primary" @click="ExportPdf">
+                        <button type="button" class="btn btn-danger d-inline-flex align-items-center" @click="ExportPdf">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="margin-right:8px" aria-hidden="true" focusable="false">
+                                <rect x="0" y="0" width="16" height="16" rx="2" ry="2" fill="#d32f2f"/>
+                                <!-- simple page icon with folded corner -->
+                                <path d="M11 1h-6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L11 1z" fill="none" stroke="#fff" stroke-width="0.8"/>
+                                <path d="M11 1v4h4" transform="translate(-1 0)" fill="none" stroke="#fff" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <text x="3.5" y="12" fill="#fff" font-weight="700" font-size="7">PDF</text>
+                            </svg>
                             exportar a pdf
                         </button>
                     </div> 
@@ -180,6 +191,17 @@ export default {
                 const meta = (response.data && response.data.meta) ? response.data.meta : {};
                 this.pagination = Object.assign({ total: 0, per_page: 10, current_page: 1 }, meta);
                 this.pagination.per_page = parseInt(this.pagination.per_page) || 10;
+                
+                // Mostrar mensaje de éxito
+                if (response.data && response.data.success && response.data.message) {
+                    this.$toast.success(response.data.message);
+                    this.getRecords();
+                }
+            }).catch(error => {
+                // Manejar errores
+                console.error('Error al generar resumen diario:', error);
+                const errorMessage = error.response?.data?.message || 'Error al generar el resumen diario';
+                this.$toast.error(errorMessage);
             });
         },
         changeCustomer() {
