@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditListExport;
 use App\Exports\StaffWorkerExport;
+use App\Exports\StaffWorkerPdfExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
 use App\Http\Resources\Tenant\CreditListPersonCollection;
@@ -277,7 +278,7 @@ class StaffController extends Controller
                         $pairsByDate[$dateKey] = ['minutes' => 0, 'pairs' => []];
                     }
                     $pairsByDate[$dateKey]['pairs'][] = [
-                        'entrance' => $start['dt']->format('H:i:s'),
+                        'entrance' => $start['dt']->format('H:i'),
                         'exit' => null,
                         'minutes' => 0,
                         'exit_date' => null,
@@ -299,8 +300,8 @@ class StaffController extends Controller
                 $minutes = $startDt->diffInMinutes($endDt);
                 $pairsByDate[$dateKey]['minutes'] += $minutes;
                 $pairsByDate[$dateKey]['pairs'][] = [
-                    'entrance' => $startDt->format('H:i:s'),
-                    'exit' => $endDt->format('H:i:s'),
+                    'entrance' => $startDt->format('H:i'),
+                    'exit' => $endDt->format('H:i'),
                     'minutes' => $minutes,
                     'exit_date' => $endDt->toDateString(),
                 ];
@@ -356,14 +357,14 @@ class StaffController extends Controller
                         'entrance' => null,
                         'exit' => null,
                         'job_position_id' => $empleado->job_position_id,
-                        'horas_trabajadas' => gmdate('H:i:s', $workedMinutes * 60),
+                        'horas_trabajadas' => gmdate('H:i', $workedMinutes * 60),
                         'overtime' => round($horasExtras, 2),
                         'amount_extra' => round($montoExtra, 2),
                         'lack' => $falta,
                         'date_end_daily' => $fecha_salida,
-                        'extra_time_two' => gmdate('H:i:s', ($horasExtras > 2 ? 2 : $horasExtras) * 3600),
-                        'extra_time_three' => gmdate('H:i:s', ($horasExtras > 2 ? $horasExtras - 2 : 0) * 3600),
-                        'lack_time' => $falta ? gmdate('H:i:s', $minutesMissing * 60) : null,
+                        'extra_time_two' => gmdate('H:i', ($horasExtras > 2 ? 2 : $horasExtras) * 3600),
+                        'extra_time_three' => gmdate('H:i', ($horasExtras > 2 ? $horasExtras - 2 : 0) * 3600),
+                        'lack_time' => $falta ? gmdate('H:i', $minutesMissing * 60) : null,
                     ]
                 );
             }
@@ -377,10 +378,13 @@ class StaffController extends Controller
 
     public function getRecords(Request $request)
     {
-
         Log::info('getRecords called with request: ' . json_encode($request->all()));
+
         $waTable = (new WorkerAdvance)->getTable();
         $wdTable = (new WorkerDailySummari)->getTable();
+        $wcTable = (new WorkerConsumption)->getTable();
+
+        // SUBQUERY DE ADELANTOS
         $advancesSub = DB::connection('tenant')->table($waTable)
             ->select(
                 "{$waTable}.person_id",
@@ -389,18 +393,45 @@ class StaffController extends Controller
             )
             ->groupBy("{$waTable}.person_id", DB::raw("DATE({$waTable}.date_time_advance)"));
 
-        $query = WorkerDailySummari::with('person')
+        // SUBQUERY DE CONSUMOS
+        $consumptionsSub = DB::connection('tenant')->table($wcTable)
+            ->select(
+                "{$wcTable}.person_id",
+                DB::raw("DATE({$wcTable}.date_time_consumption) as cons_date"),
+                DB::raw("SUM({$wcTable}.amount) as consumptions_sum")
+            )
+            ->groupBy("{$wcTable}.person_id", DB::raw("DATE({$wcTable}.date_time_consumption)"));
+
+        // QUERY PRINCIPAL
+        $query = WorkerDailySummari::with(['person.job_position', 'job_position'])
+
+            // JOIN ADELANTOS
             ->leftJoinSub($advancesSub, 'wa', function ($join) use ($wdTable) {
                 $join->on("{$wdTable}.person_id", '=', 'wa.person_id')
                     ->on("{$wdTable}.date_daily", '=', 'wa.adv_date');
             })
-            ->select("{$wdTable}.*", DB::raw("COALESCE(wa.advances_sum, 0) as advances"))
+
+            // JOIN CONSUMOS
+            ->leftJoinSub($consumptionsSub, 'wc', function ($join) use ($wdTable) {
+                $join->on("{$wdTable}.person_id", '=', 'wc.person_id')
+                    ->on("{$wdTable}.date_daily", '=', 'wc.cons_date');
+            })
+
+            ->select(
+                "{$wdTable}.*",
+                DB::raw("COALESCE(wa.advances_sum, 0) as advances"),
+                DB::raw("COALESCE(wc.consumptions_sum, 0) as consumptions")
+            )
+
             ->whereHas('person', function ($q) {
                 $q->where('is_staff', true);
             });
+
+        // FILTROS QUE YA TIENES
         if ($request->filled('person_id')) {
             $query->where("{$wdTable}.person_id", $request->person_id);
         }
+
         if ($request->filled('date_day')) {
             $query->whereDate("{$wdTable}.date_daily", $request->date_day);
         }
@@ -419,9 +450,11 @@ class StaffController extends Controller
 
         if ($request->filled('date')) {
             $dateVal = $request->date;
+
             if (preg_match('/^\d{4}-\d{2}-00$/', $dateVal)) {
                 $dateVal = substr($dateVal, 0, 7);
             }
+
             if (preg_match('/^\d{4}-\d{2}$/', $dateVal)) {
                 [$y, $m] = explode('-', $dateVal);
                 $query->whereYear("{$wdTable}.date_daily", $y)
@@ -430,9 +463,8 @@ class StaffController extends Controller
                 $query->whereDate("{$wdTable}.date_daily", $dateVal);
             }
         }
-        $records = $query->orderBy("{$wdTable}.date_daily", 'desc');
 
-        return $records;
+        return $query->orderBy("{$wdTable}.date_daily", 'desc');
     }
 
 
@@ -453,6 +485,20 @@ class StaffController extends Controller
             ->download('Lista_de_personal_' . Carbon::now() . '.xlsx');
     }
 
+    public function ExportPdf(Request $request)
+    {
+        $company = Company::first();
+        $establishment = Establishment::first();
+        $records = $this->getRecords($request)->get();
+        
+        return (new StaffWorkerPdfExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->dateRange($request->d_start, $request->d_end)
+            ->download('Lista_de_personal_' . Carbon::now() . '.pdf');
+    }
+
     public function recordByPerson(Request $request)
     {
 
@@ -469,7 +515,7 @@ class StaffController extends Controller
     private function updateStock($item_id, $quantity, $warehouse_id)
     {
         $configuration = Configuration::firstOrFail();
-        
+
         if ($configuration->college) {
 
             $item_warehouse = ItemWarehouse::where('item_id', $item_id)->first();
@@ -480,17 +526,17 @@ class StaffController extends Controller
 
             $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
         }
-        
+
         $old_stock = $item_warehouse->stock;
         $item_warehouse->stock = $item_warehouse->stock + $quantity;
-        
+
         if ($quantity < 0 && $item_warehouse->item->unit_type_id !== 'ZZ') {
             if (($configuration->sales_stock) && ($item_warehouse->stock < 0)) {
-             
+
                 throw new Exception("El producto {$item_warehouse->item->description} no tiene suficiente stock!");
             }
         }
-        
+
         $item_warehouse->save();
         //Log::info('ItemWarehouse saved successfully');
         // $item-save();
@@ -509,7 +555,7 @@ class StaffController extends Controller
     function createInventoryKardex($item_id, $quantity, $warehouse_id, $credit_list)
     {
         //Log::info('createInventoryKardex called with item_id: ' . $item_id . ', quantity: ' . $quantity . ', warehouse_id: ' . $warehouse_id);
-        
+
         $kardex = InventoryKardex::create([
             'inventory_kardexable_id' => $credit_list->id,
             'inventory_kardexable_type' => 'App\Models\Tenant\CreditList',
@@ -520,7 +566,7 @@ class StaffController extends Controller
             'type' => 'output',
             'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
-        
+
         //Log::info('InventoryKardex created successfully with ID: ' . $kardex->id);
     }
 
@@ -542,14 +588,14 @@ class StaffController extends Controller
 
             if ($item->unit_type_id !== 'ZZ') {
                 $has_real_promotions = $promotion_count > 0;
-                
+
                 // 1️⃣ Item normal (no es set ni promoción)
                 if (!$item->is_set && !$has_real_promotions) {
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
                 } elseif ($item->is_set) {
                     $item_sets = ItemSet::where('item_id', $item_id)->get();
-                    
+
                     if ($item_sets->count() == 0) {
                         $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                         $this->updateStock($item_id, $quantity, $warehouse->id);
@@ -566,10 +612,10 @@ class StaffController extends Controller
                         }
                     }
 
-                // 3️⃣ Item de promoción
+                    // 3️⃣ Item de promoción
                 } elseif ($has_real_promotions) {
                     $promotion_items = ItemPromotion::where('item_id', $item_id)->get();
-                    
+
                     foreach ($promotion_items as $promo_item) {
                         $promo_item_obj = Item::find($promo_item->promotion_item_id);
                         $promo_quantity = isset($promo_item->quantity) ? floatval($promo_item->quantity) : 1;
@@ -587,7 +633,7 @@ class StaffController extends Controller
                             }
                         } else {
                             $total_quantity = $promo_quantity * $orden_item->quantity * -1;
-                         
+
                             $this->createInventoryKardex($promo_item_obj->id, $total_quantity, $warehouse->id, $credit_list);
                             try {
                                 $this->updateStock($promo_item_obj->id, $total_quantity, $warehouse->id);
@@ -604,7 +650,7 @@ class StaffController extends Controller
             }
         }
     }
-    
+
     public function send_credit(Request $request)
     {
         $configuration = Configuration::firstOrFail();

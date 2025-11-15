@@ -60,6 +60,7 @@ if ($hostname) {
             Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
 
             Route::get('staff/export-excel', [StaffController::class, 'ExportExcel']);
+            Route::get('staff/export-pdf', [StaffController::class, 'ExportPdf']);
 
             Route::get('report_cash/download-report-discount/{filename}', [CashController::class, 'downloadReportDiscount']);
             /* para reporte de madera  */

@@ -33,10 +33,12 @@
               <th class="text-white" style="width: 150px;">Horas Trabajadas</th>
               <th class="text-white" style="width: 100px;"> Fecha y Hora de salida</th>
               <th class="text-white" style="width: 100px;">Horas Trabajadas</th>
+              <th class="text-white" style="width: 120px;">pago por dia</th>
               <th class="text-white" style="width: 120px;">Horas Extras 25%</th>
               <th class="text-white" style="width: 120px;">Horas Extras 35%</th>
               <th class="text-white" style="width: 120px;">Horas Faltante</th>
               <th class="text-white" style="width: 100px;">Adelantos</th>
+              <th class="text-white" style="width: 100px;">Consumos total</th>
               <th class="text-white text-center" style="width: 100px;">Acciones</th>
             </tr>
             <tr slot-scope="{ index, row }">
@@ -71,12 +73,14 @@
               </td>
               <td>{{ row.date_end_daily }}</td>
               <td>{{ row.horas_trabajadas }}</td>
+              <td>{{ row.factor_diario }}</td>
               <td>{{ row.extra_time_two }}</td>
               <td>{{ row.extra_time_three }}</td>
               <td>{{ row.lack_time }}</td>
               <td class="text-center">
                 {{ Number(row.advances).toFixed(2) }}
               </td>
+              <td>{{ Number(row.consumptions).toFixed(2) }}</td>
               <td>
                 <!-- Bind per-row: when the user changes the select we call handleActionChange(row, value) -->
                 <el-select

@@ -20,14 +20,11 @@ class PersonWorkerImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        // rows: header + rows where col0 = number, col1 = date/time
         $total = count($rows);
         $registered = 0;
 
-        // remove header row if present
         if (isset($rows[0])) unset($rows[0]);
 
-        // Primero: recolectar y agrupar marcas por persona y fecha
         $groups = [];
 
         foreach ($rows as $row) {
@@ -53,7 +50,7 @@ class PersonWorkerImport implements ToCollection
 
             $date_time = $carbon->format('Y-m-d H:i:s');
             $date_only = $carbon->format('Y-m-d');
-            $time_only = $carbon->format('H:i:s');
+            $time_only = $carbon->format('H:i');
 
             $person = Person::where('number', $number)->first();
             if (!$person) {
@@ -61,8 +58,6 @@ class PersonWorkerImport implements ToCollection
                 continue;
             }
 
-            // Agrupar solo por persona; procesaremos emparejamientos cruzando fechas si es necesario
-            // store the Carbon instance as well to avoid re-parsing/timezone issues later
             $groups[$person->id][] = [
                 'person_id' => $person->id,
                 'date_time' => $date_time,
@@ -80,12 +75,8 @@ class PersonWorkerImport implements ToCollection
                 $tb = isset($b['carbon']) ? $b['carbon']->getTimestamp() : strtotime($b['date_time']);
                 return $ta <=> $tb;
             });
-
-            // Después de ordenar las marcas, eliminamos duplicados cercanos
-            // (por ejemplo: persona marcó 2 veces al ingresar). Mantendremos
-            // la primera marca y descartaremos las siguientes si están dentro
-            // de una tolerancia (minutos).
-            $toleranceMinutes = 10; // tolerancia configurable en minutos
+           
+            $toleranceMinutes = 10;
 
             $filtered = [];
             foreach ($marks as $m) {
@@ -130,8 +121,6 @@ class PersonWorkerImport implements ToCollection
                 if (isset($marks[$i + 1])) {
                     $exit = $marks[$i + 1];
 
-                    // Calcular si la salida corresponde a la misma jornada (ej. turno nocturno)
-                    // Use the stored Carbon instances if available to avoid timezone/parse differences
                     if (isset($entry['carbon']) && isset($exit['carbon'])) {
                         $startDt = $entry['carbon'];
                         $endDt = $exit['carbon'];

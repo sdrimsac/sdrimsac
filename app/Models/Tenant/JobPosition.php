@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Tenant;
+
 use Illuminate\Database\Eloquent\Model;
 
 class JobPosition extends Model
@@ -20,4 +21,9 @@ class JobPosition extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function job_position()
+    {
+        return $this->belongsTo(JobPosition::class);
+    }
 }
