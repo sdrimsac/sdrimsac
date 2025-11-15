@@ -123,7 +123,6 @@ class DocumentItem extends ModelTenant
         return $this->belongsTo(Document::class);
     }
 
-
     public function relation_item()
     {
         return $this->belongsTo(Item::class, 'item_id');

@@ -34,6 +34,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('record/{inventory}', 'InventoryController@record');
         Route::post('/', 'InventoryController@store');
         Route::post('/transaction', 'InventoryController@store_transaction');
+        Route::post('/transaction-devolution', 'InventoryController@store_transaction_devolution');
         Route::post('/transaction/importColorZise',  'InventoryController@importColorZise');
         Route::post('move', 'InventoryController@move');
         Route::get('tables', 'InventoryController@tables');

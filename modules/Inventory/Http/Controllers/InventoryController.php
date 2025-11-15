@@ -664,6 +664,155 @@ class InventoryController extends Controller
         return $result;
     }
 
+    public function store_transaction_devolution(Request $request)
+    {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
+            $items = $request->input('items', []);
+            $document_id = $request->input('document_id');
+            $document_series = $request->input('document_series');
+            $document_number = $request->input('document_number');
+
+            if (empty($items)) {
+                throw new Exception('No hay items para procesar');
+            }
+
+            $results = [];
+            
+            foreach ($items as $itemData) {
+                $type = $itemData['type'] ?? 'input';
+                $item_id = $itemData['item_id'];
+                $warehouse_id = $itemData['warehouse_id'];
+                $inventory_transaction_id = $itemData['inventory_transaction_id'];
+                $quantity = $itemData['quantity'];
+                $lot_code = $itemData['lot_code'] ?? null;
+                $lots = $itemData['lots'] ?? [];
+                $color_size = $itemData['color_size'] ?? [];
+
+                $item_warehouse = ItemWarehouse::firstOrNew([
+                    'item_id' => $item_id,
+                    'warehouse_id' => $warehouse_id
+                ]);
+
+                // Verificar que existe el inventory_transaction_id
+                $inventory_transaction = InventoryTransaction::find($inventory_transaction_id);
+                if (!$inventory_transaction) {
+                    throw new Exception("InventoryTransaction con ID {$inventory_transaction_id} no encontrado");
+                }
+
+                if ($type == 'input' && count($lots) > 0) {
+                    foreach ($lots as $lot) {
+                        $existing_lot = ItemLot::where('item_id', $item_id)
+                            ->where('series', $lot['series'])
+                            ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
+                            ->first();
+
+                        if ($existing_lot) {
+                            throw new Exception("La serie {$lot['series']} ya existe para este producto en este almacén no puede registrarse otra vez.");
+                        }
+                    }
+                }
+
+                if ($type == 'output' && ($quantity > $item_warehouse->stock)) {
+                    throw new Exception('La cantidad no puede ser mayor a la que se tiene en el almacén.');
+                }
+
+                $inventory = new Inventory();
+                $inventory->type = null;
+                $inventory->description = $inventory_transaction->name . ' (Devolución)';
+                $inventory->item_id = $item_id;
+                $inventory->warehouse_id = $warehouse_id;
+                $inventory->quantity = $quantity;
+                $inventory->inventory_transaction_id = $inventory_transaction_id;
+                $inventory->lot_code = $lot_code;
+                $inventory->lots = $lots;
+                
+                if ($type == 'output') {
+                    $lots = array_filter($lots, function ($lot) {
+                        return $lot['has_sale'] == true;
+                    });
+                    $inventory->lots = $lots;
+                }
+                $inventory->save();
+
+                $lots_enabled = $itemData['lots_enabled'] ?? false;
+                if (count($color_size) > 0) {
+                    $inventory->color_size = $color_size;
+                }
+                
+                if ($type == 'input') {
+                    foreach ($color_size as $row) {
+                        $stock = $row["stock"];
+                        $color = $row["color"];
+                        $size = $row["size"];
+                        $price = $row["price"];
+                        $code = $row["code"];
+                        $color_size_exist = ItemColorSize::where('item_id', $item_id)
+                            ->where('warehouse_id', $warehouse_id)
+                            ->where('color', $color)
+                            ->where('size', $size)
+                            ->where('code', $code)
+                            ->first();
+                        if ($color_size_exist) {
+                            $color_size_exist->stock = $color_size_exist->stock + $stock;
+                            if ($price != null || $price != '' || $price != 0) {
+                                $color_size_exist->price = $price;
+                            }
+                            $color_size_exist->save();
+                        } else {
+                            ItemColorSize::create([
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_id,
+                                'stock' => $stock,
+                                'color' => $color,
+                                'size' => $size,
+                                'price' => $price,
+                                'code' => $code
+                            ]);
+                        }
+                    }
+                    
+                    // Procesar lots
+                    foreach ($lots as $lot) {
+                        $inventory->lots()->create([
+                            'date' => $lot['date'],
+                            'series' => $lot['series'],
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_id,
+                            'has_sale' => false,
+                            'state' => $lot['state'],
+                        ]);
+                    }
+
+                    if ($lots_enabled) {
+                        ItemLotsGroup::create([
+                            'code'  => $lot_code,
+                            'quantity'  => $quantity,
+                            'date_of_due'  => $itemData['date_of_due'] ?? null,
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_id
+                        ]);
+                    }
+
+                    $item = Item::findOrFail($item_id);
+                    if ((bool) $item->codes_family) {
+                        Log::info('Generando códigos para item_id ' . $item_id . ' en almacén ' . $warehouse_id);
+                        ItemCodeService::generateCodesForItemWarehouse($item_id, $warehouse_id);
+                    }
+                }
+                $inventory->save();
+                $results[] = ['item_id' => $item_id, 'status' => 'processed'];
+            }
+
+            return  [
+                'success' => true,
+                'message' => 'Devolución registrada correctamente',
+                'processed_items' => $results
+            ];
+        });
+
+        return response()->json($result);
+    }
+
     public function importColorZise(Request $request)
     {
         set_time_limit(0);

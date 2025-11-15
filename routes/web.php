@@ -451,9 +451,6 @@ if ($hostname) {
                 Route::delete('arqueos/{arqueo}', [App\Http\Controllers\Tenant\ArqueoController::class, 'destroy']);
 
                 //vehicles------------------------------------------------------vehiculos
-
-
-
                 //Reviews-----------------------------------------------------revisiones
                 Route::get('Reviews/columns', [App\Http\Controllers\Tenant\ReviewsController::class, 'columns']);
                 Route::get('Reviews', [App\Http\Controllers\Tenant\ReviewsController::class, 'driver_index'])->name('tenant.reviews.index')->middleware('just.admin');
@@ -589,7 +586,6 @@ if ($hostname) {
                 Route::get('items/export/barcode/print', [App\Http\Controllers\Tenant\ItemController::class, 'printBarCode'])->name('tenant.items.export.barcode.print')->middleware('just.admin');
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
                 Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
-
 
                 // rutas para crear catalogos 
                 Route::prefix('catalog')
@@ -870,17 +866,6 @@ if ($hostname) {
                 Route::delete('banks/{bank_id}/delete-image', [App\Http\Controllers\Tenant\BankController::class, 'deleteImage']);
                 Route::delete('banks/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'destroy']);
 
-                /* salida y entrada de productos  */
-
-                /* Route::get('productos', [App\Http\Controllers\Tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
-                Route::get('productos/records', [App\Http\Controllers\Tenant\ProductosController::class, 'records']);
-                Route::get('productos/record/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'record']);
-                Route::post('productos', [App\Http\Controllers\Tenant\ProductosController::class, 'store']);
-                Route::delete('productos/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'destroy']);
-                Route::get('/columns', [App\Http\Controllers\tenant\ProductosController::class, 'columns']);
-                Route::get('/tables', [App\Http\Controllers\tenant\ProductosController::class, 'tables']);
-                Route::post('/move', [App\Http\Controllers\tenant\ProductosController::class, 'move']);
-                Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']); */
                 Route::prefix('productos')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
                     Route::get('/records', [App\Http\Controllers\Tenant\ProductosController::class, 'records']);
@@ -895,6 +880,21 @@ if ($hostname) {
                     Route::post('/remove', [App\Http\Controllers\Tenant\ProductosController::class, 'remove']);
                     Route::get('/excel', [App\Http\Controllers\Tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
                     Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printer'])->name('tenant.productos.guides_salida');
+                });
+
+                Route::prefix('devolutions')->group(function () {
+                    Route::get('/records', [App\Http\Controllers\Tenant\DevolutionController::class, 'records']);
+                    Route::post('/search', [App\Http\Controllers\Tenant\DevolutionController::class, 'searchDevolutions']);
+                    Route::get('/record/{id}', [App\Http\Controllers\Tenant\DevolutionController::class, 'record']);
+                    Route::post('/', [App\Http\Controllers\Tenant\DevolutionController::class, 'store']);
+                    Route::delete('/{productos}', [App\Http\Controllers\Tenant\DevolutionController::class, 'destroy']);
+                    Route::get('/columns', [App\Http\Controllers\Tenant\DevolutionController::class, 'columns']);
+                    Route::get('/tables', [App\Http\Controllers\Tenant\DevolutionController::class, 'tables']);
+                    Route::get('/recordPdf/{type}', [App\Http\Controllers\Tenant\DevolutionController::class, 'recordPdf']);
+                    Route::post('/move', [App\Http\Controllers\Tenant\DevolutionController::class, 'move']);
+                    Route::post('/remove', [App\Http\Controllers\Tenant\DevolutionController::class, 'remove']);
+                    Route::get('/excel', [App\Http\Controllers\Tenant\DevolutionController::class, 'excel'])->name('tenant.devolutions.report_excel');
+                    Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\DevolutionController::class, 'printer'])->name('tenant.devolutions.guides_salida');
                 });
 
 

@@ -3,47 +3,37 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-              <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
-                  <h4 class="my-0 text-white d-flex align-items-center"
-                      style="font-size: 1rem; font-weight: bold;">
-                      <i class="fas fa-truck-loading" style="font-size: 1rem; margin-right: 0.5rem;"></i>
-                      Ingreso y Salida de Productos
-                  </h4>
-              </div>
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="fas fa-truck-loading" style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                        Ingreso y Salida de Productos
+                    </h4>
+                </div>
                 <div class="data-table-visible-columns">
                     <div style="display: flex; gap: 8px;">
-                        <el-button
-                            v-if="configuration.color_size_enabled"
-                            type="primary"
-                            class="btn_guardarsmall"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportColorSize()"
-                        >
-                            <i class="fa fa-arrow-circle-down fa-lg"></i>
-                            Importar talla color 
+                        <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;"
+                            href="javascript:void(0)" @click.prevent="clickDevolucion()">
+                            <i class="fa fa-arrow-circle-up fa-lg"></i>
+                            Nuevo devolucion
                         </el-button>
-                        <el-button
-                            type="primary"
-                            class="btn_guardarsmall"
-                            href="javascript:void(0)"
-                            @click.prevent="clickCreate('input')"
-                        >
+                        <el-button v-if="configuration.color_size_enabled" type="primary" class="btn_guardarsmall"
+                            href="javascript:void(0)" @click.prevent="clickImportColorSize()">
+                            <i class="fa fa-arrow-circle-down fa-lg"></i>
+                            Importar talla color
+                        </el-button>
+                        <el-button type="primary" class="btn_guardarsmall" href="javascript:void(0)"
+                            @click.prevent="clickCreate('input')">
                             <i class="fa fa-arrow-circle-down fa-lg"></i>
                             Ingreso
                         </el-button>
-                        <el-button
-                            type="primary"
-                            class="btn_guardarsmall"
-                            style="margin-right: 5px;"
-                            href="javascript:void(0)"
-                            @click.prevent="clickOutput()"
-                        >
+                        <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;"
+                            href="javascript:void(0)" @click.prevent="clickOutput()">
                             <i class="fa fa-arrow-circle-up fa-lg"></i>
                             Salida
                         </el-button>
                     </div>
                 </div>
-                
+
 
                 <div class="card-body">
                     <data-table :resource="resource" ref="dataTable">
@@ -77,17 +67,10 @@
                                 {{ row.item_description }}
                                 <br />
                                 <span>{{ row.lot_code }}</span>
-                                <template
-                                    v-if="row.lots && row.lots.length > 0"
-                                >
-                                    <table
-                                        class="table table-responsive table-striped"
-                                    >
+                                <template v-if="row.lots && row.lots.length > 0">
+                                    <table class="table table-responsive table-striped">
                                         <thead>
-                                            <tr
-                                                slot="heading"
-                                                class="bg-primary"
-                                            >
+                                            <tr slot="heading" class="bg-primary">
                                                 <!-- <th class="text-white">N°</th> -->
                                                 <th class="text-white">
                                                     Serie
@@ -95,29 +78,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                v-for="lots in row.lots"
-                                                :key="lots.series"
-                                            >
+                                            <tr v-for="lots in row.lots" :key="lots.series">
                                                 <td>{{ lots.series }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </template>
-                                <template
-                                    v-if="
-                                        row.color_size &&
-                                            row.color_size.length != 0
-                                    "
-                                >
-                                    <table
-                                        class="table table-responsive table-striped"
-                                    >
+                                <template v-if="
+                                    row.color_size &&
+                                    row.color_size.length != 0
+                                ">
+                                    <table class="table table-responsive table-striped">
                                         <thead>
-                                            <tr
-                                                slot="heading"
-                                                class="bg-primary"
-                                            >
+                                            <tr slot="heading" class="bg-primary">
                                                 <th class="text-white">Código Familia</th>
                                                 <th class="text-white">
                                                     Color
@@ -128,22 +101,19 @@
                                                 <th class="text-white">
                                                     Precio
                                                 </th>
-                                                
+
                                                 <th class="text-white">Stock</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                v-for="color_size in row.color_size"
-                                                :key="color_size.id"
-                                            >   
+                                            <tr v-for="color_size in row.color_size" :key="color_size.id">
                                                 <td>{{ color_size.code }}</td>
                                                 <td>{{ color_size.color }}</td>
                                                 <td>{{ color_size.size }}</td>
                                                 <td>{{ color_size.price }}</td>
-                                                
+
                                                 <td>{{ color_size.stock }}</td>
-                                                
+
                                             </tr>
                                         </tbody>
                                     </table>
@@ -168,112 +138,68 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                              <el-tag
-                                :type="row.type === 'input' ? 'success' : 'danger'"
-                                effect="dark"
-                                disable-transitions
-                                style="font-size: 0.95em; padding: 2px 10px;"
-                              >
-                                {{ row.type === "input" ? "Ingreso" : "Salida" }}
-                              </el-tag>
+                                <el-tag :type="row.type === 'input' ? 'success' : 'danger'" effect="dark"
+                                    disable-transitions style="font-size: 0.95em; padding: 2px 10px;">
+                                    {{ row.type === "input" ? "Ingreso" : "Salida" }}
+                                </el-tag>
                             </td>
-                            
+
                             <td class="text-center">
-                            <div style="display: flex; align-items: center; justify-content: center;">
-                                <button
-                                    @click="clickPrint(row.id)"
-                                    type="button"
-                                    class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width:32px;height:32px;padding:0;"
-                                    title="Imprimir"
-                                >
-                                    <i class="fa fa-print"></i>
-                                </button>
-                                <button
-                                    @click="RePrint(row.id)"
-                                    type="button"
-                                    class="btn btn-sm btn-danger rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width:32px;height:32px;padding:0;margin-left:6px;"
-                                    title="Reimprimir"
-                                >
-                                    <i class="fa fa-redo"></i>
-                                </button>
-                            </div>
+                                <div style="display: flex; align-items: center; justify-content: center;">
+                                    <button @click="clickPrint(row.id)" type="button"
+                                        class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width:32px;height:32px;padding:0;" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
+                                    <button @click="RePrint(row.id)" type="button"
+                                        class="btn btn-sm btn-danger rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width:32px;height:32px;padding:0;margin-left:6px;" title="Reimprimir">
+                                        <i class="fa fa-redo"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </data-table>
                 </div>
             </div>
 
-            
-            <el-dialog
-                append-to-body
-                :visible.sync="showDialogEstablishment"
-                title="Seleccione una impresora de establecimiento"
-                width="500px"
-            >
-                <el-select
-                    class="m-2"
-                    v-model="establishment_id"
-                    placeholder="Seleccione una impresora"
-                >
-                    <el-option
-                        v-for="printer in establishment"
-                        :key="printer.id"
-                        :label="printer.printer"
-                        :value="printer.id"
-                    ></el-option>
+
+            <el-dialog append-to-body :visible.sync="showDialogEstablishment"
+                title="Seleccione una impresora de establecimiento" width="500px">
+                <el-select class="m-2" v-model="establishment_id" placeholder="Seleccione una impresora">
+                    <el-option v-for="printer in establishment" :key="printer.id" :label="printer.printer"
+                        :value="printer.id"></el-option>
                 </el-select>
                 <span slot="footer" class="dialog-footer" style="display: flex; justify-content: flex-end;">
-                  <!-- Botón Cancelar -->
-                  <el-button
-                    class="btn-cancel btn-cancel:hover"
-                    icon="fas fa-times fa-lg"
-                    @click="showDialogEstablishment = false"
-                  >
-                    <span>Cancelar</span>
-                  </el-button>
-                  <!-- Botón Guardar -->
-                    <el-button
-                    class="btn-save btn-save:hover"
-                    icon="fas fa-print fa-lg"
-                    type="primary"
-                    @click="Printer(); showDialogEstablishment = false"
-                    style="margin-left: 10px;"
-                    >
-                    <span>Imprimir</span>
+                    <!-- Botón Cancelar -->
+                    <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg"
+                        @click="showDialogEstablishment = false">
+                        <span>Cancelar</span>
+                    </el-button>
+                    <!-- Botón Guardar -->
+                    <el-button class="btn-save btn-save:hover" icon="fas fa-print fa-lg" type="primary"
+                        @click="Printer(); showDialogEstablishment = false" style="margin-left: 10px;">
+                        <span>Imprimir</span>
                     </el-button>
                 </span>
             </el-dialog>
         </div>
-        <inventories-form
-            :showDialog.sync="showDialog"
-            :type.sync="typeTransaction"
-        ></inventories-form>
+        <inventories-form :showDialog.sync="showDialog" :type.sync="typeTransaction"></inventories-form>
 
-        <inventories-form-output
-            :showDialog.sync="showDialogOutput"
-        ></inventories-form-output>
+        <inventories-form-output :showDialog.sync="showDialogOutput"></inventories-form-output>
 
-        <inventories-move
-            :showDialog.sync="showDialogMove"
-            :recordId="recordId"
-        ></inventories-move>
-        <inventories-remove
-            :showDialog.sync="showDialogRemove"
-            :recordId="recordId"
-        ></inventories-remove>
-        <form-pdf
-            :showDialog.sync="showDialogRePrint"
-            :recordId="recordId"
-            :type.sync="typeTransaction" 
+        <inventories-move :showDialog.sync="showDialogMove" :recordId="recordId"></inventories-move>
+        <inventories-remove :showDialog.sync="showDialogRemove" :recordId="recordId"></inventories-remove>
+        <form-pdf :showDialog.sync="showDialogRePrint" :recordId="recordId" :type.sync="typeTransaction"
             :configuration="configuration">
         </form-pdf>
-        <import-color-size
-            :showDialog.sync="showImportColorSizeDialog"
-        ></import-color-size>
+        <import-color-size :showDialog.sync="showImportColorSizeDialog"></import-color-size>
+
+        <form-devolution :showDialog.sync="showDialogDevolution" @records="refreshTable">
+        </form-devolution>
 
     </div>
+
 </template>
 
 <style>
@@ -291,6 +217,7 @@ import InventoriesMove from "../../../../modules/Inventory/Resources/assets/js/i
 import InventoriesRemove from "../../../../modules/Inventory/Resources/assets/js/inventory/remove.vue";
 import FormPdf from "./form_pdf.vue";
 import ImportColorSize from "./importColorZise.vue";
+import FormDevolution from "./partials/form_devolution.vue";
 
 import Swal from "sweetalert2";
 export default {
@@ -304,10 +231,12 @@ export default {
         InventoriesFormOutput,
         Swal,
         FormPdf,
-        ImportColorSize
+        ImportColorSize,
+        FormDevolution
     },
     data() {
         return {
+            showDialogDevolution: false,
             showImportColorSizeDialog: false,
             showDialogRePrint: false,
             title: null,
@@ -363,10 +292,18 @@ export default {
         /* console.log("dsadasd2"); */
     },
     methods: {
+        clickDevolucion() {
+            this.showDialogDevolution = true;
+        },
+
+        handleClick(tab, event) {
+            console.log('Tab clicked:', tab.name);
+            // You can add any logic here when tab is clicked
+        },
         clickImportColorSize() {
             this.showImportColorSizeDialog = true;
         },
-        RePrint(id){
+        RePrint(id) {
             this.recordId = id;
             this.showDialogRePrint = true;
         },
@@ -479,6 +416,10 @@ export default {
         clickPrint(type) {
             this.showDialogEstablishment = true;
             this.type = type;
+        },
+        refreshTable() {
+            // Actualizar la tabla cuando se complete una devolución
+            this.$refs.dataTable.getRecords();
         }
     }
 };
