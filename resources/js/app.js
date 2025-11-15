@@ -232,7 +232,7 @@ const getAreaPrinter = async () => {
         }, 2000);
     }
 } */
-async function limpiarcache(reload = true) {
+/* async function limpiarcache(reload = true) {
     try {
         if ('caches' in window) {
             const cacheNames = await caches.keys();
@@ -252,11 +252,39 @@ async function limpiarcache(reload = true) {
     } catch (error) {
         console.error('Error limpiando caché o SW:', error);
     }
+} */
+
+async function limpiarcache(reload = true) {
+    try {
+        if ('caches' in window) {
+            const names = await caches.keys();
+            for (const name of names) {
+                await caches.delete(name);
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (const reg of regs) {
+                await reg.unregister();
+            }
+        }
+
+        if (reload) {
+            setTimeout(() => {
+                location.replace(location.href.split('?')[0] + "?v=" + Date.now());
+            }, 1000);
+        }
+
+    } catch (error) {
+        console.error('Error limpiando cache o SW:', error);
+    }
 }
+
 axios.get("/commit/store").then(response => {
     let { data } = response;
     if (data.update) {
-        Swal.fire({
+        /* Swal.fire({
             title: "NUEVA ACTUALIZACION DISPONIBLE",
             html: `<span style="font-weight: bold; font-size: 1.2rem;">la pagina se va a recargar espere por favor</span>
     `,
@@ -280,8 +308,8 @@ axios.get("/commit/store").then(response => {
             },
             position: "center",
             icon: "success"
-        });
-        console.log("actualizar");
+        }); */
+        /*  console.log("actualizar"); */
         limpiarcache();
     }
 });
