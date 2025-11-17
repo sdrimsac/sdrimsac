@@ -35,8 +35,27 @@ class BalanzaItemReceived implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        $configuration = Configuration::first();
-        $event_name = $configuration->socket_channel ?? 'default';
+        // Asegurar que usamos la conexión tenant
+        $configuration = Configuration::on('tenant')->first();
+        Log::info('Configuración obtenida', [
+            'configuration_exists' => !is_null($configuration),
+            'socket_channel' => $configuration ? $configuration->socket_channel : null,
+            'configuration_id' => $configuration ? $configuration->id : null
+        ]);
+        
+        if (!$configuration) {
+            Log::error('No se encontró configuración en la base de datos tenant');
+            throw new \Exception('No se encontró configuración en la base de datos tenant');
+        }
+        
+        if (!$configuration->socket_channel) {
+            Log::error('socket_channel está vacío o es null', [
+                'socket_channel' => $configuration->socket_channel
+            ]);
+            throw new \Exception('socket_channel no está configurado en la tabla Configuration');
+        }
+        
+        $event_name = $configuration->socket_channel;
         $eventName = 'balanza-' . $event_name;
         Log::info('Broadcasting como evento', ['event_name' => $eventName]);
         return $eventName;
