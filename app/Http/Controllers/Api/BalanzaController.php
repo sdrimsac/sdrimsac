@@ -19,6 +19,5 @@ class BalanzaController extends Controller
             'success' => true,
             'data' => $items
         ]);
-    
     }
 }
