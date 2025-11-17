@@ -13,7 +13,7 @@ class BalanzaController extends Controller
         // lsitar los item codigo interno description precio_venta y almacen_id
         $items = DB::connection('tenant')->table('items')
             ->select('internal_id', 'description', 'sale_unit_price', 'warehouse_id')
-            ->where('is_active', true)
+            ->where('active', true)
             ->get();
         return response()->json([
             'success' => true,
