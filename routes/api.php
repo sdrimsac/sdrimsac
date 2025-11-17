@@ -1,6 +1,7 @@
 <?php
 
 use App\CoreFacturalo\Services\Models\Person;
+use App\Http\Controllers\Api\BalanzaController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\System\SummaryCorrelativeController;
@@ -185,6 +186,8 @@ if ($hostname) {
             Route::get('quotations/record2/{quotation}', 'QuotationController@record2');
             Route::get('quotations/changed/{quotation}', 'QuotationController@changed');
             //--------------------------------------------------------------------------------------------------
+
+            Route::get('item-list', [BalanzaController::class, 'getItemList']);
 
             //purchases
             Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
