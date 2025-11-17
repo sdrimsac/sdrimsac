@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Events\EntranceUpdateEvent;
 use Exception;
 use Mpdf\Mpdf;
 use App\Models\Tenant\Item;
@@ -1601,6 +1602,8 @@ class ItemController extends Controller
                 $food->image = 'imagen-no-disponible.jpg';
             }
             $item->save();
+
+            event(new EntranceUpdateEvent($item));
 
             //ItemCodeService::generateCodesForItemWarehouse($item->id, $item['warehouse_id']);
 

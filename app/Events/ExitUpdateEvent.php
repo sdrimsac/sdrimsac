@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Support\Facades\Log;
 
-class BalanzaItemReceived implements ShouldBroadcast
+class ExitUpdateEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -23,17 +23,15 @@ class BalanzaItemReceived implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        $channel = new Channel('balanza-channel');
+        $channel = new Channel('exit-channel');
         return $channel;
     }
 
     public function broadcastAs()
     {
-        // Asegurar que usamos la conexión tenant
         $configuration = Configuration::on('tenant')->first();
-        
         $event_name = $configuration->socket_channel;
-        $eventName = 'balanza-' . $event_name;
+        $eventName = 'exit-' . $event_name;
         return $eventName;
     }
 
