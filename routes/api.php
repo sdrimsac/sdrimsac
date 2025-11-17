@@ -76,7 +76,7 @@ if ($hostname) {
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
 
-        Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']);
+        /* Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']); */
 
 
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
@@ -85,6 +85,8 @@ if ($hostname) {
             Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
 
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
+            Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
+
             Route::get('client-default', [PersonController::class, 'client_default']);
 
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
@@ -186,8 +188,6 @@ if ($hostname) {
             Route::get('quotations/record2/{quotation}', 'QuotationController@record2');
             Route::get('quotations/changed/{quotation}', 'QuotationController@changed');
             //--------------------------------------------------------------------------------------------------
-
-            Route::get('item-list', [BalanzaController::class, 'getItemList']);
 
             //purchases
             Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
