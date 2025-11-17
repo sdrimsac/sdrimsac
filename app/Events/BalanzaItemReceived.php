@@ -4,11 +4,13 @@ namespace App\Events;
 
 use App\Models\Tenant\Configuration;
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Support\Facades\Log;
 
-class BalanzaItemReceived
+class BalanzaItemReceived implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -17,11 +19,14 @@ class BalanzaItemReceived
     public function __construct($items)
     {
         $this->items = $items;
+        Log::info('BalanzaItemReceived evento creado', ['items' => $items]);
     }
 
     public function broadcastOn()
     {
-        return new Channel('balanza-channel');
+        $channel = new Channel('balanza-channel');
+        Log::info('Broadcasting en canal', ['channel' => 'balanza-channel']);
+        return $channel;
     }
     /* public function broadcastAs()
     {
@@ -31,10 +36,16 @@ class BalanzaItemReceived
     public function broadcastAs()
     {
         $configuration = Configuration::first();
-        $event_name = $configuration->socket_channel;
-        return 'balanza-' . $event_name;
+        $event_name = $configuration->socket_channel ?? 'default';
+        $eventName = 'balanza-' . $event_name;
+        Log::info('Broadcasting como evento', ['event_name' => $eventName]);
+        return $eventName;
     }
 
-    
-
+    public function broadcastWith()
+    {
+        return [
+            'items' => $this->items
+        ];
+    }
 }

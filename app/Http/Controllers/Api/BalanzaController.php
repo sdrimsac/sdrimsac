@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\CoreFacturalo\Facturalo;
+use App\Events\BalanzaItemReceived;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BalanzaController extends Controller
 {
@@ -104,7 +106,9 @@ class BalanzaController extends Controller
         $item->total = round($peso * $item->sale_unit_price, 2);
 
         // Enviar evento
-        event(new \App\Events\BalanzaItemReceived([$item]));
+        Log::info('Enviando evento BalanzaItemReceived', ['item' => $item]);
+        event(new BalanzaItemReceived([$item]));
+        Log::info('Evento enviado correctamente');
 
         return response()->json([
             'success' => true,
