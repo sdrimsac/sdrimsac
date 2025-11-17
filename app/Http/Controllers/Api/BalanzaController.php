@@ -36,7 +36,7 @@ class BalanzaController extends Controller
         ]);
     } */
 
-    public function itemFoods(Request $request)
+    /* public function itemFoods(Request $request)
     {
         $request->validate([
             'item_foods' => 'required|array',
@@ -74,6 +74,42 @@ class BalanzaController extends Controller
             'success' => true,
             'message' => 'Datos recibidos con éxito',
             'data' => $items
+        ]);
+    } */
+
+    public function itemFoods(Request $request)
+    {
+        $request->validate([
+            'codigo' => 'required|string',
+            'peso' => 'required|numeric',
+        ]);
+
+        $codigo = $request->codigo;
+        $peso = $request->peso;
+
+        $item = DB::connection('tenant')->table('items')
+            ->select('internal_id', 'description', 'sale_unit_price', 'warehouse_id')
+            ->where('internal_id', $codigo)
+            ->where('active', true)
+            ->first();
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Producto no encontrado'
+            ], 404);
+        }
+
+        $item->peso = $peso;
+        $item->total = round($peso * $item->sale_unit_price, 2);
+
+        // Enviar evento
+        event(new \App\Events\BalanzaItemReceived([$item]));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Datos recibidos con éxito',
+            'data' => $item
         ]);
     }
 }
