@@ -26,6 +26,8 @@ return [
   'api_factiliza_service_token' => env('API_FACTILIZA_SERVICE_TOKEN'),
   'name' => env('APP_NAME', 'Laravel'),
   'prefix_database' => env('PREFIX_DATABASE', 'tenancy'),
+  'balanza_api_key' => env('BALANZA_API_KEY'),
+
   /*
     |--------------------------------------------------------------------------
     | Application Environment

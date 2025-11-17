@@ -2048,7 +2048,8 @@ export default {
         },
         /*  aqui se puede modificar esto  */
         itemDefault(newItem, _) {
-            this.foodDefault = this.itemDefault;
+            // Crear una copia limpia del itemDefault para evitar referencias mutables
+            this.foodDefault = { ...this.itemDefault };
             this.foodDefault.quantity = 1;
             /* this.foodDefault.quantity = newItem.quantity ? newItem.quantity : 1; */
             this.foodDefault.sale_unit_price = Number(
@@ -2147,7 +2148,8 @@ export default {
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
-        this.foodDefault = this.itemDefault;
+        // Crear una copia limpia del itemDefault para evitar referencias mutables
+        this.foodDefault = this.itemDefault ? { ...this.itemDefault } : null;
         this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
         this.setOptionMenu();
         let ordens = [];
@@ -3303,8 +3305,17 @@ export default {
                 );
             }
 
-            this.foodDefaults = [this.foodDefault];
+            // Crear una copia limpia del itemDefault para evitar referencias mutables
+            this.foodDefault = { ...this.itemDefault };
+            this.foodDefault.quantity = 1;
+            this.foodDefault.sale_unit_price = Number(this.foodDefault.sale_unit_price);
+            this.foodDefaults = [{ ...this.foodDefault }];
+            
+            // Activar la variación después de configurar los datos
+            this.variation = true;
+            
             console.log("Food Defaults:", this.foodDefaults);
+            console.log("Variación activada:", this.variation);
         },
 
         saveSubtotal(idx) {
@@ -3810,6 +3821,10 @@ export default {
         limpiarForm() {
             this.commercialTreatmentId = null;
             this.quotation_stock = this.isSeller;
+            // Limpiar completamente las variables de variación
+            this.foodDefaults = [];
+            this.variation = false;
+            this.foodDefault = this.itemDefault ? { ...this.itemDefault } : null;
             this.checkCashAvailable();
             this.$emit("limpiarForm");
             this.getLasNumOrden();
@@ -4256,10 +4271,9 @@ export default {
             this.loading = false;
             this.disableSend = false;
             this.to_carry = false;
-            // NOTA: La limpieza de foodDefaults y variation debe hacerse SOLO cuando el pago realmente termine (por ejemplo, al cerrar el modal de pago)
-            this.foodDefaults = [];
-            this.variation = false;
-            // Limpiar referencia después de cobrar la orden
+            
+            // NO limpiar aquí las variables de variación, dejar que el componente padre las maneje
+            // después de completar el procesamiento. Solo limpiar la referencia si es necesario.
             if (this.clientTableData && this.clientTableData.ref) {
                 this.$emit("update:clientTableData", {
                     ...this.clientTableData,
@@ -4541,6 +4555,14 @@ export default {
             this.$http.get("/quotations/get-last-num-orden").then(res => {
                 if (res.data && res.data.data) this.num_orden = res.data.data;
             });
+        },
+        
+        // Método para limpiar variables de variación - llamado desde el componente padre
+        cleanVariationData() {
+            this.foodDefaults = [];
+            this.variation = false;
+            this.foodDefault = this.itemDefault ? { ...this.itemDefault } : null;
+            console.log("Variables de variación limpiadas desde padre");
         }
     }
 };

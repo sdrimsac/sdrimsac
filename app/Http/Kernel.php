@@ -76,5 +76,7 @@ class Kernel extends HttpKernel
         'just.admin' => \App\Http\Middleware\JustAdmin::class,
         'just.super' => \App\Http\Middleware\JustSuperAdmin::class,
         'just.worker' => \App\Http\Middleware\JustWorker::class,
+        'auth.apikey' => \App\Http\Middleware\ApiKeyMiddleware::class,
+
     ];
 }

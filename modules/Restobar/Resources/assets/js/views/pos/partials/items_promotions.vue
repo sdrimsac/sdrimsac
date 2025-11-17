@@ -159,10 +159,22 @@ export default {
             }
 
             try {
+                console.log(`🌐 Llamando al backend: /promotions/item-promotion/${id}`);
                 const response = await this.$http.get(`/promotions/item-promotion/${id}`);
+                console.log(`📥 Respuesta del backend para ID ${id}:`, response.data);
+                
                 if (response.status == 200) {
                     // Controller now returns an array of promotion items
                     const data = response.data;
+                    
+                    // DEBUG: Mostrar estructura de la respuesta
+                    console.log(`🔍 Analizando respuesta:`, {
+                        isArray: Array.isArray(data),
+                        hasDataProp: data && data.data,
+                        dataType: typeof data,
+                        dataKeys: data ? Object.keys(data) : null
+                    });
+                    
                     // If backend wraps success/message, try to normalize
                     if (Array.isArray(data)) {
                         this.promotionItems = data;
@@ -176,6 +188,9 @@ export default {
                         // fallback: try to use data as array
                         this.promotionItems = Array.isArray(data) ? data : [];
                     }
+                    
+                    console.log(`✅ promotionItems establecidos:`, this.promotionItems);
+                    
                     // normalize quantity_to_add so sums don't break
                     (this.promotionItems || []).forEach(it => {
                         if (typeof it.quantity_to_add === 'undefined' || it.quantity_to_add === null) {
@@ -220,6 +235,9 @@ export default {
         },
 
         handleSave() {
+            console.log(`📤 handleSave ejecutado - selectedFood:`, this.selectedFood);
+            console.log(`📤 promotionItems disponibles:`, this.promotionItems);
+            
             // Emit selected promotion items with promotion id, promotion item id and quantities to add
             const itemsToAdd = this.promotionItems
                 .filter(item => item.quantity_to_add && item.quantity_to_add > 0)
@@ -229,6 +247,8 @@ export default {
                     quantity: Number(item.quantity_to_add),
                     description: item.description || (this.selectedFood && this.selectedFood.description) || null,
                 }));
+
+            console.log(`📋 Items filtrados y mapeados:`, itemsToAdd);
 
             // Normalize promotion-level max (accept different property names and misspelling)
             const promoMax = this.promoMaxQuantity;

@@ -2286,6 +2286,11 @@ export default {
         clearVariation() {
             this.variation = false;
             this.formVariation = {};
+            
+            // Limpiar variables de variación en el componente hijo
+            if (this.$refs.list_orden && this.$refs.list_orden.cleanVariationData) {
+                this.$refs.list_orden.cleanVariationData();
+            }
         },
         insertOrdenQuotation(quotation_id, identifier, item, customer_number) {
             console.log(
@@ -6238,6 +6243,12 @@ export default {
             this.form.hotel_rent_id = null;
             this.form.customer_id = this.customer_default.id;
             this.form.observation = null;
+            
+            // Limpiar variables de variación en el componente hijo
+            if (this.$refs.list_orden && this.$refs.list_orden.cleanVariationData) {
+                this.$refs.list_orden.cleanVariationData();
+            }
+            
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||

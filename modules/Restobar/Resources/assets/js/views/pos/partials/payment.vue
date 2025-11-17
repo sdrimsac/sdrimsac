@@ -3641,14 +3641,6 @@ export default {
         },
         async sendPayment($event, form = null) {
             let pass = true;
-            // Validación: si hay descuentos aplicados, no permitir cambiar afectación opcional
-            /* if (this.hasAnyDiscount && this.affectation_optional_id) {
-                this.$toast.error(
-                    "No puede cambiar la afectación cuando existe un descuento aplicado"
-                );
-                this.isLocked = false;
-                return;
-            } */
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
                 (this.form.observation == "" &&
@@ -3704,12 +3696,16 @@ export default {
             form.detraction = this.form.detraction;
             if (this.formVariation.items.length == 0) {
                 form.variation = false;
+                console.log("no hay variation");
             }
             if (this.variation == true) {
                 form.variation = true;
+                console.log("si hay variation");
             }
             await this.clickPayment(form);
+            console.log("envio form principal");
             if (this.formVariation.items.length != 0) {
+                console.log("si envio variation dasdad");
                 let formVariation = this.formVariation;
                 formVariation.printerOn = false;
                 formVariation.variation_document_id = this.documentNewId;
@@ -3734,7 +3730,7 @@ export default {
                     formVariation.series_id = noteVariation.id;
                     this.$emit("update:variation", false);
                     await this.clickPayment(formVariation);
-                    // this.$emit("clearVariation");
+                    this.$emit("clearVariation");
                 } else {
                     this.$toast.error("Sin serie en nota de venta");
                 }
@@ -4144,6 +4140,8 @@ export default {
 
                 /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
 
+                console.log("ordenId dadasdsdadasdasd antes de enviar", form.variation);
+
                 if (
                     (ordenId) && !isVip &&
                     (form.variation == undefined ||
@@ -4176,6 +4174,7 @@ export default {
                     }
                 }
 
+                console.log("ordenId antes de enviar", form.variation);
 
                 if (
                     (ordenId == undefined || ordenId == null) &&
