@@ -78,6 +78,7 @@ if ($hostname) {
         /* Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']); */
 
         Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
+        Route::post('item-foods', [BalanzaController::class, 'itemFoods'])->middleware('auth.apikey');
 
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {

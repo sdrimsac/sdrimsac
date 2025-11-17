@@ -86,9 +86,9 @@
                                                 </button>
                                             </el-tooltip>
                                             </template> -->
-                                           
-                                        
-                                        
+
+
+
 
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
@@ -127,7 +127,7 @@
                                             <button style="margin-right: 2px;margin-left: 2px;" type="button"
                                                 class="btn_limpiezasmall" @click="showCleanDialog = true">
                                                 <img src="/images/imghotel/5.png" alt="Imagen" width="20" height="20" />
-                                                
+
                                             </button>
                                         </el-badge>
                                         <!-- Habitaciones Vencidas -->
@@ -136,7 +136,7 @@
                                                 class="btn_cancelarsmall" :title="'Habitaciones vencidas'"
                                                 @click="showExpiredDialog = true">
                                                 <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
-                                                
+
                                             </button>
                                         </el-badge>
                                     </template>
@@ -156,28 +156,24 @@
                                     <el-tooltip content="Historial" placement="top">
                                         <button
                                             class="btn_guardarsmall d-flex align-items-center justify-content-center"
-                                            type="button"
-                                            @click="trigerFunction(7)"
+                                            type="button" @click="trigerFunction(7)"
                                             style="height:42px; min-width:42px; padding:0 10px;">
                                             <i class="fas fa-history" style="font-size:18px;"></i>
                                         </button>
                                     </el-tooltip>
 
                                     <!-- Tiempo restante -->
-                                    
-                                        <button
-                                            class="btn_excelsmall d-flex align-items-center justify-content-center"
-                                            type="button"
-                                            style=" min-width:42px; padding:0 10px;">
-                                            <i class="fas fa-clock me-2"  style="font-size:18px;"></i>
-                                            <small>{{ formattedCountdown }}</small>
-                                        </button>
-                                    
+
+                                    <button class="btn_excelsmall d-flex align-items-center justify-content-center"
+                                        type="button" style=" min-width:42px; padding:0 10px;">
+                                        <i class="fas fa-clock me-2" style="font-size:18px;"></i>
+                                        <small>{{ formattedCountdown }}</small>
+                                    </button>
+
 
                                     <!-- Estado Internet / Latencia -->
                                     <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
-                                        <button
-                                            class="btn d-flex align-items-center justify-content-center"
+                                        <button class="btn d-flex align-items-center justify-content-center"
                                             type="button"
                                             :style="{ backgroundColor: getPingBackground(), color: 'white', height: '28px', padding: '0 12px' }">
                                             <i class="fas fa-wifi me-2" style="font-size:18px;"></i>
@@ -240,7 +236,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                            }}</span>
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -286,13 +282,13 @@
                                             <!-- Barcode -->
                                             <div v-if="configuration.barcode"
                                                 class="align-items-center justify-content-center">
-                                               
-                                                    
-                                                    <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
-                                                        class="d-flex align-items-center">
-                                                        <span>Barcode</span>
-                                                    </el-checkbox>
-                                               
+
+
+                                                <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
+                                                    class="d-flex align-items-center">
+                                                    <span>Barcode</span>
+                                                </el-checkbox>
+
                                             </div>
 
                                             <!-- Calidad -->
@@ -2073,7 +2069,7 @@ export default {
                 if (this._latencyIntervalId) {
                     clearInterval(this._latencyIntervalId);
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             this._latencyIntervalId = setInterval(async () => {
                 const valor = await this.medirLatencia();
@@ -2084,7 +2080,7 @@ export default {
             // Fallback global reference (algunos componentes pueden usar ventana global)
             try {
                 window.__latencyIntervalId = this._latencyIntervalId;
-            } catch (e) {}
+            } catch (e) { }
         },
         async medirLatencia() {
             // Usa la función existente para medir la latencia con una imagen
@@ -2121,7 +2117,7 @@ export default {
                 if (this._latencyIntervalId) {
                     clearInterval(this._latencyIntervalId);
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             this._latencyIntervalId = setInterval(async () => {
                 const valor = await this.medirLatencia();
@@ -2132,7 +2128,7 @@ export default {
             // Fallback global reference (algunos componentes pueden usar ventana global)
             try {
                 window.__latencyIntervalId = this._latencyIntervalId;
-            } catch (e) {}
+            } catch (e) { }
         },
         async ItemNew(productId) {
             try {
@@ -7193,6 +7189,23 @@ export default {
                 }
             }
         );
+
+        Echo.channel("balanza-channel")
+            .listen(".balanza.event", (e) => {
+                console.log("Productos recibidos desde balanza:", e.items);
+
+                // Aquí agregas automáticamente al carrito
+                e.items.forEach(prod => {
+                    this.addFood({
+                        codigo: prod.internal_id,
+                        nombre: prod.description,
+                        precio: prod.sale_unit_price,
+                        cantidad: prod.peso,
+                        total: prod.total
+                    });
+                });
+            });
+
     }
 };
 </script>
