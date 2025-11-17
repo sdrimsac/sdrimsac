@@ -75,9 +75,9 @@ if ($hostname) {
         Route::get('sale-notes/recordsMobile', '\App\Http\Controllers\Tenant\SaleNoteController@recordsMobile');
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
-
         /* Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']); */
 
+        Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
 
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
@@ -85,7 +85,6 @@ if ($hostname) {
             Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
 
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
-            Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
 
             Route::get('client-default', [PersonController::class, 'client_default']);
 
