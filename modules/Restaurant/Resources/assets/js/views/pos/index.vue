@@ -236,7 +236,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                        }}</span>
+                                                            }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -7190,8 +7190,36 @@ export default {
             }
         );
 
+        /* Echo.channel("balanza-channel").listen(
+            `.balanza-${this.configuration.socket_channel}`,
+            e => {
+                let { message } = e;
+                this.$toast({
+                    component: DigitalPayComponent,
+                    toastClassName: "digital-pay-toast",
+                    props: {
+                        message
+                    },
+                    position: "top-right",
+                    timeout: 8000,
+                    closeOnClick: true,
+                    pauseOnFocusLoss: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    draggablePercent: 0.6,
+                    showCloseButtonOnHover: false,
+                    hideProgressBar: true,
+                    closeButton: "button",
+                    icon: true,
+                    rtl: false
+                });
+
+                this.playSound("yape_notification.mp3");
+            }
+        ); */
+
         Echo.channel("balanza-channel")
-            .listen(".balanza.event", (e) => {
+            .listen(`.balanza-${this.configuration.socket_channel}`, (e) => {
                 console.log("Productos recibidos desde balanza:", e.items);
 
                 // Aquí agregas automáticamente al carrito
@@ -7205,7 +7233,6 @@ export default {
                     });
                 });
             });
-
     }
 };
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Tenant\Configuration;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -22,9 +23,18 @@ class BalanzaItemReceived
     {
         return new Channel('balanza-channel');
     }
+    /* public function broadcastAs()
+    {
+        return 'balanza.event';
+    } */
 
     public function broadcastAs()
     {
-        return 'balanza.event';
+        $configuration = Configuration::first();
+        $event_name = $configuration->socket_channel;
+        return 'balanza-' . $event_name;
     }
+
+    
+
 }
