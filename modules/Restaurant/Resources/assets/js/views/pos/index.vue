@@ -1789,7 +1789,7 @@ export default {
         this.cashId = this.cash_id;
         this.ordensPending = this.pending_order;
         this.loading = true;
-        //this.socketWhatsappConfig();
+        this.socketWhatsappConfig();
         await this.getTables();
         await this.initForm(this.customer_default.id);
         await this.getFoods();
@@ -6949,6 +6949,116 @@ export default {
             //this.$forceUpdate();
         },
 
+        addFoodFromBalanza(productData) {
+            if (!this.canAddItem) {
+                this.$showSAlert(
+                    "Error",
+                    "Debe seleccionar un cliente",
+                    "error"
+                );
+                return;
+            }
+
+            try {
+                console.log("Procesando producto de balanza:", productData);
+
+                // Buscar el producto en listFoods por internal_id (codigo)
+                const productIndex = this.listFoods.findIndex(food => 
+                    food.item && food.item.internal_id === productData.internal_id
+                );
+
+                if (productIndex === -1) {
+                    this.$message.warning(`Producto con código ${productData.internal_id} no encontrado en el menú`);
+                    return;
+                }
+
+                // Configurar el producto seleccionado
+                this.selectedFood = { ...this.listFoods[productIndex] };
+                
+                // Crear el objeto currentFood con los datos de la balanza
+                this.currentFood = {
+                    id: this.selectedFood.id,
+                    food: this.selectedFood,
+                    observation: `Peso: ${productData.peso}kg - Balanza`,
+                    price: parseFloat(productData.sale_unit_price),
+                    quantity: parseFloat(productData.peso), // Usar el peso como cantidad
+                    total_balanza: parseFloat(productData.total),
+                    warehouse_id: productData.warehouse_id || null
+                };
+
+                // Verificar stock si está habilitado
+                let quotation_stock = localStorage.getItem("quotation_stock") || 0;
+                quotation_stock = quotation_stock == 1;
+
+                if (
+                    Number(this.selectedFood.item.stock) <= 0 &&
+                    this.configuration.sales_stock == true &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
+                    this.$toast.warning("Stock insuficiente");
+                    return;
+                }
+
+                // Verificar si el producto ya existe en la orden
+                let foodFound = this.localOrden.filter(
+                    f => f.id == this.selectedFood.id
+                );
+
+                if (foodFound.length > 0) {
+                    // Si ya existe, verificar límites de stock
+                    let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                    qty += parseFloat(productData.peso);
+
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.is_set == 0 &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
+                        if (qty > Number(this.selectedFood.item.stock)) {
+                            this.$toast.warning("Limite de stock alcanzado");
+                            return;
+                        }
+                    }
+                }
+
+                // Insertar en la orden
+                this.insertOrden(
+                    this.currentFood,
+                    this.selectedFood.id,
+                    null, // type
+                    false, // selectSerie
+                    null // categoria
+                );
+
+                // Notificar éxito
+                this.$notify({
+                    title: `${productData.description} - ${productData.peso}kg`,
+                    duration: 1200,
+                    iconClass: "el-icon-food",
+                    message: `Agregado desde balanza - Total: $${productData.total}`,
+                    position: "bottom-left"
+                });
+
+                console.log("Producto agregado desde balanza:", this.currentFood);
+
+            } catch (error) {
+                console.error("Error en addFoodFromBalanza:", error);
+                this.$message.error("Error al agregar producto desde balanza");
+            } finally {
+                // Limpiar variables
+                this.currentFood = {
+                    food: null,
+                    observation: null,
+                    quantity: 0,
+                    price: 0,
+                    categoria: null
+                };
+                this.selectedFood = null;
+            }
+        },
+
         async processPrintQueue() {
             if (this.isPrinting || this.printQueue.length === 0) return;
 
@@ -7190,47 +7300,13 @@ export default {
             }
         );
 
-        /* Echo.channel("balanza-channel").listen(
-            `.balanza-${this.configuration.socket_channel}`,
-            e => {
-                let { message } = e;
-                this.$toast({
-                    component: DigitalPayComponent,
-                    toastClassName: "digital-pay-toast",
-                    props: {
-                        message
-                    },
-                    position: "top-right",
-                    timeout: 8000,
-                    closeOnClick: true,
-                    pauseOnFocusLoss: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    draggablePercent: 0.6,
-                    showCloseButtonOnHover: false,
-                    hideProgressBar: true,
-                    closeButton: "button",
-                    icon: true,
-                    rtl: false
-                });
-
-                this.playSound("yape_notification.mp3");
-            }
-        ); */
-
         Echo.channel("balanza-channel")
             .listen(`.balanza-${this.configuration.socket_channel}`, (e) => {
                 console.log("Productos recibidos desde balanza:", e.items);
 
                 // Aquí agregas automáticamente al carrito
                 e.items.forEach(prod => {
-                    this.addFood({
-                        codigo: prod.internal_id,
-                        nombre: prod.description,
-                        precio: prod.sale_unit_price,
-                        cantidad: prod.peso,
-                        total: prod.total
-                    });
+                    this.addFoodFromBalanza(prod);
                 });
             });
     }
