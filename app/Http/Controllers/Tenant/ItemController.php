@@ -1603,7 +1603,13 @@ class ItemController extends Controller
             }
             $item->save();
 
-            event(new EntranceUpdateEvent($item));
+            $payload = [
+                'internal_id' => $item->internal_id,
+                'sale_unit_price' => $item->sale_unit_price,
+                'warehouse_id' => $request->input('warehouse_id'),
+            ];
+
+            event(new EntranceUpdateEvent($payload));
 
             //ItemCodeService::generateCodesForItemWarehouse($item->id, $item['warehouse_id']);
 
