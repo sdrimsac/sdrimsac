@@ -445,7 +445,7 @@ Route::prefix('caja')->group(function () {
             Route::get('expenses/columns', [PosController::class, 'columns']);
             Route::get('expenses/tables', [PosController::class, 'tables']);
 
-
+            Route::get('search_customers/search_customer_delivery', [RestaurantController::class, 'search_customer_delivery']);
 
             //Ingresos
             Route::get('incomes', [IncomesController::class, 'incomes'])->name('restaurant.incomes.index')->middleware('just.worker');;
