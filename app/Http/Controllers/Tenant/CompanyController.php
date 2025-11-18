@@ -53,6 +53,7 @@ class CompanyController extends Controller
                     'name' => $row->name,
                     'website_id' => $row->hostname->website_id,
                     'uuid' => $row->hostname->website->uuid,
+                    'number' => $row->number
                 ];
             }
         );

@@ -149,7 +149,7 @@
                                         </label>
                                         <el-select v-model="same_ruc_id" placeholder="Seleccione" clearable filterable
                                             @change="saveSameRuc" style="width: 100%;">
-                                            <el-option v-for="(item, idx) in companies" :key="idx" :label="item.name"
+                                            <el-option v-for="(item, idx) in companies" :key="idx" :label="item.name + ' - ' + item.number"
                                                 :value="item.id"></el-option>
                                         </el-select>
                                         <div class="mt-2">

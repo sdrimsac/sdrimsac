@@ -76,7 +76,7 @@ class PersonWorkerImport implements ToCollection
                 return $ta <=> $tb;
             });
            
-            $toleranceMinutes = 10;
+            $toleranceMinutes = 60;
 
             $filtered = [];
             foreach ($marks as $m) {

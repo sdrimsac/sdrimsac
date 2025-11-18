@@ -42,29 +42,6 @@
                 </div>
             </div>
         </form>
-        <el-dialog v-if="showErrors" title="Errores" :visible="showErrors" @close="showErrors = false" append-to-body
-            width="75%">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th colspan="2" class="text-center text-danger">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Se encontraron errores en los siguientes productos:
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>ID Interno</th>
-                        <th>Error</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(error, index) in generalErrors.slice(0, 100)" :key="index">
-                        <td>{{ error.internal_id }}</td>
-                        <td>{{ error.description }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </el-dialog>
     </el-dialog>
 </template>
 
@@ -85,22 +62,9 @@ export default {
             generalErrors: []
         };
     },
-    /* async created() {
-        this.initForm();
-        await this.onFetchTables();
-    }, */
+    
     methods: {
         onBeforeUpload(file) { },
-        /* async onFetchTables() {
-            this.loading_submit = true;
-
-            await this.$http
-                .get("/items/import/tables")
-                .then(response => {
-                    this.warehouses = response.data.warehouses;
-                })
-                .finally(() => (this.loading_submit = false));
-        }, */
         initForm() {
             this.errors = {};
             this.form = {
@@ -111,14 +75,6 @@ export default {
             this.titleDialog = "Importar Productos";
         },
         async submit() {
-            /* if (!this.form.warehouse_id) {
-                this.$showSAlert(
-                    "IMPORTANTE",
-                    "Seleccione una Almacen para continuar",
-                    "success"
-                );
-                return;
-            } */
             if (this.loading_submit) return;
 
             const buttonProcesar = document.querySelector("#buttonProcesar");

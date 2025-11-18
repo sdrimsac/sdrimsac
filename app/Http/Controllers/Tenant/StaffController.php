@@ -105,11 +105,327 @@ class StaffController extends Controller
                 ];
             }
         }
+
+        
         return [
             'success' => false,
             'message' =>  __('app.actions.upload.error'),
         ];
     }
+
+    public function importPersonDat(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
+        
+        $request->validate([
+            'file' => 'required|file|mimes:dat,txt'
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $path = $file->getRealPath();
+
+            $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            
+            $total = count($lines);
+            $registered = 0;
+            $errors = [];
+            $groups = [];
+
+            // Procesar cada línea del archivo .dat
+            foreach ($lines as $lineIndex => $line) {
+                $line = trim($line);
+                if (empty($line)) continue;
+
+                // Dividir la línea por espacios
+                $data = preg_split('/\s+/', $line);
+                
+                if (count($data) < 2) {
+                    $errors[] = "Línea {$lineIndex}: Formato incorrecto - {$line}";
+                    continue;
+                }
+
+                $number = isset($data[0]) ? trim((string)$data[0]) : null;
+                $dateTimeString = isset($data[1]) ? $data[1] : null;
+                
+                // Si hay más partes, puede ser fecha y hora separadas
+                if (isset($data[2])) {
+                    $dateTimeString .= ' ' . $data[2];
+                }
+
+                if (empty($number) || empty($dateTimeString)) {
+                    $errors[] = "Línea {$lineIndex}: Datos vacíos o incompletos - number={$number} datetime={$dateTimeString}";
+                    continue;
+                }
+
+                try {
+                    // Intentar parsear la fecha/hora
+                    $carbon = Carbon::parse($dateTimeString);
+                } catch (Exception $e) {
+                    $errors[] = "Línea {$lineIndex}: No se pudo parsear la fecha para number={$number} datetime={$dateTimeString} - " . $e->getMessage();
+                    continue;
+                }
+
+                $date_time = $carbon->format('Y-m-d H:i:s');
+                $date_only = $carbon->format('Y-m-d');
+                $time_only = $carbon->format('H:i:s');
+
+                // Buscar la persona por número
+                $person = Person::where('number', $number)->first();
+                if (!$person) {
+                    $errors[] = "Línea {$lineIndex}: No se encontró persona con number={$number}";
+                    continue;
+                }
+
+                // Agrupar por persona
+                $groups[$person->id][] = [
+                    'person_id' => $person->id,
+                    'date_time' => $date_time,
+                    'date_attendance' => $date_only,
+                    'time_attendance' => $time_only,
+                    'carbon' => $carbon,
+                ];
+            }
+
+            // Procesar cada grupo (por persona), ordenar por datetime y emparejar cronológicamente
+            foreach ($groups as $person_id => $marks) {
+                // Ordenar por timestamp para asegurar orden cronológico correcto
+                usort($marks, function ($a, $b) {
+                    $ta = isset($a['carbon']) ? $a['carbon']->getTimestamp() : strtotime($a['date_time']);
+                    $tb = isset($b['carbon']) ? $b['carbon']->getTimestamp() : strtotime($b['date_time']);
+                    return $ta <=> $tb;
+                });
+
+                // Filtrar marcas duplicadas con lógica mejorada
+                $filtered = [];
+                $duplicateToleranceMinutes = 60; // Tolerancia de 60 minutos para manejar marcas repetitivas
+
+                foreach ($marks as $m) {
+                    if (empty($filtered)) {
+                        $filtered[] = $m;
+                        continue;
+                    }
+
+                    $last = end($filtered);
+                    if (isset($last['carbon']) && isset($m['carbon'])) {
+                        $diff = $last['carbon']->diffInMinutes($m['carbon']);
+                    } else {
+                        try {
+                            $lastDt = Carbon::parse($last['date_time']);
+                            $curDt = Carbon::parse($m['date_time']);
+                            $diff = $lastDt->diffInMinutes($curDt);
+                        } catch (Exception $e) {
+                            $diff = $duplicateToleranceMinutes + 1;
+                        }
+                    }
+
+                    // Solo eliminar si es realmente un duplicado (marcas muy cercanas en tiempo)
+                    // Los 60 minutos de tolerancia manejan: marcas accidentales, errores del dispositivo,
+                    // múltiples intentos de marcaje, y marcas de verificación durante breaks cortos
+                    if ($diff <= $duplicateToleranceMinutes) {
+                        $errors[] = "Marca duplicada eliminada person_id={$m['person_id']} datetime={$m['date_time']} (diferencia {$diff} minutos)";
+                        continue;
+                    }
+
+                    $filtered[] = $m;
+                }
+
+                $marks = array_values($filtered);
+
+                // Agrupar marcas por día laboral (considerando turnos nocturnos)
+                $dailyGroups = [];
+                foreach ($marks as $mark) {
+                    $dt = $mark['carbon'];
+                    $hour = $dt->hour;
+                    
+                    // Lógica basada en horarios reales:
+                    // Turno nocturno: 19:00 - 03:00 (del día siguiente)
+                    // Turno diurno: 09:00 - 18:59
+                    // Franja vacía: 03:01 - 08:59 (nadie trabaja)
+                    
+                    if ($hour >= 0 && $hour <= 3) {
+                        // 00:00-03:00: Pertenece al turno nocturno del día anterior
+                        $workDay = $dt->copy()->subDay()->format('Y-m-d');
+                    } elseif ($hour >= 4 && $hour <= 8) {
+                        // 04:00-08:00: Franja muerta, considerar como salida tardía del turno nocturno
+                        $workDay = $dt->copy()->subDay()->format('Y-m-d');
+                    } else {
+                        // 09:00-23:59: Día laboral actual (turno diurno o inicio de turno nocturno)
+                        $workDay = $dt->format('Y-m-d');
+                    }
+                    
+                    $dailyGroups[$workDay][] = $mark;
+                }
+
+                // Procesar cada día laboral por separado
+                foreach ($dailyGroups as $workDay => $dayMarks) {
+                    // Ordenar por hora
+                    usort($dayMarks, function ($a, $b) {
+                        return $a['carbon']->getTimestamp() <=> $b['carbon']->getTimestamp();
+                    });
+
+                    $this->processDailyMarks($dayMarks, $workDay, $errors, $registered);
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => __('app.actions.upload.success'),
+                'data' => compact('total', 'registered'),
+                'errors' => $errors
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Procesa las marcas de un día laboral específico
+     */
+    private function processDailyMarks($dayMarks, $workDay, &$errors, &$registered)
+    {
+        $count = count($dayMarks);
+        
+        // Si solo hay una marca, determinar si es entrada o salida basado en la hora
+        if ($count == 1) {
+            $mark = $dayMarks[0];
+            $hour = $mark['carbon']->hour;
+            
+            // Determinar tipo basado en horarios reales de trabajo:
+            // Entrada turno diurno: 09:00-12:00
+            // Salida turno diurno: 13:00-18:59 
+            // Entrada turno nocturno: 19:00-23:59
+            // Salida turno nocturno: 00:00-08:59 (del día siguiente)
+            
+            if ($hour >= 9 && $hour <= 12) {
+                $type = 'INGRESO'; // Entrada turno diurno
+            } elseif ($hour >= 19 && $hour <= 23) {
+                $type = 'INGRESO'; // Entrada turno nocturno
+            } else {
+                $type = 'SALIDA'; // Todo lo demás es salida
+            }
+            
+            try {
+                PersonAttendance::create([
+                    'person_id' => $mark['person_id'],
+                    'date_time_attendance' => $mark['date_time'],
+                    'date_attendance' => $workDay,
+                    'time_attendance' => $mark['time_attendance'],
+                    'type' => $type,
+                ]);
+                $registered++;
+            } catch (Exception $e) {
+                $errors[] = "Error al crear marca única para person_id={$mark['person_id']} datetime={$mark['date_time']}: " . $e->getMessage();
+            }
+            return;
+        }
+        
+        // Para múltiples marcas, emparejarlas inteligentemente
+        $this->smartPairMarks($dayMarks, $workDay, $errors, $registered);
+    }
+
+    /**
+     * Empareja marcas de forma inteligente considerando horarios típicos de trabajo
+     */
+    private function smartPairMarks($dayMarks, $workDay, &$errors, &$registered)
+    {
+        $count = count($dayMarks);
+        $i = 0;
+        
+        while ($i < $count) {
+            $currentMark = $dayMarks[$i];
+            $currentHour = $currentMark['carbon']->hour;
+            
+            // Buscar la siguiente marca que podría ser pareja
+            $pairFound = false;
+            for ($j = $i + 1; $j < $count; $j++) {
+                $nextMark = $dayMarks[$j];
+                $nextHour = $nextMark['carbon']->hour;
+                $diffHours = $currentMark['carbon']->diffInHours($nextMark['carbon']);
+                
+                // Validar si puede ser una pareja válida (entre 1 y 12 horas de diferencia)
+                if ($diffHours >= 1 && $diffHours <= 12) {
+                    // Es una pareja válida
+                    $this->createAttendancePair($currentMark, $nextMark, $workDay, $errors, $registered);
+                    $pairFound = true;
+                    $i = $j + 1; // Saltar al siguiente después de la pareja
+                    break;
+                } elseif ($diffHours > 12) {
+                    // Si la diferencia es mayor a 12 horas, no puede ser pareja del mismo día laboral
+                    break;
+                }
+            }
+            
+            if (!$pairFound) {
+                // No se encontró pareja, crear marca individual
+                // Usar la misma lógica de horarios para determinar tipo
+                if ($currentHour >= 9 && $currentHour <= 12) {
+                    $type = 'INGRESO'; // Entrada turno diurno
+                } elseif ($currentHour >= 19 && $currentHour <= 23) {
+                    $type = 'INGRESO'; // Entrada turno nocturno
+                } else {
+                    $type = 'SALIDA'; // Todo lo demás es salida
+                }
+                
+                try {
+                    PersonAttendance::create([
+                        'person_id' => $currentMark['person_id'],
+                        'date_time_attendance' => $currentMark['date_time'],
+                        'date_attendance' => $workDay,
+                        'time_attendance' => $currentMark['time_attendance'],
+                        'type' => $type,
+                    ]);
+                    $registered++;
+                } catch (Exception $e) {
+                    $errors[] = "Error al crear marca sin pareja para person_id={$currentMark['person_id']} datetime={$currentMark['date_time']}: " . $e->getMessage();
+                }
+                $i++;
+            }
+        }
+    }
+
+    /**
+     * Crea un par de registros de entrada y salida
+     */
+    private function createAttendancePair($entryMark, $exitMark, $workDay, &$errors, &$registered)
+    {
+        try {
+            // Crear registro de ingreso
+            PersonAttendance::create([
+                'person_id' => $entryMark['person_id'],
+                'date_time_attendance' => $entryMark['date_time'],
+                'date_attendance' => $workDay,
+                'time_attendance' => $entryMark['time_attendance'],
+                'type' => 'INGRESO',
+            ]);
+            $registered++;
+
+            // Determinar fecha de salida correcta
+            $exitWorkDay = $workDay;
+            if ($exitMark['carbon']->format('Y-m-d') !== $workDay) {
+                $exitWorkDay = $exitMark['carbon']->format('Y-m-d');
+            }
+
+            // Crear registro de salida
+            PersonAttendance::create([
+                'person_id' => $exitMark['person_id'],
+                'date_time_attendance' => $exitMark['date_time'],
+                'date_attendance' => $exitWorkDay,
+                'time_attendance' => $exitMark['time_attendance'],
+                'type' => 'SALIDA',
+            ]);
+            $registered++;
+            
+        } catch (Exception $e) {
+            $errors[] = "Error al crear par entrada-salida para person_id={$entryMark['person_id']}: " . $e->getMessage();
+        }
+    }
+
 
     /**
      * Update only the job position for a person (partial update).
@@ -490,7 +806,7 @@ class StaffController extends Controller
         $company = Company::first();
         $establishment = Establishment::first();
         $records = $this->getRecords($request)->get();
-        
+
         return (new StaffWorkerPdfExport)
             ->records($records)
             ->company($company)

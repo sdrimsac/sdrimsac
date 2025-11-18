@@ -20,6 +20,10 @@
             SALARIOS DEL PERSONAL
           </el-button>
           <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
+            @click.prevent="clickDownloadDat">
+            Import dat del personal huellero
+          </el-button>
+          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
             @click.prevent="clickDownloadExcel">
             Import Excel del personal
           </el-button>
@@ -102,6 +106,7 @@
       </div>
     </div>
     <import-excel :showDialog.sync="showDialogImportExcel"></import-excel>
+    <import-dart :showDialog.sync="showDialogImportDart"></import-dart>
     <adelanto :showDialog.sync="showDialogAdelanto" :person_id.sync="person_id"></adelanto>
     <salary :showDialog.sync="showDialogSalary"></salary>
   </div>
@@ -110,9 +115,9 @@
 import DataTable from "../../components/DataTableStaff.vue";
 import { deletable } from "../../mixins/deletable";
 import ImportExcel from "./partials/import_excel.vue";
+import ImportDart from "./partials/import_dat.vue";
 import Adelanto from "./partials/adelanto.vue";
 import Salary from "./partials/salary.vue";
-
 export default {
   props: ["typeUser"],
   mixins: [deletable],
@@ -120,10 +125,12 @@ export default {
     DataTable,
     ImportExcel,
     Adelanto,
-    Salary
+    Salary,
+    ImportDart
   },
   data() {
     return {
+      showDialogImportDart: false,
       showDialogSalary: false,
       showDialogAdelanto: false,
       showDialogImportExcel: false,
@@ -179,6 +186,11 @@ export default {
 
     clickDownloadExcel() {
       this.showDialogImportExcel = true;
+    },
+
+    clickDownloadDat() {
+
+      this.showDialogImportDart = true;
     },
 
     getProd(id) {

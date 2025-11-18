@@ -196,6 +196,7 @@ if ($hostname) {
                     Route::get('/records_by_person/download', [StaffController::class, 'download']);
                     Route::post('/records_by_person', [StaffController::class, 'recordByPerson']);
                     Route::post('/import-person', [StaffController::class, 'importPerson']);
+                    Route::post('/import-person-dat', [StaffController::class, 'importPersonDat']);
                     Route::post('/records_by_person_total', [StaffController::class, 'recordByPersonTotal']);
                     Route::post('/records_by_person_to_pay', [StaffController::class, 'recordByPersonToPay']);
                     Route::get('/get-ordens/{customer_id}', [StaffController::class, 'get_ordens']);
