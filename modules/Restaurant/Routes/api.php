@@ -196,6 +196,8 @@ Route::prefix('caja')->group(function () {
             Route::delete('{id}', 'CashTransferController@destroy');
         });
 
+        Route::get('search_customers/search_customer_delivery', [RestaurantController::class, 'search_customer_delivery']);
+
         //*** ORDENS */
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
         Route::get('ordens', 'OrdenController@index')->name('restaurant.ordens');
