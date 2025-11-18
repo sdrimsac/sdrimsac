@@ -29,7 +29,8 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function ver($id){
+    public function ver($id)
+    {
         // obtener el foods con el id
         $food = Food::find($id);
         // retornar la vista con el food
@@ -49,6 +50,7 @@ class DashboardController extends Controller
         $value = $request->value;
         $foods = Food::query();
         $user = auth()->user();
+        $configuration = Configuration::first();
         $warehouse_product_id = $user->warehouse_product_id;
         if ($warehouse_product_id) {
             $foods = $foods->whereHas('item', function ($query) use ($warehouse_product_id) {
@@ -56,14 +58,34 @@ class DashboardController extends Controller
                     ->where('active', 1)
                     ->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
                         $query->where('warehouse_id', $warehouse_product_id);
-                    }) 
+                    })
                     ->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
-                        
+
                         $query->where('active', 1)
                             ->where('warehouse_id', $warehouse_product_id);
                     });
             });
         }
+
+        if ($configuration->favorite_items) {
+            // Subconsulta para obtener el total vendido por item
+            $salesSub = DB::connection('tenant')->table('item_sales_summary')
+                ->select('item_id', DB::raw('SUM(total_quantity) as total_quantity'))
+                ->groupBy('item_id');
+
+            $foods = $foods
+                ->reorder()
+                ->leftJoinSub($salesSub, 's', function ($join) {
+                    $join->on('s.item_id', '=', 'foods.item_id');
+                })
+                ->select('foods.*')
+                ->addSelect(DB::raw('CASE WHEN s.item_id IS NOT NULL THEN 1 ELSE 0 END as has_sales'))
+                ->addSelect(DB::raw('COALESCE(s.total_quantity, 0) as total_quantity'))
+                ->orderByDesc('has_sales')
+                ->orderByDesc('total_quantity')
+                ->orderBy('foods.description', 'ASC');
+        }
+
         if ($category_id) {
 
             $foods = $foods->where('category_food_id', $category_id);
@@ -179,7 +201,7 @@ class DashboardController extends Controller
         $limit_month_amount = $company->limit_month_amount;
         $month_amount = DB::connection('tenant')
             ->table('documents')
-            ->whereIn('state_type_id', ['01','03','05'] )
+            ->whereIn('state_type_id', ['01', '03', '05'])
             ->where('document_type_id', '!=', '07')
             ->where('date_of_issue', '>=', $first_day_month)
             ->where('date_of_issue', '<=', $now)
@@ -231,7 +253,13 @@ class DashboardController extends Controller
             'lareaId',
             'area_id',
             'cash_id',
-            'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
+            'worker',
+            'establishments',
+            'configuration',
+            'auth_login',
+            'company',
+            'desarrollador'
+        ));
     }
 
     public function kitchen()
