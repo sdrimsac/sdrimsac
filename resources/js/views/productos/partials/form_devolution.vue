@@ -1,15 +1,12 @@
 <template>
     <el-dialog :visible.sync="showDialog" width="95%" :before-close="handleClose" :show-close="true">
         <!-- Header del Dialog -->
-        <div slot="title" class="dialog-header">
-            <div class="header-content">
-                <h2 class="dialog-title">
+        <div slot="title" class="">
+            <div class="">
+                <h2 class="text-white flex items-center text-2xl font-bold">
                     <i class="fas fa-undo-alt mr-2"></i>
                     Devolución de Productos
                 </h2>
-                <button class="close-btn" @click="handleClose">
-                    <i class="fas fa-times"></i>
-                </button>
             </div>
         </div>
         
@@ -113,7 +110,7 @@
                                 <th class="qty-column">Cantidad</th>
                                 <th class="price-column">Precio Unitario</th>
                                 <th class="total-column">Total</th>
-                                <th class="size-color-column">Talla/Color</th>
+                                <th class="size-color-column">Talla/Color/Lote</th>
                                 <th class="stock-column">Stock</th>
                                 <th class="action-column">Acción</th>
                             </tr>
@@ -122,7 +119,7 @@
                             <template v-for="item in items">
                                 <!-- Si el item tiene color_size, mostrar cada talla/color por separado -->
                                 <template v-if="item.item && item.item.color_size && item.item.color_size.length > 0">
-                                    <tr v-for="(colorSize, index) in item.item.color_size" :key="`${item.id}-${index}`"
+                                    <tr v-for="(colorSize, index) in item.item.color_size" :key="`${item.id}-color-${index}`"
                                         :class="{ 'sub-row': index > 0 }">
                                         <td class="item-desc">
                                             <div v-if="index === 0" class="product-info">
@@ -155,7 +152,41 @@
                                         </td>
                                     </tr>
                                 </template>
-                                <!-- Si no tiene color_size, mostrar el item normal -->
+                                <!-- Si el item tiene lots, mostrar cada lote por separado -->
+                                <template v-else-if="item.item && item.item.lots && item.item.lots.length > 0">
+                                    <tr v-for="(lot, index) in item.item.lots" :key="`${item.id}-lot-${index}`"
+                                        :class="{ 'sub-row': index > 0 }">
+                                        <td class="item-desc">
+                                            <div v-if="index === 0" class="product-info">
+                                                <div class="product-id">{{ item.internal_id }}</div>
+                                                <div class="product-name">{{ item.description }}</div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ index === 0 ? parseFloat(item.quantity).toFixed(2) : '' }}</td>
+                                        <td class="text-center">{{ index === 0 ? 'S/ ' + parseFloat(item.unit_price).toFixed(2) : '' }}</td>
+                                        <td class="text-center">{{ index === 0 ? 'S/ ' + parseFloat(item.total).toFixed(2) : '' }}</td>
+                                        <td>
+                                            <div class="lot-info">
+                                                <!-- <span class="lot-text">Lote: {{ lot.lot_code }}</span> -->
+                                                <span class="series-text">Serie: {{ lot.series }}</span>
+                                                <span class="date-text">Fecha: {{ lot.date }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="stock-value">1</div>
+                                        </td>
+                                        <td class="text-center">
+                                            <el-button 
+                                                size="mini" 
+                                                class="add-btn" 
+                                                @click="returnLot(item, lot)"
+                                            >
+                                                Agregar
+                                            </el-button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <!-- Si no tiene color_size ni lots, mostrar el item normal -->
                                 <tr v-else :key="item.id">
                                     <td class="item-desc">
                                         <div class="product-info">
@@ -198,7 +229,7 @@
                         <tr>
                             <th>Código</th>
                             <th>Descripción</th>
-                            <th>Talla/Color</th>
+                            <th>Talla/Color/Lote</th>
                             <th>Cantidad a Devolver</th>
                             <th>Precio Unit.</th>
                             <th>Total</th>
@@ -214,6 +245,10 @@
                                     style="background-color: #28a745; color: white; font-weight: bold;">
                                     {{ returnItem.color_size.size }} - {{ returnItem.color_size.color }}
                                 </span>
+                                <span v-else-if="returnItem.lot" class="badge"
+                                    style="background-color: #3b82f6; color: white; font-weight: bold;">
+                                    Lote: {{ returnItem.lot.lot_code }} - Serie: {{ returnItem.lot.series }}
+                                </span>
                                 <span v-else class="badge badge-secondary">Sin variantes</span>
                             </td>
                             <td>
@@ -222,13 +257,20 @@
                                     @change="validateQuantity(returnItem)"></el-input-number>
                                 <small class="text-muted d-block">Máximo: {{ returnItem.max_quantity }}</small>
                             </td>
-                            <td>S/ {{ parseFloat((returnItem.color_size && returnItem.color_size.price) ?
-                                returnItem.color_size.price : returnItem.unit_price).toFixed(2) }}</td>
-                            <td>S/ {{ (returnItem.quantity_to_return * parseFloat((returnItem.color_size &&
-                                returnItem.color_size.price) ? returnItem.color_size.price :
-                                returnItem.unit_price)).toFixed(2)
-                                }}
-                            </td>
+                            <td>S/ {{ parseFloat(
+                                (returnItem.color_size && returnItem.color_size.price) ? 
+                                    returnItem.color_size.price : 
+                                    (returnItem.lot && returnItem.lot.price) ? 
+                                        returnItem.lot.price : 
+                                        returnItem.unit_price
+                            ).toFixed(2) }}</td>
+                            <td>S/ {{ (returnItem.quantity_to_return * parseFloat(
+                                (returnItem.color_size && returnItem.color_size.price) ? 
+                                    returnItem.color_size.price : 
+                                    (returnItem.lot && returnItem.lot.price) ? 
+                                        returnItem.lot.price : 
+                                        returnItem.unit_price
+                            )).toFixed(2) }}</td>
                             <td>
                                 <el-button size="mini" type="danger" @click="removeFromReturn(index)">
                                     <i class="fa fa-trash"></i>
@@ -381,6 +423,37 @@ export default {
             this.returnItems.push(returnItem);
             this.$message.success('Producto agregado a la lista de devolución');
         },
+        returnLot(item, lot) {
+            // Crear objeto de devolución para item con lote específico
+            const returnItem = {
+                id: item.id,
+                description: item.description,
+                internal_id: item.internal_id,
+                unit_price: item.unit_price,
+                quantity_to_return: 1, // Los lotes generalmente son cantidad fija de 1
+                max_quantity: 1, // Máximo 1 por lote/serie
+                lot: {
+                    id: lot.id,
+                    lot_code: lot.lot_code,
+                    series: lot.series,
+                    date: lot.date
+                },
+                type: 'lot'
+            };
+
+            // Verificar si ya está en la lista
+            const existingIndex = this.returnItems.findIndex(ri =>
+                ri.id === item.id && ri.lot && ri.lot.id === lot.id
+            );
+
+            if (existingIndex >= 0) {
+                this.$message.warning('Este producto con ese lote/serie ya está en la lista de devolución');
+                return;
+            }
+
+            this.returnItems.push(returnItem);
+            this.$message.success('Producto con lote agregado a la lista de devolución');
+        },
         removeFromReturn(index) {
             this.returnItems.splice(index, 1);
             this.$message.success('Producto removido de la lista de devolución');
@@ -416,6 +489,34 @@ export default {
                         lot_code: null,
                         lots: [],
                         lots_enabled: false,
+                        series_enabled: false
+                    };
+                }
+                
+                // Si es un item con lote, enviar la estructura con lots dentro de un arreglo
+                if (item.type === 'lot' || (item.lot && Object.keys(item.lot).length > 0)) {
+                    return {
+                        id: null,
+                        item_id: item.id,
+                        warehouse_id: 1,
+                        inventory_transaction_id: "05",
+                        quantity: item.quantity_to_return,
+                        type: "input",
+                        color_size: [],
+                        date_of_due: null,
+                        has_color_size: false,
+                        lot_code: item.lot.lot_code,
+                        lots: [
+                            {
+                                id: item.lot.id,
+                                lot_code: item.lot.lot_code,
+                                series: item.lot.series,
+                                date: item.lot.date,
+                                has_sale: false,
+                                state: 'Activo'
+                            }
+                        ],
+                        lots_enabled: true,
                         series_enabled: false
                     };
                 }
@@ -481,7 +582,12 @@ export default {
         },
         calculateTotal() {
             return this.returnItems.reduce((total, item) => {
-                const unitPrice = (item.color_size && item.color_size.price) ? item.color_size.price : item.unit_price;
+                let unitPrice = item.unit_price;
+                if (item.color_size && item.color_size.price) {
+                    unitPrice = item.color_size.price;
+                } else if (item.lot && item.lot.price) {
+                    unitPrice = item.lot.price;
+                }
                 return total + (item.quantity_to_return * parseFloat(unitPrice));
             }, 0).toFixed(2);
         },
@@ -885,7 +991,14 @@ export default {
     text-align: left;
 }
 
-.size-text, .color-text, .price-text, .code-text {
+.lot-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-align: left;
+}
+
+.size-text, .color-text, .price-text, .code-text, .lot-text, .series-text, .date-text {
     font-size: 12px;
     font-weight: 600;
     padding: 2px 8px;
@@ -911,6 +1024,21 @@ export default {
 .code-text {
     background: #f3e8ff;
     color: #7c3aed;
+}
+
+.lot-text {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.series-text {
+    background: #ecfeff;
+    color: #155e75;
+}
+
+.date-text {
+    background: #f1f5f9;
+    color: #475569;
 }
 
 .stock-value {

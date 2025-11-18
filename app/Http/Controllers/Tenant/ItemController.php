@@ -1608,6 +1608,8 @@ class ItemController extends Controller
                 'sale_unit_price' => $item->sale_unit_price,
                 'warehouse_id' => $request->input('warehouse_id'),
             ];
+            
+            //para actualizar el precio de la balanza
 
             event(new EntranceUpdateEvent($payload));
 

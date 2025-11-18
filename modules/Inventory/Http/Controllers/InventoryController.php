@@ -700,14 +700,23 @@ class InventoryController extends Controller
                 }
 
                 if ($type == 'input' && count($lots) > 0) {
-                    foreach ($lots as $lot) {
+                    foreach ($lots as $index => $lot) {
                         $existing_lot = ItemLot::where('item_id', $item_id)
                             ->where('series', $lot['series'])
                             ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
                             ->first();
 
+                        // En devoluciones, si la serie existe
                         if ($existing_lot) {
-                            throw new Exception("La serie {$lot['series']} ya existe para este producto en este almacén no puede registrarse otra vez.");
+                            if ($existing_lot->has_sale == true) {
+                                // Solo reactivar si estaba inactiva (has_sale = true)
+                                $existing_lot->has_sale = false;
+                                $existing_lot->state = 'Activo';
+                                $existing_lot->save();
+                            }
+                            // Si la serie ya está activa (has_sale = false), no hacer nada
+                            // Marcar este lote como existente para no crearlo nuevamente
+                            $lots[$index]['existing_reactivated'] = true;
                         }
                     }
                 }
@@ -771,19 +780,23 @@ class InventoryController extends Controller
                         }
                     }
                     
-                    // Procesar lots
+                    // Procesar lots (series individuales)
                     foreach ($lots as $lot) {
-                        $inventory->lots()->create([
-                            'date' => $lot['date'],
-                            'series' => $lot['series'],
-                            'item_id' => $item_id,
-                            'warehouse_id' => $warehouse_id,
-                            'has_sale' => false,
-                            'state' => $lot['state'],
-                        ]);
+                        // Solo crear nuevos lotes si no fueron reactivados
+                        if (!isset($lot['existing_reactivated']) || !$lot['existing_reactivated']) {
+                            $inventory->lots()->create([
+                                'date' => $lot['date'],
+                                'series' => $lot['series'],
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_id,
+                                'has_sale' => false,
+                                'state' => $lot['state'],
+                            ]);
+                        }
                     }
 
-                    if ($lots_enabled) {
+                    // Crear ItemLotsGroup solo si lots_enabled es true y hay un lot_code válido
+                    if ($lots_enabled && !empty($lot_code)) {
                         ItemLotsGroup::create([
                             'code'  => $lot_code,
                             'quantity'  => $quantity,

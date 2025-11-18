@@ -84,11 +84,12 @@ if ($hostname) {
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
             Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
-
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
 
-            Route::get('client-default', [PersonController::class, 'client_default']);
+            Route::post('entrance-foods', [BalanzaController::class, 'entranceFoods']);
+            Route::post('exit-foods', [BalanzaController::class, 'exitFoods']);
 
+            Route::get('client-default', [PersonController::class, 'client_default']);
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
             //Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
