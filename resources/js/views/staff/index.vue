@@ -19,10 +19,7 @@
             @click.prevent="clickCreateSalary">
             SALARIOS DEL PERSONAL
           </el-button>
-          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
-            @click.prevent="clickDownloadDat">
-            Import dat del personal huellero
-          </el-button>
+
           <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
             @click.prevent="clickDownloadExcel">
             Import Excel del personal

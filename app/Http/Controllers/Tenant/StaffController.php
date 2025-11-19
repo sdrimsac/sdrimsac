@@ -220,9 +220,6 @@ class StaffController extends Controller
                         }
                     }
 
-                    // Solo eliminar si es realmente un duplicado (marcas muy cercanas en tiempo)
-                    // Los 60 minutos de tolerancia manejan: marcas accidentales, errores del dispositivo,
-                    // múltiples intentos de marcaje, y marcas de verificación durante breaks cortos
                     if ($diff <= $duplicateToleranceMinutes) {
                         $errors[] = "Marca duplicada eliminada person_id={$m['person_id']} datetime={$m['date_time']} (diferencia {$diff} minutos)";
                         continue;
@@ -233,26 +230,85 @@ class StaffController extends Controller
 
                 $marks = array_values($filtered);
 
-                // Agrupar marcas por día laboral (considerando turnos nocturnos)
+                // Agrupar marcas por día laboral considerando turnos nocturnos de manera inteligente
                 $dailyGroups = [];
-                foreach ($marks as $mark) {
+                
+                for ($i = 0; $i < count($marks); $i++) {
+                    $mark = $marks[$i];
                     $dt = $mark['carbon'];
                     $hour = $dt->hour;
+                    $dateStr = $dt->format('Y-m-d');
                     
-                    // Lógica basada en horarios reales:
-                    // Turno nocturno: 19:00 - 03:00 (del día siguiente)
-                    // Turno diurno: 09:00 - 18:59
-                    // Franja vacía: 03:01 - 08:59 (nadie trabaja)
-                    
-                    if ($hour >= 0 && $hour <= 3) {
-                        // 00:00-03:00: Pertenece al turno nocturno del día anterior
-                        $workDay = $dt->copy()->subDay()->format('Y-m-d');
-                    } elseif ($hour >= 4 && $hour <= 8) {
-                        // 04:00-08:00: Franja muerta, considerar como salida tardía del turno nocturno
-                        $workDay = $dt->copy()->subDay()->format('Y-m-d');
+                    if ($hour >= 9 && $hour <= 18) {
+                        // 09:00-18:59: Turno diurno - usar fecha actual
+                        $workDay = $dateStr;
+                    } elseif ($hour >= 19) {
+                        // 19:00-23:59: Inicio de turno nocturno - usar fecha actual
+                        $workDay = $dateStr;
                     } else {
-                        // 09:00-23:59: Día laboral actual (turno diurno o inicio de turno nocturno)
-                        $workDay = $dt->format('Y-m-d');
+                        // 00:00-08:59: Marcas de madrugada - necesitamos analizar el contexto
+                        
+                        // Buscar si hay una entrada nocturna en el mismo día O en días cercanos
+                        $hasNightEntryToday = false;
+                        $hasNightEntryYesterday = false;
+                        
+                        $yesterday = $dt->copy()->subDay()->format('Y-m-d');
+                        
+                        foreach ($marks as $otherMark) {
+                            $otherDate = $otherMark['carbon']->format('Y-m-d');
+                            $otherHour = $otherMark['carbon']->hour;
+                            
+                            // Verificar entrada nocturna el mismo día
+                            if ($otherDate === $dateStr && $otherHour >= 19 && $otherHour <= 23) {
+                                $hasNightEntryToday = true;
+                            }
+                            
+                            // Verificar entrada nocturna el día anterior
+                            if ($otherDate === $yesterday && $otherHour >= 19 && $otherHour <= 23) {
+                                $hasNightEntryYesterday = true;
+                            }
+                        }
+                        
+                        // Lógica de asignación mejorada:
+                        if ($hasNightEntryYesterday && !$hasNightEntryToday) {
+                            // Si hay entrada nocturna ayer pero no hoy, esta marca pertenece al turno de ayer
+                            $workDay = $yesterday;
+                        } elseif ($hasNightEntryToday && !$hasNightEntryYesterday) {
+                            // Si hay entrada nocturna hoy pero no ayer, esta marca pertenece al turno de hoy
+                            $workDay = $dateStr;
+                        } elseif ($hasNightEntryYesterday && $hasNightEntryToday) {
+                            // Si hay entradas nocturnas tanto ayer como hoy, usar proximidad temporal
+                            // Buscar cuál entrada nocturna está más cerca de esta marca de madrugada
+                            $closestToYesterday = null;
+                            $closestToToday = null;
+                            
+                            foreach ($marks as $otherMark) {
+                                $otherDate = $otherMark['carbon']->format('Y-m-d');
+                                $otherHour = $otherMark['carbon']->hour;
+                                
+                                if ($otherDate === $yesterday && $otherHour >= 19 && $otherHour <= 23) {
+                                    if (!$closestToYesterday || $otherMark['carbon']->isAfter($closestToYesterday)) {
+                                        $closestToYesterday = $otherMark['carbon'];
+                                    }
+                                }
+                                
+                                if ($otherDate === $dateStr && $otherHour >= 19 && $otherHour <= 23) {
+                                    if (!$closestToToday || $otherMark['carbon']->isBefore($closestToToday)) {
+                                        $closestToToday = $otherMark['carbon'];
+                                    }
+                                }
+                            }
+                            
+                            // Calcular diferencias temporales
+                            $diffToYesterday = $closestToYesterday ? abs($closestToYesterday->diffInHours($dt)) : 999;
+                            $diffToToday = $closestToToday ? abs($closestToToday->diffInHours($dt)) : 999;
+                            
+                            // Asignar al turno más cercano temporalmente
+                            $workDay = ($diffToYesterday <= $diffToToday) ? $yesterday : $dateStr;
+                        } else {
+                            // Si no hay entradas nocturnas cerca, asumir que es salida del día anterior
+                            $workDay = $yesterday;
+                        }
                     }
                     
                     $dailyGroups[$workDay][] = $mark;
@@ -291,30 +347,30 @@ class StaffController extends Controller
     {
         $count = count($dayMarks);
         
-        // Si solo hay una marca, determinar si es entrada o salida basado en la hora
+        // Si solo hay una marca, determinar si es entrada o salida basado en la hora y contexto
         if ($count == 1) {
             $mark = $dayMarks[0];
             $hour = $mark['carbon']->hour;
             
-            // Determinar tipo basado en horarios reales de trabajo:
-            // Entrada turno diurno: 09:00-12:00
-            // Salida turno diurno: 13:00-18:59 
-            // Entrada turno nocturno: 19:00-23:59
-            // Salida turno nocturno: 00:00-08:59 (del día siguiente)
+            // Lógica mejorada para determinar tipo basado en horarios típicos:
+            // Horarios más probables de ENTRADA: 09:00-12:00, 19:00-23:59
+            // Horarios más probables de SALIDA: 00:00-08:59, 13:00-18:59
+            // PERO también considerar que puede haber entradas tardías o salidas tempranas
             
-            if ($hour >= 9 && $hour <= 12) {
-                $type = 'INGRESO'; // Entrada turno diurno
-            } elseif ($hour >= 19 && $hour <= 23) {
-                $type = 'INGRESO'; // Entrada turno nocturno
+            if (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23)) {
+                $type = 'INGRESO'; // Probablemente entrada
             } else {
-                $type = 'SALIDA'; // Todo lo demás es salida
+                $type = 'SALIDA'; // Probablemente salida
             }
+            
+            // Para marcas únicas, usar el workDay que ya fue calculado correctamente en el agrupamiento
+            $singleMarkDate = $workDay;
             
             try {
                 PersonAttendance::create([
                     'person_id' => $mark['person_id'],
                     'date_time_attendance' => $mark['date_time'],
-                    'date_attendance' => $workDay,
+                    'date_attendance' => $singleMarkDate,
                     'time_attendance' => $mark['time_attendance'],
                     'type' => $type,
                 ]);
@@ -325,66 +381,54 @@ class StaffController extends Controller
             return;
         }
         
-        // Para múltiples marcas, emparejarlas inteligentemente
+        // Para múltiples marcas, emparejarlas inteligentemente usando patrón alternado
         $this->smartPairMarks($dayMarks, $workDay, $errors, $registered);
     }
 
     /**
-     * Empareja marcas de forma inteligente considerando horarios típicos de trabajo
+     * Empareja marcas de forma inteligente usando patrón alternado INGRESO-SALIDA
      */
     private function smartPairMarks($dayMarks, $workDay, &$errors, &$registered)
     {
         $count = count($dayMarks);
-        $i = 0;
         
-        while ($i < $count) {
+        // Procesar marcas secuencialmente usando patrón alternado
+        for ($i = 0; $i < $count; $i++) {
             $currentMark = $dayMarks[$i];
-            $currentHour = $currentMark['carbon']->hour;
             
-            // Buscar la siguiente marca que podría ser pareja
-            $pairFound = false;
-            for ($j = $i + 1; $j < $count; $j++) {
-                $nextMark = $dayMarks[$j];
-                $nextHour = $nextMark['carbon']->hour;
-                $diffHours = $currentMark['carbon']->diffInHours($nextMark['carbon']);
-                
-                // Validar si puede ser una pareja válida (entre 1 y 12 horas de diferencia)
-                if ($diffHours >= 1 && $diffHours <= 12) {
-                    // Es una pareja válida
-                    $this->createAttendancePair($currentMark, $nextMark, $workDay, $errors, $registered);
-                    $pairFound = true;
-                    $i = $j + 1; // Saltar al siguiente después de la pareja
-                    break;
-                } elseif ($diffHours > 12) {
-                    // Si la diferencia es mayor a 12 horas, no puede ser pareja del mismo día laboral
-                    break;
-                }
+            // Determinar el tipo basado en la posición en la secuencia
+            // Primera marca = INGRESO, segunda = SALIDA, tercera = INGRESO, etc.
+            $isEntrance = ($i % 2 == 0); // Posición par = entrada, impar = salida
+            $type = $isEntrance ? 'INGRESO' : 'SALIDA';
+            
+            // Validación adicional basada en horarios para corregir si es necesario
+            $hour = $currentMark['carbon']->hour;
+            
+            // Si es la primera marca y está en horario de salida típico, podría ser una salida
+            if ($i == 0 && $hour >= 0 && $hour <= 8) {
+                // Primera marca en horario de madrugada - probablemente es salida del turno anterior
+                $type = 'SALIDA';
+                $isEntrance = false;
             }
             
-            if (!$pairFound) {
-                // No se encontró pareja, crear marca individual
-                // Usar la misma lógica de horarios para determinar tipo
-                if ($currentHour >= 9 && $currentHour <= 12) {
-                    $type = 'INGRESO'; // Entrada turno diurno
-                } elseif ($currentHour >= 19 && $currentHour <= 23) {
-                    $type = 'INGRESO'; // Entrada turno nocturno
-                } else {
-                    $type = 'SALIDA'; // Todo lo demás es salida
-                }
-                
-                try {
-                    PersonAttendance::create([
-                        'person_id' => $currentMark['person_id'],
-                        'date_time_attendance' => $currentMark['date_time'],
-                        'date_attendance' => $workDay,
-                        'time_attendance' => $currentMark['time_attendance'],
-                        'type' => $type,
-                    ]);
-                    $registered++;
-                } catch (Exception $e) {
-                    $errors[] = "Error al crear marca sin pareja para person_id={$currentMark['person_id']} datetime={$currentMark['date_time']}: " . $e->getMessage();
-                }
-                $i++;
+            // Si es posición impar pero está en horario de entrada típico, mantener como entrada
+            if (!$isEntrance && (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23))) {
+                // Esta marca parece ser entrada aunque esté en posición impar
+                // Podría indicar que falta una salida anterior
+                $type = 'INGRESO';
+            }
+            
+            try {
+                PersonAttendance::create([
+                    'person_id' => $currentMark['person_id'],
+                    'date_time_attendance' => $currentMark['date_time'],
+                    'date_attendance' => $workDay,
+                    'time_attendance' => $currentMark['time_attendance'],
+                    'type' => $type,
+                ]);
+                $registered++;
+            } catch (Exception $e) {
+                $errors[] = "Error al crear marca para person_id={$currentMark['person_id']} datetime={$currentMark['date_time']}: " . $e->getMessage();
             }
         }
     }
@@ -405,17 +449,14 @@ class StaffController extends Controller
             ]);
             $registered++;
 
-            // Determinar fecha de salida correcta
-            $exitWorkDay = $workDay;
-            if ($exitMark['carbon']->format('Y-m-d') !== $workDay) {
-                $exitWorkDay = $exitMark['carbon']->format('Y-m-d');
-            }
-
+            // Para registros emparejados, ambos usan el mismo workDay calculado en el agrupamiento
+            // Esto asegura que entrada y salida del mismo turno tengan la misma fecha de asistencia
+            
             // Crear registro de salida
             PersonAttendance::create([
                 'person_id' => $exitMark['person_id'],
                 'date_time_attendance' => $exitMark['date_time'],
-                'date_attendance' => $exitWorkDay,
+                'date_attendance' => $workDay,
                 'time_attendance' => $exitMark['time_attendance'],
                 'type' => 'SALIDA',
             ]);

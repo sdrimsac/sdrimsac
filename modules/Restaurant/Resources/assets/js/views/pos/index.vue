@@ -154,7 +154,7 @@
                                     </el-tooltip> -->
 
                                     <el-tooltip content="Historial" placement="top">
-                                        <button
+                                        <button v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
                                             class="btn_guardarsmall d-flex align-items-center justify-content-center"
                                             type="button" @click="trigerFunction(7)"
                                             style="height:42px; min-width:42px; padding:0 10px;">
@@ -236,7 +236,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                            }}</span>
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -6963,7 +6963,7 @@ export default {
                 console.log("Procesando producto de balanza:", productData);
 
                 // Buscar el producto en listFoods por internal_id (codigo)
-                const productIndex = this.listFoods.findIndex(food => 
+                const productIndex = this.listFoods.findIndex(food =>
                     food.item && food.item.internal_id === productData.internal_id
                 );
 
@@ -6974,7 +6974,7 @@ export default {
 
                 // Configurar el producto seleccionado
                 this.selectedFood = { ...this.listFoods[productIndex] };
-                
+
                 // Crear el objeto currentFood con los datos de la balanza
                 this.currentFood = {
                     id: this.selectedFood.id,
