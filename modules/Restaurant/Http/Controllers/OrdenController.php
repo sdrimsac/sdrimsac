@@ -1531,7 +1531,9 @@ class OrdenController extends Controller
                 Log::info($e->getLine());
             }
             if ($orden) {
+                Log::info('Rolling back Orden ID: ' . $orden->id);
                 $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
+                Log::info('Orden Items Count: ' . $ordens_items);
                 if ($ordens_items == 0) {
                     $orden->delete();
                     $table = Table::find($orden->table_id);
