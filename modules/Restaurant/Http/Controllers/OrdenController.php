@@ -1535,8 +1535,11 @@ class OrdenController extends Controller
                 if ($ordens_items == 0) {
                     $orden->delete();
                     $table = Table::find($orden->table_id);
+                    Log::info('Revert table status for table ID: ' . $table->id);
                     $table->status_table_id = 1;
+                    Log::info('Status reverted to 1 for table ID: ' . $table->id);
                     $table->save();
+
                 }
             }
             return [
