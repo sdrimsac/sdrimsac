@@ -981,7 +981,7 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Store Orden Request: ' . json_encode($request->all()));
+        //Log::info('Store Orden Request: ' . json_encode($request->all()));
         try {
 
             $user = null;
@@ -1531,15 +1531,15 @@ class OrdenController extends Controller
                 Log::info($e->getLine());
             }
             if ($orden) {
-                Log::info('Rolling back Orden ID: ' . $orden->id);
+                //Log::info('Rolling back Orden ID: ' . $orden->id);
                 $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
-                Log::info('Orden Items Count: ' . $ordens_items);
+                //Log::info('Orden Items Count: ' . $ordens_items);
                 if ($ordens_items == 0) {
                     $orden->delete();
                     $table = Table::find($orden->table_id);
-                    Log::info('Revert table status for table ID: ' . $table->id);
+                    //Log::info('Revert table status for table ID: ' . $table->id);
                     $table->status_table_id = 1;
-                    Log::info('Status reverted to 1 for table ID: ' . $table->id);
+                    //Log::info('Status reverted to 1 for table ID: ' . $table->id);
                     $table->save();
 
                 }

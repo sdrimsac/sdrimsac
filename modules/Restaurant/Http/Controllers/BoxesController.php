@@ -3408,11 +3408,16 @@ class BoxesController extends Controller
                         ->where('method', 'Efectivo')
                         ->get();
 
-                    $sum_cash = floatval($cash_boxes->sum('amount'));
+                    $sum_cash = floatval($ringreso["amount"]);
+                    $sum_cash = min($sum_cash, floatval($sale_note->total));
+                    $sales_cash_sum += $sum_cash;
+
+
+                    /* $sum_cash = floatval($cash_boxes->sum('amount'));
 
                     $sum_cash = min($sum_cash, floatval($sale_note->total));
 
-                    $sales_cash_sum += $sum_cash;
+                    $sales_cash_sum += $sum_cash; */
                 } else {
                     $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
                         ->where('cash_id', $cash_id)
