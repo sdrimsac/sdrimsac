@@ -27,6 +27,7 @@ use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
+use Modules\Restaurant\Http\Controllers\TableController;
 use Modules\Restaurant\Http\Controllers\TableMaintenanceController;
 use Modules\Restaurant\Http\Controllers\TableRoomController;
 use Modules\Restaurant\Http\Controllers\UserScheduleController;
@@ -368,7 +369,7 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/columns', 'TableController@columns');
         Route::get('tables/check', 'TableController@check');
         Route::get('tables/records', 'TableController@records');
-        Route::get('tables/tables', 'TableController@get_tables');
+        Route::get('tables/tables', [TableController::class, 'get_tables']);
         Route::get('tables/tables-zone', 'TableController@tables_zones');
 
         Route::post('tables/store/{type}', 'TableController@store_zone');
