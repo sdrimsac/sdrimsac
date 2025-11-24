@@ -261,6 +261,8 @@ if ($hostname) {
             Route::delete('incomebox/{boxes}', 'BoxController@destroy');
             //--------------------------------------------------------------------------------------------------
 
+            Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
+
             Route::get('sale-note/series', 'Api\SaleNoteController@series');
             Route::get('sale-note/lists', 'Api\SaleNoteController@lists');
             Route::post('item', 'Api\MobileController@item');
