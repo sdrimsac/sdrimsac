@@ -79,16 +79,14 @@ if ($hostname) {
 
         Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
         Route::post('item-foods', [BalanzaController::class, 'itemFoods'])->middleware('auth.apikey');
-
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
+
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
             Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
-
             Route::post('entrance-foods', [BalanzaController::class, 'entranceFoods']);
             Route::post('exit-foods', [BalanzaController::class, 'exitFoods']);
-
             Route::get('client-default', [PersonController::class, 'client_default']);
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
@@ -97,6 +95,8 @@ if ($hostname) {
 
             Route::get('item-sets/check/{id}/{qty}', [App\Http\Controllers\Tenant\ItemSetController::class, 'set_item_check_stock']);
             Route::get('receta/check/{id}/{qty}', [App\Http\Controllers\Tenant\RecetaController::class, 'set_item_check_stock']);
+
+            Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
 
             //Company
             Route::get('companies/record', '\App\Http\Controllers\Tenant\CompanyController@record');
@@ -260,8 +260,6 @@ if ($hostname) {
             Route::get('incomebox/records', 'BoxController@records2');
             Route::delete('incomebox/{boxes}', 'BoxController@destroy');
             //--------------------------------------------------------------------------------------------------
-
-            Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
 
             Route::get('sale-note/series', 'Api\SaleNoteController@series');
             Route::get('sale-note/lists', 'Api\SaleNoteController@lists');
