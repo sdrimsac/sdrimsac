@@ -226,7 +226,7 @@ class MobileController extends Controller
                     'image_url' => $image_url,
                     'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
                     'brand' => $row->brand->name ?? '',
-                    'category' => $row->category->name ?? '',
+                    'category' => $row->category,
                     'max_quantity' => $row->max_quantity,
                     'origin' => $row->origin,
                     'series_enabled' => (bool) $row->series_enabled,
@@ -256,9 +256,15 @@ class MobileController extends Controller
                         return [
                             'id' => $item_unit_type->id,
                             'unit_type_id' => $item_unit_type->unit_type_id,
-                            'unit_type_description' => $item_unit_type->unit_type->description,
-                            'conversion_factor' => $item_unit_type->conversion_factor,
-                            'selected' => (bool) $item_unit_type->selected
+                            'description' => $item_unit_type->description,
+                            'quantity_unit' => $item_unit_type->quantity_unit,
+                            'item_id' => $item_unit_type->item_id,
+                            'price1' => $item_unit_type->price1,
+                            'price2' => $item_unit_type->price2,
+                            'price3' => $item_unit_type->price3,
+                            'price_default' => $item_unit_type->price_default,
+                            'warehouse_id' => $item_unit_type->warehouse_id,
+                            'total ' => $item_unit_type->total,
                         ];
                     })->toArray(),
                 ];
