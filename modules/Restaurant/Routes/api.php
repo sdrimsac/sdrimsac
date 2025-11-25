@@ -243,7 +243,7 @@ Route::prefix('caja')->group(function () {
         //**** AREAS */
         Route::get('areas', 'AreaController@index')->name('restaurant.areas')->middleware("just.super");
         Route::get('areas/columns', 'AreaController@columns');
-        Route::get('areas/records', 'AreaController@records');
+        Route::get('areas/records-mobile', 'AreaController@recordsMobile');
         Route::get('areas/actives', 'AreaController@actives');
         Route::get('areas/record/{id}', 'AreaController@record');
         Route::delete('areas/{id}', 'AreaController@active');

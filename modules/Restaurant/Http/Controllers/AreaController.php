@@ -46,6 +46,20 @@ class AreaController extends Controller
         $records = $records->where('active',1);
         return new AreaCollection($records->paginate(config('tenant.items_per_page')));
     }
+
+    public function recordsMobile(Request $request)
+    {
+        $records = Area::query();
+        if($request->value){
+            if ($request->value == "Activado") {
+                $records = Area::where($request->column, '=', 1);
+            } else {
+                $records = Area::where($request->column, 'like', "%{$request->value}%");
+            }
+        }
+        $records = $records->where('active', 1)->get();
+        return new AreaCollection($records);
+    }
     public function actives()
     {
         $areas = Area::where('active', 1)->get();
