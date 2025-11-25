@@ -203,7 +203,6 @@ class TableController extends Controller
         ini_set('memory_limit', '2500M');
 
         $user = auth()->user();
-        Log::info('Usuario en API:', ['user' => auth()->user()]);
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
 
