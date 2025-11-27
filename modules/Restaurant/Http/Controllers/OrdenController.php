@@ -982,6 +982,9 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         Log::info('Store Orden Request: ' . json_encode($request->all()));
+        Log::info('Store Orden - caja: ' . json_encode($request->caja));
+        Log::info('Store Orden - orden.table_id: ' . json_encode($request->orden['table_id'] ?? 'NOT_SET'));
+        Log::info('Store Orden - User-Agent: ' . $request->header('User-Agent'));
         try {
 
             $user = null;
@@ -1229,6 +1232,7 @@ class OrdenController extends Controller
             } else {
                 $orden = new Orden;
                 $orden = $orden->fill($new_orden->all());
+                Log::info('Store Orden - After fill, table_id: ' . json_encode($orden->table_id));
                 $orden->date = Carbon::today();
                 $orden->ref = $ref;
                 $orden->mozo_id = $mozo_id; // Solo guardamos el ID
@@ -1531,16 +1535,25 @@ class OrdenController extends Controller
                 Log::info($e->getLine());
             }
             if ($orden) {
+                Log::info('Exception caught - Orden state: ID=' . $orden->id . ', table_id=' . json_encode($orden->table_id));
                 Log::info('Rolling back Orden ID: ' . $orden->id);
                 $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
                 Log::info('Orden Items Count: ' . $ordens_items);
                 if ($ordens_items == 0) {
                     $orden->delete();
-                    $table = Table::find($orden->table_id);
-                    Log::info('Revert table status for table ID: ' . $table->id);
-                    $table->status_table_id = 1;
-                    Log::info('Status reverted to 1 for table ID: ' . $table->id);
-                    $table->save();
+                    if ($orden->table_id) {
+                        $table = Table::find($orden->table_id);
+                        if ($table) {
+                            Log::info('Revert table status for table ID: ' . $table->id);
+                            $table->status_table_id = 1;
+                            Log::info('Status reverted to 1 for table ID: ' . $table->id);
+                            $table->save();
+                        } else {
+                            Log::info('Table not found for table_id: ' . $orden->table_id);
+                        }
+                    } else {
+                        Log::info('Orden does not have a table_id assigned');
+                    }
 
                 }
             }
