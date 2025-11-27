@@ -981,7 +981,7 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
-        //Log::info('Store Orden Request: ' . json_encode($request->all()));
+        Log::info('Store Orden Request: ' . json_encode($request->all()));
         try {
 
             $user = null;
