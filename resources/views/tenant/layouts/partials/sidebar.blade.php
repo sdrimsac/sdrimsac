@@ -1248,7 +1248,7 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) && !$roleService->isLogistic()))
+    @if ($config->restaurant && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) || $roleService->isLogistic()))
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
