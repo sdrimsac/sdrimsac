@@ -190,6 +190,8 @@ if ($hostname) {
             Route::get('quotations/changed/{quotation}', 'QuotationController@changed');
             //--------------------------------------------------------------------------------------------------
 
+            Route::get('pos/tables', [App\Http\Controllers\Tenant\PosController::class, 'tablesMobile']);
+
             //purchases
             Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
             Route::get('purchases/ne76/correlative', [App\Http\Controllers\Tenant\PurchaseController::class, 'ne76_correlative']);
