@@ -536,6 +536,10 @@ class PosController extends Controller
             'name' => $companyModel->name,
             'number' => $companyModel->number,
         ] : null;
+
+        // ensure $company exists for views that expect it (was causing compact(): Undefined variable: company)
+        $company = $companyModel;
+
         $categories = CategoryItem::query()
             ->whereHas('items', function ($query) use ($user) {
                 $query->whereHas('warehouses', function ($query) use ($user) {
