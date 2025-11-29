@@ -528,8 +528,14 @@ class PosController extends Controller
             ];
         });
         $items = [];
-        $company = Company::first();
-        // $categories = CategoryItem::all();
+        $companyModel = Company::first();
+
+        $company_summary = $companyModel ? (object) [
+            'id' => $companyModel->id,
+            'app_name' => $companyModel->app_name,
+            'name' => $companyModel->name,
+            'number' => $companyModel->number,
+        ] : null;
         $categories = CategoryItem::query()
             ->whereHas('items', function ($query) use ($user) {
                 $query->whereHas('warehouses', function ($query) use ($user) {
@@ -569,17 +575,10 @@ class PosController extends Controller
             $tablesCleaner = TableUserMaintenance::all();
 
             // Load full model internally but expose only non-sensitive fields
-            $configuration_model = Configuration::first();
+            $configuration = Configuration::first();
 
             // Public (non-sensitive) configuration to pass around
-            $configuration = (object) [
-                'id' => optional($configuration_model)->id,
-                'app_name' => optional($configuration_model)->app_name,
-                'name' => optional($configuration_model)->name,
-                'number' => optional($configuration_model)->number,
-                // keep alarm_to_end temporarily for internal logic below (not part of public contract)
-                'alarm_to_end' => optional($configuration_model)->alarm_to_end,
-            ];
+            
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
