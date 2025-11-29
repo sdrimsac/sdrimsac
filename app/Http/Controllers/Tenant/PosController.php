@@ -503,7 +503,8 @@ class PosController extends Controller
         $currency_types = CurrencyType::whereActive()->get();
         $documents_type = IdentityDocumentType::where('active', 1)->get();
         $customers = $this->table('customers');
-        $user = User::findOrFail(auth()->user()->id);
+        $user = User::select(['id', 'name', 'establishment_id', 'area_id', 'worker_type_id', 'warehouse_product_id'])
+            ->findOrFail(auth()->user()->id);
         $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -567,7 +568,18 @@ class PosController extends Controller
         if ($config->hotels) {
             $tablesCleaner = TableUserMaintenance::all();
 
-            $configuration = Configuration::first();
+            // Load full model internally but expose only non-sensitive fields
+            $configuration_model = Configuration::first();
+
+            // Public (non-sensitive) configuration to pass around
+            $configuration = (object) [
+                'id' => optional($configuration_model)->id,
+                'app_name' => optional($configuration_model)->app_name,
+                'name' => optional($configuration_model)->name,
+                'number' => optional($configuration_model)->number,
+                // keep alarm_to_end temporarily for internal logic below (not part of public contract)
+                'alarm_to_end' => optional($configuration_model)->alarm_to_end,
+            ];
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
@@ -637,6 +649,57 @@ class PosController extends Controller
             'medida_grosor',
             'categoria_madera',
             'transport_places'
+
+        );
+    }
+
+
+    public function tablesMobile()
+    {
+
+        $config = Configuration::first();
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
+        //$customers = $this->table('customers');
+
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $method_payment = PaymentMethodType::where('active', 1)->orderBy('description', 'asc')->get();
+        if (!$establishment) {
+            $establishment = Establishment::first();
+        }
+     
+        $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'phone' => $row->telephone
+            ];
+        });
+        $customers_variation = Person::where('number', "=", "88888888")->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'phone' => $row->telephone
+            ];
+        });
+        //  dd($row,$documents);
+        $item_default = null;
+        if ($config->item_variation_id) {
+            $item_default = Item::where('id', $config->item_variation_id)->first();
+        }
+    
+
+        return compact(
+            'customers_variation',
+            'item_default',
+            'customers_default',
 
         );
     }
