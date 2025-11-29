@@ -702,8 +702,6 @@ class PosController extends Controller
         return compact(
             'customers_variation',
             'item_default',
-            'customers_default',
-
         );
     }
 
