@@ -58,12 +58,21 @@ class PersonWorkerImport implements ToCollection
                 continue;
             }
 
+            // Determinar tipo preliminar según hora
+            $hour = (int)$carbon->format('H');
+            $minute = (int)$carbon->format('i');
+            $type = 'SALIDA';
+            // INGRESO: 07:00-11:00 (inclusive) o 15:00-20:00 (inclusive) estrictamente
+            if ((($hour > 6 && $hour < 12) || ($hour > 14 && $hour < 21))) {
+                $type = 'INGRESO';
+            }
             $groups[$person->id][] = [
                 'person_id' => $person->id,
                 'date_time' => $date_time,
                 'date_attendance' => $date_only,
                 'time_attendance' => $time_only,
                 'carbon' => $carbon,
+                'type' => $type,
             ];
         }
         // Segundo: procesar cada grupo (por persona), ordenar por datetime y emparejar cronológicamente
@@ -112,103 +121,19 @@ class PersonWorkerImport implements ToCollection
             // Reemplazamos el arreglo de marcas por el filtrado
             $marks = array_values($filtered);
 
-            $i = 0;
-            $count = count($marks);
-            while ($i < $count) {
-                $entry = $marks[$i];
-
-                // Si existe siguiente marca, la usamos como salida emparejada
-                if (isset($marks[$i + 1])) {
-                    $exit = $marks[$i + 1];
-
-                    if (isset($entry['carbon']) && isset($exit['carbon'])) {
-                        $startDt = $entry['carbon'];
-                        $endDt = $exit['carbon'];
-                    } else {
-                        try {
-                            $startDt = Carbon::parse($entry['date_time']);
-                            $endDt = Carbon::parse($exit['date_time']);
-                        } catch (Exception $e) {
-                            $this->errors[] = "Error al parsear fechas para emparejar person_id={$person_id}: " . $e->getMessage();
-                        }
-                        // crear ambos por separado sin alterar fechas
-                        $pair = [
-                            ['m' => $entry, 'type' => 'INGRESO', 'date_att' => $entry['date_attendance']],
-                            ['m' => $exit, 'type' => 'SALIDA', 'date_att' => $exit['date_attendance']],
-                        ];
-                        foreach ($pair as $p) {
-                            try {
-                                PersonAttendance::create([
-                                    'person_id' => $p['m']['person_id'],
-                                    'date_time_attendance' => $p['m']['date_time'],
-                                    'date_attendance' => $p['date_att'],
-                                    'time_attendance' => $p['m']['time_attendance'],
-                                    'type' => $p['type'],
-                                ]);
-                                $registered++;
-                            } catch (Exception $ee) {
-                                $this->errors[] = "Error al crear attendance para person_id={$p['m']['person_id']} datetime={$p['m']['date_time']}: " . $ee->getMessage();
-                            }
-                        }
-                        $i += 2;
-                        continue;
-                    }
-
-                    // Si la salida es posterior a la entrada y la diferencia es razonable (<=12 horas),
-                    // consideramos que pertenece a la misma jornada; usamos la fecha del datetime de salida
-                    // para que las salidas después de medianoche se registren en el día correcto.
-                    $diffHours = $startDt->diffInHours($endDt, false);
-                    if ($endDt->gte($startDt) && $diffHours <= 12) {
-                        // usar la fecha del endDt (salida), no la del inicio
-                        $exit_date_attendance = $endDt->format('Y-m-d');
-                    } else {
-                        $exit_date_attendance = $exit['date_attendance'];
-                    }
-
-                    // Crear registro de ingreso
-                    try {
-                        PersonAttendance::create([
-                            'person_id' => $entry['person_id'],
-                            'date_time_attendance' => $entry['date_time'],
-                            'date_attendance' => $entry['date_attendance'],
-                            'time_attendance' => $entry['time_attendance'],
-                            'type' => 'INGRESO',
-                        ]);
-                        $registered++;
-                    } catch (Exception $e) {
-                        $this->errors[] = "Error al crear ingreso para person_id={$entry['person_id']} datetime={$entry['date_time']}: " . $e->getMessage();
-                    }
-
-                    // Crear registro de salida (ajustando date_attendance si corresponde)
-                    try {
-                        PersonAttendance::create([
-                            'person_id' => $exit['person_id'],
-                            'date_time_attendance' => $exit['date_time'],
-                            'date_attendance' => $exit_date_attendance,
-                            'time_attendance' => $exit['time_attendance'],
-                            'type' => 'SALIDA',
-                        ]);
-                        $registered++;
-                    } catch (Exception $e) {
-                        $this->errors[] = "Error al crear salida para person_id={$exit['person_id']} datetime={$exit['date_time']}: " . $e->getMessage();
-                    }
-
-                    $i += 2; // avanzamos por pares
-                } else {
-                    // Marca sin pareja: la registramos como INGRESO
-                    try {
-                        PersonAttendance::create([
-                            'person_id' => $entry['person_id'],
-                            'date_time_attendance' => $entry['date_time'],
-                            'date_attendance' => $entry['date_attendance'],
-                            'time_attendance' => $entry['time_attendance'],
-                            'type' => 'INGRESO',
-                        ]);
-                        $registered++;
-                    } catch (Exception $e) {
-                        $this->errors[] = "Error al crear attendance sin pareja para person_id={$entry['person_id']} datetime={$entry['date_time']}: " . $e->getMessage();
-                    }
-                    $i++;
+            // Ahora, simplemente registrar cada marca según su tipo determinado
+            foreach ($marks as $entry) {
+                try {
+                    PersonAttendance::create([
+                        'person_id' => $entry['person_id'],
+                        'date_time_attendance' => $entry['date_time'],
+                        'date_attendance' => $entry['date_attendance'],
+                        'time_attendance' => $entry['time_attendance'],
+                        'type' => $entry['type'],
+                    ]);
+                    $registered++;
+                } catch (Exception $e) {
+                    $this->errors[] = "Error al crear attendance para person_id={$entry['person_id']} datetime={$entry['date_time']}: " . $e->getMessage();
                 }
             }
         }
