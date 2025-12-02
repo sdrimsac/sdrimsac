@@ -622,7 +622,17 @@ if ($hostname) {
                 Route::delete('persons/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'destroy']);
                 Route::post('persons/import', [App\Http\Controllers\Tenant\PersonController::class, 'import']);
 
-                Route::get('/persons/suplier/{number}', [App\Http\Controllers\Tenant\PersonController::class, 'check']);
+                //Persons staff 
+                Route::get('filtrar_distritos/records', [App\Http\Controllers\Tenant\StaffPersonController::class, 'distritos']);
+                Route::get('person_staff/columns', [App\Http\Controllers\Tenant\StaffPersonController::class, 'columns']);
+                Route::get('person_staff', [App\Http\Controllers\Tenant\StaffPersonController::class, 'index'])->name('tenant.person_staff.index')->middleware('just.admin');
+                Route::get('person_staff/records', [App\Http\Controllers\Tenant\StaffPersonController::class, 'records']);
+                Route::get('person_staff/record/{person}', [App\Http\Controllers\Tenant\StaffPersonController::class, 'record']);
+                Route::delete('person_staff/{person}', [App\Http\Controllers\Tenant\StaffPersonController::class, 'destroy']);
+                Route::get('person_staff/tables', [App\Http\Controllers\Tenant\StaffPersonController::class, 'tables']);
+                Route::post('person_staff', [App\Http\Controllers\Tenant\StaffPersonController::class, 'store']);
+
+
                 /* Route::post('/persons', [PersonController::class, 'storeFromXml']); */
                 //imagen en los clientes
                 Route::post('persons/uploads', [PersonController::class, 'upload']);

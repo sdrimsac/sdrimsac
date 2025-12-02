@@ -1120,6 +1120,7 @@ const app = new Vue({
             import("./views/credit_list/index.vue"),
         "tenant-staff-index": () =>
             import("./views/staff/index.vue"),
+        "tenant-person_staff-index": () => import("./views/person_staff/index.vue"),
         "worker-cleaner": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue"

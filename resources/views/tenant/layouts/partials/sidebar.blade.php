@@ -102,6 +102,16 @@
                         </li>
                     @endif
 
+                    @if ($user->type == 'superadmin')
+                        <li>
+                            <a class="{{ $path[0] === 'person_staff' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.person_staff.index') }}">
+                                <i class="icofont-business-man" style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span>Personal de la empresa</span>
+                            </a>
+                        </li>
+                    @endif
+
                     <li>
                         <hr style="border: 1px solid #021427;">
                     </li>
