@@ -1166,13 +1166,13 @@ class OrdenController extends Controller
                 $message = 'Pedido agregado.'; //me refiero en punto de caja
                 $orden->save();
                 $data = $request->orden;
-
+                $customer_id = isset($data['customer_id']) ? $data['customer_id'] : null;
                 $table = (!empty($data['table_id'])) ? Table::find($data['table_id']) : null;
                 if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $delivery = Delivery::where('orden_id', $orden->id)->first();
                     $deliveryData = [
-                        'customer_id' => $data['customer_id'],
-                        'table_id' => $data['table_id'],
+                        'customer_id' => $customer_id,
+                        'table_id' => $data['table_id'] ?? null,
                         'address' => $data['delivery_address'] ?? '',
                         'reference' => $data['reference'] ?? '',
                         'telephone' => $data['telephone'] ?? '',
@@ -1205,14 +1205,12 @@ class OrdenController extends Controller
                 }
 
                 if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
-
                     $address   = is_array($data['delivery_address']) ? '-' : ($data['delivery_address'] ?? '-');
                     $reference = is_array($data['reference']) ? '-' : ($data['reference'] ?? '-');
                     $telephone = is_array($data['telephone']) ? '-' : ($data['telephone'] ?? '-');
                     $alias     = is_array($request->ref) ? '-' : ($request->ref ?? '-');
 
-
-                    $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
+                    $exists = CustomerAddresses::where('customer_id', $customer_id)
                         ->where('address', $address)
                         ->where('reference', $reference)
                         ->where('telephone', $telephone)
@@ -1221,7 +1219,7 @@ class OrdenController extends Controller
 
                     if (!$exists) {
                         CustomerAddresses::create([
-                            'customer_id' => $data['customer_id'],
+                            'customer_id' => $customer_id,
                             'address' => $data['delivery_address'] ?? '',
                             'reference' => $data['reference'] ?? '',
                             'telephone' => $data['telephone'] ?? '',
