@@ -137,4 +137,9 @@ class PersonWorkerImport implements ToCollection
     {
         return $this->errors;
     }
+    
+        public function getData()
+        {
+            return $this->data;
+        }
 }
