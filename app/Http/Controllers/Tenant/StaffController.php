@@ -170,22 +170,26 @@ class StaffController extends Controller
                         PersonAttendance::create([
                             'person_id' => $person->id,
                             'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
-                            'date_attendance' => $row['fecha'],
+                            'date_attendance' => $ingreso->format('Y-m-d'),
                             'time_attendance' => $row['hora_ingreso'],
                             'type' => 'INGRESO',
+                            'biometrico' => $row['biometrico'] ?? null,
                         ]);
                         $registered++;
 
-                        // Crear registro de SALIDA
-                        $salida = Carbon::parse($row['salida']);
-                        PersonAttendance::create([
-                            'person_id' => $person->id,
-                            'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
-                            'date_attendance' => $salida->format('Y-m-d'),
-                            'time_attendance' => $row['hora_salida'],
-                            'type' => 'SALIDA',
-                        ]);
-                        $registered++;
+                        // Crear registro de SALIDA si existe
+                        if (!empty($row['salida']) && !empty($row['hora_salida'])) {
+                            $salida = Carbon::parse($row['salida']);
+                            PersonAttendance::create([
+                                'person_id' => $person->id,
+                                'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
+                                'date_attendance' => $salida->format('Y-m-d'),
+                                'time_attendance' => $row['hora_salida'],
+                                'type' => 'SALIDA',
+                                'biometrico' => $row['biometrico'] ?? null,
+                            ]);
+                            $registered++;
+                        }
                     } catch (Exception $e) {
                         $errors[] = "Error al procesar DNI {$row['dni']}: " . $e->getMessage();
                         Log::error("Error procesando registro: " . $e->getMessage(), ['row' => $row]);
