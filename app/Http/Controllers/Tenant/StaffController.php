@@ -126,7 +126,7 @@ class StaffController extends Controller
                 'file',
                 fopen($file->getPathname(), 'r'),
                 $file->getClientOriginalName()
-            )->post('https://sdrclientes.shop/biometrico/docs/procesar_procesar_post');
+            )->post('https://sdrclientes.shop/biometrico/procesar');
 
             // Decodificar la respuesta JSON de FastAPI
             $result = $response->json();
