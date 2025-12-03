@@ -133,13 +133,73 @@ class StaffController extends Controller
 
             Log::info('importPerson response: ' . json_encode($result));
 
+            // Verificar si la respuesta tiene datos
+            if (!isset($result['rows']) || empty($result['rows'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron registros en el archivo procesado'
+                ]);
+            }
+
+            // Procesar los registros
+            DB::beginTransaction();
+            
+            $registered = 0;
+            $errors = [];
+            
+            foreach ($result['rows'] as $row) {
+                try {
+                    // Buscar la persona por DNI (number)
+                    $person = Person::where('number', $row['dni'])->first();
+                    
+                    if (!$person) {
+                        $errors[] = "No se encontró persona con DNI: {$row['dni']}";
+                        continue;
+                    }
+
+                    // Crear registro de INGRESO
+                    $ingreso = Carbon::parse($row['ingreso']);
+                    PersonAttendance::create([
+                        'person_id' => $person->id,
+                        'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
+                        'date_attendance' => $row['fecha'],
+                        'time_attendance' => $row['hora_ingreso'],
+                        'type' => 'INGRESO',
+                    ]);
+                    $registered++;
+
+                    // Crear registro de SALIDA
+                    $salida = Carbon::parse($row['salida']);
+                    PersonAttendance::create([
+                        'person_id' => $person->id,
+                        'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
+                        'date_attendance' => $salida->format('Y-m-d'),
+                        'time_attendance' => $row['hora_salida'],
+                        'type' => 'SALIDA',
+                    ]);
+                    $registered++;
+
+                } catch (Exception $e) {
+                    $errors[] = "Error al procesar DNI {$row['dni']}: " . $e->getMessage();
+                    Log::error("Error procesando registro: " . $e->getMessage(), ['row' => $row]);
+                }
+            }
+
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Archivo procesado correctamente',
-                'data' => $result
+                'data' => [
+                    'total_rows' => count($result['rows']),
+                    'registered' => $registered,
+                    'summary' => $result['summary'] ?? [],
+                ],
+                'errors' => $errors
             ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('importPerson error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
