@@ -6972,29 +6972,25 @@ export default {
                     return;
                 }
 
-                // Configurar el producto seleccionado
-                this.selectedFood = { ...this.listFoods[productIndex] };
-
-                // Crear el objeto currentFood con los datos de la balanza
-                this.currentFood = {
-                    id: this.selectedFood.id,
-                    food: this.selectedFood,
-                    observation: `Peso: ${productData.peso}kg - Balanza`,
-                    price: parseFloat(productData.sale_unit_price),
-                    quantity: parseFloat(productData.peso), // Usar el peso como cantidad
-                    total_balanza: parseFloat(productData.total),
-                    warehouse_id: productData.warehouse_id || null
-                };
+                // Hacer una copia profunda del producto encontrado usando JSON
+                let selectedFoodCopy;
+                try {
+                    selectedFoodCopy = JSON.parse(JSON.stringify(this.listFoods[productIndex]));
+                } catch (e) {
+                    // Si falla JSON, hacer copia superficial
+                    console.warn("No se pudo hacer copia profunda, usando spread operator", e);
+                    selectedFoodCopy = { ...this.listFoods[productIndex] };
+                }
 
                 // Verificar stock si está habilitado
                 let quotation_stock = localStorage.getItem("quotation_stock") || 0;
                 quotation_stock = quotation_stock == 1;
 
                 if (
-                    Number(this.selectedFood.item.stock) <= 0 &&
+                    Number(selectedFoodCopy.item.stock) <= 0 &&
                     this.configuration.sales_stock == true &&
                     !quotation_stock &&
-                    this.selectedFood.item.unit_type_id != "ZZ"
+                    selectedFoodCopy.item.unit_type_id != "ZZ"
                 ) {
                     this.$toast.warning("Stock insuficiente");
                     return;
@@ -7002,7 +6998,7 @@ export default {
 
                 // Verificar si el producto ya existe en la orden
                 let foodFound = this.localOrden.filter(
-                    f => f.id == this.selectedFood.id
+                    f => f.id == selectedFoodCopy.id
                 );
 
                 if (foodFound.length > 0) {
@@ -7012,21 +7008,32 @@ export default {
 
                     if (
                         this.configuration.sales_stock == true &&
-                        this.selectedFood.item.is_set == 0 &&
+                        selectedFoodCopy.item.is_set == 0 &&
                         !quotation_stock &&
-                        this.selectedFood.item.unit_type_id != "ZZ"
+                        selectedFoodCopy.item.unit_type_id != "ZZ"
                     ) {
-                        if (qty > Number(this.selectedFood.item.stock)) {
+                        if (qty > Number(selectedFoodCopy.item.stock)) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
                     }
                 }
 
+                // Crear el objeto currentFood con los datos de la balanza
+                const currentFoodData = {
+                    id: selectedFoodCopy.id,
+                    food: selectedFoodCopy,
+                    observation: `Peso: ${productData.peso}kg - Balanza`,
+                    price: parseFloat(productData.sale_unit_price),
+                    quantity: parseFloat(productData.peso), // Usar el peso como cantidad
+                    total_balanza: parseFloat(productData.total),
+                    warehouse_id: productData.warehouse_id || null
+                };
+
                 // Insertar en la orden
                 this.insertOrden(
-                    this.currentFood,
-                    this.selectedFood.id,
+                    currentFoodData,
+                    selectedFoodCopy.id,
                     null, // type
                     false, // selectSerie
                     null // categoria
@@ -7041,21 +7048,16 @@ export default {
                     position: "bottom-left"
                 });
 
-                console.log("Producto agregado desde balanza:", this.currentFood);
+                console.log("Producto agregado desde balanza exitosamente");
+
+                // Limpiar el input si existe
+                if (this.input_item) {
+                    this.input_item = null;
+                }
 
             } catch (error) {
                 console.error("Error en addFoodFromBalanza:", error);
-                this.$message.error("Error al agregar producto desde balanza");
-            } finally {
-                // Limpiar variables
-                this.currentFood = {
-                    food: null,
-                    observation: null,
-                    quantity: 0,
-                    price: 0,
-                    categoria: null
-                };
-                this.selectedFood = null;
+                this.$message.error(`Error al agregar producto desde balanza: ${error.message}`);
             }
         },
 
