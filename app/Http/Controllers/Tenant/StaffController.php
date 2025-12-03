@@ -200,6 +200,7 @@ class StaffController extends Controller
                     'data' => [
                         'total_rows' => count($result['rows']),
                         'registered' => $registered,
+                        'rows' => $result['rows'] ?? [],
                         'summary' => $result['summary'] ?? [],
                     ],
                     'errors' => $errors
