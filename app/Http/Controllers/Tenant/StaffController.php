@@ -138,7 +138,7 @@ class StaffController extends Controller
                 Log::info('importPerson parsed result: ' . json_encode($result));
 
                 // Verificar si la respuesta tiene datos
-                if (!isset($result['rows']) || empty($result['rows'])) {
+                if (!isset($result['data']) || empty($result['data'])) {
                     return response()->json([
                         'success' => false,
                         'message' => 'No se encontraron registros en el archivo procesado',
@@ -154,82 +154,67 @@ class StaffController extends Controller
 
                 $registered = 0;
                 $errors = [];
+                $dataArray = $result['data'];
 
-                Log::info('Total de registros recibidos del API: ' . count($result['rows']));
+                Log::info('Total de registros recibidos del API: ' . count($dataArray));
 
-                foreach ($result['rows'] as $index => $row) {
+                foreach ($dataArray as $index => $row) {
                     try {
                         Log::info("Procesando fila {$index}: " . json_encode($row));
 
                         // Verificar que existan los campos requeridos
-                        if (!isset($row['dni'])) {
-                            $errors[] = "Fila {$index}: Falta el campo 'dni'";
-                            Log::warning("Fila {$index}: Falta el campo 'dni'", ['row' => $row]);
+                        if (!isset($row['person_id'])) {
+                            $errors[] = "Fila {$index}: Falta el campo 'person_id'";
+                            Log::warning("Fila {$index}: Falta el campo 'person_id'", ['row' => $row]);
                             continue;
                         }
 
-                        if (!isset($row['ingreso']) || !isset($row['hora_ingreso'])) {
-                            $errors[] = "Fila {$index}: Faltan campos de ingreso para DNI {$row['dni']}";
-                            Log::warning("Fila {$index}: Faltan campos de ingreso", ['row' => $row]);
+                        if (!isset($row['date_time_attendance']) || !isset($row['time_attendance']) || !isset($row['type'])) {
+                            $errors[] = "Fila {$index}: Faltan campos requeridos para person_id {$row['person_id']}";
+                            Log::warning("Fila {$index}: Faltan campos requeridos", ['row' => $row]);
                             continue;
                         }
 
-                        // Buscar la persona por DNI (number)
-                        $person = Person::where('number', $row['dni'])->first();
+                        // Buscar la persona por número (DNI)
+                        $person = Person::where('number', $row['person_id'])->first();
 
                         if (!$person) {
-                            $errors[] = "No se encontró persona con DNI: {$row['dni']}";
-                            Log::warning("No se encontró persona con DNI: {$row['dni']}");
+                            $errors[] = "No se encontró persona con DNI: {$row['person_id']}";
+                            Log::warning("No se encontró persona con DNI: {$row['person_id']}");
                             continue;
                         }
 
                         Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
 
-                        // Crear registro de INGRESO
+                        // Crear registro de asistencia
                         try {
-                            $ingreso = Carbon::parse($row['ingreso']);
-                            $attendanceIngreso = PersonAttendance::create([
+                            $dateTime = Carbon::parse($row['date_time_attendance']);
+                            $dateAttendance = isset($row['date_attendance']) ? $row['date_attendance'] : $dateTime->format('Y-m-d');
+                            $type = strtoupper($row['type']); // Normalizar tipo (ENTRADA/SALIDA o INGRESO/SALIDA)
+                            
+                            // Normalizar el tipo si viene como ENTRADA
+                            if ($type === 'ENTRADA') {
+                                $type = 'INGRESO';
+                            }
+
+                            $attendance = PersonAttendance::create([
                                 'person_id' => $person->id,
-                                'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
-                                'date_attendance' => $ingreso->format('Y-m-d'),
-                                'time_attendance' => $row['hora_ingreso'],
-                                'type' => 'INGRESO',
+                                'date_time_attendance' => $dateTime->format('Y-m-d H:i:s'),
+                                'date_attendance' => $dateAttendance,
+                                'time_attendance' => $row['time_attendance'],
+                                'type' => $type,
                             ]);
                             $registered++;
-                            Log::info("INGRESO registrado correctamente: ID={$attendanceIngreso->id}");
+                            Log::info("{$type} registrado correctamente: ID={$attendance->id}");
                         } catch (Exception $e) {
-                            $errors[] = "Error al crear INGRESO para DNI {$row['dni']}: " . $e->getMessage();
-                            Log::error("Error al crear INGRESO: " . $e->getMessage(), [
+                            $errors[] = "Error al crear registro para person_id {$row['person_id']}: " . $e->getMessage();
+                            Log::error("Error al crear registro de asistencia: " . $e->getMessage(), [
                                 'row' => $row,
                                 'person_id' => $person->id
                             ]);
                         }
-
-                        // Crear registro de SALIDA si existe
-                        if (!empty($row['salida']) && !empty($row['hora_salida'])) {
-                            try {
-                                $salida = Carbon::parse($row['salida']);
-                                $attendanceSalida = PersonAttendance::create([
-                                    'person_id' => $person->id,
-                                    'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
-                                    'date_attendance' => $salida->format('Y-m-d'),
-                                    'time_attendance' => $row['hora_salida'],
-                                    'type' => 'SALIDA',
-                                ]);
-                                $registered++;
-                                Log::info("SALIDA registrada correctamente: ID={$attendanceSalida->id}");
-                            } catch (Exception $e) {
-                                $errors[] = "Error al crear SALIDA para DNI {$row['dni']}: " . $e->getMessage();
-                                Log::error("Error al crear SALIDA: " . $e->getMessage(), [
-                                    'row' => $row,
-                                    'person_id' => $person->id
-                                ]);
-                            }
-                        } else {
-                            Log::info("No se registró SALIDA (datos vacíos o nulos) para DNI {$row['dni']}");
-                        }
                     } catch (Exception $e) {
-                        $errors[] = "Error general al procesar DNI " . ($row['dni'] ?? 'desconocido') . ": " . $e->getMessage();
+                        $errors[] = "Error general al procesar person_id " . ($row['person_id'] ?? 'desconocido') . ": " . $e->getMessage();
                         Log::error("Error general procesando registro: " . $e->getMessage(), [
                             'row' => $row,
                             'trace' => $e->getTraceAsString()
@@ -245,10 +230,8 @@ class StaffController extends Controller
                     'success' => true,
                     'message' => 'Archivo procesado correctamente',
                     'data' => [
-                        'total_rows' => count($result['rows']),
+                        'total_registros' => $result['total_registros'] ?? count($dataArray),
                         'registered' => $registered,
-                        'rows' => $result['rows'] ?? [],
-                        'summary' => $result['summary'] ?? [],
                     ],
                     'errors' => $errors
                 ]);
