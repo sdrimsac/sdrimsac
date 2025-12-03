@@ -194,7 +194,6 @@ class StaffController extends Controller
                                 'date_attendance' => $ingreso->format('Y-m-d'),
                                 'time_attendance' => $row['hora_ingreso'],
                                 'type' => 'INGRESO',
-                                'biometrico' => $row['biometrico'] ?? null,
                             ]);
                             $registered++;
                             Log::info("INGRESO registrado correctamente: ID={$attendanceIngreso->id}");
@@ -216,7 +215,6 @@ class StaffController extends Controller
                                     'date_attendance' => $salida->format('Y-m-d'),
                                     'time_attendance' => $row['hora_salida'],
                                     'type' => 'SALIDA',
-                                    'biometrico' => $row['biometrico'] ?? null,
                                 ]);
                                 $registered++;
                                 Log::info("SALIDA registrada correctamente: ID={$attendanceSalida->id}");
