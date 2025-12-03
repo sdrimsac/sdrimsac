@@ -128,16 +128,24 @@ class StaffController extends Controller
                 $file->getClientOriginalName()
             )->post('https://sdrclientes.shop/biometrico/procesar');
 
+            // Log del status y cuerpo de la respuesta
+            Log::info('API Response Status: ' . $response->status());
+            Log::info('API Response Body: ' . $response->body());
+
             // Decodificar la respuesta JSON de FastAPI
             $result = $response->json();
 
-            Log::info('importPerson response: ' . json_encode($result));
+            Log::info('importPerson parsed result: ' . json_encode($result));
 
             // Verificar si la respuesta tiene datos
             if (!isset($result['rows']) || empty($result['rows'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se encontraron registros en el archivo procesado'
+                    'message' => 'No se encontraron registros en el archivo procesado',
+                    'debug' => [
+                        'status' => $response->status(),
+                        'response' => $result
+                    ]
                 ]);
             }
 
