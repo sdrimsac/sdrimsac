@@ -184,24 +184,27 @@ class StaffController extends Controller
                             continue;
                         }
 
-                        // Verificar que la persona existe
-                        $person = Person::find($session['person_id']);
+                        // El person_id que viene del API es en realidad el DNI (number)
+                        // Buscar la persona por su número de documento
+                        $dni = $session['person_id'];
+                        $person = Person::where('number', $dni)->first();
+                        
                         if (!$person) {
-                            $errors[] = "No se encontró persona con ID: {$session['person_id']}";
+                            $errors[] = "No se encontró persona con DNI: {$dni}";
                             if ($index < 3) {
-                                Log::warning("No se encontró persona con ID: {$session['person_id']}");
+                                Log::warning("No se encontró persona con DNI: {$dni}");
                             }
                             continue;
                         }
 
                         if ($index < 3) {
-                            Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
+                            Log::info("Persona encontrada: ID={$person->id}, DNI={$dni}, Nombre={$person->name}");
                         }
 
-                        // Crear el registro de asistencia directamente con los datos del API
+                        // Crear el registro de asistencia usando el ID real de la persona de la BD
                         try {
                             $attendance = PersonAttendance::create([
-                                'person_id' => $session['person_id'],
+                                'person_id' => $person->id,  // Usar el ID real de la BD, no el DNI
                                 'date_time_attendance' => $session['date_time_attendance'],
                                 'date_attendance' => $session['date_attendance'] ?? Carbon::parse($session['date_time_attendance'])->format('Y-m-d'),
                                 'time_attendance' => $session['time_attendance'] ?? Carbon::parse($session['date_time_attendance'])->format('H:i:s'),
@@ -210,13 +213,14 @@ class StaffController extends Controller
                             $registered++;
                             
                             if ($index < 3) {
-                                Log::info("{$session['type']} registrado: ID={$attendance->id}, DateTime={$session['date_time_attendance']}");
+                                Log::info("{$session['type']} registrado: ID={$attendance->id}, PersonID={$person->id}, DNI={$dni}, DateTime={$session['date_time_attendance']}");
                             }
                         } catch (Exception $e) {
-                            $errors[] = "Error al crear registro para person_id {$session['person_id']}: " . $e->getMessage();
+                            $errors[] = "Error al crear registro para DNI {$dni} (PersonID: {$person->id}): " . $e->getMessage();
                             Log::error("Error al crear registro de asistencia: " . $e->getMessage(), [
                                 'session' => $session,
-                                'person_id' => $session['person_id']
+                                'person_id' => $person->id,
+                                'dni' => $dni
                             ]);
                         }
 
