@@ -12,7 +12,6 @@ use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonWorkerCollection;
 use App\Imports\PersonWorkerImport;
-use App\Models\System\Client;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\CreditList;
@@ -123,29 +122,25 @@ class StaffController extends Controller
         try {
             $file = $request->file('file');
 
-            $client = new Client();
-
-            $response = $client->post('https://sdrclientes.shop/biometrico/docs/procesar_procesar_post', [
-                'multipart' => [
-                    [
-                        'name'     => 'file',
-                        'contents' => fopen($file->getPathname(), 'r'),
-                        'filename' => $file->getClientOriginalName()
-                    ],
-                ],
-            ]);
+            $response = \Illuminate\Support\Facades\Http::attach(
+                'file',
+                fopen($file->getPathname(), 'r'),
+                $file->getClientOriginalName()
+            )->post('https://sdrclientes.shop/biometrico/docs/procesar_procesar_post');
 
             // Decodificar la respuesta JSON de FastAPI
-            $result = json_decode($response->getBody(), true);
+            $result = $response->json();
+
+            Log::info('importPerson response: ' . json_encode($result));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Archivo procesado correctamente',
                 'data' => $result
             ]);
-            Log::info('importPerson response: ' . json_encode($result));
 
         } catch (\Exception $e) {
+            Log::error('importPerson error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
