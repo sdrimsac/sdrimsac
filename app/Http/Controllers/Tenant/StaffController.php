@@ -155,46 +155,91 @@ class StaffController extends Controller
                 $registered = 0;
                 $errors = [];
 
-                foreach ($result['rows'] as $row) {
+                Log::info('Total de registros recibidos del API: ' . count($result['rows']));
+
+                foreach ($result['rows'] as $index => $row) {
                     try {
+                        Log::info("Procesando fila {$index}: " . json_encode($row));
+
+                        // Verificar que existan los campos requeridos
+                        if (!isset($row['dni'])) {
+                            $errors[] = "Fila {$index}: Falta el campo 'dni'";
+                            Log::warning("Fila {$index}: Falta el campo 'dni'", ['row' => $row]);
+                            continue;
+                        }
+
+                        if (!isset($row['ingreso']) || !isset($row['hora_ingreso'])) {
+                            $errors[] = "Fila {$index}: Faltan campos de ingreso para DNI {$row['dni']}";
+                            Log::warning("Fila {$index}: Faltan campos de ingreso", ['row' => $row]);
+                            continue;
+                        }
+
                         // Buscar la persona por DNI (number)
                         $person = Person::where('number', $row['dni'])->first();
 
                         if (!$person) {
                             $errors[] = "No se encontró persona con DNI: {$row['dni']}";
+                            Log::warning("No se encontró persona con DNI: {$row['dni']}");
                             continue;
                         }
 
-                        // Crear registro de INGRESO
-                        $ingreso = Carbon::parse($row['ingreso']);
-                        PersonAttendance::create([
-                            'person_id' => $person->id,
-                            'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
-                            'date_attendance' => $ingreso->format('Y-m-d'),
-                            'time_attendance' => $row['hora_ingreso'],
-                            'type' => 'INGRESO',
-                            'biometrico' => $row['biometrico'] ?? null,
-                        ]);
-                        $registered++;
+                        Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
 
-                        // Crear registro de SALIDA si existe
-                        if (!empty($row['salida']) && !empty($row['hora_salida'])) {
-                            $salida = Carbon::parse($row['salida']);
-                            PersonAttendance::create([
+                        // Crear registro de INGRESO
+                        try {
+                            $ingreso = Carbon::parse($row['ingreso']);
+                            $attendanceIngreso = PersonAttendance::create([
                                 'person_id' => $person->id,
-                                'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
-                                'date_attendance' => $salida->format('Y-m-d'),
-                                'time_attendance' => $row['hora_salida'],
-                                'type' => 'SALIDA',
+                                'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
+                                'date_attendance' => $ingreso->format('Y-m-d'),
+                                'time_attendance' => $row['hora_ingreso'],
+                                'type' => 'INGRESO',
                                 'biometrico' => $row['biometrico'] ?? null,
                             ]);
                             $registered++;
+                            Log::info("INGRESO registrado correctamente: ID={$attendanceIngreso->id}");
+                        } catch (Exception $e) {
+                            $errors[] = "Error al crear INGRESO para DNI {$row['dni']}: " . $e->getMessage();
+                            Log::error("Error al crear INGRESO: " . $e->getMessage(), [
+                                'row' => $row,
+                                'person_id' => $person->id
+                            ]);
+                        }
+
+                        // Crear registro de SALIDA si existe
+                        if (!empty($row['salida']) && !empty($row['hora_salida'])) {
+                            try {
+                                $salida = Carbon::parse($row['salida']);
+                                $attendanceSalida = PersonAttendance::create([
+                                    'person_id' => $person->id,
+                                    'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
+                                    'date_attendance' => $salida->format('Y-m-d'),
+                                    'time_attendance' => $row['hora_salida'],
+                                    'type' => 'SALIDA',
+                                    'biometrico' => $row['biometrico'] ?? null,
+                                ]);
+                                $registered++;
+                                Log::info("SALIDA registrada correctamente: ID={$attendanceSalida->id}");
+                            } catch (Exception $e) {
+                                $errors[] = "Error al crear SALIDA para DNI {$row['dni']}: " . $e->getMessage();
+                                Log::error("Error al crear SALIDA: " . $e->getMessage(), [
+                                    'row' => $row,
+                                    'person_id' => $person->id
+                                ]);
+                            }
+                        } else {
+                            Log::info("No se registró SALIDA (datos vacíos o nulos) para DNI {$row['dni']}");
                         }
                     } catch (Exception $e) {
-                        $errors[] = "Error al procesar DNI {$row['dni']}: " . $e->getMessage();
-                        Log::error("Error procesando registro: " . $e->getMessage(), ['row' => $row]);
+                        $errors[] = "Error general al procesar DNI " . ($row['dni'] ?? 'desconocido') . ": " . $e->getMessage();
+                        Log::error("Error general procesando registro: " . $e->getMessage(), [
+                            'row' => $row,
+                            'trace' => $e->getTraceAsString()
+                        ]);
                     }
                 }
+
+                Log::info("Proceso completado. Registros insertados: {$registered}");
 
                 DB::commit();
 
@@ -224,8 +269,6 @@ class StaffController extends Controller
             'message' => 'No se ha enviado ningún archivo'
         ]);
     }
-
-
 
     /* public function importPersonDat(Request $request)
     {
