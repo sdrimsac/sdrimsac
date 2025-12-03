@@ -12,6 +12,7 @@ use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonWorkerCollection;
 use App\Imports\PersonWorkerImport;
+use App\Models\System\Client;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\CreditList;
@@ -82,7 +83,7 @@ class StaffController extends Controller
         ]);
     }
 
-    public function importPerson(Request $request)
+    /* public function importPerson(Request $request)
     {
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
@@ -111,9 +112,56 @@ class StaffController extends Controller
             'success' => false,
             'message' =>  __('app.actions.upload.error'),
         ];
+    } */
+
+    public function importPerson(Request $request)
+{
+    set_time_limit(0);
+    ini_set('memory_limit', '2048M');
+
+    if ($request->hasFile('file')) {
+        try {
+            $file = $request->file('file');
+
+            $client = new Client();
+
+            $response = $client->post('https://sdrclientes.shop/biometrico/docs/procesar_procesar_post', [
+                'multipart' => [
+                    [
+                        'name'     => 'file',
+                        'contents' => fopen($file->getPathname(), 'r'),
+                        'filename' => $file->getClientOriginalName()
+                    ],
+                ],
+            ]);
+
+            // Decodificar la respuesta JSON de FastAPI
+            $result = json_decode($response->getBody(), true);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Archivo procesado correctamente',
+                'data' => $result
+            ]);
+            Log::info('importPerson response: ' . json_encode($result));
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    public function importPersonDat(Request $request)
+    return response()->json([
+        'success' => false,
+        'message' => 'No se ha enviado ningún archivo'
+    ]);
+}
+
+
+
+    /* public function importPersonDat(Request $request)
     {
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
@@ -339,7 +387,7 @@ class StaffController extends Controller
             ];
         }
     }
-
+ */
     /**
      * Procesa las marcas de un día laboral específico
      */
