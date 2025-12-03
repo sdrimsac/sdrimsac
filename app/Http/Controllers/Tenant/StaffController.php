@@ -137,6 +137,9 @@ class StaffController extends Controller
 
                 Log::info('importPerson parsed result: ' . json_encode($result));
 
+                // Log completo de la respuesta para debug
+                Log::info('API Response completa: ' . json_encode($result));
+
                 // Verificar si la respuesta tiene datos
                 if (!isset($result['data']) || empty($result['data'])) {
                     return response()->json([
@@ -158,46 +161,84 @@ class StaffController extends Controller
                 $dataArray = $result['data'];
 
                 Log::info('Total de sesiones recibidas del API: ' . count($dataArray));
+                
+                // Log de la primera sesión para ver la estructura exacta
+                if (!empty($dataArray)) {
+                    Log::info("Estructura de la primera sesión: " . json_encode($dataArray[0]));
+                }
 
                 foreach ($dataArray as $index => $session) {
                     try {
-                        Log::info("Procesando sesión {$index}: " . json_encode($session));
+                        // Log más detallado de cada sesión (solo las primeras 3 para no saturar)
+                        if ($index < 3) {
+                            Log::info("Procesando sesión {$index}: " . json_encode($session));
+                            Log::info("Keys disponibles: " . json_encode(array_keys($session)));
+                        }
 
-                        // Verificar que existan los campos requeridos
-                        if (!isset($session['user_id'])) {
-                            $errors[] = "Sesión {$index}: Falta el campo 'user_id'";
-                            Log::warning("Sesión {$index}: Falta el campo 'user_id'", ['session' => $session]);
+                        // Intentar encontrar el campo de DNI con diferentes nombres posibles
+                        $dni = $session['user_id'] 
+                            ?? $session['dni'] 
+                            ?? $session['numero'] 
+                            ?? $session['number'] 
+                            ?? $session['document_number']
+                            ?? $session['user']
+                            ?? null;
+
+                        if (!$dni) {
+                            $errors[] = "Sesión {$index}: Falta el campo de identificación (user_id, dni, number, etc.). Campos disponibles: " . implode(', ', array_keys($session));
+                            if ($index < 3) {
+                                Log::warning("Sesión {$index}: No se encontró campo de identificación", ['session' => $session]);
+                            }
                             continue;
                         }
 
-                        if (!isset($session['entrada'])) {
-                            $errors[] = "Sesión {$index}: Falta el campo 'entrada' para user_id {$session['user_id']}";
-                            Log::warning("Sesión {$index}: Falta el campo 'entrada'", ['session' => $session]);
+                        // Intentar encontrar los campos de entrada con diferentes nombres posibles
+                        $entrada = $session['entrada'] 
+                            ?? $session['entry'] 
+                            ?? $session['check_in']
+                            ?? $session['time_in']
+                            ?? $session['ingreso']
+                            ?? null;
+
+                        if (!$entrada) {
+                            $errors[] = "Sesión {$index}: Falta el campo 'entrada' para DNI {$dni}. Campos disponibles: " . implode(', ', array_keys($session));
+                            if ($index < 3) {
+                                Log::warning("Sesión {$index}: Falta el campo 'entrada'", ['session' => $session]);
+                            }
                             continue;
                         }
 
                         // Buscar la persona por número (DNI)
-                        $person = Person::where('number', $session['user_id'])->first();
+                        $person = Person::where('number', $dni)->first();
 
                         if (!$person) {
-                            $errors[] = "No se encontró persona con DNI: {$session['user_id']}";
-                            Log::warning("No se encontró persona con DNI: {$session['user_id']}");
+                            $errors[] = "No se encontró persona con DNI: {$dni}";
+                            if ($index < 3) {
+                                Log::warning("No se encontró persona con DNI: {$dni}");
+                            }
                             continue;
                         }
 
-                        Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
+                        if ($index < 3) {
+                            Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
+                        }
 
                         // Obtener la fecha real de la sesión
-                        $dateReal = isset($session['date_real']) ? $session['date_real'] : Carbon::parse($session['entrada'])->format('Y-m-d');
+                        $dateReal = isset($session['date_real']) 
+                            ? $session['date_real'] 
+                            : (isset($session['fecha']) 
+                                ? $session['fecha']
+                                : Carbon::parse($entrada)->format('Y-m-d'));
 
                         // Verificar si hay flag de advertencia
-                        if (!empty($session['flag'])) {
-                            $warnings[] = "user_id {$session['user_id']} - {$dateReal}: {$session['flag']}";
+                        if (!empty($session['flag']) || !empty($session['warning']) || !empty($session['alerta'])) {
+                            $flagMsg = $session['flag'] ?? $session['warning'] ?? $session['alerta'];
+                            $warnings[] = "DNI {$dni} - {$dateReal}: {$flagMsg}";
                         }
 
                         // Crear registro de ENTRADA
                         try {
-                            $entradaDateTime = Carbon::parse($session['entrada']);
+                            $entradaDateTime = Carbon::parse($entrada);
                             
                             $attendanceEntrada = PersonAttendance::create([
                                 'person_id' => $person->id,
@@ -207,19 +248,28 @@ class StaffController extends Controller
                                 'type' => 'INGRESO',
                             ]);
                             $registered++;
-                            Log::info("INGRESO registrado: ID={$attendanceEntrada->id}, DateTime={$entradaDateTime->format('Y-m-d H:i:s')}");
+                            if ($index < 3) {
+                                Log::info("INGRESO registrado: ID={$attendanceEntrada->id}, DateTime={$entradaDateTime->format('Y-m-d H:i:s')}");
+                            }
                         } catch (Exception $e) {
-                            $errors[] = "Error al crear INGRESO para user_id {$session['user_id']}: " . $e->getMessage();
+                            $errors[] = "Error al crear INGRESO para DNI {$dni}: " . $e->getMessage();
                             Log::error("Error al crear INGRESO: " . $e->getMessage(), [
                                 'session' => $session,
                                 'person_id' => $person->id
                             ]);
                         }
 
+                        // Buscar el campo de salida con diferentes nombres posibles
+                        $salida = $session['salida'] 
+                            ?? $session['exit'] 
+                            ?? $session['check_out']
+                            ?? $session['time_out']
+                            ?? null;
+
                         // Crear registro de SALIDA (si existe)
-                        if (!empty($session['salida'])) {
+                        if (!empty($salida)) {
                             try {
-                                $salidaDateTime = Carbon::parse($session['salida']);
+                                $salidaDateTime = Carbon::parse($salida);
                                 
                                 $attendanceSalida = PersonAttendance::create([
                                     'person_id' => $person->id,
@@ -229,21 +279,25 @@ class StaffController extends Controller
                                     'type' => 'SALIDA',
                                 ]);
                                 $registered++;
-                                Log::info("SALIDA registrada: ID={$attendanceSalida->id}, DateTime={$salidaDateTime->format('Y-m-d H:i:s')}");
+                                if ($index < 3) {
+                                    Log::info("SALIDA registrada: ID={$attendanceSalida->id}, DateTime={$salidaDateTime->format('Y-m-d H:i:s')}");
+                                }
                             } catch (Exception $e) {
-                                $errors[] = "Error al crear SALIDA para user_id {$session['user_id']}: " . $e->getMessage();
+                                $errors[] = "Error al crear SALIDA para DNI {$dni}: " . $e->getMessage();
                                 Log::error("Error al crear SALIDA: " . $e->getMessage(), [
                                     'session' => $session,
                                     'person_id' => $person->id
                                 ]);
                             }
                         } else {
-                            $warnings[] = "user_id {$session['user_id']} - {$dateReal}: Sesión sin salida registrada";
-                            Log::warning("Sesión sin salida", ['session' => $session]);
+                            $warnings[] = "DNI {$dni} - {$dateReal}: Sesión sin salida registrada";
+                            if ($index < 3) {
+                                Log::warning("Sesión sin salida", ['session' => $session]);
+                            }
                         }
 
                     } catch (Exception $e) {
-                        $errors[] = "Error general al procesar user_id " . ($session['user_id'] ?? 'desconocido') . ": " . $e->getMessage();
+                        $errors[] = "Error general al procesar DNI " . ($dni ?? 'desconocido') . ": " . $e->getMessage();
                         Log::error("Error general procesando sesión: " . $e->getMessage(), [
                             'session' => $session,
                             'trace' => $e->getTraceAsString()
