@@ -7030,14 +7030,47 @@ export default {
                     warehouse_id: productData.warehouse_id || null
                 };
 
-                // Insertar en la orden
-                this.insertOrden(
-                    currentFoodData,
-                    selectedFoodCopy.id,
-                    null, // type
-                    false, // selectSerie
-                    null // categoria
-                );
+                // Crear un mock temporal de las referencias que insertOrden necesita
+                const tempRefs = {
+                    list_orden: this.$refs.list_orden || {
+                        changeCurrencyItems: () => {
+                            console.log('[BALANZA] changeCurrencyItems no disponible, se omite');
+                        }
+                    },
+                    ordenRef: this.$refs.ordenRef || {
+                        calculateTotal: () => {
+                            console.log('[BALANZA] ordenRef.calculateTotal no disponible, usando calculateTotal directo');
+                            this.calculateTotal();
+                        }
+                    }
+                };
+
+                // Guardar las referencias originales
+                const originalRefs = this.$refs;
+
+                // Temporalmente sobrescribir las referencias
+                this.$refs = { ...originalRefs, ...tempRefs };
+
+                try {
+                    // Insertar en la orden
+                    this.insertOrden(
+                        currentFoodData,
+                        selectedFoodCopy.id,
+                        null, // type
+                        false, // selectSerie
+                        null // categoria
+                    );
+                } finally {
+                    // Restaurar las referencias originales
+                    this.$refs = originalRefs;
+                }
+
+                // Asegurar que el total se recalcule
+                if (this.$refs.ordenRef && typeof this.$refs.ordenRef.calculateTotal === 'function') {
+                    this.$refs.ordenRef.calculateTotal();
+                } else {
+                    this.calculateTotal();
+                }
 
                 // Notificar éxito
                 this.$notify({
