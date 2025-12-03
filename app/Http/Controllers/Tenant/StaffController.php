@@ -154,69 +154,98 @@ class StaffController extends Controller
 
                 $registered = 0;
                 $errors = [];
+                $warnings = [];
                 $dataArray = $result['data'];
 
-                Log::info('Total de registros recibidos del API: ' . count($dataArray));
+                Log::info('Total de sesiones recibidas del API: ' . count($dataArray));
 
-                foreach ($dataArray as $index => $row) {
+                foreach ($dataArray as $index => $session) {
                     try {
-                        Log::info("Procesando fila {$index}: " . json_encode($row));
+                        Log::info("Procesando sesión {$index}: " . json_encode($session));
 
                         // Verificar que existan los campos requeridos
-                        if (!isset($row['person_id'])) {
-                            $errors[] = "Fila {$index}: Falta el campo 'person_id'";
-                            Log::warning("Fila {$index}: Falta el campo 'person_id'", ['row' => $row]);
+                        if (!isset($session['user_id'])) {
+                            $errors[] = "Sesión {$index}: Falta el campo 'user_id'";
+                            Log::warning("Sesión {$index}: Falta el campo 'user_id'", ['session' => $session]);
                             continue;
                         }
 
-                        if (!isset($row['date_time_attendance']) || !isset($row['time_attendance']) || !isset($row['type'])) {
-                            $errors[] = "Fila {$index}: Faltan campos requeridos para person_id {$row['person_id']}";
-                            Log::warning("Fila {$index}: Faltan campos requeridos", ['row' => $row]);
+                        if (!isset($session['entrada'])) {
+                            $errors[] = "Sesión {$index}: Falta el campo 'entrada' para user_id {$session['user_id']}";
+                            Log::warning("Sesión {$index}: Falta el campo 'entrada'", ['session' => $session]);
                             continue;
                         }
 
                         // Buscar la persona por número (DNI)
-                        $person = Person::where('number', $row['person_id'])->first();
+                        $person = Person::where('number', $session['user_id'])->first();
 
                         if (!$person) {
-                            $errors[] = "No se encontró persona con DNI: {$row['person_id']}";
-                            Log::warning("No se encontró persona con DNI: {$row['person_id']}");
+                            $errors[] = "No se encontró persona con DNI: {$session['user_id']}";
+                            Log::warning("No se encontró persona con DNI: {$session['user_id']}");
                             continue;
                         }
 
                         Log::info("Persona encontrada: ID={$person->id}, Nombre={$person->name}");
 
-                        // Crear registro de asistencia
-                        try {
-                            $dateTime = Carbon::parse($row['date_time_attendance']);
-                            $dateAttendance = isset($row['date_attendance']) ? $row['date_attendance'] : $dateTime->format('Y-m-d');
-                            $type = strtoupper($row['type']); // Normalizar tipo (ENTRADA/SALIDA o INGRESO/SALIDA)
-                            
-                            // Normalizar el tipo si viene como ENTRADA
-                            if ($type === 'ENTRADA') {
-                                $type = 'INGRESO';
-                            }
+                        // Obtener la fecha real de la sesión
+                        $dateReal = isset($session['date_real']) ? $session['date_real'] : Carbon::parse($session['entrada'])->format('Y-m-d');
 
-                            $attendance = PersonAttendance::create([
+                        // Verificar si hay flag de advertencia
+                        if (!empty($session['flag'])) {
+                            $warnings[] = "user_id {$session['user_id']} - {$dateReal}: {$session['flag']}";
+                        }
+
+                        // Crear registro de ENTRADA
+                        try {
+                            $entradaDateTime = Carbon::parse($session['entrada']);
+                            
+                            $attendanceEntrada = PersonAttendance::create([
                                 'person_id' => $person->id,
-                                'date_time_attendance' => $dateTime->format('Y-m-d H:i:s'),
-                                'date_attendance' => $dateAttendance,
-                                'time_attendance' => $row['time_attendance'],
-                                'type' => $type,
+                                'date_time_attendance' => $entradaDateTime->format('Y-m-d H:i:s'),
+                                'date_attendance' => $dateReal,
+                                'time_attendance' => $entradaDateTime->format('H:i:s'),
+                                'type' => 'INGRESO',
                             ]);
                             $registered++;
-                            Log::info("{$type} registrado correctamente: ID={$attendance->id}");
+                            Log::info("INGRESO registrado: ID={$attendanceEntrada->id}, DateTime={$entradaDateTime->format('Y-m-d H:i:s')}");
                         } catch (Exception $e) {
-                            $errors[] = "Error al crear registro para person_id {$row['person_id']}: " . $e->getMessage();
-                            Log::error("Error al crear registro de asistencia: " . $e->getMessage(), [
-                                'row' => $row,
+                            $errors[] = "Error al crear INGRESO para user_id {$session['user_id']}: " . $e->getMessage();
+                            Log::error("Error al crear INGRESO: " . $e->getMessage(), [
+                                'session' => $session,
                                 'person_id' => $person->id
                             ]);
                         }
+
+                        // Crear registro de SALIDA (si existe)
+                        if (!empty($session['salida'])) {
+                            try {
+                                $salidaDateTime = Carbon::parse($session['salida']);
+                                
+                                $attendanceSalida = PersonAttendance::create([
+                                    'person_id' => $person->id,
+                                    'date_time_attendance' => $salidaDateTime->format('Y-m-d H:i:s'),
+                                    'date_attendance' => $dateReal,
+                                    'time_attendance' => $salidaDateTime->format('H:i:s'),
+                                    'type' => 'SALIDA',
+                                ]);
+                                $registered++;
+                                Log::info("SALIDA registrada: ID={$attendanceSalida->id}, DateTime={$salidaDateTime->format('Y-m-d H:i:s')}");
+                            } catch (Exception $e) {
+                                $errors[] = "Error al crear SALIDA para user_id {$session['user_id']}: " . $e->getMessage();
+                                Log::error("Error al crear SALIDA: " . $e->getMessage(), [
+                                    'session' => $session,
+                                    'person_id' => $person->id
+                                ]);
+                            }
+                        } else {
+                            $warnings[] = "user_id {$session['user_id']} - {$dateReal}: Sesión sin salida registrada";
+                            Log::warning("Sesión sin salida", ['session' => $session]);
+                        }
+
                     } catch (Exception $e) {
-                        $errors[] = "Error general al procesar person_id " . ($row['person_id'] ?? 'desconocido') . ": " . $e->getMessage();
-                        Log::error("Error general procesando registro: " . $e->getMessage(), [
-                            'row' => $row,
+                        $errors[] = "Error general al procesar user_id " . ($session['user_id'] ?? 'desconocido') . ": " . $e->getMessage();
+                        Log::error("Error general procesando sesión: " . $e->getMessage(), [
+                            'session' => $session,
                             'trace' => $e->getTraceAsString()
                         ]);
                     }
@@ -230,10 +259,12 @@ class StaffController extends Controller
                     'success' => true,
                     'message' => 'Archivo procesado correctamente',
                     'data' => [
-                        'total_registros' => $result['total_registros'] ?? count($dataArray),
+                        'total_sesiones' => $result['total_sesiones'] ?? count($dataArray),
+                        'suspect_sessions' => $result['suspect_sessions'] ?? 0,
                         'registered' => $registered,
                     ],
-                    'errors' => $errors
+                    'errors' => $errors,
+                    'warnings' => $warnings
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();
