@@ -114,113 +114,111 @@ class StaffController extends Controller
     } */
 
     public function importPerson(Request $request)
-{
-    set_time_limit(0);
-    ini_set('memory_limit', '2048M');
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
 
-    if ($request->hasFile('file')) {
-        try {
-            $file = $request->file('file');
+        if ($request->hasFile('file')) {
+            try {
+                $file = $request->file('file');
 
-            $response = \Illuminate\Support\Facades\Http::attach(
-                'file',
-                fopen($file->getPathname(), 'r'),
-                $file->getClientOriginalName()
-            )->post('https://sdrclientes.shop/biometrico/procesar');
+                $response = \Illuminate\Support\Facades\Http::attach(
+                    'archivo',
+                    fopen($file->getPathname(), 'r'),
+                    $file->getClientOriginalName()
+                )->post('https://sdrclientes.shop/biometrico/procesar');
 
-            // Log del status y cuerpo de la respuesta
-            Log::info('API Response Status: ' . $response->status());
-            Log::info('API Response Body: ' . $response->body());
+                // Log del status y cuerpo de la respuesta
+                Log::info('API Response Status: ' . $response->status());
+                Log::info('API Response Body: ' . $response->body());
 
-            // Decodificar la respuesta JSON de FastAPI
-            $result = $response->json();
+                // Decodificar la respuesta JSON de FastAPI
+                $result = $response->json();
 
-            Log::info('importPerson parsed result: ' . json_encode($result));
+                Log::info('importPerson parsed result: ' . json_encode($result));
 
-            // Verificar si la respuesta tiene datos
-            if (!isset($result['rows']) || empty($result['rows'])) {
+                // Verificar si la respuesta tiene datos
+                if (!isset($result['rows']) || empty($result['rows'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se encontraron registros en el archivo procesado',
+                        'debug' => [
+                            'status' => $response->status(),
+                            'response' => $result
+                        ]
+                    ]);
+                }
+
+                // Procesar los registros
+                DB::beginTransaction();
+
+                $registered = 0;
+                $errors = [];
+
+                foreach ($result['rows'] as $row) {
+                    try {
+                        // Buscar la persona por DNI (number)
+                        $person = Person::where('number', $row['dni'])->first();
+
+                        if (!$person) {
+                            $errors[] = "No se encontró persona con DNI: {$row['dni']}";
+                            continue;
+                        }
+
+                        // Crear registro de INGRESO
+                        $ingreso = Carbon::parse($row['ingreso']);
+                        PersonAttendance::create([
+                            'person_id' => $person->id,
+                            'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
+                            'date_attendance' => $row['fecha'],
+                            'time_attendance' => $row['hora_ingreso'],
+                            'type' => 'INGRESO',
+                        ]);
+                        $registered++;
+
+                        // Crear registro de SALIDA
+                        $salida = Carbon::parse($row['salida']);
+                        PersonAttendance::create([
+                            'person_id' => $person->id,
+                            'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
+                            'date_attendance' => $salida->format('Y-m-d'),
+                            'time_attendance' => $row['hora_salida'],
+                            'type' => 'SALIDA',
+                        ]);
+                        $registered++;
+                    } catch (Exception $e) {
+                        $errors[] = "Error al procesar DNI {$row['dni']}: " . $e->getMessage();
+                        Log::error("Error procesando registro: " . $e->getMessage(), ['row' => $row]);
+                    }
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Archivo procesado correctamente',
+                    'data' => [
+                        'total_rows' => count($result['rows']),
+                        'registered' => $registered,
+                        'summary' => $result['summary'] ?? [],
+                    ],
+                    'errors' => $errors
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('importPerson error: ' . $e->getMessage());
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se encontraron registros en el archivo procesado',
-                    'debug' => [
-                        'status' => $response->status(),
-                        'response' => $result
-                    ]
+                    'message' => $e->getMessage()
                 ]);
             }
-
-            // Procesar los registros
-            DB::beginTransaction();
-            
-            $registered = 0;
-            $errors = [];
-            
-            foreach ($result['rows'] as $row) {
-                try {
-                    // Buscar la persona por DNI (number)
-                    $person = Person::where('number', $row['dni'])->first();
-                    
-                    if (!$person) {
-                        $errors[] = "No se encontró persona con DNI: {$row['dni']}";
-                        continue;
-                    }
-
-                    // Crear registro de INGRESO
-                    $ingreso = Carbon::parse($row['ingreso']);
-                    PersonAttendance::create([
-                        'person_id' => $person->id,
-                        'date_time_attendance' => $ingreso->format('Y-m-d H:i:s'),
-                        'date_attendance' => $row['fecha'],
-                        'time_attendance' => $row['hora_ingreso'],
-                        'type' => 'INGRESO',
-                    ]);
-                    $registered++;
-
-                    // Crear registro de SALIDA
-                    $salida = Carbon::parse($row['salida']);
-                    PersonAttendance::create([
-                        'person_id' => $person->id,
-                        'date_time_attendance' => $salida->format('Y-m-d H:i:s'),
-                        'date_attendance' => $salida->format('Y-m-d'),
-                        'time_attendance' => $row['hora_salida'],
-                        'type' => 'SALIDA',
-                    ]);
-                    $registered++;
-
-                } catch (Exception $e) {
-                    $errors[] = "Error al procesar DNI {$row['dni']}: " . $e->getMessage();
-                    Log::error("Error procesando registro: " . $e->getMessage(), ['row' => $row]);
-                }
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Archivo procesado correctamente',
-                'data' => [
-                    'total_rows' => count($result['rows']),
-                    'registered' => $registered,
-                    'summary' => $result['summary'] ?? [],
-                ],
-                'errors' => $errors
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('importPerson error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]);
         }
-    }
 
-    return response()->json([
-        'success' => false,
-        'message' => 'No se ha enviado ningún archivo'
-    ]);
-}
+        return response()->json([
+            'success' => false,
+            'message' => 'No se ha enviado ningún archivo'
+        ]);
+    }
 
 
 
@@ -457,26 +455,26 @@ class StaffController extends Controller
     private function processDailyMarks($dayMarks, $workDay, &$errors, &$registered)
     {
         $count = count($dayMarks);
-        
+
         // Si solo hay una marca, determinar si es entrada o salida basado en la hora y contexto
         if ($count == 1) {
             $mark = $dayMarks[0];
             $hour = $mark['carbon']->hour;
-            
+
             // Lógica mejorada para determinar tipo basado en horarios típicos:
             // Horarios más probables de ENTRADA: 09:00-12:00, 19:00-23:59
             // Horarios más probables de SALIDA: 00:00-08:59, 13:00-18:59
             // PERO también considerar que puede haber entradas tardías o salidas tempranas
-            
+
             if (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23)) {
                 $type = 'INGRESO'; // Probablemente entrada
             } else {
                 $type = 'SALIDA'; // Probablemente salida
             }
-            
+
             // Para marcas únicas, usar el workDay que ya fue calculado correctamente en el agrupamiento
             $singleMarkDate = $workDay;
-            
+
             try {
                 PersonAttendance::create([
                     'person_id' => $mark['person_id'],
@@ -491,7 +489,7 @@ class StaffController extends Controller
             }
             return;
         }
-        
+
         // Para múltiples marcas, emparejarlas inteligentemente usando patrón alternado
         $this->smartPairMarks($dayMarks, $workDay, $errors, $registered);
     }
@@ -502,33 +500,33 @@ class StaffController extends Controller
     private function smartPairMarks($dayMarks, $workDay, &$errors, &$registered)
     {
         $count = count($dayMarks);
-        
+
         // Procesar marcas secuencialmente usando patrón alternado
         for ($i = 0; $i < $count; $i++) {
             $currentMark = $dayMarks[$i];
-            
+
             // Determinar el tipo basado en la posición en la secuencia
             // Primera marca = INGRESO, segunda = SALIDA, tercera = INGRESO, etc.
             $isEntrance = ($i % 2 == 0); // Posición par = entrada, impar = salida
             $type = $isEntrance ? 'INGRESO' : 'SALIDA';
-            
+
             // Validación adicional basada en horarios para corregir si es necesario
             $hour = $currentMark['carbon']->hour;
-            
+
             // Si es la primera marca y está en horario de salida típico, podría ser una salida
             if ($i == 0 && $hour >= 0 && $hour <= 8) {
                 // Primera marca en horario de madrugada - probablemente es salida del turno anterior
                 $type = 'SALIDA';
                 $isEntrance = false;
             }
-            
+
             // Si es posición impar pero está en horario de entrada típico, mantener como entrada
             if (!$isEntrance && (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23))) {
                 // Esta marca parece ser entrada aunque esté en posición impar
                 // Podría indicar que falta una salida anterior
                 $type = 'INGRESO';
             }
-            
+
             try {
                 PersonAttendance::create([
                     'person_id' => $currentMark['person_id'],
@@ -562,7 +560,7 @@ class StaffController extends Controller
 
             // Para registros emparejados, ambos usan el mismo workDay calculado en el agrupamiento
             // Esto asegura que entrada y salida del mismo turno tengan la misma fecha de asistencia
-            
+
             // Crear registro de salida
             PersonAttendance::create([
                 'person_id' => $exitMark['person_id'],
@@ -572,7 +570,6 @@ class StaffController extends Controller
                 'type' => 'SALIDA',
             ]);
             $registered++;
-            
         } catch (Exception $e) {
             $errors[] = "Error al crear par entrada-salida para person_id={$entryMark['person_id']}: " . $e->getMessage();
         }
