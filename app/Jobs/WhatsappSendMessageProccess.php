@@ -124,11 +124,11 @@ class WhatsappSendMessageProccess implements ShouldQueue
                     } else {
                         $sender = 'sdrimsac';
                         if ($this->subdomain != null && $configuration->whatsapp_client) {
-                            $url = "https://" . $this->subdomain . ".sdrimsac.xyz/api/send-message";
+                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-text";
                             $sender = $this->subdomain;
                         } else {
                             $web_whatsapp = config('app.web_whatsapp');
-                            $url = "https://" . $web_whatsapp . '/api/send-message';
+                            $url = "https://" . $web_whatsapp . '/api/send-text';
                         }
                         $response = Http::withoutVerifying()->post($url, [
                             // $response = Http::post($url, [
