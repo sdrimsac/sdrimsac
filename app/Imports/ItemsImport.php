@@ -53,7 +53,8 @@ class ItemsImport implements ToCollection
 
             $second_name = $row[1];
             $item_type_id = '01';
-            $internal_id = $row[2];
+            // Convertir notación científica a string completo para códigos largos
+            $internal_id = $this->formatNumericValue($row[2]);
             $barcode = $row[3];
             $item_code = ($row[4]) ?: null;
             $unit_type_id = $row[5];
@@ -485,6 +486,25 @@ class ItemsImport implements ToCollection
                 'total' =>  floatval($price['price']),
             ]);
         }
+    }
+
+    /**
+     * Convierte valores numéricos en notación científica a string completo
+     * Para evitar pérdida de precisión en códigos largos
+     */
+    private function formatNumericValue($value)
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        // Si el valor contiene notación científica (E o e)
+        if (is_numeric($value) && (stripos((string)$value, 'e') !== false || is_float($value))) {
+            // Convertir a string sin notación científica con precisión suficiente
+            return sprintf('%.0f', $value);
+        }
+
+        return $value;
     }
 
 }
