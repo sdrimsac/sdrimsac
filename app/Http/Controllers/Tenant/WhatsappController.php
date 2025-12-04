@@ -298,7 +298,7 @@ class WhatsappController extends Controller
             }
         } else {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $web_whatsapp . "/api/send-message";
+            $url = "https://" . $web_whatsapp . "/api/send-messages";
 
             try {
                 $response = Http::withoutVerifying()->post($url, [
@@ -473,7 +473,7 @@ class WhatsappController extends Controller
 
         if ($sender == "sdrimsac") {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $web_whatsapp . '/api/send-message';
+            $url = "https://" . $web_whatsapp . '/api/send-messages';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-message';
         }
