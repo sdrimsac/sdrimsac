@@ -42,7 +42,7 @@ class ClientPaymentController extends Controller
         if ($to_group) {
             $url = "https://" . $web_whatsapp . '/api/send-file-by-name';
         } else {
-            $url = "https://" . $web_whatsapp . '/api/send-media';
+            $url = "https://" . $web_whatsapp . '/api/send-medias';
         }
 
         $video = str_replace('/storage/', '', $video);

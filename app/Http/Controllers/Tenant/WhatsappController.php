@@ -211,7 +211,7 @@ class WhatsappController extends Controller
             return;
         }
         $web_whatsapp = config('app.web_whatsapp');
-        $url = "https://" . $web_whatsapp . '/api/send-media';
+        $url = "https://" . $web_whatsapp . '/api/send-medias';
         $content_file = file_get_contents(Storage::disk('public')->path($image));
         $this->client = new Client([
             'verify' => false,
@@ -565,7 +565,7 @@ class WhatsappController extends Controller
         }
         if ($sender == "sdrimsac") {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $web_whatsapp . '/api/send-media';
+            $url = "https://" . $web_whatsapp . '/api/send-medias';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -626,7 +626,7 @@ class WhatsappController extends Controller
         $sender = $request->sender ?? 'sdrimsac';
         if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-media';
+            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-medias';
         } else {
             if ($sender == 'tunegociofactvillacorpnet') {
                 $sender = 'sdrimsac';
@@ -634,7 +634,7 @@ class WhatsappController extends Controller
 
             if ($sender == "sdrimsac" || $sender == null) {
                 $web_whatsapp = config('app.web_whatsapp');
-                $url = "https://" . $web_whatsapp . '/api/send-media';
+                $url = "https://" . $web_whatsapp . '/api/send-medias';
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }
@@ -761,7 +761,7 @@ class WhatsappController extends Controller
         $sender = $request->sender ?? 'sdrimsac';
         if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-media';
+            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-medias';
         } else {
             if ($sender == 'tunegociofactvillacorpnet') {
                 $sender = 'sdrimsac';
@@ -769,7 +769,7 @@ class WhatsappController extends Controller
 
             if ($sender == "sdrimsac" || $sender == null) {
                 $web_whatsapp = config('app.web_whatsapp');
-                $url = "https://" . $web_whatsapp . '/api/send-media';
+                $url = "https://" . $web_whatsapp . '/api/send-medias';
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }
@@ -897,7 +897,7 @@ class WhatsappController extends Controller
 
         if ($sender == "sdrimsac") {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $web_whatsapp . '/api/send-media';
+            $url = "https://" . $web_whatsapp . '/api/send-medias';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
