@@ -82,7 +82,7 @@ class DocumentTransform
 
         $inputs_transform = self::invoice($inputs_transform, $inputs);
         $inputs_transform = self::note($inputs_transform, $inputs);
-        Log::info('inputs_transform: ' . json_encode($inputs_transform));
+        /* Log::info('inputs_transform: ' . json_encode($inputs_transform)); */
         return $inputs_transform;
     }
 

@@ -393,6 +393,10 @@ if ($hostname) {
                 Route::post('card_brands', [App\Http\Controllers\Tenant\CardBrandController::class, 'store']);
                 Route::delete('card_brands/{card_brand}', [App\Http\Controllers\Tenant\CardBrandController::class, 'destroy']);
 
+                Route::get('schedules/records', [App\Http\Controllers\Tenant\SchedulesController::class, 'records']);
+                Route::post('schedules', [App\Http\Controllers\Tenant\SchedulesController::class, 'store']);
+                Route::get('schedules/record/{schedule}', [App\Http\Controllers\Tenant\SchedulesController::class, 'record']);
+
                 //Configurations
                 Route::post('configurations/etiquetas', [App\Http\Controllers\Tenant\ConfigurationController::class, 'etiquetas']);
                 Route::get('configurations/tablesNumbersEstablishments', [App\Http\Controllers\Tenant\ConfigurationController::class, 'tablesNumbersEstablishments']);

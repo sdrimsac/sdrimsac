@@ -25,6 +25,7 @@ use App\Models\Tenant\JobPosition;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Person;
 use App\Models\Tenant\PersonAttendance;
+use App\Models\Tenant\Schedule;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
@@ -39,6 +40,7 @@ use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\Restobar\Events\OrdenEvent;
 use Modules\Restobar\Events\PrintEvent;
@@ -122,29 +124,29 @@ class StaffController extends Controller
             try {
                 $file = $request->file('file');
 
-                $response = \Illuminate\Support\Facades\Http::attach(
+                /* $response = \Illuminate\Support\Facades\Http::attach(
+                    'archivo',
+                    fopen($file->getPathname(), 'r'),
+                    $file->getClientOriginalName()
+                )->post('https://sdrclientes.shop/biometrico/procesar'); */
+
+                $response = Http::withoutVerifying()->attach(
                     'archivo',
                     fopen($file->getPathname(), 'r'),
                     $file->getClientOriginalName()
                 )->post('https://sdrclientes.shop/biometrico/procesar');
 
-                // Log del status y cuerpo de la respuesta
+
                 Log::info('API Response Status: ' . $response->status());
                 Log::info('API Response Body: ' . $response->body());
 
-                // Decodificar la respuesta JSON de FastAPI
                 $result = $response->json();
 
-                Log::info('importPerson parsed result: ' . json_encode($result));
-
-                // Log completo de la respuesta para debug
-                Log::info('API Response completa: ' . json_encode($result));
-
-                // Verificar si la respuesta tiene datos
-                if (!isset($result['data']) || empty($result['data'])) {
+                // Verificar si la respuesta es exitosa y tiene datos
+                if (!isset($result['success']) || !$result['success']) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'No se encontraron registros en el archivo procesado',
+                        'message' => 'Error en la respuesta del API',
                         'debug' => [
                             'status' => $response->status(),
                             'response' => $result
@@ -152,84 +154,59 @@ class StaffController extends Controller
                     ]);
                 }
 
-                // Procesar los registros
+                if (!isset($result['data']) || empty($result['data'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se encontraron registros en el archivo procesado',
+                        'total' => $result['total'] ?? 0
+                    ]);
+                }
+
                 DB::beginTransaction();
 
                 $registered = 0;
                 $errors = [];
-                $warnings = [];
                 $dataArray = $result['data'];
 
-                Log::info('Total de sesiones recibidas del API: ' . count($dataArray));
-                
-                // Log de la primera sesión para ver la estructura exacta
-                if (!empty($dataArray)) {
-                    Log::info("Estructura de la primera sesión: " . json_encode($dataArray[0]));
-                }
+                Log::info('Total de registros recibidos del API: ' . count($dataArray));
 
-                foreach ($dataArray as $index => $session) {
+                foreach ($dataArray as $index => $record) {
                     try {
-                        // Log más detallado de cada sesión (solo las primeras 3 para no saturar)
-                        if ($index < 3) {
-                            Log::info("Procesando sesión {$index}: " . json_encode($session));
-                            Log::info("Keys disponibles: " . json_encode(array_keys($session)));
-                        }
-
-                        // Verificar que tenga los campos necesarios ya procesados por el API
-                        if (!isset($session['person_id']) || !isset($session['date_time_attendance']) || !isset($session['type'])) {
-                            $errors[] = "Sesión {$index}: Faltan campos requeridos. Campos disponibles: " . implode(', ', array_keys($session));
-                            if ($index < 3) {
-                                Log::warning("Sesión {$index}: Estructura de datos incompleta", ['session' => $session]);
-                            }
+                        // Verificar campos requeridos (según la nueva estructura)
+                        if (!isset($record['person_id']) || !isset($record['datetime'])) {
+                            $errors[] = "Registro {$index}: Faltan campos requeridos (person_id o datetime)";
                             continue;
                         }
 
-                        // El person_id que viene del API es en realidad el DNI (number)
-                        // Buscar la persona por su número de documento
-                        $dni = $session['person_id'];
+                        // El person_id que viene del API es el DNI
+                        $dni = $record['person_id'];
                         $person = Person::where('number', $dni)->first();
-                        
+
                         if (!$person) {
                             $errors[] = "No se encontró persona con DNI: {$dni}";
-                            if ($index < 3) {
-                                Log::warning("No se encontró persona con DNI: {$dni}");
-                            }
                             continue;
                         }
 
-                        if ($index < 3) {
-                            Log::info("Persona encontrada: ID={$person->id}, DNI={$dni}, Nombre={$person->name}");
-                        }
+                        // Insertar el registro sin determinar el tipo (INGRESO/SALIDA)
+                        // El tipo se determinará después con otro método según schedules
+                        $attendance = PersonAttendance::create([
+                            'person_id' => $person->id,
+                            'date_time_attendance' => $record['datetime'],
+                            'date_attendance' => $record['date'] ?? Carbon::parse($record['datetime'])->format('Y-m-d'),
+                            'time_attendance' => $record['time'] ?? Carbon::parse($record['datetime'])->format('H:i:s'),
+                            'type' => null, // Se determinará después
+                        ]);
 
-                        // Crear el registro de asistencia usando el ID real de la persona de la BD
-                        try {
-                            $attendance = PersonAttendance::create([
-                                'person_id' => $person->id,  // Usar el ID real de la BD, no el DNI
-                                'date_time_attendance' => $session['date_time_attendance'],
-                                'date_attendance' => $session['date_attendance'] ?? Carbon::parse($session['date_time_attendance'])->format('Y-m-d'),
-                                'time_attendance' => $session['time_attendance'] ?? Carbon::parse($session['date_time_attendance'])->format('H:i:s'),
-                                'type' => strtoupper($session['type']),
-                            ]);
-                            $registered++;
-                            
-                            if ($index < 3) {
-                                Log::info("{$session['type']} registrado: ID={$attendance->id}, PersonID={$person->id}, DNI={$dni}, DateTime={$session['date_time_attendance']}");
-                            }
-                        } catch (Exception $e) {
-                            $errors[] = "Error al crear registro para DNI {$dni} (PersonID: {$person->id}): " . $e->getMessage();
-                            Log::error("Error al crear registro de asistencia: " . $e->getMessage(), [
-                                'session' => $session,
-                                'person_id' => $person->id,
-                                'dni' => $dni
-                            ]);
-                        }
+                        $registered++;
 
+                        if ($index < 5) {
+                            Log::info("Registro {$index} insertado: ID={$attendance->id}, PersonID={$person->id}, DNI={$dni}, DateTime={$record['datetime']}");
+                        }
                     } catch (Exception $e) {
-                        $person_id = $session['person_id'] ?? 'desconocido';
-                        $errors[] = "Error general al procesar person_id {$person_id}: " . $e->getMessage();
-                        Log::error("Error general procesando sesión: " . $e->getMessage(), [
-                            'session' => $session,
-                            'trace' => $e->getTraceAsString()
+                        $dni = $record['person_id'] ?? 'desconocido';
+                        $errors[] = "Error al procesar DNI {$dni}: " . $e->getMessage();
+                        Log::error("Error al insertar registro: " . $e->getMessage(), [
+                            'record' => $record
                         ]);
                     }
                 }
@@ -238,16 +215,20 @@ class StaffController extends Controller
 
                 DB::commit();
 
+                // Llamar al método para determinar tipos de asistencia
+                $typeResponse = $this->dateTypeAttendance($request);
+                $typeResult = $typeResponse->getData();
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Archivo procesado correctamente',
                     'data' => [
-                        'total_sesiones' => $result['total_sesiones'] ?? count($dataArray),
-                        'suspect_sessions' => $result['suspect_sessions'] ?? 0,
+                        'total' => $result['total'] ?? count($dataArray),
                         'registered' => $registered,
+                        'errors_count' => count($errors),
+                        'types_processed' => $typeResult->processed ?? 0,
                     ],
-                    'errors' => $errors,
-                    'warnings' => $warnings
+                    'errors' => $errors
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -265,357 +246,455 @@ class StaffController extends Controller
         ]);
     }
 
-    /* public function importPersonDat(Request $request)
+
+    public function dateTypeAttendance(Request $request)
     {
-        set_time_limit(0);
-        ini_set('memory_limit', '2048M');
-        
-        $request->validate([
-            'file' => 'required|file|mimes:dat,txt'
-        ]);
-
         try {
-            $file = $request->file('file');
-            $path = $file->getRealPath();
+            DB::beginTransaction();
 
-            $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            
-            $total = count($lines);
-            $registered = 0;
-            $errors = [];
-            $groups = [];
+            // Obtener todas las marcas sin tipo, ordenadas por persona y fecha
+            $attendances = PersonAttendance::whereNull('type')
+                ->orderBy('person_id')
+                ->orderBy('date_time_attendance')
+                ->get();
 
-            // Procesar cada línea del archivo .dat
-            foreach ($lines as $lineIndex => $line) {
-                $line = trim($line);
-                if (empty($line)) continue;
-
-                // Dividir la línea por espacios
-                $data = preg_split('/\s+/', $line);
-                
-                if (count($data) < 2) {
-                    $errors[] = "Línea {$lineIndex}: Formato incorrecto - {$line}";
-                    continue;
-                }
-
-                $number = isset($data[0]) ? trim((string)$data[0]) : null;
-                $dateTimeString = isset($data[1]) ? $data[1] : null;
-                
-                // Si hay más partes, puede ser fecha y hora separadas
-                if (isset($data[2])) {
-                    $dateTimeString .= ' ' . $data[2];
-                }
-
-                if (empty($number) || empty($dateTimeString)) {
-                    $errors[] = "Línea {$lineIndex}: Datos vacíos o incompletos - number={$number} datetime={$dateTimeString}";
-                    continue;
-                }
-
-                try {
-                    // Intentar parsear la fecha/hora
-                    $carbon = Carbon::parse($dateTimeString);
-                } catch (Exception $e) {
-                    $errors[] = "Línea {$lineIndex}: No se pudo parsear la fecha para number={$number} datetime={$dateTimeString} - " . $e->getMessage();
-                    continue;
-                }
-
-                $date_time = $carbon->format('Y-m-d H:i:s');
-                $date_only = $carbon->format('Y-m-d');
-                $time_only = $carbon->format('H:i:s');
-
-                // Buscar la persona por número
-                $person = Person::where('number', $number)->first();
-                if (!$person) {
-                    $errors[] = "Línea {$lineIndex}: No se encontró persona con number={$number}";
-                    continue;
-                }
-
-                // Agrupar por persona
-                $groups[$person->id][] = [
-                    'person_id' => $person->id,
-                    'date_time' => $date_time,
-                    'date_attendance' => $date_only,
-                    'time_attendance' => $time_only,
-                    'carbon' => $carbon,
-                ];
+            if ($attendances->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'No hay marcas pendientes de procesar',
+                    'processed' => 0
+                ]);
             }
 
-            // Procesar cada grupo (por persona), ordenar por datetime y emparejar cronológicamente
-            foreach ($groups as $person_id => $marks) {
-                // Ordenar por timestamp para asegurar orden cronológico correcto
-                usort($marks, function ($a, $b) {
-                    $ta = isset($a['carbon']) ? $a['carbon']->getTimestamp() : strtotime($a['date_time']);
-                    $tb = isset($b['carbon']) ? $b['carbon']->getTimestamp() : strtotime($b['date_time']);
-                    return $ta <=> $tb;
-                });
+            // Agrupar por persona
+            $groupedByPerson = $attendances->groupBy('person_id');
+            $processed = 0;
+            $errors = [];
 
-                // Filtrar marcas duplicadas con lógica mejorada
-                $filtered = [];
-                $duplicateToleranceMinutes = 60; // Tolerancia de 60 minutos para manejar marcas repetitivas
-
-                foreach ($marks as $m) {
-                    if (empty($filtered)) {
-                        $filtered[] = $m;
-                        continue;
-                    }
-
-                    $last = end($filtered);
-                    if (isset($last['carbon']) && isset($m['carbon'])) {
-                        $diff = $last['carbon']->diffInMinutes($m['carbon']);
-                    } else {
-                        try {
-                            $lastDt = Carbon::parse($last['date_time']);
-                            $curDt = Carbon::parse($m['date_time']);
-                            $diff = $lastDt->diffInMinutes($curDt);
-                        } catch (Exception $e) {
-                            $diff = $duplicateToleranceMinutes + 1;
-                        }
-                    }
-
-                    if ($diff <= $duplicateToleranceMinutes) {
-                        $errors[] = "Marca duplicada eliminada person_id={$m['person_id']} datetime={$m['date_time']} (diferencia {$diff} minutos)";
-                        continue;
-                    }
-
-                    $filtered[] = $m;
-                }
-
-                $marks = array_values($filtered);
-
-                // Agrupar marcas por día laboral considerando turnos nocturnos de manera inteligente
-                $dailyGroups = [];
+            foreach ($groupedByPerson as $personId => $personAttendances) {
+                // Obtener TODOS los horarios configurados para esta persona
+                $schedules = Schedule::where('person_id', $personId)
+                    ->orderBy('entrada')
+                    ->get();
                 
-                for ($i = 0; $i < count($marks); $i++) {
-                    $mark = $marks[$i];
-                    $dt = $mark['carbon'];
-                    $hour = $dt->hour;
-                    $dateStr = $dt->format('Y-m-d');
-                    
-                    if ($hour >= 9 && $hour <= 18) {
-                        // 09:00-18:59: Turno diurno - usar fecha actual
-                        $workDay = $dateStr;
-                    } elseif ($hour >= 19) {
-                        // 19:00-23:59: Inicio de turno nocturno - usar fecha actual
-                        $workDay = $dateStr;
-                    } else {
-                        // 00:00-08:59: Marcas de madrugada - necesitamos analizar el contexto
-                        
-                        // Buscar si hay una entrada nocturna en el mismo día O en días cercanos
-                        $hasNightEntryToday = false;
-                        $hasNightEntryYesterday = false;
-                        
-                        $yesterday = $dt->copy()->subDay()->format('Y-m-d');
-                        
-                        foreach ($marks as $otherMark) {
-                            $otherDate = $otherMark['carbon']->format('Y-m-d');
-                            $otherHour = $otherMark['carbon']->hour;
-                            
-                            // Verificar entrada nocturna el mismo día
-                            if ($otherDate === $dateStr && $otherHour >= 19 && $otherHour <= 23) {
-                                $hasNightEntryToday = true;
-                            }
-                            
-                            // Verificar entrada nocturna el día anterior
-                            if ($otherDate === $yesterday && $otherHour >= 19 && $otherHour <= 23) {
-                                $hasNightEntryYesterday = true;
-                            }
-                        }
-                        
-                        // Lógica de asignación mejorada:
-                        if ($hasNightEntryYesterday && !$hasNightEntryToday) {
-                            // Si hay entrada nocturna ayer pero no hoy, esta marca pertenece al turno de ayer
-                            $workDay = $yesterday;
-                        } elseif ($hasNightEntryToday && !$hasNightEntryYesterday) {
-                            // Si hay entrada nocturna hoy pero no ayer, esta marca pertenece al turno de hoy
-                            $workDay = $dateStr;
-                        } elseif ($hasNightEntryYesterday && $hasNightEntryToday) {
-                            // Si hay entradas nocturnas tanto ayer como hoy, usar proximidad temporal
-                            // Buscar cuál entrada nocturna está más cerca de esta marca de madrugada
-                            $closestToYesterday = null;
-                            $closestToToday = null;
-                            
-                            foreach ($marks as $otherMark) {
-                                $otherDate = $otherMark['carbon']->format('Y-m-d');
-                                $otherHour = $otherMark['carbon']->hour;
-                                
-                                if ($otherDate === $yesterday && $otherHour >= 19 && $otherHour <= 23) {
-                                    if (!$closestToYesterday || $otherMark['carbon']->isAfter($closestToYesterday)) {
-                                        $closestToYesterday = $otherMark['carbon'];
-                                    }
-                                }
-                                
-                                if ($otherDate === $dateStr && $otherHour >= 19 && $otherHour <= 23) {
-                                    if (!$closestToToday || $otherMark['carbon']->isBefore($closestToToday)) {
-                                        $closestToToday = $otherMark['carbon'];
-                                    }
-                                }
-                            }
-                            
-                            // Calcular diferencias temporales
-                            $diffToYesterday = $closestToYesterday ? abs($closestToYesterday->diffInHours($dt)) : 999;
-                            $diffToToday = $closestToToday ? abs($closestToToday->diffInHours($dt)) : 999;
-                            
-                            // Asignar al turno más cercano temporalmente
-                            $workDay = ($diffToYesterday <= $diffToToday) ? $yesterday : $dateStr;
-                        } else {
-                            // Si no hay entradas nocturnas cerca, asumir que es salida del día anterior
-                            $workDay = $yesterday;
-                        }
-                    }
-                    
-                    $dailyGroups[$workDay][] = $mark;
+                if ($schedules->isEmpty()) {
+                    $errors[] = "No se encontró horario configurado para person_id: {$personId}";
+                    continue;
                 }
 
-                // Procesar cada día laboral por separado
-                foreach ($dailyGroups as $workDay => $dayMarks) {
-                    // Ordenar por hora
-                    usort($dayMarks, function ($a, $b) {
-                        return $a['carbon']->getTimestamp() <=> $b['carbon']->getTimestamp();
+                // Agrupar las marcas por día laboral
+                $groupedByDay = [];
+
+                foreach ($personAttendances as $attendance) {
+                    $dt = Carbon::parse($attendance->date_time_attendance);
+                    
+                    // Si la hora es entre 00:00 y 06:59, pertenece al día laboral anterior
+                    if ($dt->hour < 7) {
+                        $workDay = $dt->copy()->subDay()->format('Y-m-d');
+                    } else {
+                        $workDay = $dt->format('Y-m-d');
+                    }
+
+                    if (!isset($groupedByDay[$workDay])) {
+                        $groupedByDay[$workDay] = [];
+                    }
+
+                    $groupedByDay[$workDay][] = [
+                        'id' => $attendance->id,
+                        'dt' => $dt,
+                        'time' => $dt->format('H:i:s'),
+                    ];
+                }
+
+                // Procesar cada día laboral
+                foreach ($groupedByDay as $workDay => $dayMarks) {
+                    // Ordenar las marcas por hora
+                    usort($dayMarks, function($a, $b) {
+                        return $a['dt']->timestamp <=> $b['dt']->timestamp;
                     });
 
-                    $this->processDailyMarks($dayMarks, $workDay, $errors, $registered);
+                    $count = count($dayMarks);
+                    
+                    // Variable para rastrear el tipo esperado siguiente
+                    $expectedNextType = 'INGRESO'; // Primer marca del día debería ser INGRESO
+                    $lastType = null;
+                    $lastMarkDateTime = null;
+
+                    // Procesar cada marca considerando el contexto y secuencia
+                    for ($i = 0; $i < $count; $i++) {
+                        $mark = $dayMarks[$i];
+                        
+                        // Buscar el tipo basándose en el horario más cercano y contexto
+                        $type = $this->determineTypeByScheduleWithContext(
+                            $mark['dt'], 
+                            $schedules, 
+                            $workDay, 
+                            $i,
+                            $expectedNextType
+                        );
+
+                        PersonAttendance::where('id', $mark['id'])->update(['type' => $type]);
+                        $processed++;
+                        
+                        // Guardar última marca y tipo
+                        $lastType = $type;
+                        $lastMarkDateTime = $mark['dt'];
+                        
+                        // Actualizar el tipo esperado para la siguiente marca
+                        $expectedNextType = ($type === 'INGRESO') ? 'SALIDA' : 'INGRESO';
+                    }
+                    
+                    // VERIFICAR SI FALTA MARCA DE SALIDA
+                    // Si la última marca del día es INGRESO, crear una SALIDA automática después de 8 horas
+                    if ($lastType === 'INGRESO' && $lastMarkDateTime !== null) {
+                        $this->createAutoExitIfNeeded(
+                            $personId, 
+                            $lastMarkDateTime, 
+                            $workDay, 
+                            $schedules,
+                            $processed,
+                            $errors
+                        );
+                    }
                 }
             }
 
-            return [
+            DB::commit();
+
+            return response()->json([
                 'success' => true,
-                'message' => __('app.actions.upload.success'),
-                'data' => compact('total', 'registered'),
+                'message' => 'Tipos de asistencia asignados correctamente',
+                'processed' => $processed,
                 'errors' => $errors
-            ];
+            ]);
 
-        } catch (Exception $e) {
-            return [
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('dateTypeAttendance error: ' . $e->getMessage());
+            return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
-            ];
-        }
-    }
- */
-    /**
-     * Procesa las marcas de un día laboral específico
-     */
-    private function processDailyMarks($dayMarks, $workDay, &$errors, &$registered)
-    {
-        $count = count($dayMarks);
-
-        // Si solo hay una marca, determinar si es entrada o salida basado en la hora y contexto
-        if ($count == 1) {
-            $mark = $dayMarks[0];
-            $hour = $mark['carbon']->hour;
-
-            // Lógica mejorada para determinar tipo basado en horarios típicos:
-            // Horarios más probables de ENTRADA: 09:00-12:00, 19:00-23:59
-            // Horarios más probables de SALIDA: 00:00-08:59, 13:00-18:59
-            // PERO también considerar que puede haber entradas tardías o salidas tempranas
-
-            if (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23)) {
-                $type = 'INGRESO'; // Probablemente entrada
-            } else {
-                $type = 'SALIDA'; // Probablemente salida
-            }
-
-            // Para marcas únicas, usar el workDay que ya fue calculado correctamente en el agrupamiento
-            $singleMarkDate = $workDay;
-
-            try {
-                PersonAttendance::create([
-                    'person_id' => $mark['person_id'],
-                    'date_time_attendance' => $mark['date_time'],
-                    'date_attendance' => $singleMarkDate,
-                    'time_attendance' => $mark['time_attendance'],
-                    'type' => $type,
-                ]);
-                $registered++;
-            } catch (Exception $e) {
-                $errors[] = "Error al crear marca única para person_id={$mark['person_id']} datetime={$mark['date_time']}: " . $e->getMessage();
-            }
-            return;
-        }
-
-        // Para múltiples marcas, emparejarlas inteligentemente usando patrón alternado
-        $this->smartPairMarks($dayMarks, $workDay, $errors, $registered);
-    }
-
-    /**
-     * Empareja marcas de forma inteligente usando patrón alternado INGRESO-SALIDA
-     */
-    private function smartPairMarks($dayMarks, $workDay, &$errors, &$registered)
-    {
-        $count = count($dayMarks);
-
-        // Procesar marcas secuencialmente usando patrón alternado
-        for ($i = 0; $i < $count; $i++) {
-            $currentMark = $dayMarks[$i];
-
-            // Determinar el tipo basado en la posición en la secuencia
-            // Primera marca = INGRESO, segunda = SALIDA, tercera = INGRESO, etc.
-            $isEntrance = ($i % 2 == 0); // Posición par = entrada, impar = salida
-            $type = $isEntrance ? 'INGRESO' : 'SALIDA';
-
-            // Validación adicional basada en horarios para corregir si es necesario
-            $hour = $currentMark['carbon']->hour;
-
-            // Si es la primera marca y está en horario de salida típico, podría ser una salida
-            if ($i == 0 && $hour >= 0 && $hour <= 8) {
-                // Primera marca en horario de madrugada - probablemente es salida del turno anterior
-                $type = 'SALIDA';
-                $isEntrance = false;
-            }
-
-            // Si es posición impar pero está en horario de entrada típico, mantener como entrada
-            if (!$isEntrance && (($hour >= 7 && $hour <= 12) || ($hour >= 19 && $hour <= 23))) {
-                // Esta marca parece ser entrada aunque esté en posición impar
-                // Podría indicar que falta una salida anterior
-                $type = 'INGRESO';
-            }
-
-            try {
-                PersonAttendance::create([
-                    'person_id' => $currentMark['person_id'],
-                    'date_time_attendance' => $currentMark['date_time'],
-                    'date_attendance' => $workDay,
-                    'time_attendance' => $currentMark['time_attendance'],
-                    'type' => $type,
-                ]);
-                $registered++;
-            } catch (Exception $e) {
-                $errors[] = "Error al crear marca para person_id={$currentMark['person_id']} datetime={$currentMark['date_time']}: " . $e->getMessage();
-            }
+                'message' => 'Error al procesar tipos de asistencia: ' . $e->getMessage()
+            ]);
         }
     }
 
     /**
-     * Crea un par de registros de entrada y salida
+     * Crea una marca de salida automática si es necesaria
+     * Se activa cuando hay INGRESO pero no hay SALIDA
      */
-    private function createAttendancePair($entryMark, $exitMark, $workDay, &$errors, &$registered)
+    private function createAutoExitIfNeeded($personId, $lastIngressDateTime, $workDay, $schedules, &$processed, &$errors)
     {
         try {
-            // Crear registro de ingreso
-            PersonAttendance::create([
-                'person_id' => $entryMark['person_id'],
-                'date_time_attendance' => $entryMark['date_time'],
-                'date_attendance' => $workDay,
-                'time_attendance' => $entryMark['time_attendance'],
-                'type' => 'INGRESO',
-            ]);
-            $registered++;
-
-            // Para registros emparejados, ambos usan el mismo workDay calculado en el agrupamiento
-            // Esto asegura que entrada y salida del mismo turno tengan la misma fecha de asistencia
-
-            // Crear registro de salida
-            PersonAttendance::create([
-                'person_id' => $exitMark['person_id'],
-                'date_time_attendance' => $exitMark['date_time'],
-                'date_attendance' => $workDay,
-                'time_attendance' => $exitMark['time_attendance'],
+            Log::info("Verificando salida automática: person_id={$personId}, workDay={$workDay}, lastIngress={$lastIngressDateTime->format('Y-m-d H:i:s')}");
+            
+            // Verificar que no exista ya una marca de salida DESPUÉS del ingreso en ese día
+            $existingExit = PersonAttendance::where('person_id', $personId)
+                ->where('date_attendance', $workDay)
+                ->where('type', 'SALIDA')
+                ->where('time_attendance', '>', $lastIngressDateTime->format('H:i:s'))
+                ->first();
+            
+            if ($existingExit) {
+                Log::info("Ya existe salida para person_id={$personId} en {$workDay}: {$existingExit->time_attendance}");
+                return;
+            }
+            
+            // Calcular salida estimada: 8 horas después del ingreso
+            $estimatedExit = $lastIngressDateTime->copy()->addHours(8);
+            
+            // Buscar el horario de salida más cercano en los schedules
+            $closestScheduleExit = null;
+            $minDiff = PHP_INT_MAX;
+            
+            foreach ($schedules as $schedule) {
+                $salidaCompare = Carbon::parse($workDay . ' ' . $schedule->salida);
+                
+                // Si la salida es antes de la entrada, es turno nocturno
+                $salidaTime = Carbon::parse($schedule->salida);
+                $entradaTime = Carbon::parse($schedule->entrada);
+                if ($salidaTime->lt($entradaTime)) {
+                    $salidaCompare->addDay();
+                }
+                
+                $diff = abs($estimatedExit->diffInMinutes($salidaCompare));
+                if ($diff < $minDiff) {
+                    $minDiff = $diff;
+                    $closestScheduleExit = $salidaCompare;
+                }
+            }
+            
+            // Decidir qué hora usar para la salida automática
+            $autoExitDateTime = $estimatedExit;
+            
+            // Si hay un horario configurado cercano (menos de 1 hora de diferencia), usarlo
+            if ($closestScheduleExit !== null && $minDiff <= 60) {
+                $autoExitDateTime = $closestScheduleExit;
+            }
+            
+            // Determinar la fecha de asistencia para la salida
+            $exitWorkDay = $workDay;
+            if ($autoExitDateTime->hour < 7) {
+                // Si la salida es en la madrugada, mantiene la fecha del día laboral
+                $exitWorkDay = $workDay;
+            } elseif ($autoExitDateTime->format('Y-m-d') !== $workDay) {
+                // Si la salida calculada cae en otro día (después de medianoche)
+                $exitWorkDay = $autoExitDateTime->format('Y-m-d');
+            }
+            
+            // Crear la marca de salida automática
+            $newAttendance = PersonAttendance::create([
+                'person_id' => $personId,
+                'date_time_attendance' => $autoExitDateTime->format('Y-m-d H:i:s'),
+                'date_attendance' => $exitWorkDay,
+                'time_attendance' => $autoExitDateTime->format('H:i:s'),
                 'type' => 'SALIDA',
+                'biometrico' => 0, // Marcar como no biométrico (generado automáticamente)
             ]);
-            $registered++;
-        } catch (Exception $e) {
-            $errors[] = "Error al crear par entrada-salida para person_id={$entryMark['person_id']}: " . $e->getMessage();
+            
+            $processed++;
+            
+            Log::info("✅ Salida automática creada: ID={$newAttendance->id}, person_id={$personId}, entrada={$lastIngressDateTime->format('Y-m-d H:i:s')}, salida={$autoExitDateTime->format('Y-m-d H:i:s')}");
+            
+        } catch (\Exception $e) {
+            $errors[] = "Error al crear salida automática para person_id={$personId}: " . $e->getMessage();
+            Log::error("createAutoExitIfNeeded error: " . $e->getMessage(), [
+                'person_id' => $personId,
+                'work_day' => $workDay,
+                'last_ingress' => $lastIngressDateTime->format('Y-m-d H:i:s')
+            ]);
         }
+    }
+
+    /**
+     * Determina el tipo de marca considerando contexto de secuencia y horarios
+     */
+    private function determineTypeByScheduleWithContext($markDateTime, $schedules, $workDay, $position, $expectedType)
+    {
+        $candidates = [];
+        $isInAnyShift = false;
+        
+        foreach ($schedules as $schedule) {
+            // Crear fechas comparables para entrada
+            $entradaCompare = Carbon::parse($workDay . ' ' . $schedule->entrada);
+            $diffEntrada = abs($markDateTime->diffInMinutes($entradaCompare));
+            
+            // Crear fechas comparables para salida
+            $salidaCompare = Carbon::parse($workDay . ' ' . $schedule->salida);
+            
+            // Si la salida es antes de la entrada, es turno nocturno
+            $salidaTime = Carbon::parse($schedule->salida);
+            $entradaTime = Carbon::parse($schedule->entrada);
+            if ($salidaTime->lt($entradaTime)) {
+                $salidaCompare->addDay();
+            }
+            
+            $diffSalida = abs($markDateTime->diffInMinutes($salidaCompare));
+            
+            // Determinar si está dentro de algún turno
+            if ($markDateTime->between($entradaCompare, $salidaCompare)) {
+                $isInAnyShift = true;
+            }
+            
+            // Agregar candidato para ENTRADA
+            $candidates[] = [
+                'type' => 'INGRESO',
+                'diff' => $diffEntrada,
+                'schedule' => $schedule,
+                'time' => $schedule->entrada,
+                'entrada_compare' => $entradaCompare,
+                'salida_compare' => $salidaCompare
+            ];
+            
+            // Agregar candidato para SALIDA
+            $candidates[] = [
+                'type' => 'SALIDA',
+                'diff' => $diffSalida,
+                'schedule' => $schedule,
+                'time' => $schedule->salida,
+                'entrada_compare' => $entradaCompare,
+                'salida_compare' => $salidaCompare
+            ];
+        }
+        
+        // Ordenar candidatos por diferencia (más cercano primero)
+        usort($candidates, function($a, $b) {
+            return $a['diff'] <=> $b['diff'];
+        });
+        
+        $closest = $candidates[0];
+        
+        // REGLA 1: Marca muy cercana (≤ 30 minutos) - alta confianza
+        if ($closest['diff'] <= 30) {
+            return $closest['type'];
+        }
+        
+        // REGLA 2: Marca cercana (≤ 90 minutos) y coincide con el tipo esperado
+        if ($closest['diff'] <= 90 && $closest['type'] === $expectedType) {
+            return $closest['type'];
+        }
+        
+        // REGLA ESPECIAL: Si esperamos INGRESO pero la marca está ENTRE dos turnos
+        // (después de una salida y antes de la próxima entrada), es SALIDA tardía
+        if ($expectedType === 'INGRESO' && !$isInAnyShift) {
+            // Buscar el turno anterior (su salida) y el siguiente turno (su entrada)
+            $recentExit = null;
+            $nextEntrance = null;
+            
+            foreach ($candidates as $c) {
+                if ($c['type'] === 'SALIDA' && $markDateTime->gt($c['salida_compare'])) {
+                    if ($recentExit === null || $c['diff'] < $recentExit['diff']) {
+                        $recentExit = $c;
+                    }
+                }
+                if ($c['type'] === 'INGRESO' && $markDateTime->lt($c['entrada_compare'])) {
+                    if ($nextEntrance === null || $c['diff'] < $nextEntrance['diff']) {
+                        $nextEntrance = $c;
+                    }
+                }
+            }
+            
+            // Si la marca está entre una salida pasada y una entrada futura
+            // y la salida pasada está dentro de 3 horas, es SALIDA tardía
+            if ($recentExit !== null && $nextEntrance !== null && $recentExit['diff'] <= 180) {
+                return 'SALIDA';
+            }
+        }
+        
+        // REGLA 3: Priorizar tipo esperado por secuencia si está razonablemente cerca
+        $expectedCandidates = array_filter($candidates, function($c) use ($expectedType) {
+            return $c['type'] === $expectedType;
+        });
+        
+        if (!empty($expectedCandidates)) {
+            usort($expectedCandidates, function($a, $b) {
+                return $a['diff'] <=> $b['diff'];
+            });
+            
+            $closestExpected = $expectedCandidates[0];
+            
+            if ($closestExpected['diff'] < $closest['diff'] || 
+                ($closestExpected['diff'] <= 180 && $closest['diff'] > 60)) {
+                return $closestExpected['type'];
+            }
+        }
+        
+        // REGLA 4: Si el candidato más cercano está razonablemente cerca (≤ 2 horas)
+        if ($closest['diff'] <= 120) {
+            return $closest['type'];
+        }
+        
+        // REGLA 5: Como último recurso, usar el tipo esperado por secuencia
+        return $expectedType;
+    }
+
+    /**
+     * Determina el tipo de marca (INGRESO/SALIDA) basándose en los horarios configurados
+     * Usa lógica inteligente considerando múltiples turnos
+     * @deprecated Usar determineTypeByScheduleWithContext
+     */
+    private function determineTypeBySchedule($markDateTime, $schedules, $workDay, $position)
+    {
+        $candidates = [];
+        
+        foreach ($schedules as $schedule) {
+            // Crear fechas comparables para entrada
+            $entradaCompare = Carbon::parse($workDay . ' ' . $schedule->entrada);
+            $diffEntrada = $markDateTime->diffInMinutes($entradaCompare, false); // false = con signo
+            
+            // Crear fechas comparables para salida
+            $salidaCompare = Carbon::parse($workDay . ' ' . $schedule->salida);
+            
+            // Si la salida es antes de la entrada, es turno nocturno
+            $salidaTime = Carbon::parse($schedule->salida);
+            $entradaTime = Carbon::parse($schedule->entrada);
+            if ($salidaTime->lt($entradaTime)) {
+                $salidaCompare->addDay();
+            }
+            
+            $diffSalida = $markDateTime->diffInMinutes($salidaCompare, false); // false = con signo
+            
+            // Agregar candidato para ENTRADA
+            $candidates[] = [
+                'type' => 'INGRESO',
+                'diff' => abs($diffEntrada),
+                'signed_diff' => $diffEntrada,
+                'schedule' => $schedule,
+                'time' => $schedule->entrada
+            ];
+            
+            // Agregar candidato para SALIDA
+            $candidates[] = [
+                'type' => 'SALIDA',
+                'diff' => abs($diffSalida),
+                'signed_diff' => $diffSalida,
+                'schedule' => $schedule,
+                'time' => $schedule->salida
+            ];
+        }
+        
+        // Ordenar candidatos por diferencia absoluta (más cercano primero)
+        usort($candidates, function($a, $b) {
+            return $a['diff'] <=> $b['diff'];
+        });
+        
+        // Obtener el candidato más cercano
+        $closest = $candidates[0];
+        
+        // REGLA 1: Si está muy cerca (menos de 30 minutos), usar ese tipo sin dudas
+        if ($closest['diff'] <= 30) {
+            return $closest['type'];
+        }
+        
+        // REGLA 2: Si está dentro de 2 horas del horario más cercano, usar ese tipo
+        if ($closest['diff'] <= 120) {
+            return $closest['type'];
+        }
+        
+        // REGLA 3: Si está lejos de todos los horarios, usar patrón alternado
+        // pero con lógica mejorada
+        return ($position % 2 == 0) ? 'INGRESO' : 'SALIDA';
+    }
+
+    /**
+     * Encuentra el tipo de marca (INGRESO/SALIDA) más cercano basado en los horarios configurados
+     * @deprecated Usar determineTypeBySchedule en su lugar
+     */
+    private function findClosestScheduleType($markDateTime, $schedules, $workDay)
+    {
+        $minDiff = PHP_INT_MAX;
+        $closestType = null;
+        $tolerancia = 120; // 2 horas de tolerancia para considerar "cercano"
+
+        foreach ($schedules as $schedule) {
+            // Comparar con hora de ENTRADA
+            $entradaCompare = Carbon::parse($workDay . ' ' . $schedule->entrada);
+            $diffEntrada = abs($markDateTime->diffInMinutes($entradaCompare));
+            
+            if ($diffEntrada < $minDiff && $diffEntrada <= $tolerancia) {
+                $minDiff = $diffEntrada;
+                $closestType = 'INGRESO';
+            }
+
+            // Comparar con hora de SALIDA
+            $salidaCompare = Carbon::parse($workDay . ' ' . $schedule->salida);
+            
+            // Si la salida es antes de la entrada, es turno nocturno
+            $salidaTime = Carbon::parse($schedule->salida);
+            $entradaTime = Carbon::parse($schedule->entrada);
+            if ($salidaTime->lt($entradaTime)) {
+                $salidaCompare->addDay();
+            }
+            
+            $diffSalida = abs($markDateTime->diffInMinutes($salidaCompare));
+            
+            if ($diffSalida < $minDiff && $diffSalida <= $tolerancia) {
+                $minDiff = $diffSalida;
+                $closestType = 'SALIDA';
+            }
+        }
+
+        // Solo retornar el tipo si está dentro de la tolerancia
+        return ($minDiff <= $tolerancia) ? $closestType : null;
     }
 
 

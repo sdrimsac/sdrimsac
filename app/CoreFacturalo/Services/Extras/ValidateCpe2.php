@@ -2,6 +2,8 @@
 
 namespace App\CoreFacturalo\Services\Extras;
 
+use App\Models\Tenant\Company;
+use App\Models\Tenant\Document;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -180,9 +182,9 @@ class ValidateCpe2
                 ->whereBetween('date_of_issue', [$date_from, $date_to])
                 ->orderBy('number')
                 ->get();
-            Log::info('-------------------------------------------------');
-            Log::info('Periodo: ' . $date_from . ' al ' . $date_to);
-            Log::info('Documentos:' . count($documents));
+            /* Log::info('-------------------------------------------------');
+            Log::info('Periodo: ' . $date_from . ' al ' . $date_to); */
+            /* Log::info('Documentos:' . count($documents)); */
             foreach ($documents as $document) {
                 reValidate:
                 sleep(2);
