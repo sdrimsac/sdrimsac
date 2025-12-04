@@ -90,7 +90,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
                 return;
             }
             /* $url = "https://sdrimsac.xyz/api/send-message"; */
-            $url = "https://https://sdrpersonal.shop/api/send-messages";
+            $url = "https://sdrpersonal.shop/api/send-messages";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
                 if ($number->number) {
