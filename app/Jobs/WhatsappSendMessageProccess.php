@@ -90,7 +90,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
                 return;
             }
             /* $url = "https://sdrimsac.xyz/api/send-message"; */
-            $url = "https://https://sdrpersonal.shop/api/send-text";
+            $url = "https://https://sdrpersonal.shop/api/send-message";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
                 if ($number->number) {
@@ -124,11 +124,11 @@ class WhatsappSendMessageProccess implements ShouldQueue
                     } else {
                         $sender = 'sdrimsac';
                         if ($this->subdomain != null && $configuration->whatsapp_client) {
-                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-text";
+                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-mensage";
                             $sender = $this->subdomain;
                         } else {
                             $web_whatsapp = config('app.web_whatsapp');
-                            $url = "https://" . $web_whatsapp . '/api/send-text';
+                            $url = "https://" . $web_whatsapp . '/api/send-mensage';
                         }
                         $response = Http::withoutVerifying()->post($url, [
                             // $response = Http::post($url, [
