@@ -149,13 +149,13 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                     if ($configuration->whatsapp_client) {
                         $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
                         $sender = $subdomain;
-                        $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-media';
+                        $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-medias';
                     } else {
                         $web_whatsapp = config('app.web_whatsapp');
-                        $url = "https://" . $web_whatsapp . '/api/send-media';
+                        $url = "https://" . $web_whatsapp . '/api/send-medias';
                     }
                 } else {
-                    $url = config('app.whatsapp_url') . '/api/send-media';
+                    $url = config('app.whatsapp_url') . '/api/send-medias';
                 }
                 // $url = 'http://localhost:3800/api/send-media';
                 Log::info('url: ' . $url);

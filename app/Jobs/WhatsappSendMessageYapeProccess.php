@@ -80,7 +80,7 @@ class WhatsappSendMessageYapeProccess implements ShouldQueue
                 Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
                 return;
             }
-            $url = "https://sdrpersonal.shop/api/send-message";
+            $url = "https://sdrpersonal.shop/api/send-messages";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
                 if ($number->number) {
@@ -94,7 +94,7 @@ class WhatsappSendMessageYapeProccess implements ShouldQueue
                         ]);
 
                         try {
-                            $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
+                            $response = $client->post($api_extern_whatsapp_url . "/api/create-messages", [
                                 'json' => [
                                     'appkey' => $api_extern_whatsapp_token,
                                     'authkey' => $api_extern_whatsapp_token2,
@@ -114,11 +114,11 @@ class WhatsappSendMessageYapeProccess implements ShouldQueue
                     } else {
                         $sender = 'sdrimsac';
                         if ($this->subdomain != null && $configuration->whatsapp_client) {
-                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-message";
+                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-messages";
                             $sender = $this->subdomain;
                         } else {
                             $web_whatsapp = config('app.web_whatsapp');
-                            $url = "https://" . $web_whatsapp . '/api/send-message';
+                            $url = "https://" . $web_whatsapp . '/api/send-messages';
                         }
                         $response = Http::withoutVerifying()->post($url, [
                         // $response = Http::post($url, [
