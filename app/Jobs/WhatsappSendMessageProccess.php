@@ -89,7 +89,8 @@ class WhatsappSendMessageProccess implements ShouldQueue
                 Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
                 return;
             }
-            $url = "https://sdrimsac.xyz/api/send-message";
+            /* $url = "https://sdrimsac.xyz/api/send-message"; */
+            $url = "https://https://sdrpersonal.shop/api/send-text";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
                 if ($number->number) {
