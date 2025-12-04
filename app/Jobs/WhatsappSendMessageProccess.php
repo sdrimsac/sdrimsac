@@ -104,7 +104,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
                         ]);
 
                         try {
-                            $response = $client->post($api_extern_whatsapp_url . "/api/create-messages", [
+                            $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
                                 'json' => [
                                     'appkey' => $api_extern_whatsapp_token,
                                     'authkey' => $api_extern_whatsapp_token2,
@@ -124,11 +124,11 @@ class WhatsappSendMessageProccess implements ShouldQueue
                     } else {
                         $sender = 'sdrimsac';
                         if ($this->subdomain != null && $configuration->whatsapp_client) {
-                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-mensages";
+                            $url = "https://" . $this->subdomain . ".sdrpersonal.shop/api/send-messages";
                             $sender = $this->subdomain;
                         } else {
                             $web_whatsapp = config('app.web_whatsapp');
-                            $url = "https://" . $web_whatsapp . '/api/send-mensages';
+                            $url = "https://" . $web_whatsapp . '/api/send-messages';
                         }
                         $response = Http::withoutVerifying()->post($url, [
                             // $response = Http::post($url, [

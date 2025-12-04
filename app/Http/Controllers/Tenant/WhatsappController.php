@@ -105,6 +105,7 @@ class WhatsappController extends Controller
         }
         foreach ($numbers_activity as $key => $value) {
             if ($value->number) {
+                Log::info("Enviando mensaje de WhatsApp a " . $value->number);
                 WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number, null, $establishment_id);
                 // $this->sendMessage($message, $value->number);
             }
