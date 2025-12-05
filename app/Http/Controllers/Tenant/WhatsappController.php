@@ -476,7 +476,7 @@ class WhatsappController extends Controller
             $web_whatsapp = config('app.web_whatsapp');
             $url = "https://" . $web_whatsapp . '/api/send-messages';
         } else {
-            $url = config('app.whatsapp_url') . '/api/send-message';
+            $url = config('app.whatsapp_url') . '/api/send-messages';
         }
 
         $this->client = new Client([
