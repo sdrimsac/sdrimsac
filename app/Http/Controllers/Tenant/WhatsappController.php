@@ -899,7 +899,7 @@ class WhatsappController extends Controller
             $web_whatsapp = config('app.web_whatsapp');
             $url = "https://" . $web_whatsapp . '/api/send-medias';
         } else {
-            $url = config('app.whatsapp_url') . '/api/send-media';
+            $url = config('app.whatsapp_url') . '/api/send-medias';
         }
         // $url = 'http://localhost:3800/api/send-media';
 

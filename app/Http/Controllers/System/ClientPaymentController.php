@@ -107,7 +107,7 @@ class ClientPaymentController extends Controller
         if ($to_group) {
             $url = "https://" . $web_whatsapp . "/api/send-message-by-name";
         } else {
-            $url = "https://" . $web_whatsapp . "/api/send-message";
+            $url = "https://" . $web_whatsapp . "/api/send-messages";
         }
 
         // Reemplazar <br> por saltos de línea
