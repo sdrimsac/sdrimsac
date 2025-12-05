@@ -513,6 +513,7 @@ class WhatsappController extends Controller
 
     public function sendwhatsapp(Request $request)
     {
+        Log::info("Iniciando proceso para enviar documento por whatsapp");
         $website = $this->getTenantWebsite();
         // $message,
         // $website_id,
@@ -575,7 +576,7 @@ class WhatsappController extends Controller
         // $url = 'http://localhost:3800/api/send-media';
         Log::info("la url es: " . $url);
         Log::info("Enviando documento por whatsapp al número: " . $request->customer_telephone);
-        
+
         $content_file = null;
 
         if (!$xml) {
