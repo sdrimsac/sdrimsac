@@ -524,6 +524,12 @@ class WhatsappController extends Controller
         // $customer_telephone
         $hostname =  app(Environment::class)->hostname();
         $fqdn = $hostname->fqdn;
+        Log::info("Despachando trabajo para enviar documento por whatsapp", [
+            'website_id' => $website->id,
+            'document_id' => $request->document_id,
+            'document_type_id' => $request->document_type_id,
+            'customer_telephone' => $request->customer_telephone,
+        ]);
         WhatsappSendDocumentProccess::dispatch($request->mensaje, $website->id, $request->url_file, $request->document_id, $request->document_type_id, $request->xml, $request->customer_telephone, $fqdn);
         return [
             "success" => true,
