@@ -35,6 +35,26 @@ class WhatsappSendDocumentProccess implements ShouldQueue
     protected $xml;
     protected $customer_telephone;
     protected $url;
+    
+    /**
+     * Log adicional para debugging
+     */
+    private function debugLog($message, $context = [])
+    {
+        // Log normal
+        Log::info($message, $context);
+        
+        // Log adicional en archivo específico
+        try {
+            $logFile = storage_path('logs/whatsapp_job_debug.log');
+            $timestamp = now()->format('Y-m-d H:i:s');
+            $contextStr = !empty($context) ? ' - ' . json_encode($context, JSON_UNESCAPED_UNICODE) : '';
+            $logLine = "[{$timestamp}] {$message}{$contextStr}\n";
+            file_put_contents($logFile, $logLine, FILE_APPEND);
+        } catch (\Exception $e) {
+            // Si falla el log adicional, no hacer nada
+        }
+    }
 
 
     public function __construct(
@@ -60,16 +80,53 @@ class WhatsappSendDocumentProccess implements ShouldQueue
 
     public function handle()
     {
-        Log::info('=== INICIO WhatsappSendDocumentProccess ===');
-        Log::info('Document ID: ' . $this->document_id);
-        Log::info('Document Type: ' . $this->document_type_id);
-        Log::info('Customer Telephone: ' . $this->customer_telephone);
-        
-        $website = $this->findWebsite($this->website_id);
-        $tenancy = app(Environment::class);
-        $tenancy->tenant($website);
-        $configuration = Configuration::first();
         try {
+            $this->debugLog('=== INICIO WhatsappSendDocumentProccess ===', [
+                'document_id' => $this->document_id,
+                'document_type_id' => $this->document_type_id,
+                'customer_telephone' => $this->customer_telephone,
+                'website_id' => $this->website_id,
+                'url' => $this->url,
+                'message_length' => strlen($this->message ?? ''),
+            ]);
+            
+            $this->debugLog('Buscando website...');
+            $website = $this->findWebsite($this->website_id);
+            
+            if (!$website) {
+                $this->debugLog('ERROR: Website no encontrado', ['website_id' => $this->website_id]);
+                throw new Exception('Website no encontrado: ' . $this->website_id);
+            }
+            
+            $this->debugLog('Website encontrado OK', ['website_id' => $website->id]);
+            
+            $this->debugLog('Configurando tenancy...');
+            $tenancy = app(Environment::class);
+            $tenancy->tenant($website);
+            $this->debugLog('Tenancy configurado OK');
+        } catch (Exception $e) {
+            $this->debugLog('ERROR CRITICO al inicializar', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
+            Log::error('Error al inicializar el Job', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+        
+        $this->debugLog('Obteniendo configuración...');
+        $configuration = Configuration::first();
+        $this->debugLog('Configuración obtenida', [
+            'whatsapp_client' => $configuration->whatsapp_client ?? 'N/A'
+        ]);
+        
+        try {
+            $this->debugLog('Iniciando proceso principal...');
             $message = $this->message;
             $url1 = "http://" . $this->url;
             ///si el ambito es local cambiar https por http
@@ -77,27 +134,39 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $url1 = str_replace("https", "http", $url1);
             }
             
-            Log::info('URL inicial: ' . $url1);
-            Log::info('Environment: ' . env('APP_ENV'));
+            $this->debugLog('URL generada', ['url' => $url1, 'env' => env('APP_ENV')]);
             
             $external_id = "";
             $xml = $this->xml ?? false;
-            Log::info('Enviar XML: ' . ($xml ? 'SI' : 'NO'));
+            $this->debugLog('Configuración', ['xml' => $xml, 'document_type' => $this->document_type_id]);
+            
             if ($this->document_type_id == "01" || $this->document_type_id == "03") {
+                $this->debugLog('Buscando documento tipo Factura/Boleta...');
                 $document = Document::find($this->document_id);
+                if (!$document) {
+                    throw new Exception('Documento no encontrado: ' . $this->document_id);
+                }
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
 
                 $url1 = $url1 . "/print/document/" . $external_id . "/ticket";
-                Log::info('Documento tipo Factura/Boleta - External ID: ' . $external_id);
+                $this->debugLog('Documento Factura/Boleta encontrado', ['external_id' => $external_id, 'url' => $url1]);
             } else if ($this->document_type_id == "80") {
+                $this->debugLog('Buscando nota de venta...');
                 $document = SaleNote::find($this->document_id);
+                if (!$document) {
+                    throw new Exception('Nota de venta no encontrada: ' . $this->document_id);
+                }
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/sale-notes/print/" . $external_id . "/ticket";
-                Log::info('Documento tipo Nota de Venta - External ID: ' . $external_id);
+                $this->debugLog('Nota de venta encontrada', ['external_id' => $external_id, 'url' => $url1]);
             } else if ($this->document_type_id == "09") {
+                $this->debugLog('Buscando guía de remisión...');
                 $document = Dispatch::find($this->document_id);
+                if (!$document) {
+                    throw new Exception('Guía de remisión no encontrada: ' . $this->document_id);
+                }
                 $company = Company::first();
                 $company_name = $company->name;
                 //si en $message existe la palabra "de undefined" reemplazalo con "de $company_name"
@@ -105,13 +174,17 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/print/dispatch/" . $external_id . "/ticket";
-                Log::info('Documento tipo Guía de Remisión - External ID: ' . $external_id);
+                $this->debugLog('Guía de remisión encontrada', ['external_id' => $external_id, 'url' => $url1]);
             } else if ($this->document_type_id == "COT") {
+                $this->debugLog('Buscando cotización...');
                 $document = Quotation::find($this->document_id);
+                if (!$document) {
+                    throw new Exception('Cotización no encontrada: ' . $this->document_id);
+                }
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/quotations/print/" . $external_id . "/ticket";
-                Log::info('Documento tipo Cotización - External ID: ' . $external_id);
+                $this->debugLog('Cotización encontrada', ['external_id' => $external_id, 'url' => $url1]);
             }
             //"" 
             $company = Company::first();
