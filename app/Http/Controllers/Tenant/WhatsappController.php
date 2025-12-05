@@ -529,8 +529,27 @@ class WhatsappController extends Controller
             'document_id' => $request->document_id,
             'document_type_id' => $request->document_type_id,
             'customer_telephone' => $request->customer_telephone,
+            'mensaje' => $request->mensaje,
+            'url_file' => $request->url_file,
+            'xml' => $request->xml,
+            'fqdn' => $fqdn,
         ]);
-        WhatsappSendDocumentProccess::dispatch($request->mensaje, $website->id, $request->url_file, $request->document_id, $request->document_type_id, $request->xml, $request->customer_telephone, $fqdn);
+        
+        try {
+            WhatsappSendDocumentProccess::dispatch($request->mensaje, $website->id, $request->url_file, $request->document_id, $request->document_type_id, $request->xml, $request->customer_telephone, $fqdn);
+            Log::info("Job despachado correctamente");
+        } catch (\Exception $e) {
+            Log::error("Error al despachar el job", [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return [
+                "success" => false,
+                "message" => "Error al despachar el trabajo: " . $e->getMessage()
+            ];
+        }
+        
         return [
             "success" => true,
             "message" => "Enviando documento por whatsapp"
