@@ -276,6 +276,14 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                     Log::info('Obteniendo contenido del PDF desde: ' . $url1);
                     try {
                         $content_file = file_get_contents($url1);
+                        
+                        // Validar si el contenido está vacío
+                        if (empty($content_file) || $content_file === false) {
+                            $errorMsg = 'El archivo PDF está vacío o no se pudo obtener desde: ' . $url1;
+                            Log::error($errorMsg);
+                            throw new Exception($errorMsg);
+                        }
+                        
                         Log::info('PDF obtenido correctamente, tamaño: ' . strlen($content_file) . ' bytes');
                     } catch (\Exception $e) {
                         Log::error('Error al obtener PDF: ' . $e->getMessage());
@@ -286,6 +294,14 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                     Log::info('Obteniendo contenido del XML: ' . $document_filename . '.xml');
                     try {
                         $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+                        
+                        // Validar si el contenido está vacío
+                        if (empty($content_file) || $content_file === false) {
+                            $errorMsg = 'El archivo XML está vacío o no se pudo obtener: ' . $document_filename . '.xml';
+                            Log::error($errorMsg);
+                            throw new Exception($errorMsg);
+                        }
+                        
                         Log::info('XML obtenido correctamente, tamaño: ' . strlen($content_file) . ' bytes');
                     } catch (\Exception $e) {
                         Log::error('Error al obtener XML: ' . $e->getMessage());
