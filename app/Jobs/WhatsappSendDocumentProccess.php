@@ -60,6 +60,11 @@ class WhatsappSendDocumentProccess implements ShouldQueue
 
     public function handle()
     {
+        Log::info('=== INICIO WhatsappSendDocumentProccess ===');
+        Log::info('Document ID: ' . $this->document_id);
+        Log::info('Document Type: ' . $this->document_type_id);
+        Log::info('Customer Telephone: ' . $this->customer_telephone);
+        
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
@@ -71,19 +76,26 @@ class WhatsappSendDocumentProccess implements ShouldQueue
             if (env('APP_ENV') == 'local') {
                 $url1 = str_replace("https", "http", $url1);
             }
+            
+            Log::info('URL inicial: ' . $url1);
+            Log::info('Environment: ' . env('APP_ENV'));
+            
             $external_id = "";
             $xml = $this->xml ?? false;
+            Log::info('Enviar XML: ' . ($xml ? 'SI' : 'NO'));
             if ($this->document_type_id == "01" || $this->document_type_id == "03") {
                 $document = Document::find($this->document_id);
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
 
                 $url1 = $url1 . "/print/document/" . $external_id . "/ticket";
+                Log::info('Documento tipo Factura/Boleta - External ID: ' . $external_id);
             } else if ($this->document_type_id == "80") {
                 $document = SaleNote::find($this->document_id);
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/sale-notes/print/" . $external_id . "/ticket";
+                Log::info('Documento tipo Nota de Venta - External ID: ' . $external_id);
             } else if ($this->document_type_id == "09") {
                 $document = Dispatch::find($this->document_id);
                 $company = Company::first();
@@ -93,17 +105,24 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/print/dispatch/" . $external_id . "/ticket";
+                Log::info('Documento tipo Guía de Remisión - External ID: ' . $external_id);
             } else if ($this->document_type_id == "COT") {
                 $document = Quotation::find($this->document_id);
                 $document_filename = $document->filename;
                 $external_id = $document->external_id;
                 $url1 = $url1 . "/quotations/print/" . $external_id . "/ticket";
+                Log::info('Documento tipo Cotización - External ID: ' . $external_id);
             }
             //"" 
             $company = Company::first();
             $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
             $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
             $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
+            
+            Log::info('API Externa WhatsApp URL: ' . ($api_extern_whatsapp_url ?? 'NO CONFIGURADO'));
+            Log::info('Token configurado: ' . ($api_extern_whatsapp_token ? 'SI' : 'NO'));
+            Log::info('Token2 configurado: ' . ($api_extern_whatsapp_token2 ? 'SI' : 'NO'));
+            
             $message .= "\n\n *Número solo para envíos de documentos*";
             $document_establishment = null;
             if ($document->establishment_id) {
@@ -114,6 +133,11 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 }
             }
             if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+                Log::info('Usando API Externa de WhatsApp');
+                Log::info('URL API: ' . $api_extern_whatsapp_url);
+                Log::info('Teléfono destino: +51' . $this->customer_telephone);
+                Log::info('URL del archivo: ' . $url1);
+                
                 $client = new Client([
                     'verify' => false,
                     'stream' => false,
@@ -132,14 +156,23 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                             'file' => $url1,
                         ]
                     ]);
-                    return  $response->getBody()->getContents();
+                    
+                    $responseBody = $response->getBody()->getContents();
+                    Log::info('Respuesta API Externa: ' . $responseBody);
+                    return $responseBody;
                 } catch (\Exception $e) {
+                    Log::error('Error en API Externa WhatsApp: ' . $e->getMessage());
+                    Log::error('Línea: ' . $e->getLine());
+                    Log::error('Trace: ' . $e->getTraceAsString());
+                    
                     return [
                         "message" => $e->getMessage(),
                         "line" => $e->getLine(),
                     ];
                 }
             } else {
+                Log::info('Usando API Interna de WhatsApp (SDR Personal)');
+                
                 $sender = 'sdrimsac';
                 if ($sender == 'tunegociofactvillacorpnet') {
                     $sender = 'sdrimsac';
@@ -150,22 +183,41 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                         $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
                         $sender = $subdomain;
                         $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-medias';
+                        Log::info('Usando URL cliente: ' . $url);
                     } else {
                         $web_whatsapp = config('app.web_whatsapp');
                         $url = "https://" . $web_whatsapp . '/api/send-medias';
+                        Log::info('Usando URL configuración: ' . $url);
                     }
                 } else {
                     $url = config('app.whatsapp_url') . '/api/send-medias';
+                    Log::info('Usando URL alternativa: ' . $url);
                 }
                 // $url = 'http://localhost:3800/api/send-media';
                 Log::info('url: ' . $url);
+                Log::info('Sender: ' . $sender);
+                
                 $content_file = null;
 
                 if (!$xml) {
-                    $content_file = file_get_contents($url1);
+                    Log::info('Obteniendo contenido del PDF desde: ' . $url1);
+                    try {
+                        $content_file = file_get_contents($url1);
+                        Log::info('PDF obtenido correctamente, tamaño: ' . strlen($content_file) . ' bytes');
+                    } catch (\Exception $e) {
+                        Log::error('Error al obtener PDF: ' . $e->getMessage());
+                        throw $e;
+                    }
                     // $content_file = ($this->document_type_id == "80")  ? file_get_contents(Storage::disk('tenant')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :   file_get_contents(Storage::disk('tenant')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
                 } else {
-                    $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+                    Log::info('Obteniendo contenido del XML: ' . $document_filename . '.xml');
+                    try {
+                        $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+                        Log::info('XML obtenido correctamente, tamaño: ' . strlen($content_file) . ' bytes');
+                    } catch (\Exception $e) {
+                        Log::error('Error al obtener XML: ' . $e->getMessage());
+                        throw $e;
+                    }
                 }
                 $client = new Client([
                     'verify' => false,
@@ -174,6 +226,11 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                         'User-Agent' => 'Testing 1.0'
                     ]
                 ]);
+                
+                Log::info('Preparando envío multipart a WhatsApp');
+                Log::info('Teléfono: 51' . $this->customer_telephone);
+                Log::info('Filename: ' . $document_filename . ($xml ? ".xml" : ".pdf"));
+                
                 try {
                     $response = $client->post($url, [
                         'multipart' => [
@@ -198,8 +255,15 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                         ]
                     ]);
 
-                    return  $response->getBody()->getContents();
+                    $responseBody = $response->getBody()->getContents();
+                    Log::info('Respuesta de WhatsApp API: ' . $responseBody);
+                    Log::info('=== FIN WhatsappSendDocumentProccess - EXITOSO ===');
+                    return $responseBody;
                 } catch (\Exception $e) {
+                    Log::error('Error al enviar mensaje WhatsApp: ' . $e->getMessage());
+                    Log::error('Línea: ' . $e->getLine());
+                    Log::error('Trace: ' . $e->getTraceAsString());
+                    Log::info('=== FIN WhatsappSendDocumentProccess - ERROR ===');
 
                     return [
                         "message" => $e->getMessage(),
@@ -208,7 +272,10 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 }
             }
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error('Error general en WhatsappSendDocumentProccess: ' . $e->getMessage());
+            Log::error('Línea: ' . $e->getLine());
+            Log::error('Trace: ' . $e->getTraceAsString());
+            Log::info('=== FIN WhatsappSendDocumentProccess - EXCEPTION ===');
         }
         // (new WhatsappController)->sendMessageAll($this->message);
     }
@@ -222,6 +289,13 @@ class WhatsappSendDocumentProccess implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        Log::error($exception->getMessage());
+        Log::error('=== JOB FAILED - WhatsappSendDocumentProccess ===');
+        Log::error('Error: ' . $exception->getMessage());
+        Log::error('Línea: ' . $exception->getLine());
+        Log::error('Archivo: ' . $exception->getFile());
+        Log::error('Trace: ' . $exception->getTraceAsString());
+        Log::error('Document ID: ' . $this->document_id);
+        Log::error('Document Type: ' . $this->document_type_id);
+        Log::error('Customer Telephone: ' . $this->customer_telephone);
     }
 }
