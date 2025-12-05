@@ -528,6 +528,8 @@ class WhatsappController extends Controller
             "success" => true,
             "message" => "Enviando documento por whatsapp"
         ];
+    
+        Log::info("Enviando documento por whatsapp al número: " . $request->customer_telephone);
 
         $message = $request->mensaje;
         $url1 = url("");
@@ -572,6 +574,8 @@ class WhatsappController extends Controller
         }
         // $url = 'http://localhost:3800/api/send-media';
         Log::info("la url es: " . $url);
+        Log::info("Enviando documento por whatsapp al número: " . $request->customer_telephone);
+        
         $content_file = null;
 
         if (!$xml) {
