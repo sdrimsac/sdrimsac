@@ -12,6 +12,10 @@
         </div>
         <div class="data-table-visible-columns" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
+            @click.prevent="clickCreatehorarios">
+            HORARIOS DEL PERSONAL
+          </el-button>
+          <el-button type="button" class="btn_buscar" style="display:inline-flex; width:auto; min-width:140px;"
             @click.prevent="clickCreateAdelanto">
             ADELANTOS DEL PERSONAL
           </el-button>
@@ -106,6 +110,7 @@
     <import-dart :showDialog.sync="showDialogImportDart"></import-dart>
     <adelanto :showDialog.sync="showDialogAdelanto" :person_id.sync="person_id"></adelanto>
     <salary :showDialog.sync="showDialogSalary"></salary>
+    <schules :clickCreatehorarios.sync="showDialogHorarios" :staffList="records"></schules>
   </div>
 </template>
 <script>
@@ -115,6 +120,7 @@ import ImportExcel from "./partials/import_excel.vue";
 import ImportDart from "./partials/import_dat.vue";
 import Adelanto from "./partials/adelanto.vue";
 import Salary from "./partials/salary.vue";
+import Schules from "./partials/schules.vue";
 export default {
   props: ["typeUser"],
   mixins: [deletable],
@@ -123,10 +129,12 @@ export default {
     ImportExcel,
     Adelanto,
     Salary,
-    ImportDart
+    ImportDart,
+    Schules
   },
   data() {
     return {
+      showDialogHorarios: false,
       showDialogImportDart: false,
       showDialogSalary: false,
       showDialogAdelanto: false,
@@ -172,6 +180,10 @@ export default {
     this.getTables();
   },
   methods: {
+
+    clickCreatehorarios() {
+      this.showDialogHorarios = true;
+    },
 
     clickCreateAdelanto() {
       this.showDialogAdelanto = true;
