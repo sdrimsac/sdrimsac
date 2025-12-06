@@ -22,7 +22,7 @@ class PersonAttendance extends Authenticatable
         'date_attendance',
         'time_attendance',
         'type',
-        'biometrico',
+        'biometrio',
         'created_at',
         'updated_at',
     ];

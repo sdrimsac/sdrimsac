@@ -84,7 +84,7 @@ class StaffController extends Controller
         ]);
     }
 
-    /* public function importPerson(Request $request)
+    public function importPerson(Request $request)
     {
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
@@ -113,9 +113,9 @@ class StaffController extends Controller
             'success' => false,
             'message' =>  __('app.actions.upload.error'),
         ];
-    } */
+    }
 
-    public function importPerson(Request $request)
+    /* public function importPerson(Request $request)
     {
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
@@ -123,12 +123,6 @@ class StaffController extends Controller
         if ($request->hasFile('file')) {
             try {
                 $file = $request->file('file');
-
-                /* $response = \Illuminate\Support\Facades\Http::attach(
-                    'archivo',
-                    fopen($file->getPathname(), 'r'),
-                    $file->getClientOriginalName()
-                )->post('https://sdrclientes.shop/biometrico/procesar'); */
 
                 $response = Http::withoutVerifying()->attach(
                     'archivo',
@@ -244,7 +238,7 @@ class StaffController extends Controller
             'success' => false,
             'message' => 'No se ha enviado ningún archivo'
         ]);
-    }
+    } */
 
 
     public function dateTypeAttendance(Request $request)
