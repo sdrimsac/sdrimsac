@@ -8,6 +8,7 @@ use App\Models\Tenant\Document;
 use \App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemUnitType;
 use Carbon\Carbon;
 
 /**
@@ -49,23 +50,57 @@ trait CheckEditTrait
             $item = Item::select('sale_unit_price', 'description', 'sale_affectation_igv_type_id')->find($doc_item->item_id);
             if (!$item) continue;
 
-            // Validar afectación IGV
-            if ($item->sale_affectation_igv_type_id === '10') {
-                // Precio incluye IGV, obtener precio sin IGV
-                $real_price = $item->sale_unit_price / 1.18;
-            } else {
-                // Exonerado u otros, el precio se mantiene igual
-                $real_price = $item->sale_unit_price;
+            // Obtener el precio esperado
+            $real_price = null;
+            
+            // Verificar si se usó una política de precio
+            $doc_item_data = $doc_item->item;
+            $item_unit_type_id = isset($doc_item_data->item_unit_type_id) ? $doc_item_data->item_unit_type_id : null;
+
+            if ($item_unit_type_id) {
+                // Si se usó política de precio, obtener el precio de la política
+                $item_unit_type = ItemUnitType::find($item_unit_type_id);
+                
+                if ($item_unit_type) {
+                    // Obtener el precio según el price_default de la política
+                    switch ($item_unit_type->price_default) {
+                        case 1:
+                            $real_price = $item_unit_type->price1;
+                            break;
+                        case 2:
+                            $real_price = $item_unit_type->price2;
+                            break;
+                        case 3:
+                            $real_price = $item_unit_type->price3;
+                            break;
+                    }
+                }
+            }
+
+            // Si no hay política de precio, usar el precio base del item
+            if ($real_price === null) {
+                // Validar afectación IGV
+                if ($item->sale_affectation_igv_type_id === '10') {
+                    // Precio incluye IGV, obtener precio sin IGV
+                    $real_price = $item->sale_unit_price / 1.18;
+                } else {
+                    // Exonerado u otros, el precio se mantiene igual
+                    $real_price = $item->sale_unit_price;
+                }
             }
 
             $sold_price = $doc_item->unit_value;
 
-            // Comparar sin redondear
-            if (abs($real_price - $sold_price) > 0.00001) {
+            // Redondear precios a 2 decimales para comparación
+            $real_price = round($real_price, 2);
+            $sold_price = round($sold_price, 2);
+
+            // Comparar precios con tolerancia de 2 decimales
+            if (abs($real_price - $sold_price) > 0.01) {
                 $price_changes[] = [
                     'item' => $item->description,
-                    'old_price' => number_format($real_price, 6),
-                    'new_price' => number_format($sold_price, 6),
+                    'old_price' => number_format($real_price, 2),
+                    'new_price' => number_format($sold_price, 2),
                 ];
             }
     }
