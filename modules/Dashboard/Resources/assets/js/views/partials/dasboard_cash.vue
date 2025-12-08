@@ -6,7 +6,7 @@
       <!-- Filtros y Título -->
       <div class="left-section">
     
-        <h1>DASHBOARD VENTAS [GEKO RESTOBAR]</h1>
+        <h1>DASHBOARD VENTAS</h1>
         
         <!-- INDICADORES COMPACTOS -->
         <div class="cards-compact">
@@ -35,7 +35,7 @@
     <!-- GRÁFICO PRINCIPAL -->
     <div class="charts-row">
       <div class="chart big">
-        <h3>Tendencia de Ventas (Turno Noche)</h3>
+        <h3>Tendencia de Ventas</h3>
         <apexchart type="line" height="300" :options="lineOptions" :series="lineSeries"/>
       </div>
 
