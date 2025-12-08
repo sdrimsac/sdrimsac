@@ -38,6 +38,9 @@ Route::middleware(['auth', 'just.admin'])->group(function () {
         Route::get('comparative/records', 'DashboardController@comparative');
         Route::post('utilities', 'DashboardController@utilities');
         Route::post('global-data', 'DashboardController@globalData');
+        Route::get('cash-dashboard', 'DashboardController@cashDashboard')->name('dashboard.cash');
+        Route::get('cash-dashboard-open', 'dashboardCashOpenController@cashDashboard')->name('dashboard.cash.open');
+        Route::get('debug-cashes', 'dashboardCashOpenController@debugCashes')->name('dashboard.debug.cashes');
     });
 
     //Commands

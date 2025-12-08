@@ -11,6 +11,7 @@ use Modules\Dashboard\Helpers\DashboardUtility;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
 use Modules\Dashboard\Helpers\DashboardView;
 use Modules\Dashboard\Helpers\DashboardStock;
+use modules\Dashboard\Helpers\DashboardCash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Company;
@@ -83,6 +84,13 @@ class DashboardController extends Controller
         return (new DashboardComparative())->data($request);
     }
 
+    /**
+     * Obtiene datos en tiempo real del dashboard de caja (restobar)
+     */
+    public function cashDashboard(Request $request)
+    {
+        return response()->json((new DashboardCash())->data($request), 200);
+    }
 
     public function utilities(Request $request)
     {

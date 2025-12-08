@@ -18,6 +18,7 @@ class Cash extends ModelTenant
         'counter' => 'array',
         'principal' => 'boolean',
         'is_loading_report' => 'boolean',
+        'state' => 'boolean',
 
     ];
     protected $table = 'cash';
