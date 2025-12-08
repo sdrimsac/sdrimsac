@@ -63,6 +63,7 @@ class DashboardCash
 
             if ($cash) {
                 Log::info("getActiveCash - Caja CERRADA encontrada: ID={$cash->id}, user_id={$cash->user_id}, date_closed={$cash->date_closed}");
+                Log::info("getActiveCash - state type: " . gettype($cash->state) . ", value: " . var_export($cash->state, true));
                 return $cash;
             }
 
@@ -222,30 +223,69 @@ class DashboardCash
 
     private function getMetrics($cash_id)
     {
+        // Verificar si la caja existe
+        $cash = Cash::find($cash_id);
+        /* Log::info("getMetrics - cash_id: $cash_id"); */
+        
+        if (!$cash) {
+            /* Log::error("getMetrics - Caja no encontrada: cash_id=$cash_id"); */
+            return [
+                'total_sales' => 0,
+                'efectivo' => 0,
+                'tarjeta' => 0,
+                'yape' => 0,
+                'plin' => 0,
+                'transferencia' => 0,
+                'orders_count' => 0,
+                'canceled_count' => 0,
+                'total_sale_notes' => 0,
+                'total_documents' => 0,
+            ];
+        }
+        
+        /* Log::info("getMetrics - Caja encontrada: ID={$cash->id}, state={$cash->state}, user_id={$cash->user_id}, date_opening={$cash->date_opening}, date_closed={$cash->date_closed}");
+        Log::info("getMetrics - state type: " . gettype($cash->state) . ", value: " . var_export($cash->state, true)); */
+        
         // FILTRAR SOLO VENTAS DE ESTA CAJA ESPECÍFICA
-        // State = 1 significa que es una venta registrada
+        // Ventas son las que NO son expenses ni incomes
         $sales = Box::where('cash_id', $cash_id)
             ->where('expenses', 0)
-            ->where('incomes', 0)
-            ->where('state', 1);
+            ->where('incomes', 0);
 
         // Log para debug
-        Log::info("getMetrics - cash_id: $cash_id");
-        Log::info("getMetrics - Total registros en Box: " . $sales->count());
+        /* Log::info("getMetrics - Total registros en Box: " . $sales->count()); */
 
         // Total de ventas (según Box)
         $total_sales = $sales->sum('amount');
         
-        Log::info("getMetrics - total_sales: $total_sales");
+        /* Log::info("getMetrics - total_sales: $total_sales"); */
+
+        // Verificar registros en Box para debug
+        $box_records = Box::where('cash_id', $cash_id)->get();
+        /* Log::info("getMetrics - Total registros en Box (todos): " . $box_records->count()); */
+        if ($box_records->count() > 0) {
+            /* Log::info("getMetrics - Primeros 3 registros Box: " . json_encode($box_records->take(3)->map(function($b) {
+                return [
+                    'id' => $b->id,
+                    'cash_id' => $b->cash_id,
+                    'amount' => $b->amount,
+                    'method' => $b->method,
+                    'expenses' => $b->expenses,
+                    'incomes' => $b->incomes,
+                    'state' => $b->state
+                ];
+            }))); */
+        }
 
         // Ventas por método de pago - SOLO DE ESTA CAJA
         $sales_by_method = Box::where('cash_id', $cash_id)
             ->where('expenses', 0)
             ->where('incomes', 0)
-            ->where('state', 1)
             ->select('method', DB::raw('SUM(amount) as total'))
             ->groupBy('method')
             ->get();
+        
+        /* Log::info("getMetrics - sales_by_method: " . json_encode($sales_by_method)); */
 
         $efectivo = $sales_by_method->where('method', 'Efectivo')->sum('total') ?? 0;
         $tarjeta = $sales_by_method->whereIn('method', ['Tarjeta', 'TARJETA: NIUBIZ', 'TARJETA: IZYPAY', 'TARJETA: OPENPAY'])->sum('total') ?? 0;
@@ -258,16 +298,16 @@ class DashboardCash
             ->where('state_type_id', '!=', '11') // excluir anuladas
             ->sum('total');
         
-        Log::info("getMetrics - total_sale_notes: $total_sale_notes");
-        Log::info("getMetrics - SaleNotes count: " . SaleNote::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
+        //Log::info("getMetrics - total_sale_notes: $total_sale_notes");
+        //Log::info("getMetrics - SaleNotes count: " . SaleNote::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
 
         // Total de ventas DOCUMENTOS (boletas + facturas) - SOLO DE ESTA CAJA
         $total_documents = Document::where('cash_id', $cash_id)
             ->where('state_type_id', '!=', '11')
             ->sum('total');
         
-        Log::info("getMetrics - total_documents: $total_documents");
-        Log::info("getMetrics - Documents count: " . Document::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
+        //Log::info("getMetrics - total_documents: $total_documents");
+        //Log::info("getMetrics - Documents count: " . Document::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
 
         // Obtener IDs de órdenes que pertenecen a esta caja específica
         $orden_ids_from_salenote = SaleNote::where('cash_id', $cash_id)
@@ -282,14 +322,14 @@ class DashboardCash
 
         $orden_ids = array_unique(array_merge($orden_ids_from_salenote, $orden_ids_from_document));
         
-        Log::info("getMetrics - orden_ids count: " . count($orden_ids));
+        //Log::info("getMetrics - orden_ids count: " . count($orden_ids));
 
         // Cantidad de atenciones (órdenes pagadas) - SOLO DE ESTA CAJA
         $orders_paid = Orden::whereIn('id', $orden_ids)
             ->where('status_orden_id', 4)
             ->count();
         
-        Log::info("getMetrics - orders_paid: $orders_paid");
+        //Log::info("getMetrics - orders_paid: $orders_paid");
 
         // Cantidad de anulaciones - SOLO DE ESTA CAJA
         $canceled = SaleNote::where('cash_id', $cash_id)
@@ -342,11 +382,10 @@ class DashboardCash
         }
 
         // Obtener todas las ventas de ESTA CAJA ESPECÍFICA con su fecha/hora completa
-        // State = 1 significa que es una venta registrada
+        // Ventas son las que NO son expenses ni incomes
         $sales = Box::where('cash_id', $cash_id)
             ->where('expenses', 0)
             ->where('incomes', 0)
-            ->where('state', 1)
             ->whereBetween('created_at', [$opening_date, $closing_date])
             ->select('created_at', 'amount')
             ->get();
