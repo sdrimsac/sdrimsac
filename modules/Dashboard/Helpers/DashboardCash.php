@@ -452,7 +452,7 @@ class DashboardCash
 
         $orden_ids = array_unique(array_merge($orden_ids_from_salenote, $orden_ids_from_document));
 
-        Log::info("Órdenes de la caja $cash_id: " . implode(', ', $orden_ids));
+        //Log::info("Órdenes de la caja $cash_id: " . implode(', ', $orden_ids));
 
         if (empty($orden_ids)) {
             Log::info("No hay órdenes para la caja $cash_id");
@@ -467,27 +467,27 @@ class DashboardCash
             ->with(['orden.salenote', 'orden.document', 'user'])
             ->get();
 
-        Log::info("Items encontrados para caja $cash_id: " . $items->count());
+        //Log::info("Items encontrados para caja $cash_id: " . $items->count());
 
         // Agrupar por mozo (orden_item.user_id)
         $groupedByWaiter = $items->groupBy('user_id');
         
-        Log::info("Usuarios agrupados: " . $groupedByWaiter->keys()->implode(', '));
+        //Log::info("Usuarios agrupados: " . $groupedByWaiter->keys()->implode(', '));
 
         foreach ($groupedByWaiter as $waiter_id => $waiter_items) {
 
             $waiter = User::with('worker_type')->find($waiter_id);
             if (!$waiter) {
-                Log::info("Usuario $waiter_id no encontrado");
+                //Log::info("Usuario $waiter_id no encontrado");
                 continue;
             }
 
             $workerTypeName = $waiter->worker_type ? $waiter->worker_type->description : 'Sin tipo';
-            Log::info("Usuario encontrado: ID={$waiter->id}, Name={$waiter->name}, WorkerType={$workerTypeName}");
+            //Log::info("Usuario encontrado: ID={$waiter->id}, Name={$waiter->name}, WorkerType={$workerTypeName}");
 
             // Solo mozos o caja (según worker_type)
             if (!$waiter->worker_type || !in_array(strtoupper($waiter->worker_type->description), ['MOZO', 'CAJA'])) {
-                Log::info("Usuario {$waiter->name} descartado por worker_type: {$workerTypeName}");
+                //Log::info("Usuario {$waiter->name} descartado por worker_type: {$workerTypeName}");
                 continue;
             }
 
@@ -592,16 +592,13 @@ class DashboardCash
 
         return $products_by_area;
     }
-
-    /**
-     * Obtiene información de la caja y cajero
-     */
     private function getCashInfo($cash)
     {
         return [
             'cashier_name' => $cash->user ? $cash->user->name : 'Sin usuario',
             'opening_date' => $cash->date_opening,
             'opening_time' => Carbon::parse($cash->time_opening)->format('H:i'),
+            'image' => $cash->user && $cash->user->image ? url("storage/uploads/workers/{$cash->user->image}") : url('logo.png'),
             'turn' => $cash->turn ? $cash->turn->turn_desc : 'Sin turno',
             'is_open' => (bool) $cash->state,
         ];

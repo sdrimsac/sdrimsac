@@ -24,10 +24,6 @@
           <strong>CAJERO: {{ cajero.nombre.toUpperCase() }}</strong><br />
           <span>FECHA: {{ cajero.fecha }}</span><br />
           <span>HORA: {{ cajero.hora }}</span>
-          <!-- <div class="cajero-stats">
-            <div class="stat-badge">AT <span>{{ cajero.at }}</span></div>
-            <div class="stat-badge anulados">ANUL <span>{{ cajero.anul }}</span></div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -410,7 +406,7 @@ export default {
           nombre: this.cash_info.cashier_name || "Sin Cajero",
           fecha: this.cash_info.opening_date || "-",
           hora: this.cash_info.opening_time || "-",
-          foto: "https://randomuser.me/api/portraits/women/44.jpg",
+          foto: this.cash_info.image,
           at: this.metrics.orders_count || 0,
           anul: this.metrics.canceled_count || 0
         };
