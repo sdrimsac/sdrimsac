@@ -29,6 +29,7 @@ class DashboardCash
             $seller_ids = User::where('type', 'seller')->pluck('id');
 
             if ($seller_ids->isEmpty()) {
+                Log::info("getActiveCash - No hay usuarios tipo seller");
                 return null;
             }
 
@@ -39,24 +40,55 @@ class DashboardCash
                         ->orWhere('state', true);
                 })
                 ->orderBy('date_opening', 'desc')
+                ->orderBy('id', 'desc')
                 ->first();
 
-            // Si no hay caja abierta, buscar la última caja cerrada de cualquier seller
-            if (!$cash) {
-                $cash = Cash::whereIn('user_id', $seller_ids)
-                    ->where(function ($query) {
-                        $query->where('state', 0)
-                            ->orWhere('state', false);
-                    })
-                    ->orderBy('id', 'desc') // Usar ID en lugar de date_closed por si es null
-                    ->first();
+            if ($cash) {
+                Log::info("getActiveCash - Caja ABIERTA encontrada: ID={$cash->id}, user_id={$cash->user_id}, date_opening={$cash->date_opening}");
+                return $cash;
+            }
+
+            // Si no hay caja abierta, buscar la última caja CERRADA de cualquier seller
+            // Ordenar por date_closed DESC (la más recientemente cerrada) y luego por ID DESC
+            $cash = Cash::whereIn('user_id', $seller_ids)
+                ->where(function ($query) {
+                    $query->where('state', 0)
+                        ->orWhere('state', false);
+                })
+                ->whereNotNull('date_closed') // Asegurar que tenga fecha de cierre
+                ->orderBy('date_closed', 'desc')
+                ->orderBy('time_closed', 'desc')
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($cash) {
+                Log::info("getActiveCash - Caja CERRADA encontrada: ID={$cash->id}, user_id={$cash->user_id}, date_closed={$cash->date_closed}");
+                return $cash;
+            }
+
+            // Si no hay caja con date_closed, buscar la última cerrada sin importar date_closed
+            $cash = Cash::whereIn('user_id', $seller_ids)
+                ->where(function ($query) {
+                    $query->where('state', 0)
+                        ->orWhere('state', false);
+                })
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($cash) {
+                Log::info("getActiveCash - Caja CERRADA sin date_closed encontrada: ID={$cash->id}, user_id={$cash->user_id}");
+                return $cash;
             }
 
             // Si aún no hay caja, buscar la última sin importar el estado
-            if (!$cash) {
-                $cash = Cash::whereIn('user_id', $seller_ids)
-                    ->orderBy('id', 'desc')
-                    ->first();
+            $cash = Cash::whereIn('user_id', $seller_ids)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($cash) {
+                Log::info("getActiveCash - Última caja (cualquier estado) encontrada: ID={$cash->id}, user_id={$cash->user_id}, state={$cash->state}");
+            } else {
+                Log::info("getActiveCash - NO se encontró ninguna caja");
             }
 
             return $cash;
@@ -65,6 +97,7 @@ class DashboardCash
         // Para usuarios no admin, verificar que sea seller y buscar solo sus cajas
         $user = User::find($user_id);
         if (!$user || $user->type !== 'seller') {
+            Log::info("getActiveCash - Usuario no es seller o no existe: user_id={$user_id}");
             return null;
         }
 
@@ -75,24 +108,54 @@ class DashboardCash
                     ->orWhere('state', true);
             })
             ->orderBy('date_opening', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
-        // Si no hay caja abierta, buscar la última caja cerrada
-        if (!$cash) {
-            $cash = Cash::where('user_id', $user_id)
-                ->where(function ($query) {
-                    $query->where('state', 0)
-                        ->orWhere('state', false);
-                })
-                ->orderBy('id', 'desc') // Usar ID en lugar de date_closed por si es null
-                ->first();
+        if ($cash) {
+            Log::info("getActiveCash - Caja ABIERTA del seller encontrada: ID={$cash->id}, user_id={$cash->user_id}");
+            return $cash;
+        }
+
+        // Si no hay caja abierta, buscar la última caja CERRADA
+        $cash = Cash::where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->where('state', 0)
+                    ->orWhere('state', false);
+            })
+            ->whereNotNull('date_closed')
+            ->orderBy('date_closed', 'desc')
+            ->orderBy('time_closed', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            Log::info("getActiveCash - Caja CERRADA del seller encontrada: ID={$cash->id}, user_id={$cash->user_id}, date_closed={$cash->date_closed}");
+            return $cash;
+        }
+
+        // Si no hay caja con date_closed, buscar la última cerrada sin importar date_closed
+        $cash = Cash::where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->where('state', 0)
+                    ->orWhere('state', false);
+            })
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            Log::info("getActiveCash - Caja CERRADA sin date_closed del seller encontrada: ID={$cash->id}, user_id={$cash->user_id}");
+            return $cash;
         }
 
         // Si aún no hay caja, buscar la última sin importar el estado
-        if (!$cash) {
-            $cash = Cash::where('user_id', $user_id)
-                ->orderBy('id', 'desc')
-                ->first();
+        $cash = Cash::where('user_id', $user_id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            Log::info("getActiveCash - Última caja del seller (cualquier estado) encontrada: ID={$cash->id}, state={$cash->state}");
+        } else {
+            Log::info("getActiveCash - NO se encontró ninguna caja para el seller: user_id={$user_id}");
         }
 
         return $cash;
@@ -104,11 +167,15 @@ class DashboardCash
         $cash = null;
         $authenticated_user = auth()->user();
 
+        Log::info("Dashboard data() - cash_id recibido: " . ($cash_id ?? 'null'));
+        Log::info("Dashboard data() - user_id: " . $authenticated_user->id . ", type: " . $authenticated_user->type);
+
         // Si no se proporciona cash_id, buscar automáticamente
         if (!$cash_id) {
             $cash = $this->getActiveCash();
 
             if (!$cash) {
+                Log::info("Dashboard data() - No se encontró ninguna caja");
                 return [
                     'success' => false,
                     'message' => 'No se encontró ninguna caja para este usuario'
@@ -116,19 +183,24 @@ class DashboardCash
             }
 
             $cash_id = $cash->id;
+            Log::info("Dashboard data() - Caja encontrada automáticamente: ID={$cash_id}, state={$cash->state}, user_id={$cash->user_id}");
         } else {
             // Si se proporciona cash_id, buscar esa caja específica
             $cash = Cash::find($cash_id);
 
             if (!$cash) {
+                Log::info("Dashboard data() - Caja no encontrada con ID: $cash_id");
                 return [
                     'success' => false,
                     'message' => 'Caja no encontrada'
                 ];
             }
 
+            Log::info("Dashboard data() - Caja específica encontrada: ID={$cash_id}, state={$cash->state}, user_id={$cash->user_id}");
+
             // Verificar permisos: admin o superadmin pueden ver todas las cajas, seller solo las suyas
             if (!in_array($authenticated_user->type, ['admin', 'superadmin']) && $cash->user_id !== auth()->id()) {
+                Log::info("Dashboard data() - Usuario sin permisos para ver esta caja");
                 return [
                     'success' => false,
                     'message' => 'No tiene permisos para ver esta caja'
@@ -157,8 +229,14 @@ class DashboardCash
             ->where('incomes', 0)
             ->where('state', 1);
 
+        // Log para debug
+        Log::info("getMetrics - cash_id: $cash_id");
+        Log::info("getMetrics - Total registros en Box: " . $sales->count());
+
         // Total de ventas (según Box)
         $total_sales = $sales->sum('amount');
+        
+        Log::info("getMetrics - total_sales: $total_sales");
 
         // Ventas por método de pago - SOLO DE ESTA CAJA
         $sales_by_method = Box::where('cash_id', $cash_id)
@@ -179,11 +257,17 @@ class DashboardCash
         $total_sale_notes = SaleNote::where('cash_id', $cash_id)
             ->where('state_type_id', '!=', '11') // excluir anuladas
             ->sum('total');
+        
+        Log::info("getMetrics - total_sale_notes: $total_sale_notes");
+        Log::info("getMetrics - SaleNotes count: " . SaleNote::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
 
         // Total de ventas DOCUMENTOS (boletas + facturas) - SOLO DE ESTA CAJA
         $total_documents = Document::where('cash_id', $cash_id)
             ->where('state_type_id', '!=', '11')
             ->sum('total');
+        
+        Log::info("getMetrics - total_documents: $total_documents");
+        Log::info("getMetrics - Documents count: " . Document::where('cash_id', $cash_id)->where('state_type_id', '!=', '11')->count());
 
         // Obtener IDs de órdenes que pertenecen a esta caja específica
         $orden_ids_from_salenote = SaleNote::where('cash_id', $cash_id)
@@ -197,11 +281,15 @@ class DashboardCash
             ->toArray();
 
         $orden_ids = array_unique(array_merge($orden_ids_from_salenote, $orden_ids_from_document));
+        
+        Log::info("getMetrics - orden_ids count: " . count($orden_ids));
 
         // Cantidad de atenciones (órdenes pagadas) - SOLO DE ESTA CAJA
         $orders_paid = Orden::whereIn('id', $orden_ids)
             ->where('status_orden_id', 4)
             ->count();
+        
+        Log::info("getMetrics - orders_paid: $orders_paid");
 
         // Cantidad de anulaciones - SOLO DE ESTA CAJA
         $canceled = SaleNote::where('cash_id', $cash_id)

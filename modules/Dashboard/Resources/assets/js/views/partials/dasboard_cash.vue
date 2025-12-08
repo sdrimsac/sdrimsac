@@ -57,13 +57,13 @@
 
         <apexchart type="bar" height="250" :options="area.options" :series="area.series"/>
         
-        <div class="area-footer">
+        <!-- <div class="area-footer">
           <span>- VENDIDO</span>
           <div class="producto-badge">
             <span class="producto-label">PRODUCTO</span>
             <span class="producto-number">1</span>
           </div>
-        </div>
+        </div> -->
       </div>
 
     </div>
@@ -376,7 +376,7 @@ export default {
                   return val + " Und"
                 },
                 style: {
-                  colors: ['#111'],
+                  colors: ['#fff'],
                   fontSize: '11px',
                   fontWeight: 'bold'
                 }
