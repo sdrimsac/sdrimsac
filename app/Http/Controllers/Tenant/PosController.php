@@ -503,8 +503,8 @@ class PosController extends Controller
         $currency_types = CurrencyType::whereActive()->get();
         $documents_type = IdentityDocumentType::where('active', 1)->get();
         $customers = $this->table('customers');
-        $user = User::select(['id', 'name', 'establishment_id', 'area_id', 'worker_type_id', 'warehouse_product_id'])
-            ->findOrFail(auth()->user()->id);
+        /* $user = User::all(); */
+        $user = User::findOrFail(auth()->user()->id);
         $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -528,22 +528,23 @@ class PosController extends Controller
             ];
         });
         $items = [];
-        $companyModel = Company::first();
+        $company = Company::first();
 
-        $company_summary = $companyModel ? (object) [
+        /* $company_summary = $companyModel ? (object) [
             'id' => $companyModel->id,
             'app_name' => $companyModel->app_name,
             'name' => $companyModel->name,
             'number' => $companyModel->number,
-        ] : null;
+        ] : null; */
 
         // ensure $company exists for views that expect it (was causing compact(): Undefined variable: company)
-        $company = $companyModel;
+        /* $company = $companyModel; */
 
+        $current_user = auth()->user();
         $categories = CategoryItem::query()
-            ->whereHas('items', function ($query) use ($user) {
-                $query->whereHas('warehouses', function ($query) use ($user) {
-                    $query->where('warehouse_id', $user->establishment_id)
+            ->whereHas('items', function ($query) use ($current_user) {
+                $query->whereHas('warehouses', function ($query) use ($current_user) {
+                    $query->where('warehouse_id', $current_user->establishment_id)
                         ->where('active', 1);
                 });
             })
