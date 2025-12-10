@@ -118,7 +118,9 @@ class WorkerController extends Controller
         $company = Company::active();
         $records = ItemWarehouse::where('warehouse_id', $establishment_id)
             ->whereHas('item', function ($query) {
-                $query->where('unit_type_id', '<>', 'ZZ');
+                $query->where('unit_type_id', '<>', 'ZZ')
+                    ->whereNotIsSet()
+                    ->whereNotPromotionItems();
             })
             ->get()
             ->transform(function ($row) {
@@ -151,7 +153,9 @@ class WorkerController extends Controller
         $establishment = Establishment::find($establishment_id);
         $records = ItemWarehouse::where('warehouse_id', $establishment_id)
             ->whereHas('item', function ($query) {
-                $query->where('unit_type_id', '<>', 'ZZ');
+                $query->where('unit_type_id', '<>', 'ZZ')
+                    ->whereNotIsSet()
+                    ->whereNotPromotionItems();
             })
             ->get()
             ->transform(function ($row) {

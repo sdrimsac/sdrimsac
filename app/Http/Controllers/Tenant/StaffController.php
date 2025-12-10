@@ -47,6 +47,7 @@ use Modules\Restobar\Events\PrintEvent;
 use Modules\Restobar\Models\Area;
 use Modules\Restobar\Models\Food;
 use Maatwebsite\Excel\Excel;
+use Modules\Restaurant\Models\CashStockMovement;
 use Modules\Restobar\Models\OrderItemDetail;
 
 class StaffController extends Controller
@@ -1174,6 +1175,17 @@ class StaffController extends Controller
                 if (!$item->is_set && !$has_real_promotions) {
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
+
+                    // Registrar movimiento para item normal
+                    if ($credit_list->cash_id) {
+                        $this->registrarMovimiento(
+                            $credit_list->cash_id,
+                            $item_id,
+                            abs($quantity),
+                            $warehouse->id,
+                            'credit_list'
+                        );
+                    }
                 } elseif ($item->is_set) {
                     $item_sets = ItemSet::where('item_id', $item_id)->get();
 
@@ -1189,6 +1201,17 @@ class StaffController extends Controller
                             } catch (Exception $e) {
                                 Log::error('updateStock error for set component: ' . $e->getMessage());
                                 throw $e;
+                            }
+
+                            // Registrar movimiento para cada ingrediente del set
+                            if ($credit_list->cash_id) {
+                                $this->registrarMovimiento(
+                                    $credit_list->cash_id,
+                                    $set_item->individual_item_id,
+                                    abs($total_quantity),
+                                    $warehouse->id,
+                                    'credit_list_set'
+                                );
                             }
                         }
                     }
@@ -1211,6 +1234,17 @@ class StaffController extends Controller
                                 } catch (Exception $e) {
                                     throw $e;
                                 }
+
+                                // Registrar movimiento para ingrediente de set promocional
+                                if ($credit_list->cash_id) {
+                                    $this->registrarMovimiento(
+                                        $credit_list->cash_id,
+                                        $set_item->individual_item_id,
+                                        abs($total_quantity),
+                                        $warehouse->id,
+                                        'credit_list_promo_set'
+                                    );
+                                }
                             }
                         } else {
                             $total_quantity = $promo_quantity * $orden_item->quantity * -1;
@@ -1222,13 +1256,67 @@ class StaffController extends Controller
                                 //Log::error('updateStock error for promo item: ' . $e->getMessage());
                                 throw $e;
                             }
+
+                            // Registrar movimiento para item promocional normal
+                            if ($credit_list->cash_id) {
+                                $this->registrarMovimiento(
+                                    $credit_list->cash_id,
+                                    $promo_item_obj->id,
+                                    abs($total_quantity),
+                                    $warehouse->id,
+                                    'credit_list_promo'
+                                );
+                            }
                         }
                     }
                 } else {
                     $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
+
+                    // Registrar movimiento para item sin clasificación específica
+                    if ($credit_list->cash_id) {
+                        $this->registrarMovimiento(
+                            $credit_list->cash_id,
+                            $item_id,
+                            abs($quantity),
+                            $warehouse->id,
+                            'credit_list'
+                        );
+                    }
                 }
             }
+        }
+    }
+
+    private function registrarMovimiento($cash_id, $item_id, $quantity, $warehouse_id, $tipo)
+    {
+        //Log::info("Registrando movimiento en CashStockMovement jkjkjkkjkjkjkjkkjk - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        try {
+            // Usar firstOrNew para crear o recuperar el registro
+            $movement = CashStockMovement::firstOrNew([
+                'cash_id' => $cash_id,
+                'item_id' => $item_id,
+            ]);
+
+            // Si es nuevo, establecer valores iniciales
+            if (!$movement->exists) {
+                $movement->warehouse_id = $warehouse_id;
+                $movement->initial_stock = 0;
+                $movement->purchases = 0;
+                $movement->sold_quantity = 0;
+                $movement->current_stock = 0;
+            }
+
+            // Acumular cantidad vendida y actualizar stock actual
+            $movement->sold_quantity = ($movement->sold_quantity ?? 0) + $quantity;
+            $movement->current_stock = ($movement->current_stock ?? 0) - $quantity;
+            $movement->movement_type = $tipo;
+
+            $movement->save();
+
+            //Log::info("Movimiento registrado en CashStockMovement qqqqqqqqqqqqqqqqqqqqqqq - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        } catch (\Exception $e) {
+            Log::error("Error al registrar movimiento en CashStockMovement zzzzzzzz: " . $e->getMessage());
         }
     }
 

@@ -1676,7 +1676,7 @@ class OrdenController extends Controller
 
                     // Debug log: ensure area_id saved correctly per created orden item
                     try {
-                        Log::debug('OrdenItem created', ['id' => $ordenItem->id, 'food_id' => $ordenItem->food_id, 'area_id' => $ordenItem->area_id, 'user_id' => $ordenItem->user_id]);
+                        //Log::debug('OrdenItem created', ['id' => $ordenItem->id, 'food_id' => $ordenItem->food_id, 'area_id' => $ordenItem->area_id, 'user_id' => $ordenItem->user_id]);
                     } catch (Exception $e) {
                         // ignore logging errors
                     }

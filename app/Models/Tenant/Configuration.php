@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'purchase_credit',
         'pollo_cuartos',
         'comission_item',
         'credits_home',
@@ -356,6 +357,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'purchase_credit' => 'boolean',
         'pollo_cuartos' => 'boolean',
         'comission_item' => 'boolean',
         'credits_home' => 'boolean',
@@ -656,6 +658,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'purchase_credit' => (bool)$this->purchase_credit,
             'pollo_cuartos' => (bool)$this->pollo_cuartos,
             'comission_item' => (bool)$this->comission_item,
             'credits_home' => (bool)$this->credits_home,

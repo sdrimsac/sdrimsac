@@ -2,6 +2,7 @@
 
 namespace Modules\Inventory\Providers;
 
+use App\Jobs\ProcesarCashStockMovement;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\InventoryKardexDetail;
@@ -22,6 +23,7 @@ use Modules\Order\Models\OrderNote;
 use Modules\Item\Models\ItemLotsGroup;
 use Modules\Item\Models\ItemLot;
 use Modules\Order\Models\OrderNoteItem;
+use Modules\Restaurant\Models\CashStockMovement;
 
 class InventoryKardexServiceProvider extends ServiceProvider
 {
@@ -159,6 +161,19 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 $inventory_kardex = $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
                 if (!$document_item->document->sale_note_id && !$document_item->document->order_note_id)
                     $this->updateStock($document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
+
+                // Registrar movimiento en cash_stock_movements si hay cash_id (para documentos)
+                if ($document_item->document->cash_id && $factor == -1) {
+                    $this->registrarMovimiento(
+                        $document_item->document->cash_id,
+                        $document_item->item_id,
+                        $quantity * $presentationQuantity,
+                        $warehouse->id,
+                        'document'
+                    );
+                    Log::info("Movimiento registrado para item normal en CashStockMovement - Cash ID: {$document_item->document->cash_id}, Item ID: {$document_item->item_id}");
+                }
+
             } else {
                 if ($document) {
                     $factor = ($document->document_type_id === '07') ? 1 : -1;
@@ -182,6 +197,18 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $this->createInventoryKardex($document_item->document, $ind_item->id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
                     if (!$document_item->document->sale_note_id && !$document_item->document->order_note_id) {
                         $this->updateStock($ind_item->id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
+                    }
+
+                    // Registrar movimiento en cash_stock_movements para ingredientes de set (documentos)
+                    if ($document_item->document->cash_id && $factor == -1) {
+                        $this->registrarMovimiento(
+                            $document_item->document->cash_id,
+                            $ind_item->id,
+                            $document_item->quantity * $presentationQuantity,
+                            $warehouse->id,
+                            'document_set'
+                        );
+                        Log::info("Movimiento registrado para ingrediente de set en CashStockMovement - Cash ID: {$document_item->document->cash_id}, Item ID: {$ind_item->id}");
                     }
                 }
             }
@@ -311,6 +338,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 }
             }
             if ($sale_note_item->item->is_stock == 'Si' && !$sale_note_item->sale_note->from_consignment) {
+
                 if ($sale_note_item->warehouse_id) {
                     $warehouse = Warehouse::find($sale_note_item->warehouse_id);
                 } else {
@@ -335,10 +363,14 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     }
                 } */
 
+                Log::info("Procesando SaleNoteItem ID fdggdfhhhhhhhhhhhhhhhh: {$sale_note_item->id}, Item ID: {$sale_note_item->item_id}");
+
                 if (!$sale_note_item->item->is_set) {
 
+                    Log::info("Verificando si el item es promocional para SaleNoteItemrrrrrrrrrrrrrrrrrr ID: {$sale_note_item->id}, Item ID: {$sale_note_item->item_id}");
+
                     if (isset($sale_note_item->item) && $sale_note_item->item->promotions_items == 1) {
-                        Log::info('Item promocional detectado, se omite el descuento de stock: ' . $sale_note_item->item->description);
+                        Log::info('Item promocional detectado, se omite el descuento de stock yyyyyyyyyyyyyyyyyyyyyyyyyyyy: ' . $sale_note_item->item->description);
                         return;
                     }
 
@@ -366,6 +398,19 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     if (!$sale_note_item->sale_note->order_note_id) {
                         $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
                     }
+
+                    Log::info("Movimiento registrado para item normal en CashStockMovement fdgfdfgfkkkkkkkkkkkkkkkkkkk - Cash ID: {$sale_note_item->sale_note->cash_id}, Item ID: {$sale_note_item->item_id}");
+
+                    // Registrar movimiento en cash_stock_movements si hay cash_id
+                    if ($sale_note_item->sale_note->cash_id) {
+                        $this->registrarMovimiento(
+                            $sale_note_item->sale_note->cash_id,
+                            $sale_note_item->item_id,
+                            $quantity * $presentationQuantity,
+                            $warehouse->id,
+                            'sale_note'
+                        );
+                    }
                 } else {
                     $quantity = $sale_note_item->quantity;
                     $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
@@ -378,9 +423,55 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $ind_item->id, (-1 * ($sale_note_item->quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
                         if (!$sale_note_item->sale_note->order_note_id) $this->updateStock($ind_item->id, (-1 * ($sale_note_item->quantity * $presentationQuantity)), $warehouse->id);
                     }
+
+                    Log::info("Movimiento registrado para set en CashStockMovement  gdfgfhfghfhfghfg- Cash ID: {$sale_note_item->sale_note->cash_id}, Item ID: {$sale_note_item->item_id}");
+
+                    // Registrar movimiento en cash_stock_movements si hay cash_id (para sets)
+                    if ($sale_note_item->sale_note->cash_id) {
+                        $this->registrarMovimiento(
+                            $sale_note_item->sale_note->cash_id,
+                            $sale_note_item->item_id,
+                            $quantity * $presentationQuantity,
+                            $warehouse->id,
+                            'sale_note_set'
+                        );
+                        Log::info("Movimiento registrado para set en CashStockMovement  ccccccccccccc- Cash ID: {$sale_note_item->sale_note->cash_id}, Item ID: {$sale_note_item->item_id}");
+                    }
                 }
             }
         });
+    }
+
+    private function registrarMovimiento($cash_id, $item_id, $quantity, $warehouse_id, $tipo)
+    {
+        Log::info("Registrando movimiento en CashStockMovement jkjkjkkjkjkjkjkkjk - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        try {
+            // Usar firstOrNew para crear o recuperar el registro
+            $movement = CashStockMovement::firstOrNew([
+                'cash_id' => $cash_id,
+                'item_id' => $item_id,
+            ]);
+
+            // Si es nuevo, establecer valores iniciales
+            if (!$movement->exists) {
+                $movement->warehouse_id = $warehouse_id;
+                $movement->initial_stock = 0;
+                $movement->purchases = 0;
+                $movement->sold_quantity = 0;
+                $movement->current_stock = 0;
+            }
+
+            // Acumular cantidad vendida y actualizar stock actual
+            $movement->sold_quantity = ($movement->sold_quantity ?? 0) + $quantity;
+            $movement->current_stock = ($movement->current_stock ?? 0) - $quantity;
+            $movement->movement_type = $tipo;
+
+            $movement->save();
+
+            Log::info("Movimiento registrado en CashStockMovement qqqqqqqqqqqqqqqqqqqqqqq - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        } catch (\Exception $e) {
+            Log::error("Error al registrar movimiento en CashStockMovement zzzzzzzz: " . $e->getMessage());
+        }
     }
 
 

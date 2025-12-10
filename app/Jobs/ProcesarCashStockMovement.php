@@ -117,13 +117,13 @@ class ProcesarCashStockMovement implements ShouldQueue
     private function registrarMovimiento($cash_id, $item_id, $quantity, $row, $tipo)
     {
         // Usar firstOrNew para crear o recuperar la fila y garantizar consistencia
-        $movement = CashStockMovement::firstOrNew([
+        /* $movement = CashStockMovement::firstOrNew([
             'cash_id' => $cash_id,
             'item_id' => $item_id,
-        ]);
+        ]); */
 
         // asegurar valores por defecto
-        $movement->warehouse_id = $movement->warehouse_id ?? ($row['item']['warehouse_id'] ?? $row['warehouse_id'] ?? null);
+       /*  $movement->warehouse_id = $movement->warehouse_id ?? ($row['item']['warehouse_id'] ?? $row['warehouse_id'] ?? null);
         $movement->initial_stock = $movement->initial_stock ?? 0;
         $movement->purchases = $movement->purchases ?? 0;
 
@@ -132,6 +132,6 @@ class ProcesarCashStockMovement implements ShouldQueue
         $movement->current_stock = ($movement->current_stock ?? 0) - $quantity;
         $movement->movement_type = $tipo;
 
-        $movement->save();
+        $movement->save(); */
     }
 }

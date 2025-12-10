@@ -352,12 +352,17 @@ class DocumentController extends Controller
 
         $items_not_services = $this->getItemsNotServices($request);
         $items_services = $this->getItemsServices($request);
+        
+        // Filtrar items que NO tengan is_set = 1 o promotions_items = 1
+        $all_items = $items_not_services->merge($items_services)->filter(function ($row) {
+            return !$row->is_set && !$row->promotions_items;
+        });
+        
         //aqui hay un return, cuando hay un return el codigo abajo de él no se ejectua
-        return self::TransformToModal($items_not_services->merge($items_services));
-        $all_items = $items_not_services->merge($items_services);
-
+        return self::TransformToModal($all_items);
+        
         $items = collect($all_items)->filter(function ($row) {
-            return $row->unit_type_id !== 'zz';
+            return $row->unit_type_id !== 'zz' && $row->item_set !== true && $row->promotions_items !== null;
         })->transform(function ($row) use ($warehouse) {
 
             $detail = $this->getFullDescription($row, $warehouse);

@@ -21,7 +21,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\Inventory\Traits\InventoryTrait;
-
+use Modules\Restaurant\Models\CashStockMovement;
 
 class ProcessSaleNoteItemPromotionStock implements ShouldQueue
 {
@@ -158,6 +158,17 @@ class ProcessSaleNoteItemPromotionStock implements ShouldQueue
                     } catch (Exception $e) {
                         //Log::error('Error actualizando stock para ingrediente', ['exception' => $e->getMessage(), 'ingredient_item_id' => $ingredient_item->id]);
                     }
+
+                    // Registrar movimiento en caja
+                    if ($sale_note_item->sale_note->cash_id) {
+                        $this->registrarMovimiento(
+                            $sale_note_item->sale_note->cash_id,
+                            $ingredient_item->id,
+                            $ingredient_quantity,
+                            $this->warehouse_id,
+                            'sale_note'
+                        );
+                    }
                 }
             } else {
                 // Item normal
@@ -180,7 +191,50 @@ class ProcessSaleNoteItemPromotionStock implements ShouldQueue
                 } catch (Exception $e) {
                     //Log::error('Error actualizando stock para item promocional', ['exception' => $e->getMessage(), 'item_id' => $child_item->id]);
                 }
+
+                // Registrar movimiento en caja
+                if ($sale_note_item->sale_note->cash_id) {
+                    $this->registrarMovimiento(
+                        $sale_note_item->sale_note->cash_id,
+                        $child_item->id,
+                        $promo_quantity,
+                        $this->warehouse_id,
+                        'sale_note'
+                    );
+                }
             }
+        }
+    }
+
+    private function registrarMovimiento($cash_id, $item_id, $quantity, $warehouse_id, $tipo)
+    {
+       Log::info("Registrando movimiento en CashStockMovement jkjkjkkjkjkjkjkkjk - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        try {
+            // Usar firstOrNew para crear o recuperar el registro
+            $movement = CashStockMovement::firstOrNew([
+                'cash_id' => $cash_id,
+                'item_id' => $item_id,
+            ]);
+
+            // Si es nuevo, establecer valores iniciales
+            if (!$movement->exists) {
+                $movement->warehouse_id = $warehouse_id;
+                $movement->initial_stock = 0;
+                $movement->purchases = 0;
+                $movement->sold_quantity = 0;
+                $movement->current_stock = 0;
+            }
+
+            // Acumular cantidad vendida y actualizar stock actual
+            $movement->sold_quantity = ($movement->sold_quantity ?? 0) + $quantity;
+            $movement->current_stock = ($movement->current_stock ?? 0) - $quantity;
+            $movement->movement_type = $tipo;
+
+            $movement->save();
+
+            Log::info("Movimiento registrado en CashStockMovement qqqqqqqqqqqqqqqqqqqqqqq - Cash ID: {$cash_id}, Item ID: {$item_id}, Cantidad: {$quantity}");
+        } catch (\Exception $e) {
+            Log::error("Error al registrar movimiento en CashStockMovement zzzzzzzz: " . $e->getMessage());
         }
     }
 }

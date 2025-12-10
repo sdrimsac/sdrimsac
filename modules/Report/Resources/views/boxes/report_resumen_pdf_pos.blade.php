@@ -2215,7 +2215,6 @@
                     </table>
                 </div>
             @endif
-
         @endif
 
         @if ($configuration->image_comand)

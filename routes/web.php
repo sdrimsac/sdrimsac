@@ -203,7 +203,7 @@ if ($hostname) {
                     Route::post('/generate-summary', [StaffController::class, 'generarResumenAsistencias']);
                     Route::get('/records', [StaffController::class, 'recordsWorker']);
                     Route::post('/adelanto', [StaffController::class, 'adelanto']);
-                    Route::post('/send-credit', [StaffController::class, 'send_credit']);
+                    /* Route::post('/send-credit', [StaffController::class, 'send_credit']); */
                     Route::post('/update-job-position', [StaffController::class, 'updateJobPosition']);
                 });
                 Route::prefix('/sellers')->group(function () {

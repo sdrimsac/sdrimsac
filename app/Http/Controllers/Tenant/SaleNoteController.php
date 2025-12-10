@@ -1882,7 +1882,6 @@ class SaleNoteController extends Controller
                 //             $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
                 //         }
                 //     }
-
                 // }
                 /////------------------------------------------
                 $this->dumpWithTime("generate");

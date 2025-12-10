@@ -38,10 +38,6 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
 
             $cash = $this->cash;
 
-            // Nota: el init_report debe evaluarse por el ítem afectado. Para recetas
-            // se debe verificar cada componente, y para promociones se debe verificar
-            // el/los ítems de la promoción o sus componentes si son sets.
-
             $cash_id = $cash->id ?? null;
 
             if (!$cash_id) {
@@ -119,7 +115,7 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
     private function registrarMovimiento($cash_id, $item_id, $quantity, $row, $tipo)
     {
         // Usar firstOrNew para crear o recuperar la fila y garantizar consistencia
-        $movement = CashStockMovement::firstOrNew([
+        /* $movement = CashStockMovement::firstOrNew([
             'cash_id' => $cash_id,
             'item_id' => $item_id,
         ]);
@@ -134,6 +130,6 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
         $movement->current_stock = ($movement->current_stock ?? 0) - $quantity;
         $movement->movement_type = $tipo;
 
-        $movement->save();
+        $movement->save(); */
     }
 }

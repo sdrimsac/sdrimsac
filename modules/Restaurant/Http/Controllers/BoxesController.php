@@ -1938,36 +1938,6 @@ class BoxesController extends Controller
         }
     }
 
-    /* private function formatPollo($cantidad)
-    {
-        if ($cantidad == 0) {
-            return '0 Pollo';
-        }
-
-        $entero = floor($cantidad);
-        $decimal = round($cantidad - $entero, 3);
-
-        $fraccion = '';
-        if ($decimal == 0.500) {
-            $fraccion = '1/2';
-        } elseif ($decimal == 0.250) {
-            $fraccion = '1/4';
-        } elseif ($decimal == 0.125) {
-            $fraccion = '1/8';
-        }
-
-        if ($entero > 0 && $fraccion) {
-            return "{$entero} {$fraccion} Pollo";
-        } elseif ($entero > 0) {
-            return "{$entero} Pollo";
-        } elseif ($fraccion) {
-            return "{$fraccion} Pollo";
-        } else {
-            return "{$cantidad} Pollo";
-        }
-    } */
-
-
     function formatInitial($stock)
     {
         $wholeChickens = floor($stock);
@@ -2111,7 +2081,6 @@ class BoxesController extends Controller
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
 
-        // 🔸 1. Consultamos órdenes anuladas o con ítems anulados
         $query = Orden::with([
             'orden_items.food',
             'orden_items.user',
@@ -2127,18 +2096,15 @@ class BoxesController extends Controller
             ->whereDate('created_at', '>=', $date_opening)
             ->whereTime('created_at', '>=', $time_opening);
 
-        // 🔸 2. Filtrar por usuario dueño de la caja
         $query->whereHas('orden_items', function ($q) use ($cash) {
             $q->where('user_id', $cash->user_id);
         });
 
-        // 🔸 3. Si la caja está cerrada, filtrar por fecha/hora de cierre
         if ($date_closed && $time_closed) {
             $query->whereDate('created_at', '<=', $date_closed)
                 ->whereTime('created_at', '<=', $time_closed);
         }
 
-        // 🔸 4. Procesar resultados
         $cancelado_orders = $query->get()->map(function ($order) {
 
             // Si la orden completa fue anulada (status_orden_id = 5)
@@ -4746,6 +4712,7 @@ class BoxesController extends Controller
     //         "documents_info",
     //     );
     // }
+
     public function list_food_sales(Request $request)
     {
 

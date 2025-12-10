@@ -6575,6 +6575,40 @@
                                                                         </div>
                                                                     </div>
 
+                                                                    <div class="col-md-3 mb-2">
+                                                                        <div class="card h-100">
+                                                                            <div class="card-body d-flex flex-column"
+                                                                                style="padding: 7px;">
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1">
+                                                                                    <label class="control-label w-100">
+                                                                                        <i
+                                                                                            class="fas fa-id-card fa-lg"></i>
+                                                                                        Permitir realizar compra a crédito
+                                                                                        <el-tooltip
+                                                                                            content="Activar compra a crédito en el módulo de compras">
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch v-model="form.purchase_credit
+                                                                                        " active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="'#28a745'
+                                                                                            " :inactive-color="'#6c757d'
+                                                                                                " @change="
+                                                                                                    submit(
+                                                                                                        'permitir realizar compra a crédito',
+                                                                                                        form.purchase_credit,
+                                                                                                        'origin',
+                                                                                                        'idCardIcon'
+                                                                                                    )
+                                                                                                    "></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <!-- <div
                                                                 class="col-md-2 mt-4"
                                                             >

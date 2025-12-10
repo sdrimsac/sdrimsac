@@ -2561,8 +2561,7 @@ export default {
                     title: ["Ingreso de Stock", ""],
                     icon: "fas fa-history ",
                     visible:
-                        !this.isSeller &&
-                        (!this.configuration.kitchen_mozo || !this.cashId)
+                        !this.isSeller && this.cashId
                 },
 
                 {
@@ -2602,7 +2601,7 @@ export default {
                     visible:
                         this.configuration.pos_drag_category &&
                         !this.isSeller &&
-                        this.cashId
+                        !this.cashId
                 },
                 {
                     id: 103,

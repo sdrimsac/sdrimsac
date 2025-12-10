@@ -142,16 +142,6 @@
                                     </template>
                                 </div>
                                 <div class="d-flex align-items-center" style="gap:12px; flex-wrap:nowrap;">
-                                    <!-- <el-tooltip content="Crear Productos" placement="top">
-                                        <button
-                                            class="btn_guardarsmall d-flex align-items-center justify-content-center"
-                                            type="button"
-                                            @click="createdNewLibrary"
-                                            style="height:42px; min-width:42px; padding:0 10px;">
-                                            <i class="fas fa-box-open" style="font-size:18px;"></i>
-                                            
-                                        </button>
-                                    </el-tooltip> -->
 
                                     <el-tooltip content="Historial" placement="top">
                                         <button v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
@@ -169,7 +159,6 @@
                                         <i class="fas fa-clock me-2" style="font-size:18px;"></i>
                                         <small>{{ formattedCountdown }}</small>
                                     </button>
-
 
                                     <!-- Estado Internet / Latencia -->
                                     <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
@@ -1202,7 +1191,8 @@
             :establishment.sync="establishment">
         </PromotionCanje>
         <credits-list v-if="configuration.sale_note_credit_penalty" :showDialog.sync="showCredits"
-            :configuration="configuration" :isAnalist="isAnalist" :user="user" :fromPos="true"></credits-list>
+            :configuration="configuration" :isAnalist="isAnalist" :user="user" :fromPos="true">
+        </credits-list>
         <unit-type-modal @addUnitType="addUnitType" @addCategoriaMadera="addCategoriaMadera"
             :showDialog.sync="showUnitTypeModal" :medida_alto="medida_alto" :medida_ancho="medida_ancho"
             :medida_grosor="medida_grosor" :categoria_madera="categoria_madera" :item="selectedFood"
