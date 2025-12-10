@@ -512,23 +512,25 @@
                             </el-select>
                         </template>
                         <div class="row">
-                            
-                                <div class="col-md-12" v-if="!configuration.college && configuration.restaurant && !configuration.hotels">
-                                    <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
-                                        placeholder="Referencia:" maxlength="45" show-word-limit
-                                        style="margin-bottom: 10px;">
-                                    </el-input>
-                                </div>
-                            
-                            
-                                <div class="col-md-6" v-if="!configuration.college && configuration.restaurant && configuration.hotels">
-                                    <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
-                                        placeholder="Referencia:" maxlength="45" show-word-limit
-                                        style="margin-bottom: 10px;">
-                                    </el-input>
 
-                                </div>
-                            
+                            <div class="col-md-12"
+                                v-if="!configuration.college && configuration.restaurant && !configuration.hotels">
+                                <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
+                                    placeholder="Referencia:" maxlength="45" show-word-limit
+                                    style="margin-bottom: 10px;">
+                                </el-input>
+                            </div>
+
+
+                            <div class="col-md-6"
+                                v-if="!configuration.college && configuration.restaurant && configuration.hotels">
+                                <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
+                                    placeholder="Referencia:" maxlength="45" show-word-limit
+                                    style="margin-bottom: 10px;">
+                                </el-input>
+
+                            </div>
+
                             <div class="col-md-6" v-if="configuration.hotels">
                                 <div class="row">
                                     <!-- Canjear Promoción Piscina y Desayuno -->
@@ -885,20 +887,18 @@
                                                                                         indexx
                                                                                     )
                                                                                     "></el-button>
-                                                                            <el-button v-if="
-                                                                                configuration.restaurant && !configuration.college && !configuration.hotels
-                                                                            " class="text-white" type="info"
-                                                                                icon="el-icon-s-order" size="mini"
-                                                                                circle @click="
-                                                                                    openLocalObservationDialog(
-                                                                                        indexx,
-                                                                                        order_pend.observation,
-                                                                                        order_pend
-                                                                                            .food
-                                                                                            .item
-                                                                                            .id
-                                                                                    )
-                                                                                    "></el-button>
+                                                                            <el-button v-if="configuration.restaurant && !configuration.college"
+                                                                                       class="text-white"
+                                                                                       type="info"
+                                                                                       icon="el-icon-s-order"
+                                                                                       size="mini"
+                                                                                       circle
+                                                                                       @click="openLocalObservationDialog(
+                                                                                           indexx,
+                                                                                           order_pend.observation,
+                                                                                           order_pend.food.item.id
+                                                                                       )">
+                                                                            </el-button>
                                                                         </el-button-group>
                                                                     </div>
                                                                 </div>
