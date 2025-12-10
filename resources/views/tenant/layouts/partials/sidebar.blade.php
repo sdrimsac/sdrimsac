@@ -69,6 +69,16 @@
                         </li>
                     @endif
 
+                    @if ($roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                                href="{{ route('tenant.staff.index') }}">
+                                <i class="icofont-users-social" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Tratamiento Personal</span>
+                            </a>
+                        </li>
+                    @endif
+
                     {{-- Clientes --}}
                     @if ($user->type == 'superadmin' || ($config->clientes && !$roleService->isLogistic()))
                         <li>
@@ -102,7 +112,7 @@
                         </li>
                     @endif
 
-                    @if ($user->type == 'superadmin')
+                    @if ($user->type == 'superadmin' || $roleService->isLogistic() || $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'person_staff' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.person_staff.index') }}">
@@ -857,6 +867,16 @@
                         </li>
                     @endif
 
+                    @if ($roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                                href="{{ route('reports.cash_closes.index') }}">
+                                <i class="icofont-close-circled" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Cierre de Caja</span>
+                            </a>
+                        </li>
+                    @endif
+
                     {{-- Reporte Global de Salud --}}
                     @if ($config->health_network && !$roleService->isLogistic() && !$roleService->isAccountant($user->worker_type_id))
                         <li>
@@ -1258,7 +1278,9 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) || $roleService->isLogistic()))
+    @if (
+        $config->restaurant &&
+            (!$roleService->isAccountant($user->getAttribute('worker_type_id')) || $roleService->isLogistic()))
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
@@ -1326,7 +1348,9 @@
         </li>
     @endif
 
-    @if ($config->restobar_home && (!$roleService->isAccountant($user->getAttribute('worker_type_id')) && !$roleService->isLogistic()))
+    @if (
+        $config->restobar_home &&
+            (!$roleService->isAccountant($user->getAttribute('worker_type_id')) || $roleService->isLogistic()))
 
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"

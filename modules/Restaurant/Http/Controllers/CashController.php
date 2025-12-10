@@ -528,7 +528,23 @@ class CashController extends Controller
         $users = User::where('active', 1)->get();
         $user_id = auth()->user()->id;
         $has_cash = 0 < Cash::where('user_id', $user_id)->where('state', 1)->count();
-        $user = User::findOrFail($user_id);
+        // $user_id puede ser un id de usuario o un id de worker_type.
+        $user = User::find($user_id);
+        if (!$user) {
+            // Verificar si existe en la tabla workers_type
+            $workerType = DB::connection('tenant')->table('workers_type')->where('id', $user_id)->first();
+            if ($workerType) {
+            // Intentar obtener un usuario asociado a ese worker_type_id
+            $user = User::where('worker_type_id', $user_id)->first();
+            }
+            // Si aún no se encontró, usar el usuario autenticado como fallback
+            if (!$user) {
+            $user = auth()->user();
+            }
+        }
+        $isLogistico = $user->isWorkerType("LOGISTICA");
+
+        Log::info("User ID: " . $user->id . ", is_arca: " . $user->is_arca . ", isLogistico: " . ($isLogistico ? 'true' : 'false'));
         $can_open = $user->isWorkerType("arca") || $user->is_arca;
         $can_open = !$can_open;
         $cash_id = null;
@@ -545,7 +561,8 @@ class CashController extends Controller
             'configuration',
             'users',
             'has_cash',
-            'cash_id'
+            'cash_id',
+            'isLogistico'
         ));
     }
     public function index_report_cash()

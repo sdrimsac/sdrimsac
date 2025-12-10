@@ -66,7 +66,8 @@ class JustAdmin
             "documents",
             "banks",
             "documents_ventas",
-            "reports/valued"
+            "reports/valued",
+            "person_staff"
         ];
         $paths_logistic = [
             "items",
@@ -83,7 +84,11 @@ class JustAdmin
             // "documents_ventas",
             // "nota_venta",
             "productos",
-            "receta"
+            "receta",
+            "promotions",
+            "person_staff",
+            "report_closed_cash",
+            "main_cash"
         ];
         $worker_type = WorkersType::find($user->worker_type_id);
         // $redirect_to = "";

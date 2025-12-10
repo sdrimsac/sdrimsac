@@ -87,9 +87,6 @@
                                             </el-tooltip>
                                             </template> -->
 
-
-
-
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
                                                 <i class="fas fa-print" style="font-size: 35px;"></i>
@@ -170,8 +167,6 @@
                                         </button>
                                     </el-tooltip>
                                 </div>
-
-
                             </div>
                         </div>
                         <div class="row card mx-1 mt-2" v-if="configuration.sale_note_credit_confirm
@@ -271,13 +266,10 @@
                                             <!-- Barcode -->
                                             <div v-if="configuration.barcode"
                                                 class="align-items-center justify-content-center">
-
-
                                                 <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
                                                     class="d-flex align-items-center">
                                                     <span>Barcode</span>
                                                 </el-checkbox>
-
                                             </div>
 
                                             <!-- Calidad -->
@@ -293,8 +285,6 @@
                                                 </el-tooltip>
                                             </div>
 
-                                            <!-- Modelo -->
-
                                             <div v-if="configuration.model"
                                                 class="align-items-center justify-content-center">
                                                 <el-tooltip content="Filtrar por modelo del producto" placement="top">
@@ -306,12 +296,9 @@
                                                     </el-checkbox>
                                                 </el-tooltip>
                                             </div>
-
                                         </div>
 
                                         <div class="col-10">
-                                            <!-- Categorías y Marca -->
-
                                             <div class="row align-items-center">
                                                 <div class="row">
                                                     <div class="mb-1 mt-1 col-8">
@@ -780,7 +767,7 @@
                             @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
                             :isRestaurantWarehouse="isRestaurantWarehouse" @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
-                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"></list-orden>
+                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv" :worker="worker"></list-orden>
                     </div>
                 </div>
             </div>
@@ -1121,7 +1108,7 @@
                         @updateOrdens="updateOrdens" @paymentsOrden="paymentsOrden" @deletedFood="deletedFood"
                         @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
                         :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv"
-                        :isRestaurantWarehouse="isRestaurantWarehouse" :currencyIdChoice.sync="currencyIdChoice"
+                        :isRestaurantWarehouse="isRestaurantWarehouse" :currencyIdChoice.sync="currencyIdChoice" :worker="worker"
                         ref="listOrdens"></list-orden>
                 </div>
                 <template>
