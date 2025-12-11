@@ -7009,11 +7009,11 @@ export default {
 
                 // Crear un mock temporal de las referencias que insertOrden necesita
                 const tempRefs = {
-                    list_orden: this.$refs.list_orden || {
+                    /* list_orden: this.$refs.list_orden || {
                         changeCurrencyItems: () => {
                             console.log('[BALANZA] changeCurrencyItems no disponible, se omite');
                         }
-                    },
+                    }, */
                     ordenRef: this.$refs.ordenRef || {
                         calculateTotal: () => {
                             console.log('[BALANZA] ordenRef.calculateTotal no disponible, usando calculateTotal directo');
