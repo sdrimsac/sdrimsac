@@ -60,7 +60,8 @@ trait PromotionDocumentTrait
                         $query->where('is_points', true);
                     })
                     ->first();
-                $points_to_subtract += $item_promotion->points_value;
+                // Los puntos siempre deben ser enteros
+                $points_to_subtract += intval($item_promotion->points_value);
                 $this->savePromotionReceived($promotion_customer, $item->item_id, $item->quantity, $document);
             }
         }
@@ -68,7 +69,8 @@ trait PromotionDocumentTrait
         try {
             Log::info('Saving promotion_customer points', ['promotion_customer_id' => $promotion_customer->id, 'points_to_subtract' => $points_to_subtract, 'points_before' => $promotion_customer->points]);
         } catch (\Exception $e) {}
-        $promotion_customer->points -= $points_to_subtract;
+        // Asegurar que los puntos siempre sean enteros
+        $promotion_customer->points = intval($promotion_customer->points) - intval($points_to_subtract);
         $promotion_customer->save();
     }
 
@@ -192,7 +194,9 @@ trait PromotionDocumentTrait
                 $promotion->acc_total += $document_total;
             }
             $this->createPromotionDetail($promotion->id, $document, $document_total, $document_type_id);
-            $promotion->points += $this->calculatePoints($document_total, $limit, $points_value);
+            // Asegurar que los puntos siempre sean enteros
+            $calculatedPoints = $this->calculatePoints($document_total, $limit, $points_value);
+            $promotion->points = intval($promotion->points) + intval($calculatedPoints);
             $promotion->save();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -277,6 +281,7 @@ trait PromotionDocumentTrait
         $promotion->promotion_document_id = $promotion_id;
         $promotion->customer_id = $customer_id;
         $promotion->acc_total = $acc_total;
+        $promotion->points = 0; // Inicializar puntos como entero
         $promotion->save();
 
         return $promotion;

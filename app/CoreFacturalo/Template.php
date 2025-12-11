@@ -141,7 +141,7 @@ class Template
                             ->sum(function ($row) {
                                 $promotion_document = $row->promotion_customer->promotion_document;
                                 $units = intval($row->total / $promotion_document->total); // Solo enteros
-                                return $units * $promotion_document->points_value;
+                                return intval($units * $promotion_document->points_value); // Puntos siempre enteros
                             });
 
                         $detail_points['total_document_points'] = $currentDocumentPoints;
@@ -150,12 +150,13 @@ class Template
                             ->first();
                         $type_promotion_id = $type_promotion->id;
                         $count_promotion_document_customer_detail = $type_promotion->promotion_customer->details()->first()->id;
-                        $accumulatedPoints = $type_promotion->promotion_customer->points;
-
-                        $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
-                        $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
+                        
+                        // Obtener los puntos acumulados actuales del cliente directamente
+                        $detail_points['acc_points'] = intval($type_promotion->promotion_customer->points);
+                        
+                        // Si es el primer detalle del cliente, los puntos acumulados deben ser solo los del documento actual
                         if ($count_promotion_document_customer_detail == $type_promotion_id) {
-                            $detail_points['acc_points'] = 0;
+                            $detail_points['acc_points'] = $currentDocumentPoints;
                         }
                         $detail_points['is_points'] = true;
                     } else {

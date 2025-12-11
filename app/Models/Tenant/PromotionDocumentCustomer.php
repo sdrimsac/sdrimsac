@@ -16,6 +16,11 @@ class PromotionDocumentCustomer extends ModelTenant
         'active',
     ];
 
+    protected $casts = [
+        'points' => 'integer', // Asegurar que siempre sea entero
+        'active' => 'boolean',
+    ];
+
     public function customer()
     {
         return $this->belongsTo(Person::class);

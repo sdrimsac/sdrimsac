@@ -168,7 +168,8 @@ class PromotionDocumentController extends Controller
             'success' => false,
         ];
 
-        $points = $record->points;
+        // Asegurar que los puntos siempre sean enteros
+        $points = intval($record->points);
         $points_value = $record->points_value; // New field from promotion_documents
         $promotion_document_id = $record->promotion_document_id;
         $total = $record->total;

@@ -2305,20 +2305,9 @@ export default {
                 unit_value: 0,
                 quantity: safeNumber(i.quantity),
                 aux_quantity: safeNumber(i.quantity),
-                total_base_igv:
-                    affectation_igv_type_id == 10
-                        ? safeNumber(i.sale_unit_price) * safeNumber(i.quantity) /
-                        (1 + safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) / 100)
-                        : safeNumber(i.sale_unit_price) * safeNumber(i.quantity),
+                total_base_igv: 0,
                 percentage_igv: safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv),
-                total_igv:
-                    affectation_igv_type_id == 10 ||
-                        affectation_igv_type_id == 15
-                        ? safeNumber(i.sale_unit_price) *
-                        safeNumber(i.quantity) *
-                        safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) /
-                        100
-                        : 0,
+                total_igv: 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
                 total_isc: 0.0,
@@ -2326,22 +2315,21 @@ export default {
                 percentage_other_taxes: 0.0,
                 total_other_taxes: 0.0,
                 total_taxes: 0,
-                total_value: safeNumber(i.quantity) * safeNumber(i.sale_unit_price),
+                total_value: 0,
                 total_charge: 0.0,
                 total_discount: 0.0,
-                // total: i.sale_unit_price * i.quantity,
-                total: safeNumber(i.total),
+                total: 0,
                 price_type_id: "02",
-                unit_price: safeNumber(i.sale_unit_price),
-                unit_price_value: i.sale_unit_price,
+                unit_price: 0,
+                unit_price_value: 0,
                 has_igv: i.has_igv,
                 affectation_igv_type_id: affectation_igv_type_id,
-                unit_price: i.sale_unit_price,
                 presentation: null,
                 charges: [],
                 discounts: [],
                 attributes: [],
-                affectation_igv_type: affectation_igv_type_id
+                affectation_igv_type: affectation_igv_type_id,
+                is_promotion: true
             };
 
             this.form.items.push(item);
