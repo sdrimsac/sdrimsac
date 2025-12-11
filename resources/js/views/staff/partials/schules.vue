@@ -1,107 +1,112 @@
 <template>
-    <el-dialog 
-        :visible.sync="dialogVisible" 
-        width="85%" 
-        :before-close="handleClose" 
+    <el-dialog
+        :visible.sync="dialogVisible"
+        width="80%"
+        :before-close="handleClose"
         :close-on-click-modal="false"
-        custom-class="schedule-dialog"
-        top="5vh">
-        
-        <div slot="title" class="dialog-header">
+        top="3vh"
+    >
+        <div slot="title" class="">
             <i class="el-icon-time"></i>
-            <span>Gestión de Horarios del Personal</span>
+            <span>Gestión de Horarios Laborales</span>
         </div>
 
         <!-- Formulario de Creación -->
-        <div class="schedule-form-card">
-            <div class="form-header">
-                <h4><i class="el-icon-plus"></i> Nuevo Horario</h4>
+        <div class="card mb-2">
+            <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                <el-input
+                    v-model="form.name"
+                    placeholder="Ej: Turno Mañana"
+                    prefix-icon="el-icon-edit"
+                    size="small"
+                >
+                </el-input>
+                </div>
+                <div class="col-2">
+                <el-select
+                    v-model="form.person_id"
+                    placeholder="Seleccionar personal"
+                    filterable
+                    size="small"
+                    style="width: 100%"
+                >
+                    <el-option
+                    v-for="person in persons"
+                    :key="person.id"
+                    :label="person.name"
+                    :value="person.id"
+                    >
+                    </el-option>
+                </el-select>
+                Personal Asignado
+                </div>
+                <div class="col-2">
+                <el-time-picker
+                    v-model="form.entrada"
+                    placeholder="00:00"
+                    format="HH:mm"
+                    value-format="HH:mm"
+                    size="small"
+                    style="width: 100%"
+                >
+                </el-time-picker>
+                Entrada
+                </div>
+                <div class="col-2">
+                <el-time-picker
+                    v-model="form.salida"
+                    placeholder="00:00"
+                    format="HH:mm"
+                    value-format="HH:mm"
+                    size="small"
+                    style="width: 100%"
+                >
+                </el-time-picker>
+                Salida
+                </div>
+                <div class="col-1">
+                <el-input-number
+                    v-model="form.tolerancia_min"
+                    :min="0"
+                    :max="60"
+                    size="small"
+                    controls-position="right"
+                    style="width: 100%"
+                >
+                </el-input-number>
+                Tolerancia
+                </div>
+                <div class="col-3">
+                <div style="display: flex; justify-content: flex-center; align-items: center;">
+                    <el-tooltip
+                    content="Limpia datos a registrar"
+                    placement="top"
+                    >
+                    <el-button
+                        class="btn_limpiarsmall"
+                        @click="resetForm"
+                        icon="el-icon-brush"
+                        size="small"
+                        circle
+                        style="margin-right: 10px;"
+                    >
+                    </el-button>
+                    </el-tooltip>
+                    <el-button
+                    class="btn_guardarsmall"
+                    type="primary"
+                    @click="handleSubmit"
+                    icon="el-icon-check"
+                    size="small"
+                    >
+                    Registrar
+                    </el-button>
+                </div>
+                </div>
             </div>
-            <el-form :model="form" label-position="top" class="schedule-form">
-                <el-row :gutter="20">
-                    <el-col :xs="24" :sm="12" :md="8">
-                        <el-form-item label="Nombre del horario" required>
-                            <el-input 
-                                v-model="form.name" 
-                                placeholder="Ej: Turno Mañana"
-                                prefix-icon="el-icon-edit">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    
-                    <el-col :xs="24" :sm="12" :md="8">
-                        <el-form-item label="Personal asignado" required>
-                            <el-select 
-                                v-model="form.person_id" 
-                                placeholder="Seleccionar personal" 
-                                filterable
-                                style="width: 100%">
-                                <el-option
-                                    v-for="person in persons"
-                                    :key="person.id"
-                                    :label="person.name"
-                                    :value="person.id">
-                                    <span style="float: left">{{ person.name }}</span>
-                                    <span style="float: right; color: #8492a6; font-size: 13px">ID: {{ person.id }}</span>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    
-                    <el-col :xs="24" :sm="12" :md="8">
-                        <el-form-item label="Hora de entrada" required>
-                            <el-time-picker 
-                                v-model="form.entrada" 
-                                placeholder="Seleccionar hora"
-                                format="HH:mm"
-                                value-format="HH:mm"
-                                prefix-icon="el-icon-time"
-                                style="width: 100%">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                    
-                    <el-col :xs="24" :sm="12" :md="8">
-                        <el-form-item label="Hora de salida" required>
-                            <el-time-picker 
-                                v-model="form.salida" 
-                                placeholder="Seleccionar hora"
-                                format="HH:mm"
-                                value-format="HH:mm"
-                                prefix-icon="el-icon-time"
-                                style="width: 100%">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                    
-                    <el-col :xs="24" :sm="12" :md="8">
-                        <el-form-item label="Tolerancia de ingreso">
-                            <el-input-number 
-                                v-model="form.tolerancia_min" 
-                                :min="0" 
-                                :max="60"
-                                controls-position="right"
-                                style="width: 100%">
-                            </el-input-number>
-                            <small class="form-hint">Minutos de tolerancia para el ingreso</small>
-                        </el-form-item>
-                    </el-col>
-                    
-                    <el-col :xs="24" :sm="12" :md="8" class="form-actions-col">
-                        <el-form-item label=" " class="form-actions">
-                            <el-button @click="resetForm" icon="el-icon-refresh-left">
-                                Limpiar
-                            </el-button>
-                            <el-button 
-                                type="primary" 
-                                @click="handleSubmit"
-                                icon="el-icon-check">
-                                Guardar Horario
-                            </el-button>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
+            </div>
         </div>
 
         <!-- Tabla de Horarios -->
@@ -110,7 +115,7 @@
                 <h4><i class="el-icon-document"></i> Horarios Registrados</h4>
                 <el-tag type="info">{{ records.length }} registros</el-tag>
             </div>
-            
+
             <el-table
                 :data="records"
                 v-loading="loading"
@@ -119,86 +124,96 @@
                 border
                 style="width: 100%"
                 :empty-text="'No hay horarios registrados'"
-                class="schedule-table">
-                
+                class="schedule-table"
+            >
                 <el-table-column
                     prop="name"
                     label="Nombre del Horario"
-                    min-width="180">
+                    min-width="110"
+                >
                     <template slot-scope="scope">
                         <i class="el-icon-price-tag"></i>
                         <strong>{{ scope.row.name }}</strong>
                     </template>
                 </el-table-column>
-                
+
                 <el-table-column
                     prop="person_name"
                     label="Personal Asignado"
-                    min-width="180">
+                    min-width="110"
+                >
                     <template slot-scope="scope">
                         <i class="el-icon-user"></i>
                         {{ scope.row.person_name }}
                     </template>
                 </el-table-column>
-                
+
                 <el-table-column
                     prop="entrada"
                     label="Hora Entrada"
                     width="120"
-                    align="center">
+                    align="center"
+                >
                     <template slot-scope="scope">
                         <el-tag type="success" size="small">
-                            <i class="el-icon-sunrise"></i> {{ scope.row.entrada }}
+                            <i class="el-icon-sunrise"></i>
+                            {{ scope.row.entrada }}
                         </el-tag>
                     </template>
                 </el-table-column>
-                
+
                 <el-table-column
                     prop="salida"
                     label="Hora Salida"
                     width="120"
-                    align="center">
+                    align="center"
+                >
                     <template slot-scope="scope">
                         <el-tag type="warning" size="small">
-                            <i class="el-icon-sunset"></i> {{ scope.row.salida }}
+                            <i class="el-icon-sunset"></i>
+                            {{ scope.row.salida }}
                         </el-tag>
                     </template>
                 </el-table-column>
-                
+
                 <el-table-column
                     prop="tolerancia_min"
                     label="Tolerancia"
                     width="110"
-                    align="center">
+                    align="center"
+                >
                     <template slot-scope="scope">
                         <el-tag type="info" size="small">
                             {{ scope.row.tolerancia_min }} min
                         </el-tag>
                     </template>
                 </el-table-column>
-                
+
                 <el-table-column
                     label="Acciones"
                     width="160"
                     align="center"
-                    fixed="right">
+                    fixed="right"
+                >
                     <template slot-scope="scope">
                         <el-tooltip content="Editar" placement="top">
-                            <el-button 
-                                type="primary" 
-                                icon="el-icon-edit" 
+                            <el-button
+                                type="primary"
+                                icon="el-icon-edit"
                                 size="mini"
                                 circle
-                                @click="editRecord(scope.row)">
+                                @click="editRecord(scope.row)"
+                            >
                             </el-button>
                         </el-tooltip>
                         <el-tooltip content="Eliminar" placement="top">
-                            <el-button 
-                                type="danger" 
-                                icon="el-icon-delete" 
+                            <el-button
+                                type="danger"
+                                icon="el-icon-delete"
                                 size="mini"
                                 circle
-                                @click="deleteRecord(scope.row)">
+                                @click="deleteRecord(scope.row)"
+                            >
                             </el-button>
                         </el-tooltip>
                     </template>
@@ -206,11 +221,16 @@
             </el-table>
         </div>
 
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="handleClose" size="medium">
+        <el-row type="flex" justify="end" style="margin-top: 20px;">
+            <el-button
+                class="btn_cancelarsmall"
+                type="danger"
+                @click="handleClose"
+                size="medium"
+            >
                 <i class="el-icon-close"></i> Cerrar
             </el-button>
-        </span>
+        </el-row>
     </el-dialog>
 </template>
 <script>
@@ -247,20 +267,27 @@ export default {
         },
         dialogVisible(val) {
             if (!val) {
-                this.$emit('update:clickCreatehorarios', false);
+                this.$emit("update:clickCreatehorarios", false);
             }
         }
     },
     async mounted() {
-        console.log('adelanto mounted, person_id prop:', this.person_id, 'selectedPerson:', this.selectedPerson, 'showDialog:', this.showDialog);
+        console.log(
+            "adelanto mounted, person_id prop:",
+            this.person_id,
+            "selectedPerson:",
+            this.selectedPerson,
+            "showDialog:",
+            this.showDialog
+        );
         // Fetch persons list from server and store locally as a fallback
         try {
-            const response = await this.$http.get('/staff/tables');
+            const response = await this.$http.get("/staff/tables");
             if (response && response.data && response.data.persons) {
                 this.persons = response.data.persons;
             }
         } catch (error) {
-            console.error('Failed to load persons:', error);
+            console.error("Failed to load persons:", error);
         }
 
         // Cargar los registros de horarios
@@ -284,44 +311,56 @@ export default {
         getData() {
             this.loading = true;
             // Usamos el cliente HTTP global ($http) consistente con el resto del proyecto
-            this.$http.get('schedules/records')
+            this.$http
+                .get("schedules/records")
                 .then(response => {
                     // Almacenar registros recibidos
                     this.records = response.data.data || response.data || [];
 
-                    console.log('schedules records', this.records);
+                    console.log("schedules records", this.records);
                 })
                 .catch(error => {
-                    console.error('Error obteniendo schedules records', error);
+                    console.error("Error obteniendo schedules records", error);
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
 
-
         async handleSubmit() {
             // Validación básica
-            if (!this.form.name || !this.form.person_id || !this.form.entrada || !this.form.salida) {
-                this.$message.error('Por favor complete todos los campos requeridos');
+            if (
+                !this.form.name ||
+                !this.form.person_id ||
+                !this.form.entrada ||
+                !this.form.salida
+            ) {
+                this.$message.error(
+                    "Por favor complete todos los campos requeridos"
+                );
                 return;
             }
 
             try {
-                const response = await this.$http.post('/schedules', this.form);
+                const response = await this.$http.post("/schedules", this.form);
 
                 if (response.data.success) {
-                    this.$message.success('Horario creado exitosamente');
-                    this.$emit('save', response.data);
+                    this.$message.success("Horario creado exitosamente");
+                    this.$emit("save", response.data);
                     // Recargar los datos después de guardar
                     this.getData();
                     this.handleClose();
                 } else {
-                    this.$message.error(response.data.message || 'Error al crear el horario');
+                    this.$message.error(
+                        response.data.message || "Error al crear el horario"
+                    );
                 }
             } catch (error) {
-                console.error('Error al guardar horario:', error);
-                this.$message.error(error.response?.data?.message || 'Error al guardar el horario');
+                console.error("Error al guardar horario:", error);
+                this.$message.error(
+                    error.response?.data?.message ||
+                        "Error al guardar el horario"
+                );
             }
         },
         editRecord(record) {
@@ -334,30 +373,38 @@ export default {
                 salida: record.salida,
                 tolerancia_min: record.tolerancia_min
             };
-            this.$message.info('Editando horario: ' + record.name);
+            this.$message.info("Editando horario: " + record.name);
         },
         deleteRecord(record) {
-            this.$confirm('¿Está seguro de eliminar este horario?', 'Confirmar eliminación', {
-                confirmButtonText: 'Eliminar',
-                cancelButtonText: 'Cancelar',
-                type: 'warning'
-            }).then(() => {
-                this.$http.delete(`/schedules/${record.id}`)
-                    .then(response => {
-                        this.$message.success('Horario eliminado exitosamente');
-                        this.getData();
-                    })
-                    .catch(error => {
-                        console.error('Error al eliminar:', error);
-                        this.$message.error('Error al eliminar el horario');
-                    });
-            }).catch(() => {
-                this.$message.info('Eliminación cancelada');
-            });
+            this.$confirm(
+                "¿Está seguro de eliminar este horario?",
+                "Confirmar eliminación",
+                {
+                    confirmButtonText: "Eliminar",
+                    cancelButtonText: "Cancelar",
+                    type: "warning"
+                }
+            )
+                .then(() => {
+                    this.$http
+                        .delete(`/schedules/${record.id}`)
+                        .then(response => {
+                            this.$message.success(
+                                "Horario eliminado exitosamente"
+                            );
+                            this.getData();
+                        })
+                        .catch(error => {
+                            console.error("Error al eliminar:", error);
+                            this.$message.error("Error al eliminar el horario");
+                        });
+                })
+                .catch(() => {
+                    this.$message.info("Eliminación cancelada");
+                });
         }
-    },
+    }
 };
-
 </script>
 
 <style scoped>
@@ -377,7 +424,7 @@ export default {
 
 .dialog-header i {
     font-size: 24px;
-    color: #409EFF;
+    color: #409eff;
 }
 
 /* Tarjeta del formulario */
@@ -469,7 +516,7 @@ export default {
 }
 
 .table-header i {
-    color: #409EFF;
+    color: #409eff;
 }
 
 /* Estilos de la tabla */
@@ -511,16 +558,16 @@ export default {
     .schedule-form-card {
         padding: 15px;
     }
-    
+
     .form-actions :deep(.el-form-item__content) {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .form-actions :deep(.el-button) {
         width: 100%;
     }
-    
+
     .table-header {
         flex-direction: column;
         gap: 10px;
@@ -534,6 +581,7 @@ export default {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

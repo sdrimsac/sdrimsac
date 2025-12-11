@@ -3,21 +3,21 @@
         <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12">
                 <div class="row">
-
-                    <!-- <div class="row m-2 d-flex align-items-center"> -->
-                    <div class="col-4">
-                        <label for="">Buscar Personal</label>
+                    
+                    <div class="col-md-2 col-lg-2 col-12">
+                        <!-- <label for="">Buscar Personal</label> -->
                         <el-select ref="cliente" filterable remote clearable popper-class="el-select-customers"
-                            dusk="customer_id" placeholder="Ingrese Personal / Cliente"
+                            dusk="customer_id" 
+                            placeholder="Ingrese Personal"
                             :remote-method="searchRemoteCustomers" @change="changeCustomer" v-model="form.person_id">
                             <el-option v-for="option in persons" :key="option.id" :value="option.id"
                                 :label="option.name"></el-option>
                         </el-select>
                     </div>
-                    <!-- </div> -->
+                    
 
                     <div class="col-md-2 col-lg-2 col-12">
-                        <label for="">Seleccione Establecimiento</label>
+                        <!-- <label for="">Seleccione Establecimiento</label> -->
                         <el-select v-model="form.establishment_id" placeholder="Seleccione Establecimiento" clearable
                             filterable @change="changeCustomer">
                             <el-option v-for="item in establishments" :key="item.id" :label="item.description"
@@ -25,8 +25,9 @@
                         </el-select>
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
-                        <label for="">Seleccione Mes</label>
-                        <el-date-picker class="w-100" v-model="form.date" type="month" placeholder="Seleccione Mes"
+                        <!-- <label for="">Seleccione Mes</label> -->
+                        <el-date-picker class="w-100" v-model="form.date" type="month" 
+                            placeholder="Seleccione Mes"
                             @change="changeCustomer" value-format="yyyy-MM" :picker-options="{
                                 disabledDate(time) {
                                     // Comparar por inicio de mes para evitar bloquear meses pasados
@@ -38,8 +39,9 @@
                             }"></el-date-picker>
                     </div>
                     <div class="col-md-2 col-lg-2 col-12">
-                        <label for="">Seleccione Dia</label>
-                        <el-date-picker class="w-100" v-model="form.date_day" type="date" placeholder="Seleccione Dia"
+                        <!-- <label for="">Seleccione Día</label> -->
+                        <el-date-picker class="w-100" v-model="form.date_day" type="date"
+                            placeholder="Seleccione Día"
                             @change="changeCustomer" value-format="yyyy-MM-dd" :picker-options="{
                                 disabledDate(time) {
                                     // Comparar por inicio de mes para evitar bloquear meses pasados
@@ -50,32 +52,21 @@
                                 }
                             }"></el-date-picker>
                     </div>
-                    <div class="col-2">
-                        <button type="button" class="btn btn-primary" @click="diasPersonal">
-                            Generar Dias Personal
+                    <div class="col-4 d-flex justify-content-end">
+                        <button type="primary" class="btn_guardarsmall" @click="diasPersonal">
+                            Generar
+                        </button>
+                        <button type="success" class="btn_excelsmall ms-2" @click="ExportExcel">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar
+                        </button>
+                        <button type="danger" class="btn_pdfsmall ms-2" @click="ExportPdf">
+                            <i class="far fa-file-pdf"></i>
+                            Exportar
                         </button>
                     </div>
-                    <div class="col-2">
-                        <button type="button" class="btn btn-success d-inline-flex align-items-center" @click="ExportExcel">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="margin-right:8px" aria-hidden="true" focusable="false">
-                                <rect x="0" y="0" width="16" height="16" rx="2" ry="2" fill="#217346"/>
-                                <path d="M4 3 L12 13 M12 3 L4 13" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
-                            </svg>
-                            exportar a excel
-                        </button>
-                    </div>
-                    <div class="col-2">
-                        <button type="button" class="btn btn-danger d-inline-flex align-items-center" @click="ExportPdf">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="margin-right:8px" aria-hidden="true" focusable="false">
-                                <rect x="0" y="0" width="16" height="16" rx="2" ry="2" fill="#d32f2f"/>
-                                <!-- simple page icon with folded corner -->
-                                <path d="M11 1h-6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L11 1z" fill="none" stroke="#fff" stroke-width="0.8"/>
-                                <path d="M11 1v4h4" transform="translate(-1 0)" fill="none" stroke="#fff" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-                                <text x="3.5" y="12" fill="#fff" font-weight="700" font-size="7">PDF</text>
-                            </svg>
-                            exportar a pdf
-                        </button>
-                    </div> 
+                    
+                    
                 </div>
             </div>
 

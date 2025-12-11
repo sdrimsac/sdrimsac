@@ -9,7 +9,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="">Tipo de trabajador</label>
-                                <el-input v-model="form.name" placeholder="Tipo de trabajador"></el-input>
+                                <el-select v-model="form.name" placeholder="Seleccione tipo de trabajador">
+                                    <el-option label="ADMINISTRADOR(A)" value="ADMINISTRADOR(A)"></el-option>
+                                    <el-option label="CAJERO(A)" value="CAJERO(A)"></el-option>
+                                    <el-option label="MOZO(A)" value="MOZO(A)"></el-option>
+                                    <el-option label="COCINERO(A)" value="COCINERO(A)"></el-option>
+                                </el-select>
                             </div>
                             <div class="col-md-4">
                                 <label for="">Sueldo base</label>
@@ -21,8 +26,14 @@
                             </div>
                         </div>
                         <div class="form-actions" style="text-align: right; margin-top: 8px;">
-                            <el-button type="danger" round @click="$emit('update:showDialog', false)">Cancelar</el-button>
-                                        <el-button type="primary" round :loading="loading" @click="addRecord">{{ form.id ? 'Guardar' : 'Agregar' }}</el-button>
+                            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                                <el-button class="btn_cancelarsmall" type="danger" round @click="$emit('update:showDialog', false)">
+                                    Cancelar
+                                </el-button>
+                                <el-button class="btn_guardarsmall" type="primary" round :loading="loading" @click="addRecord">
+                                    {{ form.id ? 'Guardar' : 'Agregar' }}
+                                </el-button>
+                            </div>
                         </div>
                     </el-form>
                 </div>
@@ -33,18 +44,19 @@
                     <table class="table table-striped table-bordered">
                         <thead class="bg-primary text-white">
                             <tr>
-                                <th class="text-white">Tipo de trabajador</th>
-                                <th class="text-white">Sueldo base</th>
-                                <th class="text-white">Factor diario</th>
-                                <th class="text-white">Acciones</th>
+                                <th class="text-white text-center">Tipo de trabajador</th>
+                                <th class="text-white text-center">Sueldo base</th>
+                                <th class="text-white text-center">Factor diario</th>
+                                <th class="text-white text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(record, index) in records" :key="record.id || index">
-                                <td>{{ record.name }}</td>
-                                <td>{{ formatCurrency(null, null, record.sueldo_base) }}</td>
-                                <td>{{ record.factor_diario }}</td>
-                                <td>
+                            <tr v-for="(record, index) in records" :key="record.id || index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }"
+ >
+                                <td>{{ record.name ? record.name.toUpperCase() : '' }}</td>
+                                <td class="text-center">{{ formatCurrency(null, null, record.sueldo_base) }}</td>
+                                <td class="text-right">{{ formatCurrency(null, null, record.factor_diario) }}</td>
+                                <td text="center">
                                     <el-button type="primary" icon="el-icon-edit" circle
                                         @click="editRecord(record)"></el-button>
                                     <el-button type="danger" icon="el-icon-delete" circle
