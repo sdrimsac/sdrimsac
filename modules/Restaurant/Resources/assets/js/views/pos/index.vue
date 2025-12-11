@@ -141,7 +141,8 @@
                                 <div class="d-flex align-items-center" style="gap:12px; flex-wrap:nowrap;">
 
                                     <el-tooltip content="Historial" placement="top">
-                                        <button v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
+                                        <button
+                                            v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
                                             class="btn_guardarsmall d-flex align-items-center justify-content-center"
                                             type="button" @click="trigerFunction(7)"
                                             style="height:42px; min-width:42px; padding:0 10px;">
@@ -220,7 +221,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                        }}</span>
+                                                            }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -767,7 +768,8 @@
                             @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
                             :isRestaurantWarehouse="isRestaurantWarehouse" @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
-                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv" :worker="worker"></list-orden>
+                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"
+                            :worker="worker"></list-orden>
                     </div>
                 </div>
             </div>
@@ -1108,8 +1110,8 @@
                         @updateOrdens="updateOrdens" @paymentsOrden="paymentsOrden" @deletedFood="deletedFood"
                         @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
                         :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv"
-                        :isRestaurantWarehouse="isRestaurantWarehouse" :currencyIdChoice.sync="currencyIdChoice" :worker="worker"
-                        ref="listOrdens"></list-orden>
+                        :isRestaurantWarehouse="isRestaurantWarehouse" :currencyIdChoice.sync="currencyIdChoice"
+                        :worker="worker" ref="listOrdens"></list-orden>
                 </div>
                 <template>
                     <list-food-mobiles :canAddItem.sync="canAddItem" :loadingItems.sync="loadingItems"

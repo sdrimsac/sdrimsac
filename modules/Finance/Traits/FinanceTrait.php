@@ -12,6 +12,7 @@ use App\Models\Tenant\{
     SaleNotePayment,
     PurchasePayment
 };
+use Illuminate\Support\Facades\DB;
 use Modules\Sale\Models\QuotationPayment;
 use Modules\Sale\Models\ContractPayment;
 use Modules\Finance\Models\IncomePayment;
@@ -20,14 +21,109 @@ use Modules\Finance\Models\IncomePayment;
 trait FinanceTrait
 {
 
-    public function getPaymentDestinations()
-    {
-
-        //$bank_accounts = self::getBankAccounts();
+    public function getPaymentDestinations(){
+        
+        $bank_accounts = self::getBankAccounts();
         $cash = $this->getCash();
-        return collect()->push($cash);
+        $payment_destinations = collect($bank_accounts);
+
+        $user = auth()->user();
+        // Agregar la caja si el usuario es logistica, admin-logistica o admin-arca
+        if (
+            $user->type === 'logistica' ||
+            ($user->type === 'admin' && $this->isUserLogistica($user->worker_type_id)) ||
+            ($user->type === 'admin' && isset($user->is_arca) && $user->is_arca) ||
+            $user->type === 'superadmin' || 
+            $user->type === 'admin'
+
+
+        ) {
+            if ($cash) {
+                $payment_destinations->push($cash);
+            }
+        }
+
+        return $payment_destinations;
     }
 
+    private function isUserLogistica($worker_type_id) {
+        return DB::connection('tenant')->table('workers_type')->where('id', $worker_type_id)->value('description') === 'LOGISTICA';
+    }
+
+    public function getCash()
+    {
+        $user = auth()->user();
+        $cash = null;
+
+        if ($user->type === 'admin') {
+            $cash = Cash::where('user_id', $user->id)->latest()->first();
+        } elseif ($this->isUserLogistica($user->worker_type_id)) {
+            $cash = Cash::whereHas('user', function ($query) {
+                $query->where('type', 'admin');
+            })->where('state', true)->latest()->first();
+        } else {
+            $cash = Cash::where('user_id', $user->id)->latest()->first();
+        }
+
+        if ($cash) {
+            // Determinar si el usuario es logistica
+            $isLogistica = false;
+            if ($user->type === 'logistica') {
+                $isLogistica = true;
+            } elseif ($user->type === 'admin' && $this->isUserLogistica($user->worker_type_id)) {
+                $isLogistica = true;
+            }
+
+            // Si el usuario es admin y is_arca, mostrar CAJA ARCA
+            if ($user->type === 'admin' && isset($user->is_arca) && $user->is_arca) {
+                $desc = 'CAJA ARCA';
+            } elseif ($isLogistica) {
+                $desc = 'CAJA LOGISTICA';
+            } else {
+                $desc = 'CAJA GENERAL';
+            }
+            $description = ($cash->reference_number) ? "$desc - {$cash->reference_number}" : $desc;
+            return [
+                'id' => 'cash',
+                'cash_id' => $cash->id,
+                'description' => $description,
+            ];
+        } else {
+            return null;
+        }
+    }
+
+    public function createGlobalPayment($model, $row)
+    {
+
+        $destination = $this->getDestinationRecord($row);
+        $company = Company::active();
+
+        $model->global_payment()->create([
+            'soap_type_id' => $company->soap_type_id,
+            'destination_id' => $destination['destination_id'],
+            'destination_type' => $destination['destination_type'],
+        ]);
+    }
+
+    public function getDestinationRecord($row)
+    {
+
+        if ($row['payment_destination_id'] === 'cash') {
+
+            $destination_id = $this->getCash()['cash_id'];
+            $destination_type = Cash::class;
+        } else {
+
+            $destination_id = $row['payment_destination_id'];
+            $destination_type = BankAccount::class;
+        }
+
+        return [
+            'destination_id' => $destination_id,
+            'destination_type' => $destination_type,
+        ];
+    }
 
     private static function getBankAccounts()
     {
@@ -41,7 +137,60 @@ trait FinanceTrait
         });
     }
 
-    public function getCash()
+    /* public function getCash()
+    {
+        $user = auth()->user();
+
+        // 1. Construir la base de la consulta
+        $query = Cash::query()->whereNull('date_closed');
+
+        // 2. Filtrar según tipo de usuario
+        if (in_array($user->type, ['admin', 'superadmin'])) {
+
+            if ($user->type === 'admin' && $user->is_arca) {
+                // Admin ARCA → solo su propia caja
+                $query->where('user_id', $user->id);
+
+                $description = "CAJA ARCA";
+            } else {
+                // Admin general o Superadmin → cajas de admins/superadmins
+                $query->whereIn('user_id', function ($q) {
+                    $q->select('id')
+                        ->from('users')
+                        ->whereIn('type', ['admin', 'superadmin']);
+                });
+
+                $description = "CAJA GENERAL";
+            }
+        } else {
+            // Usuario normal → solo su propia caja
+            $query->where('user_id', $user->id);
+
+            $description = "CAJA GENERAL";
+        }
+
+        // 3. Obtener la última caja abierta
+        $cash = $query->latest()->first();
+
+        if (!$cash) {
+            return null;
+        }
+
+        // 4. Concatenar reference_number si existe
+        if ($cash->reference_number) {
+            $description .= " - {$cash->reference_number}";
+        }
+
+        // 5. Respuesta final
+        return [
+            'id' => 'cash',
+            'cash_id' => $cash->id,
+            'description' => $description,
+        ];
+    } */
+
+
+    /* public function getCash()
     {
         $user = auth()->user();
         $cash = null;
@@ -91,9 +240,9 @@ trait FinanceTrait
         }
 
         return null;
-    }
+    } */
 
-    public function createGlobalPayment($model, $row)
+    /* public function createGlobalPayment($model, $row)
     {
 
         $destination = $this->getDestinationRecord($row);
@@ -104,9 +253,9 @@ trait FinanceTrait
             'destination_id' => $destination['destination_id'],
             'destination_type' => $destination['destination_type'],
         ]);
-    }
+    } */
 
-    public function getDestinationRecord($row)
+    /* public function getDestinationRecord($row)
     {
 
         if ($row['payment_destination_id'] === 'cash') {
@@ -123,10 +272,10 @@ trait FinanceTrait
             'destination_id' => $destination_id,
             'destination_type' => $destination_type,
         ];
-    }
+    } */
 
 
-    public function deleteAllPayments($payments)
+   public function deleteAllPayments($payments)
     {
 
         foreach ($payments as $payment) {

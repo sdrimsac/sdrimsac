@@ -2773,7 +2773,7 @@ class CashController extends Controller
         $initial_balance = (float) $request->beginning_balance;
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
-        $tab_single = (bool) $establishment->tab_single;
+        $tab_single = (bool) ($establishment->tab_single ?? false);
         $excluded = $cash_user->excluded_user;
         if ($configuration->automatic_principal_cash && !$tab_single && $request->input('principal') == false) {
             $exist_principal_cash = Cash::where('principal', true)
@@ -2927,6 +2927,7 @@ class CashController extends Controller
 
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
+        Log::info('Establecimiento ID correcion: ' . $user->establishment_id);
         $area = Area::find($user->area_id);
         if ($area) {
             $area_description = $area->description;

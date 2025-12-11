@@ -730,7 +730,6 @@ class PurchaseController extends Controller
                         $totalCompra = $doc->total;
                         $totalEnviado = collect($data['payments'])->sum('payment');
 
-                        // Solo validar si no se permite crédito
                         if (!$configuration->purchase_credit && $totalEnviado != $totalCompra) {
                             throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
                         }
