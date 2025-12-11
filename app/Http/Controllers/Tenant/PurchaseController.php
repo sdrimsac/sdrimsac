@@ -728,10 +728,13 @@ class PurchaseController extends Controller
 
                         $totalCompra = $doc->total;
                         $payments = $data['payments'] ?? [];
-                        // Si purchase_credit está activado, permite la compra a crédito aunque no haya pagos
+                        // Si purchase_credit está activado y el usuario es arca
                         if ($configuration->purchase_credit) {
-                            // Si hay pagos enviados, validar que el total coincida y validar saldo
-                            if (!empty($payments)) {
+                            if (empty($payments)) {
+                                // Compra a crédito: no validar pagos ni saldo
+                                // ...no hacer nada, solo permitir la compra...
+                            } else {
+                                // Compra pagada: validar pagos y saldo
                                 $totalEnviado = collect($payments)->sum('payment');
                                 if ($totalEnviado != $totalCompra) {
                                     throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
@@ -799,7 +802,6 @@ class PurchaseController extends Controller
                                     }
                                 }
                             }
-                            // Si no hay pagos, permite la compra a crédito sin validar pagos ni saldo
                         } else {
                             // purchase_credit desactivado: lógica normal
                             $totalEnviado = collect($payments)->sum('payment');
