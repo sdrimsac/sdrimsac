@@ -4584,72 +4584,70 @@ export default {
                 }
 
                 // Verificar si el producto ya existe en la orden
-                let foodFound = this.localOrden.filter(
-                    f => f.id == selectedFoodCopy.id
-                );
+                let foodFoundIndex = this.localOrden.findIndex(f => f.id == selectedFoodCopy.id);
+                let foodFound = foodFoundIndex !== -1 ? this.localOrden[foodFoundIndex] : null;
 
-                if (foodFound.length > 0) {
-                    // Si ya existe, verificar límites de stock
-                    let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
-                    qty += parseFloat(productData.peso);
-
+                // Si ya existe, sumar el peso recibido a la cantidad existente
+                if (foodFound) {
+                    let nuevaCantidad = Number(foodFound.quantity) + parseFloat(productData.peso);
+                    // Validar stock
                     if (
                         this.configuration.sales_stock == true &&
                         selectedFoodCopy.item.is_set == 0 &&
                         !quotation_stock &&
                         selectedFoodCopy.item.unit_type_id != "ZZ"
                     ) {
-                        if (qty > Number(selectedFoodCopy.item.stock)) {
+                        if (nuevaCantidad > Number(selectedFoodCopy.item.stock)) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
                     }
-                }
+                    // Actualizar cantidad y totales
+                    this.localOrden[foodFoundIndex].quantity = nuevaCantidad;
+                    this.localOrden[foodFoundIndex].total_balanza = (this.localOrden[foodFoundIndex].total_balanza || 0) + parseFloat(productData.total);
+                    this.localOrden[foodFoundIndex].price = parseFloat(productData.sale_unit_price); // Actualiza precio si cambia
+                    this.localOrden[foodFoundIndex].observation = `Peso: ${nuevaCantidad}kg - Balanza`;
+                } else {
+                    // Crear el objeto currentFood con los datos de la balanza
+                    const currentFoodData = {
+                        id: selectedFoodCopy.id,
+                        food: selectedFoodCopy,
+                        observation: `Peso: ${productData.peso}kg - Balanza`,
+                        price: parseFloat(productData.sale_unit_price),
+                        quantity: parseFloat(productData.peso), // Usar el peso como cantidad
+                        total_balanza: parseFloat(productData.total),
+                        warehouse_id: productData.warehouse_id || null
+                    };
 
-                // Crear el objeto currentFood con los datos de la balanza
-                const currentFoodData = {
-                    id: selectedFoodCopy.id,
-                    food: selectedFoodCopy,
-                    observation: `Peso: ${productData.peso}kg - Balanza`,
-                    price: parseFloat(productData.sale_unit_price),
-                    quantity: parseFloat(productData.peso), // Usar el peso como cantidad
-                    total_balanza: parseFloat(productData.total),
-                    warehouse_id: productData.warehouse_id || null
-                };
+                    // Crear un mock temporal de las referencias que insertOrden necesita
+                    const tempRefs = {
+                        ordenRef: this.$refs.ordenRef || {
+                            calculateTotal: () => {
+                                console.log('[BALANZA] ordenRef.calculateTotal no disponible, usando calculateTotal directo');
+                                this.calculateTotal();
+                            }
+                        }
+                    };
 
-                // Crear un mock temporal de las referencias que insertOrden necesita
-                const tempRefs = {
-                    /* list_orden: this.$refs.list_orden || {
-                        changeCurrencyItems: () => {
-                            console.log('[BALANZA] changeCurrencyItems no disponible, se omite');
-                        }
-                    }, */
-                    ordenRef: this.$refs.ordenRef || {
-                        calculateTotal: () => {
-                            console.log('[BALANZA] ordenRef.calculateTotal no disponible, usando calculateTotal directo');
-                            this.calculateTotal();
-                        }
+                    // Guardar las referencias originales
+                    const originalRefs = this.$refs;
+
+                    // Temporalmente sobrescribir las referencias
+                    this.$refs = { ...originalRefs, ...tempRefs };
+
+                    try {
+                        // Insertar en la orden
+                        this.insertOrden(
+                            currentFoodData,
+                            selectedFoodCopy.id,
+                            null, // type
+                            false, // selectSerie
+                            null // categoria
+                        );
+                    } finally {
+                        // Restaurar las referencias originales
+                        this.$refs = originalRefs;
                     }
-                };
-
-                // Guardar las referencias originales
-                const originalRefs = this.$refs;
-
-                // Temporalmente sobrescribir las referencias
-                this.$refs = { ...originalRefs, ...tempRefs };
-
-                try {
-                    // Insertar en la orden
-                    this.insertOrden(
-                        currentFoodData,
-                        selectedFoodCopy.id,
-                        null, // type
-                        false, // selectSerie
-                        null // categoria
-                    );
-                } finally {
-                    // Restaurar las referencias originales
-                    this.$refs = originalRefs;
                 }
 
                 // Asegurar que el total se recalcule
