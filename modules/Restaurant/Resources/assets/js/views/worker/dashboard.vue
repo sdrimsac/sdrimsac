@@ -3,127 +3,48 @@
         <!-- Title and Top Buttons Start -->
         <div class="page-title-container mb-0">
             <div class="row">
-                <div class="col-12 col-sm-5">
+                <div class="col-3" v-if="show != 'tables'">
                     <h1 class="mb-1 pb-0 display-4 user_online">
                         <div class="btn-group">
-                            <div class="dropdown">
-                                <!-- <a
-                                    class="dropdown-toggle mb-1"
-                                    href="javascript:void(0)"
-                                    role="button"
-                                    id="dropdownMenuLink"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    <i class="icofont-waiter icofont-2x"></i>
-                                   
-                                </a> -->
+                            <el-tooltip
+                                content="Seleccione Mesa a atender"
+                                placement="bottom"
+                            >
                                 <el-button
-
                                     v-if="show != 'tables'"
                                     @click="returnToTablesView"
-                                    class="fw-bold bg-primary"
+                                    class="btn_guardarsmall"
                                 >
-                                    <i class="icofont icofont-dining-table" style="color: #fff;"></i>
+                                    <i
+                                        class="icofont icofont-dining-table"
+                                        style="color: #fff; font-size: 24px;"
+                                    ></i>
                                 </el-button>
+                            </el-tooltip>
 
-                                <el-button
-                                    v-if="
-                                        configuration.chifa_china &&
-                                            show == 'create' &&
-                                            currentTable
-                                    "
-                                    icon="el-icon-plus"
-                                    type="success"
-                                    @click="open"
-                                >
-                                    
-                                </el-button>
-                                <el-button
-                                    v-if="currentTable != null"
-                                    
-                                    type="primary"
-                                
-                                >
-                                    Mesa N°{{ currentTable.number }}
-                                </el-button>
-                            </div>
+                            <el-button
+                                class="btn_guardarsmall"
+                                v-if="
+                                    configuration.chifa_china &&
+                                        show == 'create' &&
+                                        currentTable
+                                "
+                                icon="el-icon-plus"
+                                type="primary"
+                                @click="open"
+                            >
+                            </el-button>
+                            <el-button
+                                v-if="currentTable != null"
+                                class="btn_guardarsmall"
+                                type="primary"
+                            >
+                                Mesa N° {{ currentTable.number }}
+                            </el-button>
                         </div>
                     </h1>
-                    <!-- <nav
-                        class="breadcrumb-container d-inline-block"
-                        aria-label="breadcrumb"
-                    >
-                        <ul class="breadcrumb pt-0">
-                            <template v-if="!currentTable">
-                                <li class="breadcrumb-item">
-                                    <a href="javascript:void(0)" class="fw-bold"
-                                        >SELECCIONE UNA MESA</a
-                                    >
-                                </li>
-                            </template>
-                            
-                        </ul>
-                    </nav> -->
-                   <!--  <template v-if="currentTable != null">
-                                <li class="breadcrumb-item">
-                                    <h1 class="fw-bold">
-                                        <a
-                                            href="javascript:void(0)"
-                                            class="text-danger font-weight-bold"
-                                            
-                                        >
-                                            
-                                        </a>
-                                    </h1>
-                                </li>
-                            </template> -->
                 </div>
-                <div
-                    class="col-12 col-sm-6 pt-2 pb-2"
-                    v-if="show == 'create' && screenWidth > 678"
-                >
-                    <div class="d-flex align-items-center">
-                        <el-input
-                            class="flex-grow-1 me-2"
-                            v-model="item"
-                            @focus="clearinput()"
-                            @input="searchOrden()"
-                            ref="item"
-                            placeholder="Buscar Producto"
-                        >
-                            <i
-                                slot="prefix"
-                                class="el-input__icon el-icon-search"
-                            ></i>
-                            <!-- <el-button
-                                :class="
-                                    optionsSelected == 0
-                                        ? 'bg-secondary text-white'
-                                        : ''
-                                "
-                                slot="append"
-                                icon="el-icon-tickets"
-                                @click="selectSearch(0)"
-                            ></el-button>
-                            <el-button
-                                :class="
-                                    optionsSelected == 1
-                                        ? 'bg-secondary text-white'
-                                        : ''
-                                "
-                                slot="append"
-                                icon="el-icon-s-order"
-                                @click="selectSearch(1)"
-                            ></el-button> -->
-                        </el-input>
-                    </div>
-                </div>
-                <div
-                    class="col-12 pt-2 pb-2"
-                    v-if="show == 'create' && screenWidth > 678"
-                >
+                <div class="col-4" v-if="show == 'create' && screenWidth > 878">
                     <template v-if="configuration.category_deslay">
                         <div class="categories-scroll">
                             <div class="categories-wrapper">
@@ -161,14 +82,13 @@
                     </template>
                     <template v-else>
                         <div
-                            class="col-12 col-sm-6 pt-2 pb-2"
+                            class="col-12 "
                             v-if="show == 'create' && screenWidth > 678"
                         >
                             <template>
-                                <span slot="label">
-                                    <i class="fas fa-list"></i> Categoria de
-                                    Producto
-                                </span>
+                                <!-- <span slot="label">
+                                    <i class="fas fa-list"></i> Categoría
+                                </span> -->
                                 <el-select
                                     v-model="category"
                                     filterable
@@ -186,28 +106,32 @@
                         </div>
                     </template>
                 </div>
+                <div class="col-5" v-if="show == 'create' && screenWidth > 678">
+                    <div class="d-flex align-items-center">
+                        <el-input
+                            class="flex-grow-1 me-2"
+                            v-model="item"
+                            @focus="clearinput()"
+                            @input="searchOrden()"
+                            ref="item"
+                            placeholder="Buscar Producto"
+                        >
+                            <i
+                                slot="prefix"
+                                class="el-input__icon el-icon-search"
+                            ></i>
+                        </el-input>
+                    </div>
+                </div>
             </div>
-            <div
-                class="d-flex justify-content-center p-2"
-                v-if="show == 'tables' && configuration.cambiar_mesa_mozo"
-            >
-                <button
-                    type="button"
-                    class="btn me-2"
-                    :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`"
-                    @click="disablingTable"
-                >
+            <!-- <div class="d-flex justify-content-center p-2" v-if="show == 'tables' && configuration.cambiar_mesa_mozo">
+                <button type="button" class="btn me-2" :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`"
+                    @click="disablingTable">
                     {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
                 </button>
 
-                <button
-                    type="button"
-                    class="mx-2"
-                    :class="
-                        `btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`
-                    "
-                    @click="changeOrden"
-                >
+                <button type="button" class="mx-2" :class="`btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`
+                    " @click="changeOrden">
                     {{
                         changingOrden
                             ? hasSelectedOrdenToChange
@@ -216,85 +140,367 @@
                             : "Cambiar orden"
                     }}
                 </button>
-            </div>
+            </div> -->
         </div>
+
         <el-tabs
             v-model="activeTab"
             class=""
             @tab-click="handleTabClick"
             v-if="show == 'tables'"
+            type="card"
         >
             <el-tab-pane label="Mesas" v-if="show == 'tables'" name="tables">
-                <div class="row p-2" v-show="show == 'tables'">
-                    <!-- Add zones section here, only dependent on show === 'tables' -->
-                    <div class="col-12 mb-3">
+                <div class="row p-1" v-show="show == 'tables'">
+                    <!-- <div class="col-12 mb-3">
                         <div class="zones-scroll">
                             <div class="zones-wrapper">
-                                <button
-                                    v-for="(zone, idx) in zones"
-                                    :key="idx"
-                                    type="button"
-                                    class="zone-btn"
-                                    :class="[
-                                        'btn',
-                                        zone_id == zone.id
-                                            ? 'btn-primary text-Success'
-                                            : 'btn-primary'
-                                    ]"
-                                    @click="filterZones(zone.id)"
-                                >
-                                     {{ zone.name }}
+                                <button v-for="(zone, idx) in zones" :key="idx" type="button" class="zone-btn" :class="[
+                                    'btn',
+                                    zone_id == zone.id
+                                        ? 'btn-primary text-Success'
+                                        : 'btn-primary'
+                                ]" @click="filterZones(zone.id)">
+                                    {{ zone.name }}
                                 </button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div
+                        class="d-flex justify-content-center p-0 mb-1"
+                        v-if="
+                            show == 'tables' && configuration.cambiar_mesa_mozo
+                        "
+                    >
+                        <el-tooltip
+                            content="Deshabilitar mesa para unirlas"
+                            placement="top"
+                        >
+                            <button
+                                type="button"
+                                style="margin-right:15px;"
+                                :class="
+                                    ` ${
+                                        isDisabling
+                                            ? 'btn_cancelarsmall'
+                                            : 'btn_dehabilitarsmall'
+                                    }`
+                                "
+                                @click="disablingTable"
+                            >
+                                {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
+                            </button>
+                        </el-tooltip>
+
+                        <!-- <button type="button" class="btn me-2" :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`"
+                            @click="disablingTable">
+                            {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
+                        </button> -->
+                        <button
+                            type="button"
+                            :class="
+                                `btn ${
+                                    changingOrden
+                                        ? 'btn_limpiezasmall'
+                                        : 'btn_guardarsmall'
+                                }`
+                            "
+                            @click="changeOrden"
+                        >
+                            {{
+                                changingOrden
+                                    ? hasSelectedOrdenToChange
+                                        ? "Seleccione a la mesa destino"
+                                        : "Seleccionar Mesa"
+                                    : "Cambiar Mesa"
+                            }}
+                        </button>
+
+                        <!-- <button type="button" class="mx-2" :class="`btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`
+                            " @click="changeOrden">
+                            {{
+                                changingOrden
+                                    ? hasSelectedOrdenToChange
+                                        ? "Seleccione a la mesa destino"
+                                        : "Seleccionar mesa"
+                                    : "Cambiar orden"
+                            }}
+                        </button> -->
+                    </div>
+                    <!-- Zona Responsiva -->
+                    <div class="zones-container" style="background: #616161;">
+                        <div
+                            class="d-flex align-items-center justify-content-between flex-wrap"
+                            style="gap:12px;"
+                        >
+                            <div
+                                class="zones-title mb-0"
+                                style="text-align:left;margin-bottom:0;"
+                            >
+                                ZONAS:
+                            </div>
+                            <div class="zones-buttons-wrapper flex-grow-1">
+                                <div
+                                    class="zones-buttons-scroll"
+                                    style="justify-content:flex-start;"
+                                >
+                                    <button
+                                        v-for="(zone, idx) in zones"
+                                        :key="idx"
+                                        type="button"
+                                        class="zone-button"
+                                        :class="
+                                            `btn ${
+                                                zone_id == zone.id
+                                                    ? 'btn_whatsappsmall'
+                                                    : 'btn_guardarsmall'
+                                            }`
+                                        "
+                                        @click="filterZones(zone.id)"
+                                    >
+                                        {{ zone.name }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div
-                        class="col-6 col-md-4 col-xl-2 p-1"
-                        v-for="(data, index) in tables"
-                        :key="index"
+                        class="d-flex flex-wrap justify-content-center"
+                        v-if="tables.length > 0"
                     >
+                        <!-- Mesas encontradas tablas -->
                         <div
-                            :class="[
-                                data.enabled == false
-                                    ? 'btn-light'
-                                    : data.status_table.id == 1
-                                    ? 'btn-primary'
-                                    : 'btn-danger'
-                            ]"
-                            class="btn d-flex flex-column justify-content-center align-items-center w-100"
-                            style="max-height: 200px;"
+                            v-for="(data, index) in tables"
+                            :key="index"
                             @click="selectedTable(data.id, data)"
+                            :style="{
+                                width:
+                                    screenWidth < 576
+                                        ? 'calc(100% - 16px)'
+                                        : screenWidth < 768
+                                        ? 'calc(50% - 16px)'
+                                        : screenWidth < 992
+                                        ? 'calc(33.33% - 20px)'
+                                        : screenWidth < 1200
+                                        ? '220px'
+                                        : '270px',
+                                maxWidth:
+                                    screenWidth < 576
+                                        ? '400px'
+                                        : screenWidth < 768
+                                        ? '350px'
+                                        : '270px',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                cursor: 'pointer',
+                                boxShadow: '0 6px 14px rgba(0,0,0,0.08)',
+                                margin: '8px',
+                                background: '#fff'
+                            }"
                         >
-                            <!-- <strong class="h3 text-white">
-                                {{ data.is_room ? "Habitación" : "Mesa" }}
-                            </strong> -->
-                            <i class="icofont-dining-table icofont-4x"></i>
-                            <span class="h2 text-white">{{ data.number }}</span>
-                            <span
-                                :class="
-                                    data.enabled == false
-                                        ? 'text-light'
-                                        : data.status_table.id == 1
-                                        ? 'text-white'
-                                        : 'text-white'
-                                "
+                            <!-- Header (zona + número circular) -->
+                            <div
+                                :style="{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '12px',
+                                    color: '#fff',
+                                    background:
+                                        data.enabled == false
+                                            ? '#6b7280'
+                                            : data.status_table.id == 1
+                                            ? '#073f68'
+                                            : data.status_table.id == 2
+                                            ? '#c53030'
+                                            : '#d97706'
+                                }"
                             >
-                                {{ data.status_table.description }}
-                            </span>
-                            <template
-                                v-if="
-                                    data.status_table.id !== 1 &&
-                                        getUserForTable(data.id)
-                                "
+                                <div style="display:flex;align-items:center;">
+                                    <i
+                                        class="icofont-dining-table"
+                                        style="font-size:35px;margin-right:10px;opacity:0.95"
+                                    ></i>
+                                    <div style="line-height:1;">
+                                        <div
+                                            class="mb-1"
+                                            style="font-size:11px;opacity:0.9"
+                                        >
+                                            ZONA:
+                                        </div>
+                                        <div
+                                            style="font-weight:600;font-size:14px"
+                                        >
+                                            {{
+                                                (data.zone && data.zone.name) ||
+                                                    data.zone_name ||
+                                                    "Sin zona"
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="background:rgba(255,255,255,0.95);color:#0b2433;border-radius:50%;width:60px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:900"
+                                >
+                                    <span
+                                        style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:17px;font-weight:800;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;line-height:1;"
+                                    >
+                                        {{
+                                            (data.number || "")
+                                                .toString()
+                                                .slice(0, 4)
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Banda de estado (LIBRE / OCUPADO / OTRO) -->
+                            <div
+                                :style="{
+                                    padding: '8px',
+                                    textAlign: 'center',
+                                    fontWeight: 800,
+                                    letterSpacing: '1px',
+                                    background:
+                                        data.status_table.id == 1
+                                            ? '#d4e4f1'
+                                            : data.status_table.id == 2
+                                            ? '#f8d7da'
+                                            : '#fff4e6',
+                                    color:
+                                        data.status_table.id == 1
+                                            ? '#073f68'
+                                            : data.status_table.id == 2
+                                            ? '#7b1113'
+                                            : '#7a4a00'
+                                }"
                             >
-                                <span class="text-white">{{
-                                    getUserForTable(data.id).usuario.substring(
-                                        0,
-                                        15
-                                    )
-                                }}</span>
-                            </template>
+                                {{
+                                    data.status_table.id == 1
+                                        ? "LIBRE"
+                                        : data.status_table.id == 2
+                                        ? "OCUPADO"
+                                        : data.status_table.description.toUpperCase()
+                                }}
+                            </div>
+
+                            <!-- Footer: usuario / monto / icono -->
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.03)"
+                            >
+                                <div style="min-width: 0;">
+                                    <div
+                                        style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+                                    >
+                                        <div style="white-space:normal;">
+                                            <div
+                                                style="display:flex;align-items:center;gap:8px;"
+                                            >
+                                                <div
+                                                    :style="{
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        borderRadius: '50%',
+                                                        background:
+                                                            data.status_table
+                                                                .id == 1
+                                                                ? '#073f68'
+                                                                : '#c53030',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent:
+                                                            'center',
+                                                        flex: '0 0 auto',
+                                                        boxShadow:
+                                                            '0 0 0 1px rgba(0,0,0,.08)'
+                                                    }"
+                                                >
+                                                    <img
+                                                        src="/images/imgrestaurant/Mozo.svg"
+                                                        alt="Mozo"
+                                                        style="width:24px;height:24px;display:block;filter:brightness(0) invert(1);"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        getUserForTable(data.id)
+                                                    "
+                                                    style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;overflow:hidden;"
+                                                >
+                                                    Atendido por:
+                                                    <template
+                                                        v-if="
+                                                            (
+                                                                getUserForTable(
+                                                                    data.id
+                                                                ).usuario || ''
+                                                            ).includes(' - ')
+                                                        "
+                                                    >
+                                                        <span
+                                                            style="font-weight:700;white-space:normal;overflow:hidden;text-overflow:ellipsis;display:block;"
+                                                        >
+                                                            {{
+                                                                getUserForTable(
+                                                                    data.id
+                                                                ).usuario
+                                                            }}
+                                                        </span>
+                                                    </template>
+                                                    <template v-else>
+                                                        <span>{{
+                                                            (
+                                                                getUserForTable(
+                                                                    data.id
+                                                                ).usuario || ""
+                                                            ).substring(0, 25)
+                                                        }}</span>
+                                                    </template>
+                                                </div>
+                                                <div
+                                                    v-else
+                                                    style="color:rgba(0,0,0,0.45);font-size:14px;"
+                                                >
+                                                    {{
+                                                        data.status_table.id ==
+                                                        1
+                                                            ? "Disponible"
+                                                            : "Mesa ocupada"
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-if="getUserForTable(data.id)"
+                                            style="font-size:12px;color:#6b7280;margin-top:4px;"
+                                        >
+                                            {{
+                                                getUserForTable(data.id).ref ||
+                                                    ""
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="text-align:right;min-width:80px;">
+                                    <div
+                                        v-if="
+                                            getUserForTable(data.id) &&
+                                                getUserForTable(data.id).monto
+                                        "
+                                        style="font-weight:700"
+                                    >
+                                        S/.
+                                        {{
+                                            parseFloat(
+                                                getUserForTable(data.id).monto
+                                            ).toFixed(2)
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,10 +514,10 @@
                 <div>
                     <el-button
                         type="primary"
-                        class="mb-2"
+                        class="btn_guardarsmall"
                         @click="createDelivery"
                     >
-                        Nuevo delivery
+                        Nuevo Delivery
                     </el-button>
                 </div>
                 <div
@@ -325,9 +531,7 @@
                         @click="selectOrden(orden.id)"
                         style="cursor: pointer;"
                     >
-                        <h2
-                            class="card-title text-white text-center fw-bold"
-                        >
+                        <h2 class="card-title text-white text-center fw-bold">
                             #{{ orden.correlative }}
                         </h2>
                         <p
@@ -343,8 +547,8 @@
                         </p>
                     </div>
                 </div>
-                <div v-else>
-                    No hay órdenes de delivery.
+                <div class="mt-3" v-else>
+                    No Existen órdenes de Delivery.
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -386,10 +590,31 @@
 
 <style scoped>
 .custom-tab-margin {
-    
     padding-left: 0rem !important;
     padding-right: 0rem !important;
 }
+
+/* Ajustar el ancho de los tabs al contenido */
+::v-deep .el-tabs--card > .el-tabs__header .el-tabs__nav {
+    width: auto !important;
+    display: inline-flex !important;
+}
+
+::v-deep .el-tabs--card > .el-tabs__header .el-tabs__item {
+    padding: 0 20px !important;
+    width: auto !important;
+    min-width: auto !important;
+    flex: 0 0 auto !important;
+}
+
+::v-deep .el-tabs__nav-wrap {
+    width: auto !important;
+}
+
+::v-deep .el-tabs__nav-scroll {
+    width: auto !important;
+}
+
 .delivery-card-red {
     width: 200px;
     height: 200px;
@@ -401,9 +626,11 @@
     transition: box-shadow 0.2s;
     overflow: hidden;
 }
+
 .delivery-card-red:hover {
     box-shadow: 0 4px 16px rgba(229, 57, 53, 0.18);
 }
+
 @media (max-width: 600px) {
     .delivery-card-red {
         width: 48%;
@@ -411,6 +638,7 @@
         margin-bottom: 10px;
     }
 }
+
 .ttitle {
     font-size: 20px;
     font-weight: bold;
@@ -439,6 +667,7 @@
 .hooper-prev {
     padding: 0.2em;
 }
+
 .categories-scroll {
     width: 100%;
     overflow-x: auto;
@@ -519,6 +748,7 @@
 .categories-scroll::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
 /* stilos de zona */
 .zones-scroll {
     width: 100%;
@@ -579,9 +809,104 @@
         gap: 8px;
     }
 }
+
+/* Estilos para el nuevo contenedor de zonas responsivo */
+.zones-container {
+    padding: 12px;
+}
+
+.zones-title {
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 700;
+    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.zones-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.zones-buttons-scroll {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.zone-button {
+    white-space: nowrap;
+}
+
+/* Tablet y móvil */
+@media (max-width: 768px) {
+    .zones-container {
+        padding: 10px;
+    }
+
+    .zones-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .zones-buttons-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1);
+    }
+
+    .zones-buttons-scroll {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        padding: 5px 10px;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .zone-button {
+        flex-shrink: 0;
+        min-width: 100px;
+    }
+
+    /* Scrollbar personalizado para webkit */
+    .zones-buttons-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .zones-buttons-wrapper::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+
+    .zones-buttons-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 3px;
+    }
+
+    .zones-buttons-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .zones-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .zone-button {
+        min-width: 90px;
+        font-size: 0.85rem;
+    }
+}
 </style>
-
-
 
 <script>
 import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";
@@ -693,7 +1018,7 @@ export default {
         window.addEventListener("resize", this.handleResize);
 
         // Escuchar evento global para habilitar el botón cuando se cree una orden delivery
-        this.$eventHub.$on('ordenCreadaYLimpiar', () => {
+        this.$eventHub.$on("ordenCreadaYLimpiar", () => {
             this.disableEnviarOrdenes = false;
         });
 
@@ -836,7 +1161,7 @@ export default {
                 this.currentTable = this.deliveryTable;
                 this.selectedOrdenId = null;
                 this.show = "create";
-                this.disableEnviarOrdenes = true; 
+                this.disableEnviarOrdenes = true;
             } else if (this.$toast) {
                 this.$toast.error("No hay mesa de delivery disponible");
             }

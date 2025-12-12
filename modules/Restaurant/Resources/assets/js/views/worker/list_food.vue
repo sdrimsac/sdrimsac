@@ -1,3 +1,4 @@
+<!-- Listfood Mozo -->
 <template>
     <div>
         <div v-if="screenWidth > 678" class="row p-2">
@@ -18,145 +19,133 @@
                         <!--  -->
                         <div
                             id="card"
-                            class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white"
+                            class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-light"
+                            :style="`${configuration.trunc_txt ? 'min-height:190px;' : 'height:210px;'}`"
                         >
                             <div @click="addFood(index)">
-                                <div>
-                                    <span class="lead-font-weight-700 h5">
-                                        {{ data.description.toUpperCase() }}
-                                    </span>
-                                </div>
-                                <div
-                                    class="d-flex align-items-end justify-content-between"
-                                >
-                                    <div class="p-1">
-                                        <div class="icon-container ">
-                                            <div class="icon-container_box">
-                                                <template
-                                                    v-if="
-                                                        data.image ==
-                                                            'imagen-no-disponible.jpg'
-                                                    "
-                                                >
-                                                    <img
-                                                        src="/images/imagen-no-disponible.jpg"
-                                                        alt="User Img"
-                                                        class="thumbail"
-                                                    />
-                                                </template>
-                                                <template v-else>
-                                                    <img
-                                                        :src="
-                                                            formatUrlImage(
-                                                                data.image
-                                                            )
-                                                        "
-                                                        class=" thumbail"
-                                                    />
-                                                </template>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <!-- Barra superior: código + precio -->
+                                <div class="d-flex justify-content-between align-items-center"
+                                    style="width:100%;padding:0;margin-top:1px;margin-bottom:0;">
                                     <div>
-                                        {{ data.code }}
+                                        <span style="font-size:1.1em;">{{ data.code }}</span>
                                     </div>
-                                    <div
-                                        class="d-flex flex-column align-items-end"
-                                    >
-                                        <div
-                                            class="text-uppercase font-weight-light h5"
-                                        >
-                                            {{ data.category.name }}
-                                        </div>
+                                    <div class="d-flex flex-column align-items-end" style="flex:1;">
                                         <div class="block mb-2">
-                                            <span
-                                                class="time font-weight-light"
-                                            >
-                                                <span
-                                                    class="text-muted lead-font-weight-700"
-                                                >
+                                            <span class="time font-weight-light">
+                                                <span class="lead-font-weight-500"
+                                                    style="font-weight:bold;font-family:'Arial Black', Arial, sans-serif;">
                                                     {{ data.currency }}
-                                                    {{ data.price }}</span
-                                                >
+                                                    <span style="font-size:1.5em;">{{ data.price }}</span>
+                                                </span>
                                             </span>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <!-- Descripción -->
+                                <div class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-primary text-white">
+                                    <el-tooltip class="item" effect="dark" :content="data.description.toUpperCase()"
+                                        placement="top-start">
+                                        <span :class="`lead-font-weight-700 ${configuration.trunc_txt
+                                                ? 'd-inline-block text-truncate'
+                                                : ''
+                                            }`">
+                                            {{ data.description.toUpperCase() }}
+                                        </span>
+                                    </el-tooltip>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Imagen -->
+                                    <div class="col-4">
                                         <div
-                                            v-if="
-                                                data.item.lots_enabled == 1 &&
-                                                    data.item.date_of_due
-                                            "
-                                        >
+                                            style="height:120px;width:120px;display:flex;align-items:center;justify-content:center;">
+                                            <template v-if="data.image == 'imagen-no-disponible.jpg'">
+                                                <img src="/images/imagen-no-disponible.jpg"
+                                                    style="width:100%;height:100%;object-fit:contain;display:block;" />
+                                            </template>
+                                            <template v-else>
+                                                <img :src="formatUrlImage(data.image)"
+                                                    style="width:100%;height:120%;object-fit:contain;display:block;" />
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- Detalles derecha -->
+                                    <div class="col-8">
+                                        <!-- Categoría -->
+                                        <div class="d-flex justify-content-end align-items-center"
+                                            style="text-align:right;margin-right:4px;">
+                                            <span class="text-uppercase font-weight-light h5">
+                                                {{ data.category.name }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Dropdown de precios -->
+                                        <div v-if="data.types && data.types.length > 0"
+                                            style="width:100%;display:flex;justify-content:flex-end;">
+                                            <el-dropdown @command="clickCommand">
+                                                <span class="el-dropdown-link"
+                                                    style="color:green;font-weight:bold;">
+                                                    Precios
+                                                    <i class="el-icon-arrow-down el-icon--right"></i>
+                                                </span>
+                                                <el-dropdown-menu slot="dropdown" class="custom-dropdown-menu"
+                                                    style="min-width:200px;">
+                                                    <el-dropdown-item v-for="(type, idx) in data.types" :key="idx"
+                                                        :command="type" class="custom-dropdown-item">
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between w-100">
+                                                            <div>
+                                                                <span class="font-weight-bold"
+                                                                    style="color:#073f68;">
+                                                                    {{ type.description.toUpperCase() }}
+                                                                </span>
+                                                                <span class="small text-muted ml-2">
+                                                                    ( {{ Number(type.quantity_unit) }} )
+                                                                </span>
+                                                            </div>
+                                                            <span class="badge ml-3"
+                                                                style="font-size:1em;min-width:30px;text-align:right;color:#000;">
+                                                                S/ {{ Number(getDefaultPrice(type)).toFixed(2) }}
+                                                            </span>
+                                                        </div>
+                                                    </el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </el-dropdown>
+                                        </div>
+
+                                        <!-- Fecha de vencimiento -->
+                                        <div v-if="data.item.lots_enabled == 1 && data.item.date_of_due">
                                             <el-tag
-                                                :type="
-                                                    `${
-                                                        isExpired(
-                                                            data.item
-                                                                .date_of_due
-                                                        )
-                                                            ? 'danger'
-                                                            : 'success'
-                                                    }`
-                                                "
+                                                :type="`${
+                                                    isExpired(data.item.date_of_due)
+                                                        ? 'danger'
+                                                        : 'success'
+                                                }`"
                                             >
                                                 Fecha de vencimiento:
                                                 {{ data.item.date_of_due }}
                                             </el-tag>
                                         </div>
-                                        <div>
-                                            <template
-                                                v-if="
-                                                    data.item.is_set == 0 &&
-                                                        data.item
-                                                            .unit_type_id !=
-                                                            'ZZ' && configuration.show_stock_cash == true
-                                                "
-                                            >
-                                                <template
-                                                    v-if="data.item.stock > 0"
-                                                >
-                                                    <span
-                                                        class="badge rounded-pill bg-primary m-l-0"
-                                                        >Stock
-                                                        {{
-                                                            parseFloat(
-                                                                data.item.stock
-                                                            )
-                                                        }}
-                                                    </span>
-                                                </template>
-                                                <template v-else>
-                                                    <span
-                                                        class="badge rounded-pill bg-danger m-l-0"
-                                                    >
-                                                        Agotado
-                                                    </span>
-                                                </template>
+
+                                        <!-- Stock -->
+                                        <div v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
+                                            class="cold-12 d-flex justify-content-end"
+                                            style="margin:0 2px 2px 2px;text-align:right;">
+                                            <template v-if="data.item.stock > 0">
+                                                <span class="badge rounded-pill bg-primary m-l-0">
+                                                    Stock {{ parseFloat(data.item.stock) }}
+                                                </span>
+                                            </template>
+                                            <template v-else>
+                                                <span class="badge rounded-pill bg-danger m-l-0">
+                                                    Agotado
+                                                </span>
                                             </template>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div
-                                v-if="data.types && data.types.length > 0"
-                                class="d-flex justify-content-end"
-                                style="padding-right:5px;margin-top:5px;"
-                            >
-                                <el-dropdown @command="clickCommand">
-                                    <span class="el-dropdown-link">
-                                        Precios<i
-                                            class="el-icon-arrow-down el-icon--right"
-                                        ></i>
-                                    </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item
-                                            v-for="(type, idx) in data.types"
-                                            :key="idx"
-                                            :command="type"
-                                        >
-                                            {{ formatDescriptionType(type) }}
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
                             </div>
                         </div>
                         <!--  -->

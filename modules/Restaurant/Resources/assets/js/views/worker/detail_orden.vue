@@ -1,36 +1,68 @@
 <template>
     <div>
         <div class="row" v-if="ordens.length > 0 && !configuration.order_mozo">
-            <div class="col-12 p-1" v-if="table.is_delivery === false || table.is_delivery === '0'">
-                <h2 class="small-title fw-bold">Ordenes Realizadas</h2>
-                <hooper :settings="hooperSettings">
-                    <slide v-for="(o, index) in ordens" :key="index">
-                        <div class="col-md-12 p-2">
-                            <div
-                                class="card_profile"
-                                :data-id="o.id"
-                                :class="
-                                    ordenSelectedId == o.id ? 'bg-active' : ''
-                                "
-                                @click="
-                                    selectOrden(o.id);
-                                    show_orders();
-                                "
-                            >
-                                <div class="card__avatar">
-                                    <div class="badge"></div>
+            <div
+                class="col-12 p-0.5"
+                v-if="table.is_delivery === false || table.is_delivery === '0'"
+            >
+                <div class="d-flex align-items-center ">
+                    <div class="me-3">
+                        <h5
+                            class="fw-bold mb-0 text-primary"
+                            style="font-size: 1.1rem;"
+                        >
+                            Ordenes
+                        </h5>
+                        <h5
+                            class="fw-bold mb-0 text-primary"
+                            style="font-size: 1.1rem;"
+                        >
+                            Realizadas
+                        </h5>
+                    </div>
+                    <div class="flex-grow-1" style="margin-left: 15px;">
+                        <hooper :settings="hooperSettings">
+                            <slide v-for="(o, index) in ordens" :key="index">
+                                <div class="">
+                                    <div
+                                        class="card_profile shadow-sm"
+                                        :data-id="o.id"
+                                        :class="
+                                            ordenSelectedId == o.id
+                                                ? 'bg-active'
+                                                : ''
+                                        "
+                                        @click="
+                                            selectOrden(o.id);
+                                            show_orders();
+                                        "
+                                        style="transition: all 0.3s ease; cursor: pointer;"
+                                    >
+                                        <div class="card__avatar">
+                                            <div class="badge"></div>
+                                        </div>
+                                        <div class="text-center">
+                                            <h3 class="mb-1">
+                                                <strong
+                                                    >Orden Nº{{ o.id }}</strong
+                                                >
+                                            </h3>
+                                            <p
+                                                class="mb-0 text-muted"
+                                                style="font-size: 0.9rem;"
+                                            >
+                                                {{ o.ref }}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3>
-                                        <strong> Orden Nº{{ o.id }} </strong>
-                                        <br />{{ o.ref }}
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </slide>
-                    <hooper-navigation slot="hooper-addons"></hooper-navigation>
-                </hooper>
+                            </slide>
+                            <hooper-navigation
+                                slot="hooper-addons"
+                            ></hooper-navigation>
+                        </hooper>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -81,11 +113,16 @@
                         >
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
+                                    <!-- Visualización de Productos Celular-->
                                     <h5
                                         class="modal-title"
                                         style="color: var(--light-text) !important;"
                                     >
-                                        Visualizacion de Productos
+                                        <i
+                                            class="fas fa-shopping-cart me-2"
+                                            aria-hidden="true"
+                                        ></i>
+                                        Agregar Productos
                                     </h5>
                                     <button
                                         type="button"
@@ -103,13 +140,11 @@
                                         style="overflow-y: auto;"
                                     >
                                         <div class="row ">
-                                            <div class="col-12">
+                                            <div class="col-12 mb-2">
                                                 <template>
-                                                    <h2
-                                                        class="font-weight-bold custom-text-size"
-                                                    >
-                                                        Categorias
-                                                    </h2>
+                                                    <!-- <h2 class="font-weight-bold custom-text-size">
+                                                        Categorías
+                                                    </h2> -->
                                                     <el-select
                                                         v-model="category"
                                                         filterable
@@ -132,11 +167,9 @@
                                                 </template>
                                             </div>
                                             <div class="col-12 ">
-                                                <h2
-                                                    class="font-weight-bold custom-text-size"
-                                                >
+                                                <!-- <h2 class="font-weight-bold custom-text-size">
                                                     Buscar
-                                                </h2>
+                                                </h2> -->
                                                 <el-input
                                                     ref="input_item"
                                                     size="small"
@@ -144,114 +177,109 @@
                                                     @input="searchOrden()"
                                                     @focus="clear_input()"
                                                     autofocus
-                                                    placeholder="Ingrese Nombre de Producto"
+                                                    placeholder="Buscar Producto..."
                                                 >
                                                     <el-button
                                                         slot="append"
                                                         icon="el-icon-search"
                                                         @click="searchOrden()"
+                                                        :style="{
+                                                            backgroundColor:
+                                                                '#073f68',
+                                                            borderColor:
+                                                                '#073f68',
+                                                            color: '#fff'
+                                                        }"
                                                     ></el-button>
                                                 </el-input>
                                             </div>
-                                            <div class="row d-flex flex-wrap">
+                                            <div class="products-grid-mobile">
                                                 <div
-                                                    class="col-12  p-1"
+                                                    class="product-card-mobile"
                                                     v-for="(data,
                                                     index) in foods"
                                                     :key="index"
+                                                    @click="addFood(index)"
                                                 >
-                                                    <div
-                                                        id="card"
-                                                        class="
-                                                                    overflow-hidden
-                                                                    coupon
-                                                                    rounded
-                                                                    d-flex
-                                                                    flex-column
-                                                                    justify-content-between
-                                                                    p-1
-                                                                    "
-                                                        style="height: 112px; width: 297px ; margin-left: 9px; "
-                                                    >
-                                                        <div
-                                                            @click="
-                                                                addFood(index)
-                                                            "
-                                                        >
-                                                            <div>
-                                                                <span
-                                                                    class="lead-font-weight-700 h5"
-                                                                >
-                                                                    {{
-                                                                        data.description.toUpperCase()
-                                                                    }}
-                                                                </span>
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-3">
                                                             <div
-                                                                class="d-flex align-items-end justify-content-between"
+                                                                class="product-image-mobile"
+                                                                v-if="
+                                                                    data.image !=
+                                                                        'imagen-no-disponible.jpg'
+                                                                "
+                                                                style="width: 96px; height: 96px; margin: 0.5rem 0; border-radius: 8px; overflow: hidden; background: #f5f5f5; display: flex; align-items: center; justify-content: center;"
                                                             >
                                                                 <div
-                                                                    class="p-1"
+                                                                    style="
+                                                                        width: 100%;
+                                                                        height: 100%;
+                                                                        background: #fff;
+                                                                        border: 2px solid #e6e9ef;
+                                                                        border-radius: 10px;
+                                                                        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+                                                                        padding: 6px;
+                                                                        display: flex;
+                                                                        align-items: center;
+                                                                        justify-content: center;
+                                                                    "
                                                                 >
-                                                                    <div
-                                                                        class="icon-container"
-                                                                    >
-                                                                        <div
-                                                                            class="icon-container_box"
-                                                                        >
-                                                                            <template
-                                                                                v-if="
-                                                                                    data.image ==
-                                                                                        'imagen-no-disponible.jpg'
-                                                                                "
-                                                                            >
-                                                                                <img
-                                                                                    hidden
-                                                                                    src="/images/imagen-no-disponible.jpg"
-                                                                                    alt="User Img"
-                                                                                    class="thumbail"
-                                                                                />
-                                                                            </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
-                                                                                <img
-                                                                                    :src="
-                                                                                        formatUrlImage(
-                                                                                            data.image
-                                                                                        )
-                                                                                    "
-                                                                                    class="thumbail"
-                                                                                />
-                                                                            </template>
-                                                                        </div>
-                                                                    </div>
+                                                                    <img
+                                                                        :src="
+                                                                            formatUrlImage(
+                                                                                data.image
+                                                                            )
+                                                                        "
+                                                                        :alt="
+                                                                            data.description
+                                                                        "
+                                                                        style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 6px;"
+                                                                    />
                                                                 </div>
-                                                                <div>
-                                                                    {{
-                                                                        data.code
-                                                                    }}
-                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-9">
+                                                            <div
+                                                                class="product-info-mobile"
+                                                            >
                                                                 <div
-                                                                    class="d-flex flex-column align-items-end"
+                                                                    class="product-header-mobile"
+                                                                >
+                                                                    <h3
+                                                                        class="product-name-mobile"
+                                                                    >
+                                                                        {{
+                                                                            data.description.toUpperCase()
+                                                                        }}
+                                                                    </h3>
+                                                                    <span
+                                                                        class="product-code-mobile"
+                                                                        >{{
+                                                                            data.code
+                                                                        }}</span
+                                                                    >
+                                                                </div>
+
+                                                                <div
+                                                                    class="product-footer-mobile"
                                                                 >
                                                                     <div
-                                                                        class="block mb-2"
+                                                                        class="product-price-mobile text-end"
                                                                     >
-                                                                        <span
-                                                                            class="time font-weight-light"
-                                                                        >
-                                                                            <span
-                                                                                class="text-muted lead-font-weight-700"
-                                                                            >
-                                                                                S/
-                                                                                {{
-                                                                                    data.price
-                                                                                }}</span
-                                                                            >
-                                                                        </span>
+                                                                        S/
+                                                                        {{
+                                                                            Number(
+                                                                                data.price
+                                                                            ).toFixed(
+                                                                                2
+                                                                            )
+                                                                        }}
                                                                     </div>
-                                                                    <div>
+
+                                                                    <div
+                                                                        class="product-stock-mobile"
+                                                                    >
                                                                         <template
                                                                             v-if="
                                                                                 data
@@ -261,7 +289,9 @@
                                                                                     data
                                                                                         .item
                                                                                         .unit_type_id !=
-                                                                                        'ZZ' && configuration.show_stock_cash == true
+                                                                                        'ZZ' &&
+                                                                                    configuration.show_stock_cash ==
+                                                                                        true
                                                                             "
                                                                         >
                                                                             <template
@@ -273,8 +303,9 @@
                                                                                 "
                                                                             >
                                                                                 <span
-                                                                                    class="badge rounded-pill bg-primary m-l-0"
-                                                                                    >Stock
+                                                                                    class="badge rounded-pill bg-primary"
+                                                                                >
+                                                                                    Stock
                                                                                     <template
                                                                                         v-if="
                                                                                             data
@@ -308,7 +339,7 @@
                                                                                 v-else
                                                                             >
                                                                                 <span
-                                                                                    class="badge rounded-pill bg-danger m-l-0"
+                                                                                    class="badge rounded-pill bg-danger"
                                                                                 >
                                                                                     Agotado
                                                                                 </span>
@@ -316,52 +347,68 @@
                                                                         </template>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            @click="nthing"
-                                                            v-if="
-                                                                data.types
-                                                                    .length > 0
-                                                            "
-                                                            class="d-flex justify-content-end"
-                                                            style="padding-right: 10px; margin-top: 5px"
-                                                        >
-                                                            <el-dropdown
-                                                                @command="
-                                                                    clickCommand
-                                                                "
-                                                            >
-                                                                <span
-                                                                    class="el-dropdown-link"
+
+                                                                <!-- Dropdown de precios -->
+                                                                <div
+                                                                    v-if="
+                                                                        data
+                                                                            .types
+                                                                            .length >
+                                                                            0
+                                                                    "
+                                                                    class="product-types-mobile"
+                                                                    @click.stop="
+                                                                        nthing
+                                                                    "
                                                                 >
-                                                                    Precios<i
-                                                                        class="el-icon-arrow-down el-icon--right"
-                                                                    ></i>
-                                                                </span>
-                                                                <el-dropdown-menu
-                                                                    slot="dropdown"
-                                                                >
-                                                                    <el-dropdown-item
-                                                                        v-for="(type,
-                                                                        idx) in data.types"
-                                                                        :key="
-                                                                            idx
-                                                                        "
-                                                                        :command="
-                                                                            type
+                                                                    <el-dropdown
+                                                                        @command="
+                                                                            clickCommand
                                                                         "
                                                                     >
-                                                                        {{
-                                                                            formatDescriptionType(
-                                                                                type
-                                                                            )
-                                                                        }}
-                                                                    </el-dropdown-item>
-                                                                </el-dropdown-menu>
-                                                            </el-dropdown>
+                                                                        <span
+                                                                            class="el-dropdown-link"
+                                                                        >
+                                                                            Precios
+                                                                            <i
+                                                                                class="el-icon-arrow-down el-icon--right"
+                                                                            ></i>
+                                                                        </span>
+                                                                        <el-dropdown-menu
+                                                                            slot="dropdown"
+                                                                        >
+                                                                            <el-dropdown-item
+                                                                                v-for="(type,
+                                                                                idx) in data.types"
+                                                                                :key="
+                                                                                    idx
+                                                                                "
+                                                                                :command="
+                                                                                    type
+                                                                                "
+                                                                            >
+                                                                                {{
+                                                                                    formatDescriptionType(
+                                                                                        type
+                                                                                    )
+                                                                                }}
+                                                                            </el-dropdown-item>
+                                                                        </el-dropdown-menu>
+                                                                    </el-dropdown>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+
+                                                    <!-- Imagen del producto -->
+                                                    <!-- <div class="product-image-mobile"
+                                                        v-if="data.image != 'imagen-no-disponible.jpg'"
+                                                        style="width: 96px; height: 96px; margin: 0.5rem 0; border-radius: 8px; overflow: hidden; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                                        <img :src="formatUrlImage(data.image)" :alt="data.description"
+                                                            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
+                                                    </div> -->
+
+                                                    <!-- Info del producto -->
                                                 </div>
                                             </div>
                                         </div>
@@ -442,7 +489,7 @@ export default {
     watch: {
         table(newTable, _) {
             this.ordens = newTable.orden;
-        },
+        }
     },
     data() {
         return {
@@ -812,17 +859,160 @@ export default {
     }
 };
 </script>
-<style>
+<style scoped>
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: var(--primary);
     border-radius: 5px;
     cursor: move;
 }
+
 .custom-text-size {
     font-size: 0.8em;
+}
+
+/* ============================================
+   MOBILE PRODUCT CARDS
+   ============================================ */
+.products-grid-mobile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+.product-card-mobile {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card-mobile:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.product-image-mobile {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.product-image-mobile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info-mobile {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.product-header-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.product-name-mobile {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #333;
+    line-height: 1.3;
+}
+
+.product-code-mobile {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.product-footer-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-price-mobile {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary, #007bff);
+}
+
+.product-stock-mobile {
+    display: flex;
+    align-items: center;
+}
+
+.product-types-mobile {
+    padding-top: 0.5rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablets pequeñas y móviles grandes */
+@media (min-width: 480px) {
+    .products-grid-mobile {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .product-image-mobile {
+        height: 150px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+    .products-grid-mobile {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Solo móvil pequeño */
+@media (max-width: 479px) {
+    .product-card-mobile {
+        border-radius: 8px;
+    }
+
+    .product-info-mobile {
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .product-name-mobile {
+        font-size: 0.95rem;
+    }
+
+    .product-price-mobile {
+        font-size: 1.1rem;
+    }
+
+    .product-image-mobile {
+        height: 160px;
+    }
+}
+
+/* Cards sin imagen - Optimización de espacio */
+.product-card-mobile:not(:has(.product-image-mobile)) .product-info-mobile {
+    padding: 1.25rem;
 }
 </style>
