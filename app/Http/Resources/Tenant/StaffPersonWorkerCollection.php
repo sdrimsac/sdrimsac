@@ -32,6 +32,7 @@ class StaffPersonWorkerCollection extends ResourceCollection
                 'job_position' => optional($row->job_position)->name,
                 'factor_diario' => optional($row->job_position)->factor_diario,
                 'advances' => (float) ($row->advances ?? 0),
+                'advances_methods' => $row->advances_methods,
                 'worker_advances' => (float) ($row->worker_advances ?? $row->advances ?? 0),
                 'amount' => $row->amount,
                 'consumptions' => $row->consumptions,

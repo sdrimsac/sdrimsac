@@ -971,7 +971,9 @@ class StaffController extends Controller
             ->select(
                 "{$waTable}.person_id",
                 DB::raw("DATE({$waTable}.date_time_advance) as adv_date"),
-                DB::raw("SUM({$waTable}.amount) as advances_sum")
+                DB::raw("SUM({$waTable}.amount) as advances_sum"),
+                DB::raw("GROUP_CONCAT({$waTable}.method SEPARATOR ', ') as advances_methods")
+
             )
             ->groupBy("{$waTable}.person_id", DB::raw("DATE({$waTable}.date_time_advance)"));
 
@@ -1002,7 +1004,8 @@ class StaffController extends Controller
             ->select(
                 "{$wdTable}.*",
                 DB::raw("COALESCE(wa.advances_sum, 0) as advances"),
-                DB::raw("COALESCE(wc.consumptions_sum, 0) as consumptions")
+                DB::raw("COALESCE(wc.consumptions_sum, 0) as consumptions"),
+                DB::raw("COALESCE(wa.advances_methods, '') as advances_methods")   
             )
 
             ->whereHas('person', function ($q) {

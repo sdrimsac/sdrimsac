@@ -223,7 +223,11 @@
                                 {{ row.lack_time }}
                             </td>
                             <td class="text-right">
-                                {{ Number(row.advances).toFixed(2) }}
+                                {{ Number(row.advances).toFixed(2) }} 
+                                <br>
+                                <span style="color:#0d6efd; font-weight:800; font-size:0.95rem;">
+                                    {{ row.advances_methods }}
+                                </span>
                             </td>
                             <td class="text-right">
                                 {{ Number(row.consumptions).toFixed(2) }}
@@ -261,15 +265,17 @@
                 </div>
             </div>
         </div>
-        <import-excel :showDialog.sync="showDialogImportExcel"></import-excel>
-        <import-dart :showDialog.sync="showDialogImportDart"></import-dart>
+        <import-excel :showDialog="activeModal === 'importExcel'" @update:showDialog="val => { if (!val) activeModal = null }"></import-excel>
+        <import-dart :showDialog="activeModal === 'importDart'" @update:showDialog="val => { if (!val) activeModal = null }"></import-dart>
         <adelanto
-            :showDialog.sync="showDialogAdelanto"
+            :showDialog="activeModal === 'adelanto'"
+            @update:showDialog="val => { if (!val) activeModal = null }"
             :person_id.sync="person_id"
         ></adelanto>
-        <salary :showDialog.sync="showDialogSalary"></salary>
+        <salary :showDialog="activeModal === 'salary'" @update:showDialog="val => { if (!val) activeModal = null }"></salary>
         <schules
-            :clickCreatehorarios.sync="showDialogHorarios"
+            :clickCreatehorarios="activeModal === 'horarios'"
+            @update:clickCreatehorarios="val => { if (!val) activeModal = null }"
             :staffList="records"
         ></schules>
     </div>
@@ -295,12 +301,7 @@ export default {
     },
     data() {
         return {
-            showDialogHorarios: false,
-            showDialogImportDart: false,
-            showDialogSalary: false,
-            showDialogAdelanto: false,
-            showDialogImportExcel: false,
-            showDialog: false,
+            activeModal: null,
             person_id: null,
             showDialogProd: false,
             resource: "staff",
@@ -354,23 +355,23 @@ export default {
     },
     methods: {
         clickCreatehorarios() {
-            this.showDialogHorarios = true;
+            this.activeModal = 'horarios';
         },
 
         clickCreateAdelanto() {
-            this.showDialogAdelanto = true;
+            this.activeModal = 'adelanto';
         },
 
         clickCreateSalary() {
-            this.showDialogSalary = true;
+            this.activeModal = 'salary';
         },
 
         clickDownloadExcel() {
-            this.showDialogImportExcel = true;
+            this.activeModal = 'importExcel';
         },
 
         clickDownloadDat() {
-            this.showDialogImportDart = true;
+            this.activeModal = 'importDart';
         },
 
         getProd(id) {

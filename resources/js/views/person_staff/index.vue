@@ -20,6 +20,9 @@
                             <th style="color: #fff;">Nombre</th>
                             <!-- <th style="color: #fff;">Puesto</th> -->
                             <th class="text-right" style="color: #fff;">Número</th>
+                            <th class="text-right" style="color: #fff;">Puesto Asignado</th>
+                            <th class="text-right" style="color: #fff;" >Salario Base</th>
+
                             <!-- <th class="text-right" style="color: #fff;">Salario Base</th> -->
                             <th class="text-right" style="color: #fff;">Acciones</th>
                         </tr>
@@ -30,6 +33,8 @@
                             <!-- <td>{{ row.job_position ? row.job_position : 'Sin cargo' }}</td> -->
                             <td class="text-right">{{ row.number }}</td>
                             <!-- <td class="text-right">{{ row.base_salary !== null ? row.base_salary : '-' }}</td> -->
+                             <td class="text-right"> {{ row.job_position }}</td>
+                             <td class="text-right">{{ row.job_position_salary }}</td>
                             <td class="text-right">
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-info"
                                     @click.prevent="clickCreate(row.id)">Editar</button>

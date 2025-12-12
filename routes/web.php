@@ -504,6 +504,12 @@ if ($hostname) {
                 // Route::get('drivers/{type}/records', [App\Http\Controllers\Tenant\UserController::class, 'records']);
                 // Route::delete('drivers/{user}', [App\Http\Controllers\Tenant\UserController::class, 'destroy']);
 
+                //para los adelantos de las personal
+                Route::get('adelantos/record/{id}', [App\Http\Controllers\Tenant\AdvancesController::class, 'record']);
+                Route::get('adelantos/records', [App\Http\Controllers\Tenant\AdvancesController::class, 'records']);
+                Route::post('adelantos', [App\Http\Controllers\Tenant\AdvancesController::class, 'store']);
+                Route::delete('adelantos/{id}', [App\Http\Controllers\Tenant\AdvancesController::class, 'destroy']);
+                Route::put('adelantos/{id}', [App\Http\Controllers\Tenant\AdvancesController::class, 'update']);
                 //para los sueldos de las personal
                 Route::get('job_positions/record/{id}', [App\Http\Controllers\Tenant\JobPositionController::class, 'record']);
                 Route::get('job_positions/records', [App\Http\Controllers\Tenant\JobPositionController::class, 'records']);

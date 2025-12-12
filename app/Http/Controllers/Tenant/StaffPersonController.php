@@ -22,6 +22,7 @@ use App\Models\Tenant\Catalogs\Department;
 use App\Http\Requests\Tenant\PersonRequest;
 use App\Http\Resources\Tenant\PersonResource;
 use App\Http\Resources\Tenant\PersonCollection;
+use App\Http\Resources\Tenant\PersonStaffCollection;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
@@ -253,7 +254,7 @@ class StaffPersonController extends Controller
     {
         $records = $this->getRecords($request);
 
-        return new PersonCollection($records->paginate(config('tenant.items_per_page')));
+        return new PersonStaffCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function recordsMobile($type, Request $request)
     {
