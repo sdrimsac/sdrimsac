@@ -3416,42 +3416,56 @@ class DocumentController extends Controller
 
     public function getDataTableItem(Request $request)
     {
+        // obtener término de búsqueda de forma explícita
+        $search = $request->input('input');
 
-        $items = Item::where(function ($query) use ($request) {
-            $query->where('description', 'like', "%{$request->input}%")
-                ->orWhere('internal_id', 'like', "%{$request->input}%");
-        });
+        $itemsQuery = Item::query();
+
+        if ($search) {
+            $itemsQuery->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                  ->orWhere('internal_id', 'like', "%{$search}%");
+            });
+        }
 
         // Excluir items que son promociones o sets
-        $items = $items->where(function($q){
+        /* $itemsQuery = $itemsQuery->where(function($q){
             $q->where('promotions_items', '<>', 1)
               ->orWhereNull('promotions_items');
         })->where(function($q){
             $q->where('is_set', '<>', 1)
               ->orWhereNull('is_set');
-        });
+        }); */
 
-        if ($request->series) {
-            $items = $items->where('series_enabled', 1);
+        // excluir items DE LA CATEGORÍA INSUMOS (buscar id real de la categoría "INSUMOS")
+        $insumosCategory = CategoryItem::where('name', 'INSUMOS')->first();
+        if ($insumosCategory) {
+            $itemsQuery->where('category_id', '<>', $insumosCategory->id);
         }
 
-        if ($request->service) {
-            $items = $items->where('unit_type_id', 'ZZ');
+        // usar booleanos explícitos para evitar acceso mágico a propiedades de Request
+        if ($request->boolean('series')) {
+            $itemsQuery->where('series_enabled', 1);
         }
-        $items =  $items->orderBy('description')
+
+        if ($request->boolean('service')) {
+            $itemsQuery->where('unit_type_id', 'ZZ');
+        }
+
+        $items = $itemsQuery->orderBy('description')
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
                     'stock' => $row->stock,
                     'max_quantity' => $row->max_quantity,
                     'max_quantity_description' => $row->max_quantity_description,
-                    'unit_type_description' => $row->unit_type->description,
+                    'unit_type_description' => optional($row->unit_type)->description,
                     'series_enabled' => $row->series_enabled,
-                    'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
+                    'description' => $row->internal_id ? "{$row->internal_id} - {$row->description}" : $row->description,
                     'sale_unit_price' => $row->sale_unit_price,
-
                 ];
             });
+
         return $items;
     }
 

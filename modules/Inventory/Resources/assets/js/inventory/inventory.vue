@@ -6,7 +6,7 @@
                 <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
                     <h5 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
                         <i class="fas fa-truck-loading" style="font-size: 1rem; margin-right: 0.5rem;"></i>
-                        Stock de Productos 
+                        Stock de Productos
                         <!-- Listado de {{ title }} -->
                     </h5>
                 </div>

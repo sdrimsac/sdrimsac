@@ -113,12 +113,13 @@ class PurchaseController extends Controller
     public function create($purchase_order_id = null)
     {
         $is_arca = auth()->user()->is_arca;
+        $is_logistic = RoleService::isLogistic(); 
         if (!$is_arca) {
             $is_arca = RoleService::isArcaUserId(auth()->id());
         }
 
 
-        return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca'));
+        return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca', 'is_logistic'));
     }
 
     public function columns()
@@ -568,6 +569,45 @@ class PurchaseController extends Controller
         return $records->get();
     }
 
+    /**
+     * Valida si el usuario logístico tiene fondos suficientes en su caja para realizar la compra.
+     * @param float $montoCompra
+     * @param string|null $methodName
+     * @throws Exception si no hay caja abierta o fondos insuficientes
+     * @return array ["caja" => Box, "saldoDisponible" => float, "methodName" => string]
+     */
+    public function userLogistic($montoCompra, $methodName = null)
+    {
+        Log::info('Validando fondos en caja logística para usuario ' . auth()->id() . ' por monto ' . $montoCompra . ' con método ' . ($methodName ?? 'Efectivo'));
+        $userId = auth()->id();
+        $cash_logistic = Cash::where('user_id', $userId)
+            ->where('state', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+        if (!$cash_logistic) {
+            throw new \Exception('No tiene caja logística aperturada.');
+        }
+        // Determinar método de pago
+        $methodToQuery = $methodName;
+        if (empty($methodToQuery)) {
+            $methodToQuery = 'Efectivo'; // Por defecto
+        }
+        // Calcular saldo disponible en la caja logística abierta (por cash_id) para el método
+        $saldoDisponible = Box::where('cash_id', $cash_logistic->id)
+            ->where('method', $methodToQuery)
+            ->selectRaw('SUM(CASE WHEN type = 1 THEN amount WHEN type = 2 THEN -amount ELSE 0 END) as saldo')
+            ->value('saldo') ?? 0;
+        if ($saldoDisponible < $montoCompra) {
+            $faltante = number_format($montoCompra - $saldoDisponible, 2);
+            throw new \Exception("Saldo insuficiente en logística para el método {$methodToQuery}. Faltan S/ {$faltante}.");
+        }
+        return [
+            'caja' => $cash_logistic,
+            'saldoDisponible' => $saldoDisponible,
+            'methodName' => $methodToQuery,
+        ];
+    }
+
 
     public function store(PurchaseRequest $request)
     {
@@ -575,12 +615,11 @@ class PurchaseController extends Controller
         $message = '';
         $data = self::convert($request);
 
-        $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
+    $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
             try {
                 $series = $data['series'];
                 $number = $data['number'];
 
-                // Validar duplicidad del documento
                 $purchase = Purchase::where('series', $series)
                     ->where('number', $number)
                     ->where('document_type_id', 'NE76')
@@ -594,7 +633,6 @@ class PurchaseController extends Controller
 
                 $doc = Purchase::create($data);
 
-                // --- Crear items, color_size y lots ---
                 foreach ($data['items'] as $row) {
                     $unit_price = floatval($row['unit_price']);
                     $p_item = new PurchaseItem;
@@ -611,7 +649,6 @@ class PurchaseController extends Controller
                             ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
                     }
 
-                    /* aqui si la affectation_igv_type_id = 10 el unit_price lo debe multiplicar por 1.18 aho si es 20 ahi si no*/
                     if ($row['affectation_igv_type_id'] == 10) {
                         $unit_price *= 1.18;
                     }
@@ -714,44 +751,36 @@ class PurchaseController extends Controller
 
                 $isArca = false;
                 $configuration = Configuration::first();
+                $isLogistic = RoleService::isLogistic();
+                $arcaCash = null;
                 if ($configuration->methods_arca_cash) {
                     $isArca = auth()->user()->is_arca == 1;
-                    $arcaCash = null;
                     if ($isArca) {
                         $arcaCash = Cash::where('user_id', auth()->id())
                             ->where('state', 1)
                             ->latest()
                             ->first();
-
                         if (!$arcaCash) {
                             throw new Exception("No tiene caja aperturada.");
                         }
-
                         $totalCompra = $doc->total;
                         $totalEnviado = collect($data['payments'])->sum('payment');
-
                         if (!$configuration->purchase_credit && $totalEnviado != $totalCompra) {
                             throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
                         }
-
                         foreach ($data['payments'] as $index => $payment) {
-
                             // buscar el método por id si viene
                             $payment_method = null;
                             $boxData = $data['boxes'][$index] ?? null;
-
                             if (!empty($payment['payment_method_type_id'])) {
                                 $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
                             } else {
-                                // Si no viene el id, intentar resolver después
                                 Log::warning('payment_method_type_id ausente en payment, se intentará derivar desde boxData', [
                                     'index' => $index,
                                     'payment' => $payment,
                                     'boxData' => $boxData
                                 ]);
                             }
-
-                            // determinar nombre del método (priorizar boxData.method)
                             if (is_array($boxData) && !empty($boxData['method'])) {
                                 $methodName = $boxData['method'];
                             } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
@@ -759,8 +788,6 @@ class PurchaseController extends Controller
                             } else {
                                 $methodName = $payment_method ? $payment_method->description : null;
                             }
-
-                            // si no hay id, intentar resolver PaymentMethodType por descripción
                             if (!$payment_method && !empty($methodName)) {
                                 $payment_method = PaymentMethodType::where('description', $methodName)->first();
                                 if ($payment_method) {
@@ -771,8 +798,6 @@ class PurchaseController extends Controller
                                     ]);
                                 }
                             }
-
-                            // 👉 Si sigue sin haber payment_method_type_id y es cuenta bancaria, poner por defecto "01"
                             if (!$payment_method && !empty($methodName) && stripos($methodName, 'CUENTA') !== false) {
                                 $payment_method = PaymentMethodType::find('01'); // Efectivo
                                 Log::info('Se asignó payment_method_type_id=01 por defecto al tratarse de cuenta bancaria', [
@@ -780,10 +805,7 @@ class PurchaseController extends Controller
                                     'methodName' => $methodName
                                 ]);
                             }
-
-                            // decidir qué usar para la consulta de saldo
                             $methodToQuery = $payment_method ? $payment_method->description : $methodName;
-
                             if (empty($methodToQuery)) {
                                 Log::error('No se pudo determinar el método de pago para validar saldo disponible', [
                                     'index' => $index,
@@ -792,8 +814,6 @@ class PurchaseController extends Controller
                                 ]);
                                 throw new Exception("Método de pago no encontrado al validar saldo disponible.");
                             }
-
-                            // calcular saldo en Box usando la descripción/etiqueta
                             $saldoDisponible = Box::where('cash_id', $arcaCash->id)
                                 ->where('method', $methodToQuery)
                                 ->selectRaw("
@@ -806,7 +826,6 @@ class PurchaseController extends Controller
                         ) as saldo
                     ")
                                 ->value('saldo') ?? 0;
-
                             if ($saldoDisponible < $payment['payment']) {
                                 $faltante = number_format($payment['payment'] - $saldoDisponible, 2);
                                 throw new Exception("Saldo insuficiente en {$methodToQuery}. Faltan S/ {$faltante}. Puede usar otro método de pago con fondos para completar la compra.");
@@ -814,119 +833,117 @@ class PurchaseController extends Controller
                         }
                     }
                 }
-
-                /* para mostrar compra en reporte de caja de las recetas */
-
-                /* if ($items = $data['items'] ?? false) { */
-                    foreach ($data['items'] as $row) {
-
-                        Log::info('Procesando item de compra para posible CashStockMovementdasdasfdsfsdfsdfsdf');
-                        $init_report = null;
-                        // Determinar flag init_report (puede venir en row['item'] o en row directamente)
-                        if (isset($row['item']) && is_array($row['item']) && array_key_exists('init_report', $row['item'])) {
-                            $init_report = $row['item']['init_report'];
-                            Log::info('init_report encontrado en row[item] gffgadasdfd4fsdfsdsd', ['init_report' => $init_report]);
-                        } elseif (array_key_exists('init_report', $row)) {
-                            $init_report = $row['init_report'];
-                            Log::info('init_report encontrado en row fcdgasdasdasd', ['init_report' => $init_report]);
+                // Validación logística SIEMPRE que el usuario sea logístico y NO sea arca
+                if ($isLogistic && !$isArca) {
+                    foreach ($data['payments'] as $index => $payment) {
+                        $payment_method = null;
+                        $boxData = $data['boxes'][$index] ?? null;
+                        if (!empty($payment['payment_method_type_id'])) {
+                            $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
                         }
-
-                        if ($init_report == 1) {
-
-                            Log::info('Procesando item para CashStockMovement vcdvcxvxcvxcxvx');
-                           
-                            $cashToUse = (isset($arcaCash) && $arcaCash) ? $arcaCash : Cash::where('user_id', auth()->id())->where('state', 1)->latest()->first();
-                            if (!$cashToUse) {
-                                $cashToUse = Cash::where('state', 1)->latest()->first();
-                            }
-
-                            // Resolución defensiva del item_id (puede venir en diferentes formas)
-                            $item_id = null;
-                            if (!empty($row['item_id'])) {
-                                $item_id = $row['item_id'];
-                            } elseif (!empty($row['item']['id'])) {
-                                $item_id = $row['item']['id'];
-                            } elseif (!empty($row['item']['item_id'])) {
-                                $item_id = $row['item']['item_id'];
-                            }
-
-                            $quantity = $row['quantity'] ?? 0;
-                            $warehouse_id = $row['warehouse_id'] ?? null;
-
-                            if (!$cashToUse) {
-                                Log::warning('No se encontró caja abierta para registrar CashStockMovement', ['item_id' => $item_id]);
-                                continue; // saltar este item
-                            }
-
-                            if (empty($item_id) || $quantity <= 0) {
-                                Log::warning('Datos inválidos para registrar CashStockMovement', ['item' => $row]);
-                                continue;
-                            }
-
-                            $cash_id = $cashToUse->id;
-
-                            // Buscar por caja, item y almacén (si existe). Usar firstOrNew para garantizar creación o actualización atómica.
-                            $movement = CashStockMovement::firstOrNew([
-                                'cash_id' => $cash_id,
-                                'item_id' => $item_id,
-                                'warehouse_id' => $warehouse_id,
-                            ]);
-                            Log::info('Registrando CashStockMovement', [
-                                'cash_id' => $cash_id,
-                                'item_id' => $item_id,
-                                'warehouse_id' => $warehouse_id,
-                                'quantity' => $quantity,
-                                'existing_movement_id' => $movement->id ?? null
-                            ]);
-
-                            // Asegurar valores numéricos
-                            $movement->purchases = ($movement->purchases ?? 0) + $quantity;
-                            $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
-                            $movement->movement_type = $movement->movement_type ?? 'purchase';
-                            // Si es un nuevo registro, inicializar otros campos
-                            if (!$movement->exists) {
-                                $movement->initial_stock = $movement->initial_stock ?? 0;
-                                $movement->sold_quantity = $movement->sold_quantity ?? 0;
-                            }
-                            $movement->save();
+                        if (is_array($boxData) && !empty($boxData['method'])) {
+                            $methodName = $boxData['method'];
+                        } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                            $methodName = $boxData->method;
+                        } else {
+                            $methodName = $payment_method ? $payment_method->description : null;
                         }
+                        $this->userLogistic($payment['payment'], $methodName);
                     }
-                /* } */
+                }
+
+                foreach ($data['items'] as $row) {
+
+                    $init_report = null;
+                    // Determinar flag init_report (puede venir en row['item'] o en row directamente)
+                    if (isset($row['item']) && is_array($row['item']) && array_key_exists('init_report', $row['item'])) {
+                        $init_report = $row['item']['init_report'];
+                    } elseif (array_key_exists('init_report', $row)) {
+                        $init_report = $row['init_report'];
+                    }
+
+                    if ($init_report == 1) {
+
+                        $cashToUse = (isset($arcaCash) && $arcaCash) ? $arcaCash : Cash::where('user_id', auth()->id())->where('state', 1)->latest()->first();
+                        if (!$cashToUse) {
+                            $cashToUse = Cash::where('state', 1)->latest()->first();
+                        }
+
+                        // Resolución defensiva del item_id (puede venir en diferentes formas)
+                        $item_id = null;
+                        if (!empty($row['item_id'])) {
+                            $item_id = $row['item_id'];
+                        } elseif (!empty($row['item']['id'])) {
+                            $item_id = $row['item']['id'];
+                        } elseif (!empty($row['item']['item_id'])) {
+                            $item_id = $row['item']['item_id'];
+                        }
+
+                        $quantity = $row['quantity'] ?? 0;
+                        $warehouse_id = $row['warehouse_id'] ?? null;
+
+                        if (!$cashToUse) {
+                            Log::warning('No se encontró caja abierta para registrar CashStockMovement', ['item_id' => $item_id]);
+                            continue; // saltar este item
+                        }
+
+                        if (empty($item_id) || $quantity <= 0) {
+                            Log::warning('Datos inválidos para registrar CashStockMovement', ['item' => $row]);
+                            continue;
+                        }
+
+                        $cash_id = $cashToUse->id;
+
+                        // Buscar por caja, item y almacén (si existe). Usar firstOrNew para garantizar creación o actualización atómica.
+                        $movement = CashStockMovement::firstOrNew([
+                            'cash_id' => $cash_id,
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_id,
+                        ]);
+
+                        $movement->purchases = ($movement->purchases ?? 0) + $quantity;
+                        $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
+                        $movement->movement_type = $movement->movement_type ?? 'purchase';
+                        // Si es un nuevo registro, inicializar otros campos
+                        if (!$movement->exists) {
+                            $movement->initial_stock = $movement->initial_stock ?? 0;
+                            $movement->sold_quantity = $movement->sold_quantity ?? 0;
+                        }
+                        $movement->save();
+                    }
+                }
 
 
                 foreach ($data['payments'] as $index => $payment) {
                     $payment['payment_method_type_id'] = $payment['payment_method_type_id'] ?? '01';
                     $record_payment = $doc->purchase_payments()->create($payment);
 
+                    // Determinar método de pago y nombre
+                    $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                    $boxData = $data['boxes'][$index] ?? null;
+                    if (is_array($boxData) && !empty($boxData['method'])) {
+                        $methodName = $boxData['method'];
+                    } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                        $methodName = $boxData->method;
+                    } else {
+                        $methodName = $payment_method ? $payment_method->description : 'Método no encontrado';
+                    }
+
+                    // Registrar egreso en caja arca si corresponde
                     if ($configuration->methods_arca_cash && $isArca) {
-                        // Tomar la caja abierta
                         $box = Box::where('cash_id', $arcaCash->id)
                             ->where('state', 1)
                             ->where('type', 1)
                             ->orderBy('id')
                             ->first();
-
                         if (!$box) {
                             throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
                         }
-
-                        // Obtenemos método de pago
-                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
-
-                        // Revisamos si vino el dato desde el frontend
-                        $boxData = $data['boxes'][$index] ?? null;
-                        Log::info('Box Data', ['index' => $index, 'boxData' => $boxData, 'payment' => $payment, 'payment_method' => $payment_method]);
-
-                        // Determinar nombre del método de pago de forma defensiva
-                        if (is_array($boxData) && !empty($boxData['method'])) {
-                            $methodName = $boxData['method'];
-                        } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
-                            $methodName = $boxData->method;
-                        } else {
-                            $methodName = $payment_method ? $payment_method->description : 'Método no encontrado';
-                        }
-
-                        // Registrar movimiento en la caja (egreso)
+                        Log::info('Registrando gasto en caja arca por compra', [
+                            'purchase_id' => $doc->id,
+                            'payment_amount' => $payment['payment'],
+                            'methodName' => $methodName
+                        ]);
                         Box::create([
                             'cash_id' => $arcaCash->id,
                             'date' => $record_payment->date_of_payment,
@@ -946,13 +963,42 @@ class PurchaseController extends Controller
                         ]);
                     }
 
+                    // Registrar egreso en caja logística si corresponde
+                    if (RoleService::isLogistic() && !$isArca) {
+                        Log::info('Usuario logístico, registrando gasto en caja logística', [
+                            'user_id' => auth()->id(),
+                            'purchase_id' => $doc->id,
+                            'payment_amount' => $payment['payment'],
+                            'methodName' => $methodName
+                        ]);
+                        $logisticInfo = $this->userLogistic($payment['payment'], $methodName);
+                        Log::info('Fondos validados en caja logística, registrando gasto', [
+                            'cash_logistic_id' => $logisticInfo['caja']->id,
+                            'available_balance' => $logisticInfo['saldoDisponible']
+                        ]);
+                        Box::create([
+                            'cash_id' => $logisticInfo['caja']->id,
+                            'date' => $record_payment->date_of_payment,
+                            'amount' => $payment['payment'],
+                            'expenses' => 1,
+                            'group_id' => 2,
+                            'category_id' => 2,
+                            'subcategory_id' => 1,
+                            'state' => 1,
+                            'type' => 2, // Egreso
+                            'soap_type_id' => Company::active()->soap_type_id,
+                            'user_id' => auth()->id(),
+                            'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del logistica para el método de pago ({$methodName})",
+                            'purchase_id' => $doc->id,
+                            'currency_type_id' => $doc->currency_type_id,
+                            'method' => $methodName,
+                        ]);
+                    }
+
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }
                 }
-
-
-                // --- Envío WhatsApp si aplica ---
 
                 if ($configuration->sale_note_credit_penalty && $isArca) {
                     $total = (new CashTransferController)->available();
@@ -965,9 +1011,7 @@ class PurchaseController extends Controller
                         WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
                     }
                 }
-                
 
-                // Generar PDF
                 if (!$doc->filename) {
                     $this->setFilename($doc);
                 }

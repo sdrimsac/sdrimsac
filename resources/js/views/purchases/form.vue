@@ -14,6 +14,10 @@
             </div> -->
         </div>
         <div class="data-table-visible-columns d-flex align-items-center">
+            <el-button v-if="is_logistic" type="primary" class="text-white btn_excelsmallmetthod">
+                SALDO disponible: S/ {{ cashAvailable_logistic.toFixed(2) }}
+
+            </el-button>
             <!--  -->
             <template v-for="(amount, bankName) in banks">
                 <el-button v-if="amount > 0" class="btn_excelsmallmetthod"
@@ -1085,7 +1089,7 @@ import { calculateRowItem } from "../../helpers/functions";
 import PurchaseItems from "./partials/purchase_items.vue";
 
 export default {
-    props: ["purchase_order_id", "is_arca"],
+    props: ["purchase_order_id", "is_arca", "is_logistic"],
     components: {
         PurchaseFormItem,
         PersonForm,
@@ -1099,6 +1103,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            cashAvailable_logistic: 0,
             items: [],
             banks: [],
             paymentMethods: {
@@ -1174,6 +1179,7 @@ export default {
     },
     mounted() {
         this.getAvaibleCash();
+        this.getCashAvailableLogistic();
     },
     async created() {
         //     setInterval(this.getNow, 1000);
@@ -1401,6 +1407,16 @@ export default {
                     this.banks = banks;
                 })
                 .catch(() => { });
+        },
+
+        getCashAvailableLogistic() {
+            this.$http.get(`/caja/cash-transfer-logistic/available-credit-logistic`).then(response => {
+                let value = response.data;
+                if (typeof value === 'string') {
+                    value = value.replace(',', '.');
+                }
+                this.cashAvailable_logistic = Number(value) || 0;
+            });
         },
 
         /* handleImportData(data) {

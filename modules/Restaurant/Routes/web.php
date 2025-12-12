@@ -195,6 +195,25 @@ Route::prefix('caja')->group(function () {
             Route::delete('{id}', 'CashTransferController@destroy');
         });
 
+        Route::prefix('cash-transfer-logistic')->group(function () {
+            Route::get('/', 'CashTransferLogisticController@index')->name('caja.cash_transfer_logistic');
+            Route::prefix('report')->group(function () {
+                Route::get('/', 'CashTransferLogisticController@index_report')->name('caja.cash_transfer_report_logistic');
+                Route::get('/columns', 'CashTransferLogisticController@columns_report');
+                Route::get('/records', 'CashTransferLogisticController@records_report');
+                Route::get('/export', 'CashTransferLogisticController@export_report');
+            });
+            Route::get('/columns', 'CashTransferLogisticController@columns');
+            Route::get('available', 'CashTransferLogisticController@available');
+            Route::get('available-credit-logistic', 'CashTransferLogisticController@availableCreditLogistic');
+            Route::get('records', 'CashTransferLogisticController@records');
+            Route::get('cashes', 'CashTransferLogisticController@cashes');
+            Route::get('cashes-principal', 'CashTransferLogisticController@cashes_principal');
+            Route::get('record/{id}', 'CashTransferLogisticController@record');
+            Route::post('', 'CashTransferLogisticController@store');
+            Route::delete('{id}', 'CashTransferLogisticController@destroy');
+        });
+
         Route::get('delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
 
         //*** ORDENS */

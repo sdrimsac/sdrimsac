@@ -6941,7 +6941,6 @@ export default {
             try {
                 console.log("Procesando producto de balanza:", productData);
 
-                // Buscar el producto en listFoods por internal_id (codigo)
                 const productIndex = this.listFoods.findIndex(food =>
                     food.item && food.item.internal_id === productData.internal_id
                 );
@@ -6951,12 +6950,10 @@ export default {
                     return;
                 }
 
-                // Hacer una copia profunda del producto encontrado usando JSON
                 let selectedFoodCopy;
                 try {
                     selectedFoodCopy = JSON.parse(JSON.stringify(this.listFoods[productIndex]));
                 } catch (e) {
-                    // Si falla JSON, hacer copia superficial
                     console.warn("No se pudo hacer copia profunda, usando spread operator", e);
                     selectedFoodCopy = { ...this.listFoods[productIndex] };
                 }

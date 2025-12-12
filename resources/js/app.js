@@ -715,6 +715,14 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/report.vue"
             ),
+        "tenant-cash-transfer-logistic-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer_logistic/index.vue"
+            ),
+        "tenant-cash-transfer-logistic-index-report": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer_logistic/report.vue"
+            ),
         "tenant-cash-index": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/cash/index.vue"

@@ -22,7 +22,7 @@
                     >
                         <el-tooltip
                             effect="dark"
-                            :content="cash.user_name"
+                            :content="cash.user_name + ' - ' + cash.description"
                             placement="top"
                         >
                             <span style="float: left">{{

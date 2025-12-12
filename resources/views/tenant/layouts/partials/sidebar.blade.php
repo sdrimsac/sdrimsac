@@ -1152,6 +1152,38 @@
         </li>
     @endif
 
+    {{-- USUARIO ARCA --}}
+    @if ($user->is_arca)
+        <li>
+            <a href="#compras" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
+                class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
+                <i class="icofont-shopping-cart" style="font-size: 2em; color: #ffffff; margin-right: 10px;"></i>
+                <span class="label" style="font-size: 1em; color: #ffffff;">Transferencias Fondos</span>
+            </a>
+
+            <ul id="compras" class="collapse ">
+                <li>
+                    <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
+                        href="{{ route('caja.cash_transfer_logistic') }}">
+                        <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span style="font-size: 1em; ">(Desembolso de Efectivo S/) Logística</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                        href="{{ route('caja.cash_transfer_report_logistic') }}">
+                        <i class="icofont-credit-card" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span style="font-size: 1em; "> Reporte de Traslados</span>
+
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+    @endif
+
     {{-- Contabilidad --}}
     {{-- @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
             <li>

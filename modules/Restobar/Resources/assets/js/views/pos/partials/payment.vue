@@ -4184,29 +4184,32 @@ export default {
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table
                 ) {
-                    const responses = await this.$http.post(
-                        "/restobar/worker/send-orden",
-                        this.orden_items
-                    );
-                    if (!responses.data.success) {
-                        // Mostrar mensaje de error del servidor
-                        this.$showSAlert(
-                            "ALERTA",
-                            responses.data.message,
-                            "error"
-                        );
-                        this.ordenLoading = false;
-                        this.loading_submit = false;
-                        this.button_payment = false;
-                        this.isLocked = false;
-                        this.$emit("update:is_payment", false);
-                        this.isLocked = false;
-                        return;
-                    }
-                    ordenId = responses.data.id;
-                    if (responses.status != 200) {
-                        return;
-                    }
+                        // Si es conversión de nota de venta, NO llamar a send-orden
+                        if (!this.clientSaleNoteNumber) {
+                            const responses = await this.$http.post(
+                                "/restobar/worker/send-orden",
+                                this.orden_items
+                            );
+                            if (!responses.data.success) {
+                                // Mostrar mensaje de error del servidor
+                                this.$showSAlert(
+                                    "ALERTA",
+                                    responses.data.message,
+                                    "error"
+                                );
+                                this.ordenLoading = false;
+                                this.loading_submit = false;
+                                this.button_payment = false;
+                                this.isLocked = false;
+                                this.$emit("update:is_payment", false);
+                                this.isLocked = false;
+                                return;
+                            }
+                            ordenId = responses.data.id;
+                            if (responses.status != 200) {
+                                return;
+                            }
+                        }
                 }
                 form.orden_id = ordenId;
                 if (this.ordens_all_table) {

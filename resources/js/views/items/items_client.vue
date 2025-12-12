@@ -81,9 +81,9 @@
                   Buscar
                 </el-button>
                 <template v-if="records.length > 0">
-                  <el-button class="btn_pdfsmall ml-2" type="danger" @click.prevent="clickDownload('pdf')"><i
+                  <!-- <el-button class="btn_pdfsmall ml-2" type="danger" @click.prevent="clickDownload('pdf')"><i
                       class="fa fa-file-pdf"></i>
-                    PDF</el-button>
+                    PDF</el-button> -->
                   <el-button class="btn_excelsmall ml-2" type="success" @click.prevent="clickDownload('excel')">
                     <i class="fa fa-file-excel"></i>
                     Excel

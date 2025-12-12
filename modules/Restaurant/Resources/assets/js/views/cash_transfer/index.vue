@@ -12,7 +12,7 @@
                             </li>
                             <li class="breadcrumb-item active">
                                 <span class="text-muted"
-                                    >Lista de traslados de dinero</span
+                                    >Lista de traslados de dinero dasdadadas</span
                                 >
                             </li>
                         </ol>
