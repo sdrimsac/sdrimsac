@@ -21,16 +21,15 @@
 
                 <div class="data-table-visible-columns">
                     <el-button
-                        class="btn_titulos_modal"
+                        class="btn_guardarsmall"
+                        type="primary"
                         href="javascript:void(0)"
                         @click.prevent="clickCreate()"
                     >
-                        <i class="fas fa-sitemap"></i>
+                       
                         <i class="fas fa-plus"></i>
-                        <span
-                            style="color: #000; font-size: 1.25rem; font-weight: bold;"
-                            >Nuevo</span
-                        >
+                      Nuevo
+                        
                     </el-button>
                     <el-button
                         v-if="configuration.health_network"
@@ -66,7 +65,7 @@
                         </tr>
 
                         <tr></tr>
-                        <tr slot-scope="{ index, row }">
+                        <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                             <td>{{ index }}</td>
                             <td>{{ row.name }}</td>
                             <td>{{ row.identifier }}</td>

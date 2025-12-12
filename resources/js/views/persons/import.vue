@@ -59,13 +59,15 @@
                 </div>
             </div>
             <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
-                    <span>Cancelar</span>
-                </el-button>
+                <div class="d-flex justify-content-end w-100 gap-3">
+                    <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">
+                        <span>Cancelar</span>
+                    </el-button>
 
-                <el-button class="btn-save btn-save:hover" icon="fas fa-cogs" type="primary" native-type="submit" :loading="loading_submit">
-                    <span>Procesar</span>
-                </el-button>
+                    <el-button class="btn_guardarsmall" icon="fas fa-cogs" type="primary" native-type="submit" :loading="loading_submit">
+                        <span>Procesar</span>
+                    </el-button>
+                </div>
             </div>
         </form>
     </el-dialog>

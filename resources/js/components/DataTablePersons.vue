@@ -34,12 +34,13 @@
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 pb-2"
             v-if="resource == 'persons/customers' || resource == 'persons/suppliers'">
-            <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
+            <vs-checkbox color="#073f68" v-model="search.credit" @change="getRecords">
+              A cuenta
+            </vs-checkbox>
           </div>
           <div class="col-md-2" v-if="typeUser === 'superadmin'">
-            <el-button class="submit" type="success" icon="el-icon-tickets"
-              @click.prevent="clickDownload('excel')">Exportar
-              Excel</el-button>
+            <el-button class="btn_excelsmall" type="success" icon="el-icon-tickets"
+              @click.prevent="clickDownload('excel')">Exportar Excel</el-button>
           </div>
         </div>
       </div>

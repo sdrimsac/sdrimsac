@@ -25,7 +25,7 @@
                         <th class="text-white text-end">Acciones</th>
                     </tr>
                     <tr></tr>
-                    <tr slot-scope="{ index, row }">
+                    <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ index }}</td>
                         <td>{{ row.name }}</td>
 

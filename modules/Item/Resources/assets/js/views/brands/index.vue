@@ -1,17 +1,17 @@
 <!--Módulo de Marcas de Productos -->
 <template>
     <div class="card mb-0">
-        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-            <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                <i class="fas fa-coins" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+        <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+            <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                <i class="fas fa-coins" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                 Módulo de {{ title }}
             </h4>
         </div>
         <div class="data-table-visible-columns" >
-            <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
-                <i class="fas fa-coins"></i>
+            <el-button class="btn_guardarsmall" type="primary" href="javascript:void(0)" @click.prevent="clickCreate()">
+                
                 <i class="fa fa-plus"></i>
-                <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+               Nuevo
             </el-button>
         </div>
 
@@ -26,7 +26,7 @@
                 </tr>
 
                 <tr></tr>
-                <tr slot-scope="{ index, row }">
+                <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }" >
                     <td>{{ index }}</td>
                     <td>{{ row.name }}</td>
                     <td>{{ row.user_name }}</td>
@@ -82,7 +82,7 @@ export default {
         };
     },
     created() {
-        this.title = "Marcas de Productos";
+        this.title = "Marcas";
     },
     methods: {
         clickReport(query = null) {

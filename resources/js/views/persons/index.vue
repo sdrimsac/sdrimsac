@@ -1,5 +1,4 @@
-<!-- Módulo de Clientes Admin hoila
-    Módulo de Proveedores -->
+<!-- Listado de Clientes Proveedores  en Admin-->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -32,7 +31,7 @@
 
                     <data-table :resource="resource + `/${this.type}`" :type-user="typeUser">
                         <tr slot="heading" class="bg-primary" style="border-radius: 12px;">
-                            <th class="text-white text-center">Imagen</th>
+                            <!-- <th class="text-white text-center">Imagen</th> -->
                             <th class="text-white">#</th>
                             <th class="text-white text-left">Creado por Usuario</th>
                             <th class="text-white">{{ title }}</th>
@@ -46,11 +45,11 @@
                         </tr>
 
                         <tr></tr>
-                        <tr slot-scope="{ index, row }" :class="{ 'bg-secondary-darker': !row.enabled }">
-                            <td class="text-center" :class="!row.enabled ? 'td-amber' : ''">
+                        <tr slot-scope="{ index, row }" :class="{ 'bg-secondary-darker': !row.enabled }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                            <!-- <td class="text-center" :class="!row.enabled ? 'td-amber' : ''">
                                 <img v-if="row.image_url" :src="row.image_url" alt="avatar" style="width:40px; height:40px; object-fit:cover; border-radius:50%; border:1px solid #ccc;" />
                                 <i v-else class="fas fa-user-circle" style="font-size: 2rem; color: #ccc;"></i>
-                            </td>
+                            </td> -->
                             <td :class="!row.enabled ? 'td-amber' : ''">{{ index }}</td>
                             <td class="text-left" :class="!row.enabled ? 'td-amber' : ''">
                                 <span v-if="row.user_name" style="font-weight: bold; font-size: 0.8rem;">
@@ -98,7 +97,7 @@
                                             <i class="fa fa-edit"></i>
                                         </button>
                                     </el-tooltip>
-                                    <el-tooltip content="Eliminar" placement="top"
+                                    <!-- <el-tooltip content="Eliminar" placement="top"
                                         v-if="typeUser === 'admin' || typeUser === 'superadmin'">
                                         <button class="btn btn-sm rounded-circle"
                                             style="color: #fff; background: #dc3545; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%;"
@@ -107,7 +106,7 @@
                                         >
                                             <i class="fa fa-trash"></i>
                                         </button>
-                                    </el-tooltip>
+                                    </el-tooltip> -->
                                     <el-tooltip content="Inhabilitar" placement="top"
                                         v-if="(typeUser === 'admin' || typeUser === 'superadmin') && row.enabled">
                                         <button class="btn btn-sm rounded-circle"

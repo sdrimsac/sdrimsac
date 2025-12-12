@@ -3,34 +3,35 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                    v-if="resource == 'caja/cash-transfer/report'"
+                    <div
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                        v-if="resource == 'caja/cash-transfer/report'"
                     >
-                    <label for="value">
-                        Caja principal
-                    </label>
-                    <el-select
-                        v-model="search.cash_id"
-                        @change="getRecords"
-                        placeholder="Seleccione la caja"
-                    >
-                        <el-option
-                            v-for="item in cashes"
-                            :key="item.id"
-                            :label="`${item.user_name}-${item.description}`"
-                            :value="item.id"
+                        <label for="value">
+                            Caja principal
+                        </label>
+                        <el-select
+                            v-model="search.cash_id"
+                            @change="getRecords"
+                            placeholder="Seleccione la caja"
                         >
-                        </el-option>
-                    </el-select>
+                            <el-option
+                                v-for="item in cashes"
+                                :key="item.id"
+                                :label="`${item.user_name}-${item.description}`"
+                                :value="item.id"
+                            >
+                            </el-option>
+                        </el-select>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
-                            Filtrar por aa:
+                            Filtrar por a:
                         </label>
                         <el-select
                             v-model="search.column"
                             placeholder="Select"
-                            @change="changeClearInput" 
+                            @change="changeClearInput"
                         >
                             <el-option
                                 v-for="(label, key) in columns"
@@ -108,7 +109,12 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <template v-else-if="search.column == 'active' && resource=='caja/workers-type'">
+                        <template
+                            v-else-if="
+                                search.column == 'active' &&
+                                    resource == 'caja/workers-type'
+                            "
+                        >
                             <el-select
                                 v-model="search.value"
                                 @change="getRecords"
@@ -189,7 +195,7 @@
                         v-if="resource == 'items'"
                     >
                         <label for="warehouse">
-                            Area de preparación
+                            Area de Preparación
                         </label>
                         <el-select
                             clearable
@@ -209,49 +215,52 @@
                     </div>
                 </div>
             </div>
-            <div v-if="resource == 'items'" class="row"></div>
+            <!-- <div v-if="resource == 'items'" class="row"></div> -->
             <div
                 v-if="
                     resource == 'caja/worker/expenses' ||
                         ('purchases' && records.length != 0)
                 "
-                class="row"
             >
                 <div v-if="resource == 'caja/worker/expenses'" class="col-md-3">
                     <el-button
-                        class="submit"
+                        class="btn:_pdfsmall"
                         type="danger"
-                        icon="el-icon-tickets"
+                        icon="fa fa-file-pdf"
                         @click.prevent="clickDownload('pdf')"
-                        >Exportar PDF</el-button
+                        >PDF</el-button
                     >
                 </div>
-                <div class="col-md-6 d-flex"
-                v-if="resource !== 'caja/cash-transfer'"
+                <div
+                    class="col-md-6 d-flex"
+                    v-if="resource !== 'caja/cash-transfer'"
                 >
                     <el-button
-                        class="submit"
+                        class="btn_excelsmall"
                         type="success"
                         v-if="resource !== 'item-color-size'"
-                        icon="el-icon-tickets"
+                        icon="fa fa-file-excel"
                         @click.prevent="clickDownload('excel')"
-                        >Exportar Excel</el-button
+                        >Excel</el-button
                     >
-                        <el-button
-                        class="submit"
+                    <el-button
+                        class="btn_excelsmall"
                         type="success"
                         v-if="search.warehouse_id && typeUser == 'superadmin'"
-                        icon="el-icon-tickets"
+                        icon="fa fa-file-excel"
                         @click.prevent="clickDownloadForImport('excel')"
-                        >Exportar Excel - Formato de importacion</el-button
+                        >Excel - Importación</el-button
                     >
                 </div>
-       
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <br>
-                    <table class="table table-striped" id="scroll2" style="overflow-x: auto">
+                    <br />
+                    <table
+                        class="table table-striped"
+                        id="scroll2"
+                        style="overflow-x: auto"
+                    >
                         <thead>
                             <slot name="heading"></slot>
                         </thead>
@@ -263,10 +272,7 @@
                             ></slot>
                         </tbody>
                         <tfoot>
-                            <slot name="footer"
-                            
-                            >
-                            </slot>
+                            <slot name="footer"> </slot>
                         </tfoot>
                     </table>
                     <div>
@@ -315,7 +321,7 @@ export default {
     },
     data() {
         return {
-            cashes:[],
+            cashes: [],
             search: {
                 column: null,
                 value: null
@@ -334,7 +340,7 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
-        if(this.resource == "caja/cash-transfer/report"){
+        if (this.resource == "caja/cash-transfer/report") {
             this.getCashes();
         }
         if (this.resource == "items") {
@@ -353,37 +359,44 @@ export default {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
         });
-        if(this.resource !== "caja/cash-transfer/report"){
+        if (this.resource !== "caja/cash-transfer/report") {
             await this.getRecords();
         }
     },
     methods: {
-        total_income(){
-            return this.records.reduce((acc, item) => acc + Number(item.income), 0);
+        total_income() {
+            return this.records.reduce(
+                (acc, item) => acc + Number(item.income),
+                0
+            );
         },
-        total_expense(){
-            return this.records.reduce((acc, item) => acc + Number(item.expense), 0);
+        total_expense() {
+            return this.records.reduce(
+                (acc, item) => acc + Number(item.expense),
+                0
+            );
         },
         getCashes() {
-            this.$http.get(`/caja/cash-transfer/cashes-principal`).then(response => {
-                this.cashes = response.data.cashes;
-                let [cash] = this.cashes;
-                if(cash){
-                    this.search.cash_id = cash.id;
-                    this.getRecords();
-                }
-            });
+            this.$http
+                .get(`/caja/cash-transfer/cashes-principal`)
+                .then(response => {
+                    this.cashes = response.data.cashes;
+                    let [cash] = this.cashes;
+                    if (cash) {
+                        this.search.cash_id = cash.id;
+                        this.getRecords();
+                    }
+                });
         },
         clickDownload(type) {
             this.$emit("clickReport", this.search, type);
         },
-        clickDownloadForImport(){
+        clickDownloadForImport() {
             this.$emit("clickReportForImport", this.search);
         },
 
         customIndex(index) {
-
-            if(this.resource == "caja/cash-transfer/report" ){
+            if (this.resource == "caja/cash-transfer/report") {
                 return index + 1;
             }
             return (
@@ -411,13 +424,13 @@ export default {
                     }/records?${this.getQueryParameters()}&fromAdmin=true`;
                 }
                 return this.$http.get(url).then(response => {
-                    if(this.resource !== "caja/cash-transfer/report"){
-                     this.records = response.data.data;
-                    this.pagination = response.data.meta;
-                    this.pagination.per_page = parseInt(
-                        response.data.meta.per_page
-                    );   
-                    }else{
+                    if (this.resource !== "caja/cash-transfer/report") {
+                        this.records = response.data.data;
+                        this.pagination = response.data.meta;
+                        this.pagination.per_page = parseInt(
+                            response.data.meta.per_page
+                        );
+                    } else {
                         let data = response.data;
                         this.records = data.data;
                     }

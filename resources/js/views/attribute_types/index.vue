@@ -7,11 +7,9 @@
             </h4>
         </div>
         <div class="data-table-visible-columns">
-            <el-button type="primary" class="" @click.prevent="clickCreate()">
-                <!-- <i class="fas fa-sitemap fa-lg"></i> -->
-                <i class="fas fa-sitemap fa-lg"></i>
+            <el-button type="primary" class="btn_guardarsmall" @click.prevent="clickCreate()">
                 <i class="fa fa-plus"></i>
-                Nuevo Atributo
+                Nuevo
             </el-button>
         </div>
     
@@ -26,7 +24,7 @@
                     <th class="text-white text-end">Acciones</th>
                 </tr>
     
-                <tr slot-scope="{ index, row }">
+                <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                     <td>{{ index }}</td>
                     <td>{{ row.id }}</td>
                     <td>{{ row.description }}</td>
@@ -53,7 +51,7 @@
     </div>
     </template>
     
-    </style>
+   
     
     <script>
     import TributeConceptTypesForm from "./form.vue";
