@@ -6,15 +6,9 @@
                 <i class="fas fa-coins" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                 Nueva Compra
             </h4>
-            <!-- <div>
-                <el-button class="btn_titulos_modal" @click.prevent="formItems()">
-                    <i class="fas fa-plus"></i>
-                    <span>Nuevo</span>
-                </el-button>
-            </div> -->
         </div>
         <div class="data-table-visible-columns d-flex align-items-center">
-            <el-button v-if="is_logistic" type="primary" class="text-white btn_excelsmallmetthod">
+            <el-button v-if="is_management" type="primary" class="text-white btn_excelsmallmetthod">
                 SALDO disponible: S/ {{ cashAvailable_logistic.toFixed(2) }}
 
             </el-button>
@@ -1089,7 +1083,7 @@ import { calculateRowItem } from "../../helpers/functions";
 import PurchaseItems from "./partials/purchase_items.vue";
 
 export default {
-    props: ["purchase_order_id", "is_arca", "is_logistic"],
+    props: ["purchase_order_id", "is_arca", "is_management"],
     components: {
         PurchaseFormItem,
         PersonForm,

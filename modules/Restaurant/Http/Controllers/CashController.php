@@ -56,6 +56,7 @@ use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
+use App\Services\RoleService;
 use App\Traits\JobReportTrait;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
 use CashOpeningBalances;
@@ -78,7 +79,6 @@ use Modules\Restaurant\Http\Resources\ReportCollection;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Models\CashOpeningBalance;
-use Modules\Restaurant\Models\CashOpeningBalances as ModelsCashOpeningBalances;
 use Modules\Restaurant\Models\CashOrderSession;
 use Modules\Restaurant\Models\CashStockMovement;
 use Modules\Restaurant\Models\Orden;
@@ -534,12 +534,12 @@ class CashController extends Controller
             // Verificar si existe en la tabla workers_type
             $workerType = DB::connection('tenant')->table('workers_type')->where('id', $user_id)->first();
             if ($workerType) {
-            // Intentar obtener un usuario asociado a ese worker_type_id
-            $user = User::where('worker_type_id', $user_id)->first();
+                // Intentar obtener un usuario asociado a ese worker_type_id
+                $user = User::where('worker_type_id', $user_id)->first();
             }
             // Si aún no se encontró, usar el usuario autenticado como fallback
             if (!$user) {
-            $user = auth()->user();
+                $user = auth()->user();
             }
         }
         $isLogistico = $user->isWorkerType("LOGISTICA");
@@ -1727,7 +1727,7 @@ class CashController extends Controller
                 // SaleNote normalmente tiene 'boxes' y 'sale_note_related' (ajustar según modelo
                 break;
             default:
-               
+
                 break;
         }
 
@@ -2769,7 +2769,7 @@ class CashController extends Controller
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
         $cash_user = User::find(auth()->user()->id);
-
+        $is_gestion = RoleService::isManagement();
         $initial_balance = (float) $request->beginning_balance;
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
@@ -2870,18 +2870,34 @@ class CashController extends Controller
         }
 
         // Si la caja abierta es principal
-        if ($cash->principal == 1) {
+        if ($cash->principal == 1 || $is_gestion) {
 
             // Buscar la última caja principal cerrada
-            $last_principal_cash = Cash::where('principal', true)
+            /* $last_principal_cash = Cash::where('principal', true)
                 ->where('id', '<>', $cash->id)
                 ->orderBy('id', 'desc')
-                ->first();
+                ->first(); */
 
-            if ($last_principal_cash) {
+            if ($cash->principal == 1) {
+                // ARCA: toma la última caja principal
+                $last_cash = Cash::where('principal', true)
+                    ->where('id', '<>', $cash->id)
+                    ->where('state', 0)
+                    ->orderBy('id', 'desc')
+                    ->first();
+            } else {
+                // GESTIÓN: toma SU PROPIA última caja cerrada
+                $last_cash = Cash::where('user_id', $cash->user_id)
+                    ->where('id', '<>', $cash->id)
+                    ->where('state', 0)
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }
+
+            if ($last_cash) {
 
                 // Traer los balances de apertura de la última caja principal
-                $balances = CashOpeningBalance::where('cash_id', $last_principal_cash->id)->get();
+                $balances = CashOpeningBalance::where('cash_id', $last_cash->id)->get();
 
                 foreach ($balances as $balance) {
 
@@ -3369,6 +3385,8 @@ class CashController extends Controller
         $cash->difference = $difference;
         $cash_user = $cash->user;
         $user = User::find($cash->user_id);
+        $is_gestion = RoleService::isManagement();
+        Log::info('is_gestion: ' . ($is_gestion ? 'true' : 'false'));
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $cash->state = 0;
@@ -3401,7 +3419,7 @@ class CashController extends Controller
             ->where('expenses', 0)
             ->get();
 
-        if ($cash->principal == 1) {
+        if ($cash->principal == 1 || $is_gestion) {
 
             $expenses = Box::where('cash_id', $id)->where('expenses', 1)
                 ->where('method')
@@ -3442,7 +3460,7 @@ class CashController extends Controller
         $cash->is_loading_report = true;
         $cash->save();
 
-        if ($cash->principal == 1) {
+        if ($cash->principal == 1 || $is_gestion) {
             /* Log::info('Generando ajustes de apertura de caja al cerrar'); */
             if (isset($totalsByMethod) && $totalsByMethod->count() > 0) {
                 foreach ($totalsByMethod as $tm) {

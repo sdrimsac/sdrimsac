@@ -108,7 +108,9 @@ class JustAdmin
             "promotions",
             "person_staff",
             "report_closed_cash",
-            "main_cash"
+            "main_cash",
+            "expenses",
+            "incomes"
         ];
 
 

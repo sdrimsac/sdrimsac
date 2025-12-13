@@ -257,7 +257,7 @@ class CashTransferLogisticController extends Controller
             return 0;
         }
         $workerType = DB::connection('tenant')->table('workers_type')->where('id', $user->worker_type_id)->first();
-        if (!$workerType || strtoupper($workerType->description) !== 'LOGISTICA') {
+        if (!$workerType || strtoupper($workerType->description) !== 'GESTION') {
             return 0;
         }
 

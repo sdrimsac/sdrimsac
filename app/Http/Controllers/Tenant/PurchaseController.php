@@ -113,13 +113,13 @@ class PurchaseController extends Controller
     public function create($purchase_order_id = null)
     {
         $is_arca = auth()->user()->is_arca;
-        $is_logistic = RoleService::isLogistic(); 
+        $is_management = RoleService::isManagement(); 
         if (!$is_arca) {
             $is_arca = RoleService::isArcaUserId(auth()->id());
         }
 
 
-        return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca', 'is_logistic'));
+        return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca', 'is_management'));
     }
 
     public function columns()
@@ -576,16 +576,16 @@ class PurchaseController extends Controller
      * @throws Exception si no hay caja abierta o fondos insuficientes
      * @return array ["caja" => Box, "saldoDisponible" => float, "methodName" => string]
      */
-    public function userLogistic($montoCompra, $methodName = null)
+    public function userManagement($montoCompra, $methodName = null)
     {
         Log::info('Validando fondos en caja logística para usuario ' . auth()->id() . ' por monto ' . $montoCompra . ' con método ' . ($methodName ?? 'Efectivo'));
         $userId = auth()->id();
-        $cash_logistic = Cash::where('user_id', $userId)
+        $cash_management = Cash::where('user_id', $userId)
             ->where('state', 1)
             ->orderBy('id', 'desc')
             ->first();
-        if (!$cash_logistic) {
-            throw new \Exception('No tiene caja logística aperturada.');
+        if (!$cash_management) {
+            throw new \Exception('No tiene caja GESTION aperturada.');
         }
         // Determinar método de pago
         $methodToQuery = $methodName;
@@ -593,7 +593,7 @@ class PurchaseController extends Controller
             $methodToQuery = 'Efectivo'; // Por defecto
         }
         // Calcular saldo disponible en la caja logística abierta (por cash_id) para el método
-        $saldoDisponible = Box::where('cash_id', $cash_logistic->id)
+        $saldoDisponible = Box::where('cash_id', $cash_management->id)
             ->where('method', $methodToQuery)
             ->selectRaw('SUM(CASE WHEN type = 1 THEN amount WHEN type = 2 THEN -amount ELSE 0 END) as saldo')
             ->value('saldo') ?? 0;
@@ -602,7 +602,7 @@ class PurchaseController extends Controller
             throw new \Exception("Saldo insuficiente en logística para el método {$methodToQuery}. Faltan S/ {$faltante}.");
         }
         return [
-            'caja' => $cash_logistic,
+            'caja' => $cash_management,
             'saldoDisponible' => $saldoDisponible,
             'methodName' => $methodToQuery,
         ];
@@ -751,7 +751,7 @@ class PurchaseController extends Controller
 
                 $isArca = false;
                 $configuration = Configuration::first();
-                $isLogistic = RoleService::isLogistic();
+                $isManagement = RoleService::isManagement();
                 $arcaCash = null;
                 if ($configuration->methods_arca_cash) {
                     $isArca = auth()->user()->is_arca == 1;
@@ -834,7 +834,7 @@ class PurchaseController extends Controller
                     }
                 }
                 // Validación logística SIEMPRE que el usuario sea logístico y NO sea arca
-                if ($isLogistic && !$isArca) {
+                if ($isManagement && !$isArca) {
                     foreach ($data['payments'] as $index => $payment) {
                         $payment_method = null;
                         $boxData = $data['boxes'][$index] ?? null;
@@ -848,7 +848,7 @@ class PurchaseController extends Controller
                         } else {
                             $methodName = $payment_method ? $payment_method->description : null;
                         }
-                        $this->userLogistic($payment['payment'], $methodName);
+                        $this->userManagement($payment['payment'], $methodName);
                     }
                 }
 
@@ -964,20 +964,20 @@ class PurchaseController extends Controller
                     }
 
                     // Registrar egreso en caja logística si corresponde
-                    if (RoleService::isLogistic() && !$isArca) {
+                    if (RoleService::isManagement() && !$isArca) {
                         Log::info('Usuario logístico, registrando gasto en caja logística', [
                             'user_id' => auth()->id(),
                             'purchase_id' => $doc->id,
                             'payment_amount' => $payment['payment'],
                             'methodName' => $methodName
                         ]);
-                        $logisticInfo = $this->userLogistic($payment['payment'], $methodName);
+                        $managementInfo = $this->userManagement($payment['payment'], $methodName);
                         Log::info('Fondos validados en caja logística, registrando gasto', [
-                            'cash_logistic_id' => $logisticInfo['caja']->id,
-                            'available_balance' => $logisticInfo['saldoDisponible']
+                            'cash_management_id' => $managementInfo['caja']->id,
+                            'available_balance' => $managementInfo['saldoDisponible']
                         ]);
                         Box::create([
-                            'cash_id' => $logisticInfo['caja']->id,
+                            'cash_id' => $managementInfo['caja']->id,
                             'date' => $record_payment->date_of_payment,
                             'amount' => $payment['payment'],
                             'expenses' => 1,
