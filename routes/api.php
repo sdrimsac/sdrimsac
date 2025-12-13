@@ -14,6 +14,7 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\ApiPeruDev\Http\Controllers\ServiceController as ControllersServiceController;
+use Modules\Restaurant\Http\Controllers\CashController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 
 
@@ -98,6 +99,8 @@ if ($hostname) {
 
             Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
 
+            Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
+            
             //Company
             Route::get('companies/record', '\App\Http\Controllers\Tenant\CompanyController@record');
             //Customer
