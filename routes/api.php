@@ -78,6 +78,8 @@ if ($hostname) {
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
         /* Route::post('/next-correlative', [SummaryCorrelativeController::class, 'nextCorrelative']); */
 
+        Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
+
         Route::get('item-list', [BalanzaController::class, 'getItemList'])->middleware('auth.apikey');
         Route::post('item-foods', [BalanzaController::class, 'itemFoods'])->middleware('auth.apikey');
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
@@ -100,6 +102,8 @@ if ($hostname) {
             Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
 
             Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
+
+            Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
             
             //Company
             Route::get('companies/record', '\App\Http\Controllers\Tenant\CompanyController@record');
