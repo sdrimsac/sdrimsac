@@ -1,16 +1,22 @@
 <template>
-    <el-dialog :title="titleDialog" width="40%"  :visible="showDialog"  @open="create"  :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
-         
+    <el-dialog :title="titleDialog" width="40%"  
+    :visible="showDialog"  @open="create"  
+    :close-on-click-modal="false" 
+    :close-on-press-escape="false" 
+    append-to-body :show-close="false">
+       
+        
+
         <div class="form-body">
             <div class="row" >
                 <div class="col-lg-12 col-md-12 table-responsive">
                     <table width="100%" class="table">
-                        <thead>
+                        <thead style="background-color: #073f68;">
                             <tr width="100%">
-                                <th class="text-center">Seleccionar</th>
-                                <th >Cod. Lote</th>
-                                <th>Serie</th>
-                                <th>Fecha</th>
+                                <th class="text-center" style="color: white;">Seleccionar</th>
+                                <th style="color: white;">Cod. Lote</th>
+                                <th style="color: white;">Serie</th>
+                                <th style="color: white;">Fecha</th>
                             </tr>
                         </thead>
                         <tbody>

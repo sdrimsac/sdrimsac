@@ -5,8 +5,8 @@
                 <div class="row mt-2">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="control-label">Almacen</label>
-                            <el-select v-model="form.warehouse_id" clearable filterable @change="getRecords">
+                            <!-- <label class="control-label">Almacén</label> -->
+                            <el-select v-model="form.warehouse_id" clearable filterable @change="getRecords" placeholder="Seleccione Almacén">
                                 <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
                                     :label="option.description"></el-option>
                             </el-select>
@@ -14,21 +14,21 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="control-label">Categoria</label>
-                            <el-select v-model="form.category_id" clearable filterable @change="getRecords">
+                            <!-- <label class="control-label">Categoría</label> -->
+                            <el-select v-model="form.category_id" clearable filterable @change="getRecords"  placeholder="Seleccione Categoría">
                                 <el-option v-for="option in categories" :key="option.id" :value="option.id"
                                     :label="option.name"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
-                        <label for="date_start">Fecha inicial</label>
+                        <!-- <label for="date_start">Fecha inicial</label> -->
                         <el-date-picker v-model="form.date_start" type="date" style="width: 100%;"
                             placeholder="Fecha inicial" value-format="yyyy-MM-dd" @change="getRecords">
                         </el-date-picker>
                     </div>
                     <div class="col-md-2 col-lg-3">
-                        <label for="date_end">Fecha final</label>
+                        <!-- <label for="date_end">Fecha final</label> -->
 
                         <el-date-picker v-model="form.date_end" type="date" style="width: 100%;"
                             placeholder="Fecha final" value-format="yyyy-MM-dd" @change="getRecords">
@@ -36,8 +36,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="control-label">Filtro Por Productos</label>
-                            <el-select v-model="form.description" clearable filterable @change="getRecords">
+                            <!-- <label class="control-label">Filtro Por Productos</label> -->
+                            <el-select v-model="form.description" clearable filterable @change="getRecords" placeholder="Seleccione Producto">
                                 <el-option v-for="option in items" :key="option.id" :value="option.id"
                                     :label="option.description"></el-option>
                             </el-select>
@@ -45,8 +45,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="control-label">Filtro Por tipo</label>
-                            <el-select v-model="form.qty_type" clearable filterable @change="getRecords">
+                            <!-- <label class="control-label">Filtro Por tipo</label> -->
+                            <el-select v-model="form.qty_type" clearable filterable @change="getRecords" placeholder="Tipo de Ingreso/Salida">
                                 <el-option v-for="option in qty_types" :key="option.id" :value="option.value"
                                     :label="option.name"></el-option>
                             </el-select>
@@ -57,7 +57,7 @@
                             :loading="loading_submit" icon="el-icon-search">Buscar</el-button> -->
                         <template v-if="records.length > 0">
                             <!-- <el-button class="submit" type="danger" @click.prevent="clickDownload('pdf')"><i class="fa fa-file-pdf" ></i>  Exportal PDF</el-button> -->
-                            <el-button class="submit" type="success" @click.prevent="clickDownload('excel')"><i
+                            <el-button class="btn_excelsmall" type="success" @click.prevent="clickDownload('excel')"><i
                                     class="fa fa-file-excel"></i> Exportal
                                 Excel</el-button>
                         </template>

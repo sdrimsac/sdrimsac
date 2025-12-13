@@ -1,44 +1,66 @@
 <template>
     <el-dialog
-        :title="titleDialog"
         :visible="showDialog"
         @open="open"
         @close="close"
         append-to-body
+        center
     >
+        <span slot="title" class="w-100 d-flex justify-content-between align-items-center">
+            <strong>{{ titleDialog }}</strong>
+            <el-button
+            class="btn_guardarsmall"
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="clickAddColorSize"
+            >Agregar</el-button>
+
+             <strong>  </strong>
+           
+        </span>
         <div class="row m-2">
-            <div class="col-12 text-end">
+            <!-- <div class="col-12 d-flex justify-content-end">
                 <el-button
+                    class="btn_guardarsmall"
                     type="primary"
                     icon="el-icon-plus"
                     size="mini"
                     @click="clickAddColorSize"
-                ></el-button>
-            </div>
+                > Agregar</el-button>
+            </div> -->
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead>
+                    <thead style="background-color:#073f68;">
                         <tr>
-                            <th>
-                                COLOR
+                            <th style="color:#ffffff;">
+                                Código Familia 
                             </th>
-                            <th>
-                                TALLA
+                            <th style="color:#ffffff;">
+                                Color
                             </th>
-                            <th>
-                                STOCK
+                            <th style="color:#ffffff;">
+                                Talla
                             </th>
-                            <th>
-                                PRECIO
+                            <th style="color:#ffffff;">
+                                Stock
                             </th>
-                            <th>
-                                CODIGO FAMILIA 
+                            <th style="color:#ffffff;">
+                                Precio
                             </th>
-                            <th></th>
+                            <th style="color:#ffffff;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(row, index) in colorSizes" :key="index">
+                        <tr v-for="(row, index) in colorSizes" :key="index":style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }" >
+                            <td>
+                                 <el-input
+                                    type="text"
+                                    v-model="row.code"
+                                ></el-input>
+
+                                
+                            </td>
                             <td>
                                 <el-input v-model="row.color"></el-input>
                             </td>
@@ -63,10 +85,7 @@
                                 ></el-input>
                             </td>
                             <td>
-                                <el-input
-                                    type="text"
-                                    v-model="row.code"
-                                ></el-input>
+                               
                             </td>
                             <td>
                                 <el-button
@@ -82,9 +101,12 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button type="danger" @click="close" size="large">Cancelar</el-button>
-            <el-button type="primary" @click="addColorSize" size="large">Aceptar</el-button>
+            <div class="d-flex justify-content-end" style="width: 100%;">
+                <el-button class="btn_cancelarsmall" type="danger" @click="close" size="large">Cancelar</el-button>
+                <el-button class="btn_guardarsmall ml-2" type="primary" @click="addColorSize" size="large">Aceptar</el-button>
+            </div>
         </span>
+        <!-- </span> -->
     </el-dialog>
 </template>
 

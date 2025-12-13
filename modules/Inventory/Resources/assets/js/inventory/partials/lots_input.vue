@@ -8,16 +8,27 @@
         :close-on-press-escape="false"
         append-to-body
         :show-close="false"
+        center
     >
+        <span slot="title" class="w-100 d-flex justify-content-between align-items-center">
+            <strong>{{ titleDialog }}</strong>
+            <el-button
+            class="btn_guardarsmall"
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="clickAddSeries"
+            >Agregar</el-button>
+
+             <strong>  </strong>
+           
+        </span>
+
+
+
+
         <div class="row m-3">
-            <div class="col-12 text-end">
-                <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    size="mini"
-                    @click="clickAddSeries"
-                ></el-button>
-            </div>
+           
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light text-center">
@@ -25,14 +36,14 @@
                             <th class="text-white">Serie</th>
                             <th class="text-white">Estado</th>
                             <th class="text-white">Fecha</th>
-                            <th class="text-white">#</th>
+                            <th class="text-white"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr
                             v-for="(row, index) in lots_splice"
                             :key="index"
-                            class="text-center"
+                            class="text-center" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }"
                         >
                             <td>
                                 <div class="form-group mb-2 mr-2">
@@ -89,22 +100,23 @@
         <div class="form-actions d-flex justify-content-end gap-3 pt-3">
             <!-- Botón Cancelar -->
             <el-button
-                class="btn-cancel"
-                icon="fas fa-times fa-lg"
-                @click.prevent="clickCancelSubmit"
+            class="btn_cancelarsmall"
+            icon="fas fa-times"
+            @click.prevent="clickCancelSubmit"
             >
-                Cancelar
+            Cancelar
             </el-button>
             <!-- Botón Guardar -->
             <el-button
-                class="btn-save"
-                icon="fas fa-save fa-lg"
-                type="primary"
-                @click="submit"
+            class="btn_guardarsmall"
+            icon="fas fa-save"
+            type="primary"
+            @click="submit"
             >
-                Guardar
+            Guardar
             </el-button>
         </div>
+        
     </el-dialog>
 </template>
 

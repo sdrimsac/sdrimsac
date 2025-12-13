@@ -1,507 +1,491 @@
 <template>
-
-    <el-tabs type="card" @tab-click="handleClick">
-        <el-tab-pane label="Dashboard general">
-            <div v-if="typeUser == 'admin' || typeUser == 'superadmin'" class="dashboard-container">
+    <div v-if="typeUser == 'admin' || typeUser == 'superadmin'" class="dashboard-container">
 
 
-                <div class="filter-bar pro-card">
+        <div class="filter-bar pro-card">
 
-                    <div class="title-section">
-                        <h1
-                            style="color: white; font-size: 32px; font-weight: 700; font-family: 'Inter', 'Segoe UI', Arial, sans-serif; margin: 0;">
-                            Dashboard General</h1>
-                        <p class="subtitle">Resumen de operaciones y rendimiento</p>
-                    </div>
-                    <div class="filter-item">
-                        <label>Establecimiento</label>
-                        <el-select v-model="form.establishment_id" @change="loadAll" size="small">
-                            <el-option v-for="option in establishments" :key="option.id" :value="option.id"
-                                :label="option.name"></el-option>
-                        </el-select>
-                    </div>
+            <div class="title-section">
+                <h1
+                    style="color: white; font-size: 32px; font-weight: 700; font-family: 'Inter', 'Segoe UI', Arial, sans-serif; margin: 0;">
+                    Dashboard General</h1>
+                <p class="subtitle">Resumen de operaciones y rendimiento</p>
+            </div>
+            <div class="filter-item">
+                <label>Establecimiento</label>
+                <el-select v-model="form.establishment_id" @change="loadAll" size="small">
+                    <el-option v-for="option in establishments" :key="option.id" :value="option.id"
+                        :label="option.name"></el-option>
+                </el-select>
+            </div>
 
-                    <div class="filter-item">
-                        <label>Período</label>
-                        <el-select v-model="form.period" @change="changePeriod" size="small">
-                            <el-option key="month" value="month" label="Por mes"></el-option>
-                            <el-option key="between_months" value="between_months" label="Entre meses"></el-option>
-                            <el-option key="date" value="date" label="Por fecha"></el-option>
-                            <el-option key="between_dates" value="between_dates" label="Entre fechas"></el-option>
-                        </el-select>
-                    </div>
+            <div class="filter-item">
+                <label>Período</label>
+                <el-select v-model="form.period" @change="changePeriod" size="small">
+                    <el-option key="month" value="month" label="Por mes"></el-option>
+                    <el-option key="between_months" value="between_months" label="Entre meses"></el-option>
+                    <el-option key="date" value="date" label="Por fecha"></el-option>
+                    <el-option key="between_dates" value="between_dates" label="Entre fechas"></el-option>
+                </el-select>
+            </div>
 
-                    <template v-if="form.period === 'month' || form.period === 'between_months'">
-                        <div class="filter-item">
-                            <label>Mes de</label>
-                            <el-date-picker v-model="form.month_start" type="month" @change="changeDisabledMonths"
-                                value-format="yyyy-MM" format="MM/yyyy" :clearable="false"
-                                size="small"></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_months'">
-                        <div class="filter-item">
-                            <label>Mes al</label>
-                            <el-date-picker v-model="form.month_end" type="month" :picker-options="pickerOptionsMonths"
-                                @change="loadAll" value-format="yyyy-MM" format="MM/yyyy" :clearable="false"
-                                size="small"></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'date' || form.period === 'between_dates'">
-                        <div class="filter-item">
-                            <label>Fecha del</label>
-                            <el-date-picker v-model="form.date_start" type="date" @change="changeDisabledDates"
-                                value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="false"
-                                size="small"></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_dates'">
-                        <div class="filter-item">
-                            <label>Fecha al</label>
-                            <el-date-picker v-model="form.date_end" type="date" :picker-options="pickerOptionsDates"
-                                @change="loadAll" value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="false"
-                                size="small"></el-date-picker>
-                        </div>
-                    </template>
+            <template v-if="form.period === 'month' || form.period === 'between_months'">
+                <div class="filter-item">
+                    <label>Mes de</label>
+                    <el-date-picker v-model="form.month_start" type="month" @change="changeDisabledMonths"
+                        value-format="yyyy-MM" format="MM/yyyy" :clearable="false" size="small"></el-date-picker>
                 </div>
-
-                <div class="kpi-grid">
-                    <div class="pro-card kpi-card">
-                        <div class="kpi-icon icon-glow-blue">
-                            <i class="el-icon-tickets"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <span class="kpi-label">CPE Emitidos</span>
-                            <h3 class="kpi-value">{{ total_cpe }}</h3>
-                        </div>
-                    </div>
-
-                    <div class="pro-card kpi-card">
-                        <div class="kpi-icon icon-glow-indigo">
-                            <i class="el-icon-money"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <span class="kpi-label">Total CPE</span>
-                            <h3 class="kpi-value">S/ {{ document_total_global }}</h3>
-                        </div>
-                    </div>
-
-                    <div class="pro-card kpi-card">
-                        <div class="kpi-icon icon-glow-orange">
-                            <i class="el-icon-notebook-1"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <span class="kpi-label">Total Notas Venta</span>
-                            <h3 class="kpi-value">S/ {{ sale_note_total_global }}</h3>
-                        </div>
-                    </div>
-
-                    <div class="pro-card kpi-card highlight-card">
-                        <div class="kpi-icon icon-glow-emerald">
-                            <i class="el-icon-s-data"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <span class="kpi-label">Monto Total General</span>
-                            <h3 class="kpi-value">S/ {{ (Number(sale_note_total_global) +
-                                Number(document_total_global)).toFixed(2) }}
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div class="pro-card kpi-card">
-                        <div class="kpi-icon icon-glow-green">
-                            <i class="el-icon-wallet"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <span class="kpi-label">Utilidad Neta</span>
-                            <h3 class="kpi-value" v-if="utilities.totals">S/ {{ utilities.totals.utility }}</h3>
-                        </div>
-                    </div>
+            </template>
+            <template v-if="form.period === 'between_months'">
+                <div class="filter-item">
+                    <label>Mes al</label>
+                    <el-date-picker v-model="form.month_end" type="month" :picker-options="pickerOptionsMonths"
+                        @change="loadAll" value-format="yyyy-MM" format="MM/yyyy" :clearable="false"
+                        size="small"></el-date-picker>
                 </div>
+            </template>
+            <template v-if="form.period === 'date' || form.period === 'between_dates'">
+                <div class="filter-item">
+                    <label>Fecha del</label>
+                    <el-date-picker v-model="form.date_start" type="date" @change="changeDisabledDates"
+                        value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="false" size="small"></el-date-picker>
+                </div>
+            </template>
+            <template v-if="form.period === 'between_dates'">
+                <div class="filter-item">
+                    <label>Fecha al</label>
+                    <el-date-picker v-model="form.date_end" type="date" :picker-options="pickerOptionsDates"
+                        @change="loadAll" value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="false"
+                        size="small"></el-date-picker>
+                </div>
+            </template>
+            <div class="col-3">
+                Caja Aperturada: Usuario  - Monto S/ 
+                + Vendido: cerveza pilsen callao (20) unidades     
+            </div>
+        </div>
 
+        <div class="kpi-grid">
+            <div class="pro-card kpi-card">
+                <div class="kpi-icon icon-glow-blue">
+                    <i class="el-icon-tickets"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">CPE Emitidos</span>
+                    <h3 class="kpi-value">{{ total_cpe }}</h3>
+                </div>
+            </div>
+
+            <div class="pro-card kpi-card">
+                <div class="kpi-icon icon-glow-indigo">
+                    <i class="el-icon-money"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Total CPE</span>
+                    <h3 class="kpi-value">S/ {{ document_total_global }}</h3>
+                </div>
+            </div>
+
+            <div class="pro-card kpi-card">
+                <div class="kpi-icon icon-glow-orange">
+                    <i class="el-icon-notebook-1"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Total Notas Venta</span>
+                    <h3 class="kpi-value">S/ {{ sale_note_total_global }}</h3>
+                </div>
+            </div>
+
+            <div class="pro-card kpi-card highlight-card">
+                <div class="kpi-icon icon-glow-emerald">
+                    <i class="el-icon-s-data"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Monto Total General</span>
+                    <h3 class="kpi-value">S/ {{ (Number(sale_note_total_global) +
+                        Number(document_total_global)).toFixed(2) }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="pro-card kpi-card">
+                <div class="kpi-icon icon-glow-green">
+                    <i class="el-icon-wallet"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Utilidad Neta</span>
+                    <h3 class="kpi-value" v-if="utilities.totals">S/ {{ utilities.totals.utility }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
                 <div class="row">
-                    <div class="col-xl-12">
-                        <div class="row">
-                            <div class="col-xl-3" v-if="soapCompany != '03'">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">CPE </span>
-                                    </div>
-                                    <div class="card-body" v-if="document">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
+                    <div class="col-xl-3" v-if="soapCompany != '03'">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">CPE </span>
+                            </div>
+                            <div class="card-body" v-if="document">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
 
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <x-graph type="pie" :all-data="document.graph"></x-graph>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <x-graph type="pie" :all-data="document.graph"></x-graph>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <div class="summary-item">
+                                                <span class="text-muted">Total Pagado</span>
+                                                <h4 class="title text-info">S/ {{ document.totals.total_payment }}</h4>
+                                            </div>
+                                            <div class="summary-item">
+                                                <span class="text-muted">Total por Pagar</span>
+                                                <h4 class="title text-danger">S/ {{ document.totals.total_to_pay }}</h4>
+                                            </div>
+                                            <div class="summary-item total">
+                                                <span class="text-muted">Total</span>
+                                                <h4 class="title text-white">S/ {{ document.totals.total }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-xl-3">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Notas de Venta</span>
+                            </div>
+                            <div class="card-body" v-if="sale_note">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="row no-gutters">
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <x-graph type="pie" :all-data="sale_note.graph"></x-graph>
                                                 </div>
-                                                <div class="col-12 mt-3">
-                                                    <div class="summary-item">
-                                                        <span class="text-muted">Total Pagado</span>
-                                                        <h4 class="title text-info">S/ {{ document.totals.total_payment
-                                                            }}</h4>
-                                                    </div>
-                                                    <div class="summary-item">
-                                                        <span class="text-muted">Total por Pagar</span>
-                                                        <h4 class="title text-danger">S/ {{ document.totals.total_to_pay
-                                                            }}</h4>
-                                                    </div>
-                                                    <div class="summary-item total">
-                                                        <span class="text-muted">Total</span>
-                                                        <h4 class="title text-white">S/ {{ document.totals.total }}</h4>
-                                                    </div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <div class="summary-item">
+                                                    <span class="text-muted">Total Pagado</span>
+                                                    <h4 class="title text-info">S/ {{ sale_note.totals.total_payment }}
+                                                    </h4>
+                                                </div>
+                                                <div class="summary-item">
+                                                    <span class="text-muted">Total por Pagar</span>
+                                                    <h4 class="title text-danger">S/ {{ sale_note.totals.total_to_pay }}
+                                                    </h4>
+                                                </div>
+                                                <div class="summary-item total">
+                                                    <span class="text-muted">Total</span>
+                                                    <h4 class="title text-white">S/ {{ sale_note.totals.total }}</h4>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
+                                </div>
                             </div>
-                            <div class="col-xl-3">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Notas de Venta</span>
-                                    </div>
-                                    <div class="card-body" v-if="sale_note">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
-                                                <div class="row no-gutters">
+                        </section>
+                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <x-graph type="pie" :all-data="sale_note.graph"></x-graph>
+
+
+                    <div class="col-xl-6 col-md-6">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Totales Generales</span>
+                            </div>
+                            <div class="card-body" v-if="general">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="summary">
+                                            <div class="row no-gutters">
+                                                <div class="row w-100 mt-2">
+                                                    <div class="col-lg-4">
+                                                        <div class="stat-box bg-dark-gradient">
+                                                            <span class="stat-label">Total Nota Venta</span>
+                                                            <strong class="amount text-danger">S/ {{
+                                                                general.totals.total_sale_notes }}</strong>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 mt-3">
-                                                        <div class="summary-item">
-                                                            <span class="text-muted">Total Pagado</span>
-                                                            <h4 class="title text-info">S/ {{
-                                                                sale_note.totals.total_payment }}
-                                                            </h4>
+                                                    <div class="col-lg-4">
+                                                        <div class="stat-box bg-dark-gradient">
+                                                            <span class="stat-label">Total Comprobantes</span>
+                                                            <strong class="amount text-info">S/ {{
+                                                                general.totals.total_documents }}</strong>
                                                         </div>
-                                                        <div class="summary-item">
-                                                            <span class="text-muted">Total por Pagar</span>
-                                                            <h4 class="title text-danger">S/ {{
-                                                                sale_note.totals.total_to_pay }}
-                                                            </h4>
-                                                        </div>
-                                                        <div class="summary-item total">
-                                                            <span class="text-muted">Total</span>
-                                                            <h4 class="title text-white">S/ {{ sale_note.totals.total }}
-                                                            </h4>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="stat-box bg-dark-gradient">
+                                                            <span class="stat-label">Total General</span>
+                                                            <strong class="amount text-white">S/ {{ general.totals.total
+                                                                }}</strong>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row m-t-20">
+                                                <div class="col-md-12 mt-3">
+                                                    <x-graph-line :all-data="general.graph"></x-graph-line>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </section>
+                                </div>
                             </div>
+                        </section>
+                    </div>
 
-
-
-                            <div class="col-xl-6 col-md-6">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Totales Generales</span>
+                    <div class="col-xl-3 mt-2 col-md-3">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">CPE Emitidos</span>
+                            </div>
+                            <div class="card-body" v-if="document">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-6 col-sm-6 col-12">
+                                                <div class="doc-stat">Facturas: <span class="val">{{
+                                                    count_documents.totals.invoices }}</span></div>
+                                                <div class="doc-stat">Boletas: <span class="val">{{
+                                                    count_documents.totals.receives }}</span></div>
+                                                <div class="doc-stat">Notas Venta: <span class="val">{{
+                                                    count_documents.totals.sale_notes }}</span></div>
+                                                <div class="doc-stat">Notas Crédito: <span class="val">{{
+                                                    count_documents.totals.credit_notes }}</span></div>
+                                                <div class="doc-stat">Notas Débito: <span class="val">{{
+                                                    count_documents.totals.debit_notes }}</span></div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-12">
+                                                <x-graph type="doughnut" :all-data="count_documents.graph"></x-graph>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body" v-if="general">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-3 mt-2 col-md-3">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Utilidades / Ganancias</span>
+                            </div>
+                            <div class="card-body" v-if="utilities">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="row no-gutters">
+                                            <div class="row w-100 mt-2">
+                                                <div class="col-4 text-center">
+                                                    <span class="d-block text-muted text-small">Ingreso</span>
+                                                    <strong class="text-info">S/ {{ utilities.totals.total_income
+                                                        }}</strong>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <span class="d-block text-muted text-small">Egreso</span>
+                                                    <strong class="text-danger">S/ {{ utilities.totals.total_egress
+                                                        }}</strong>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <span class="d-block text-muted text-small">Utilidad</span>
+                                                    <strong class="text-success">S/ {{ utilities.totals.utility
+                                                        }}</strong>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 mt-3">
                                                 <div class="summary">
-                                                    <div class="row no-gutters">
-                                                        <div class="row w-100 mt-2">
-                                                            <div class="col-lg-4">
-                                                                <div class="stat-box bg-dark-gradient">
-                                                                    <span class="stat-label">Total Nota Venta</span>
-                                                                    <strong class="amount text-danger">S/ {{
-                                                                        general.totals.total_sale_notes }}</strong>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <div class="stat-box bg-dark-gradient">
-                                                                    <span class="stat-label">Total Comprobantes</span>
-                                                                    <strong class="amount text-info">S/ {{
-                                                                        general.totals.total_documents }}</strong>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <div class="stat-box bg-dark-gradient">
-                                                                    <span class="stat-label">Total General</span>
-                                                                    <strong class="amount text-white">S/ {{
-                                                                        general.totals.total
-                                                                        }}</strong>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row m-t-20">
-                                                        <div class="col-md-12 mt-3">
-                                                            <x-graph-line :all-data="general.graph"></x-graph-line>
-                                                        </div>
-                                                    </div>
+                                                    <el-checkbox v-model="form.enabled_expense"
+                                                        @change="loadDataUtilities">Considerar gastos</el-checkbox>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class="col-xl-3 mt-2 col-md-3">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">CPE Emitidos</span>
-                                    </div>
-                                    <div class="card-body" v-if="document">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
-                                                <div class="row align-items-center">
-                                                    <div class="col-md-6 col-sm-6 col-12">
-                                                        <div class="doc-stat">Facturas: <span class="val">{{
-                                                            count_documents.totals.invoices }}</span></div>
-                                                        <div class="doc-stat">Boletas: <span class="val">{{
-                                                            count_documents.totals.receives }}</span></div>
-                                                        <div class="doc-stat">Notas Venta: <span class="val">{{
-                                                            count_documents.totals.sale_notes }}</span></div>
-                                                        <div class="doc-stat">Notas Crédito: <span class="val">{{
-                                                            count_documents.totals.credit_notes }}</span></div>
-                                                        <div class="doc-stat">Notas Débito: <span class="val">{{
-                                                            count_documents.totals.debit_notes }}</span></div>
-                                                    </div>
-                                                    <div class="col-md-6 col-sm-6 col-12">
-                                                        <x-graph type="doughnut"
-                                                            :all-data="count_documents.graph"></x-graph>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class="col-xl-3 mt-2 col-md-3">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Utilidades / Ganancias</span>
-                                    </div>
-                                    <div class="card-body" v-if="utilities">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
-                                                <div class="row no-gutters">
-                                                    <div class="row w-100 mt-2">
-                                                        <div class="col-4 text-center">
-                                                            <span class="d-block text-muted text-small">Ingreso</span>
-                                                            <strong class="text-info">S/ {{
-                                                                utilities.totals.total_income
-                                                                }}</strong>
-                                                        </div>
-                                                        <div class="col-4 text-center">
-                                                            <span class="d-block text-muted text-small">Egreso</span>
-                                                            <strong class="text-danger">S/ {{
-                                                                utilities.totals.total_egress
-                                                                }}</strong>
-                                                        </div>
-                                                        <div class="col-4 text-center">
-                                                            <span class="d-block text-muted text-small">Utilidad</span>
-                                                            <strong class="text-success">S/ {{ utilities.totals.utility
-                                                                }}</strong>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-12 mt-3">
-                                                        <div class="summary">
-                                                            <el-checkbox v-model="form.enabled_expense"
-                                                                @change="loadDataUtilities">Considerar
-                                                                gastos</el-checkbox>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="summary">
-                                                            <el-checkbox v-model="filter_item"
-                                                                @change="changeFilterItem">Filtrar por
-                                                                producto</el-checkbox>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 mt-2" v-if="filter_item">
-                                                        <div class="summary">
-                                                            <el-select v-model="form.item_id" filterable remote
-                                                                popper-class="el-select-customers" clearable
-                                                                placeholder="Buscar producto"
-                                                                :remote-method="searchRemoteItems"
-                                                                :loading="loading_search" @change="loadDataUtilities"
-                                                                size="small" class="w-100">
-                                                                <el-option v-for="option in items" :key="option.id"
-                                                                    :value="option.id"
-                                                                    :label="option.description"></el-option>
-                                                            </el-select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row m-t-20">
-                                                    <div class="col-md-12 mt-2">
-                                                        <x-graph type="doughnut" :all-data="utilities.graph"></x-graph>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class="col-xl-6 col-md-6 mt-2">
-                                <section class="card card-featured-left card-featured-secondary">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Total Compras</span>
-                                    </div>
-                                    <div class="card-body" v-if="general">
-                                        <div class="widget-summary">
-                                            <div class="widget-summary-col">
+                                            <div class="col-lg-12">
                                                 <div class="summary">
-                                                    <div class="row no-gutters">
+                                                    <el-checkbox v-model="filter_item"
+                                                        @change="changeFilterItem">Filtrar por
+                                                        producto</el-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 mt-2" v-if="filter_item">
+                                                <div class="summary">
+                                                    <el-select v-model="form.item_id" filterable remote
+                                                        popper-class="el-select-customers" clearable
+                                                        placeholder="Buscar producto" :remote-method="searchRemoteItems"
+                                                        :loading="loading_search" @change="loadDataUtilities"
+                                                        size="small" class="w-100">
+                                                        <el-option v-for="option in items" :key="option.id"
+                                                            :value="option.id" :label="option.description"></el-option>
+                                                    </el-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-t-20">
+                                            <div class="col-md-12 mt-2">
+                                                <x-graph type="doughnut" :all-data="utilities.graph"></x-graph>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-6 col-md-6 mt-2">
+                        <section class="card card-featured-left card-featured-secondary">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Total Compras</span>
+                            </div>
+                            <div class="card-body" v-if="general">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="summary">
+                                            <div class="row no-gutters">
 
 
-                                                        <div class="row w-100 mt-2 justify-content-center">
+                                                <div class="row w-100 mt-2 justify-content-center">
 
-                                                            <div class="col-lg-4">
-                                                                <div class="stat-box">
-                                                                    <span class="stat-label">Total Compras</span>
-                                                                    <strong class="amount text-info">S/ {{
-                                                                        purchase.totals.purchases_total }}</strong>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <div class="stat-box">
-                                                                    <span class="stat-label">Total</span>
-                                                                    <strong class="amount text-white">S/ {{
-                                                                        purchase.totals.total
-                                                                        }}</strong>
-                                                                </div>
-                                                            </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="stat-box">
+                                                            <span class="stat-label">Total Compras</span>
+                                                            <strong class="amount text-info">S/ {{
+                                                                purchase.totals.purchases_total }}</strong>
                                                         </div>
                                                     </div>
-                                                    <div class="row m-t-20">
-                                                        <div class="col-md-12 mt-3">
-                                                            <x-graph-line :all-data="purchase.graph"></x-graph-line>
+                                                    <div class="col-lg-4">
+                                                        <div class="stat-box">
+                                                            <span class="stat-label">Total</span>
+                                                            <strong class="amount text-white">S/ {{
+                                                                purchase.totals.total
+                                                                }}</strong>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row m-t-20">
+                                                <div class="col-md-12 mt-3">
+                                                    <x-graph-line :all-data="purchase.graph"></x-graph-line>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </section>
+                                </div>
                             </div>
+                        </section>
+                    </div>
 
-                            <div class="col-xl-3 col-md-6 mt-2">
-                                <section class="card">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Productos Top</span>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="">
-                                            <el-checkbox v-model="form.enabled_move_item" @change="loadDataAditional"
-                                                style="color: black;">
-                                                Ordenar X movimientos
-                                            </el-checkbox>
-                                        </div>
-                                        <div class="table-responsive " style="max-height: 600px; overflow-y: auto;">
-                                            <table class="table ">
-                                                <thead style="position: sticky; top: 0; z-index: 1;">
-                                                    <tr style="background-color: #073f68;">
-                                                        <th style="color: white;">#</th>
-                                                        <!-- <th style="color: white;">Código</th> -->
-                                                        <th style="color: white;">Producto</th>
-                                                        <th class="text-end" style="color: white;">Mov.</th>
-                                                        <th class="text-end" style="color: white;">Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(row, index) in items_by_sales" :key="index"
-                                                        :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>
-                                                            {{ row.internal_id }}
-                                                            <br>
-                                                            {{ row.description }}
-                                                        </td>
-                                                        <!-- <td></td> -->
-                                                        <td class="text-end">
-                                                            {{ parseInt(row.move_quantity) }}</td>
-                                                        <td class="text-end">{{ row.total }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </section>
+                    <div class="col-xl-3 col-md-6 mt-2">
+                        <section class="card">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Productos Top</span>
                             </div>
-
-                            <div class="col-xl-3 col-md-6 mt-2">
-                                <section class="card">
-                                    <div class="card-header bg-primary d-flex align-items-center"
-                                        style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
-                                        <span style="color: white; font-weight: bold;">Clientes Top</span>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="">
-                                            <el-checkbox v-model="form.enabled_transaction_customer"
-                                                @change="loadDataAditional">Ordenar
-                                                por transacciones</el-checkbox>
-                                        </div>
-                                        <div class="table-responsive " style="max-height: 600px; overflow-y: auto;">
-                                            <table class="table ">
-                                                <thead>
-                                                    <tr
-                                                        style="position: sticky; top: 0; z-index: 1; background-color: #073f68;">
-                                                        <th style="color: white;">#</th>
-                                                        <th style="color: white;">Cliente</th>
-                                                        <th class="text-end" style="color: white;">Trans.</th>
-                                                        <th class="text-end" style="color: white;">Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(row, index) in top_customers" :key="index"
-                                                        :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>
-                                                            {{ row.number }}
-                                                            <br />
-                                                            {{ row.name }}
-                                                        </td>
-                                                        <td class="text-end">{{ row.transaction_quantity }}</td>
-                                                        <td class="text-end">{{ row.total }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </section>
+                            <div class="card-body">
+                                <div class="">
+                                    <el-checkbox v-model="form.enabled_move_item" @change="loadDataAditional" style="color: black;">
+                                        Ordenar X movimientos
+                                    </el-checkbox>
+                                </div>
+                                <div class="table-responsive "
+                                    style="max-height: 600px; overflow-y: auto;">
+                                    <table class="table ">
+                                        <thead style="position: sticky; top: 0; z-index: 1;">
+                                            <tr style="background-color: #073f68;">
+                                                <th style="color: white;">#</th>
+                                                <!-- <th style="color: white;">Código</th> -->
+                                                <th style="color: white;">Producto</th>
+                                                <th class="text-end" style="color: white;">Mov.</th>
+                                                <th class="text-end" style="color: white;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, index) in items_by_sales" :key="index"
+                                                :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>
+                                                    {{ row.internal_id }}
+                                                    <br>
+                                                    {{ row.description }}
+                                                </td>
+                                                <!-- <td></td> -->
+                                                <td class="text-end">
+                                                    {{ parseInt(row.move_quantity) }}</td>
+                                                <td class="text-end">{{ row.total }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+                        </section>
+                    </div>
 
-                            <div class="col-xl-6 col-md-12 col-lg-12 mt-2">
-                                <dashboard-stock></dashboard-stock>
+                    <div class="col-xl-3 col-md-6 mt-2">
+                        <section class="card">
+                            <div class="card-header bg-primary d-flex align-items-center"
+                                style="padding: 10px; background: linear-gradient(90deg,#0b5a8a,#032a4a); ">
+                                <span style="color: white; font-weight: bold;">Clientes Top</span>
                             </div>
-                            <div class="col-3"></div>
-
-
-                            <div class="col-xl-6 col-md-12 col-lg-12 mt-2">
-                                <dashboard-conparative></dashboard-conparative>
+                            <div class="card-body">
+                                <div class="">
+                                    <el-checkbox v-model="form.enabled_transaction_customer"
+                                        @change="loadDataAditional">Ordenar
+                                        por transacciones</el-checkbox>
+                                </div>
+                                <div class="table-responsive " style="max-height: 600px; overflow-y: auto;">
+                                    <table class="table ">
+                                        <thead>
+                                            <tr style="position: sticky; top: 0; z-index: 1; background-color: #073f68;">
+                                                <th style="color: white;">#</th>
+                                                <th style="color: white;">Cliente</th>
+                                                <th class="text-end" style="color: white;">Trans.</th>
+                                                <th class="text-end" style="color: white;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, index) in top_customers" :key="index"
+                                                :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>
+                                                    {{ row.number }}
+                                                    <br />
+                                                    {{ row.name }}
+                                                </td>
+                                                <td class="text-end">{{ row.transaction_quantity }}</td>
+                                                <td class="text-end">{{ row.total }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-6 col-md-12 col-lg-12 mt-2">
+                        <dashboard-stock></dashboard-stock>
+                    </div>
+                    <div class="col-3"></div>
+
+
+                    <div class="col-xl-6 col-md-12 col-lg-12 mt-2">
+                        <dashboard-conparative></dashboard-conparative>
                     </div>
                 </div>
             </div>
-        </el-tab-pane>
-        <el-tab-pane label="Dashboard caja"> 
-            <dashboar-cash></dashboar-cash>
-        </el-tab-pane>
-    </el-tabs>
+
+
+        </div>
+
+    </div>
 </template>
 
 <style scoped>
@@ -875,11 +859,10 @@
 import DashboardStock from "./partials/dashboard_stock.vue";
 import DashboardConparative from "./partials/dashboard_conparative.vue";
 import queryString from "query-string";
-import DashboarCash from "./partials/dasboard_cash.vue";
 
 export default {
     props: ["typeUser", "soapCompany"],
-    components: { DashboardStock, DashboardConparative, DashboarCash },
+    components: { DashboardStock, DashboardConparative },
     data() {
         return {
             loading_search: false,
@@ -939,10 +922,6 @@ export default {
     },
 
     methods: {
-        handleClick(tab, event) {
-            // Maneja el cambio de tabs
-            console.log('Tab clicked:', tab.name);
-        },
         changeFilterItem() {
             this.form.item_id = null;
             this.loadDataUtilities();

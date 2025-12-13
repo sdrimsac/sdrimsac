@@ -139,10 +139,19 @@
                                     </template>
                                 </div>
                                 <div class="d-flex align-items-center" style="gap:12px; flex-wrap:nowrap;">
+                                    <!-- <el-tooltip content="Crear Productos" placement="top">
+                                        <button
+                                            class="btn_guardarsmall d-flex align-items-center justify-content-center"
+                                            type="button"
+                                            @click="createdNewLibrary"
+                                            style="height:42px; min-width:42px; padding:0 10px;">
+                                            <i class="fas fa-box-open" style="font-size:18px;"></i>
+                                            
+                                        </button>
+                                    </el-tooltip> -->
 
                                     <el-tooltip content="Historial" placement="top">
-                                        <button
-                                            v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
+                                        <button v-if="this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)"
                                             class="btn_guardarsmall d-flex align-items-center justify-content-center"
                                             type="button" @click="trigerFunction(7)"
                                             style="height:42px; min-width:42px; padding:0 10px;">
@@ -158,6 +167,7 @@
                                         <small>{{ formattedCountdown }}</small>
                                     </button>
 
+
                                     <!-- Estado Internet / Latencia -->
                                     <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
                                         <button class="btn d-flex align-items-center justify-content-center"
@@ -168,6 +178,8 @@
                                         </button>
                                     </el-tooltip>
                                 </div>
+
+
                             </div>
                         </div>
                         <div class="row card mx-1 mt-2" v-if="configuration.sale_note_credit_confirm
@@ -221,7 +233,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                            }}</span>
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -254,52 +266,59 @@
                                     <!-- Card de Búsqueda -->
                                     <div class="row">
                                         <div class="col-2 mt-1">
+                                             <!-- Barcode -->
+                                            <div v-if="configuration.barcode"
+                                                class="align-items-center justify-content-center">
+
+
+                                                <vs-checkbox color="#073f68" v-model="barcode"
+                                                    @change="saveInLocalStorageBarcode">
+                                                    Barcode
+                                                </vs-checkbox>
+
+                                            </div>
+
                                             <!-- Series -->
                                             <div v-if="configuration.search_series_pos"
                                                 class="d-flex align-items-center justify-content-start">
-                                                <el-checkbox v-model="searchSeries"
-                                                    @change="saveInLocalStorageSearchSeries"
-                                                    class="d-flex align-items-center">
-                                                    <span>Series</span>
-                                                </el-checkbox>
+                                                <vs-checkbox color="#073f68" v-model="searchSeries"
+                                                    @change="saveInLocalStorageSearchSeries">
+                                                    Series
+                                                </vs-checkbox>
                                             </div>
 
-                                            <!-- Barcode -->
-                                            <div v-if="configuration.barcode"
-                                                class="align-items-center justify-content-center">
-                                                <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
-                                                    class="d-flex align-items-center">
-                                                    <span>Barcode</span>
-                                                </el-checkbox>
-                                            </div>
+                                           
 
                                             <!-- Calidad -->
                                             <div v-if="configuration.quality"
                                                 class=" align-items-center justify-content-center">
                                                 <el-tooltip content="Filtrar por calidad del producto" placement="top">
-                                                    <el-checkbox v-model="quality" @change="
+                                                    <vs-checkbox color="#073f68" v-model="quality" @change="
                                                         saveInLocalStorageQuality
-                                                    " class="d-flex align-items-center">
-
-                                                        <span>Calidad</span>
-                                                    </el-checkbox>
+                                                    ">
+                                                        Calidad
+                                                    </vs-checkbox>
                                                 </el-tooltip>
                                             </div>
+
+                                            <!-- Modelo -->
 
                                             <div v-if="configuration.model"
                                                 class="align-items-center justify-content-center">
                                                 <el-tooltip content="Filtrar por modelo del producto" placement="top">
-                                                    <el-checkbox v-model="model" @change="
+                                                    <vs-checkbox color="#073f68" v-model="model" @change="
                                                         saveInLocalStorageModel
-                                                    " class="d-flex align-items-center">
-
-                                                        <span>Modelo</span>
-                                                    </el-checkbox>
+                                                    ">
+                                                        Modelo
+                                                    </vs-checkbox>
                                                 </el-tooltip>
                                             </div>
+
                                         </div>
 
                                         <div class="col-10">
+                                            <!-- Categorías y Marca -->
+
                                             <div class="row align-items-center">
                                                 <div class="row">
                                                     <div class="mb-1 mt-1 col-8">
@@ -345,7 +364,7 @@
                                                     align-items: center; height: 100%;">
                                                     <template v-if="selectOption == 4">
                                                         <el-input ref="input_items" size="small" v-model="input_item"
-                                                            placeholder="producto a buscar..." @input="search()"
+                                                            placeholder="Producto a Buscar..." @input="search()"
                                                             @focus="clear_input()" autofocus clearable
                                                             style="border: 2px solid #FFC107; border-radius: 4px;">
                                                         </el-input>
@@ -768,8 +787,7 @@
                             @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
                             :isRestaurantWarehouse="isRestaurantWarehouse" @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
-                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"
-                            :worker="worker"></list-orden>
+                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"></list-orden>
                     </div>
                 </div>
             </div>
@@ -1111,7 +1129,7 @@
                         @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
                         :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv"
                         :isRestaurantWarehouse="isRestaurantWarehouse" :currencyIdChoice.sync="currencyIdChoice"
-                        :worker="worker" ref="listOrdens"></list-orden>
+                        ref="listOrdens"></list-orden>
                 </div>
                 <template>
                     <list-food-mobiles :canAddItem.sync="canAddItem" :loadingItems.sync="loadingItems"
@@ -1180,8 +1198,7 @@
             :establishment.sync="establishment">
         </PromotionCanje>
         <credits-list v-if="configuration.sale_note_credit_penalty" :showDialog.sync="showCredits"
-            :configuration="configuration" :isAnalist="isAnalist" :user="user" :fromPos="true">
-        </credits-list>
+            :configuration="configuration" :isAnalist="isAnalist" :user="user" :fromPos="true"></credits-list>
         <unit-type-modal @addUnitType="addUnitType" @addCategoriaMadera="addCategoriaMadera"
             :showDialog.sync="showUnitTypeModal" :medida_alto="medida_alto" :medida_ancho="medida_ancho"
             :medida_grosor="medida_grosor" :categoria_madera="categoria_madera" :item="selectedFood"
@@ -1250,6 +1267,7 @@
             @addDataMozo="recibirItem"></Pos-form>
         <Pos-library :showDialog.sync="showDialogLibrary" :recordId.sync="recordId" :external="true"></Pos-library>
         <Stock-min :showDialog.sync="showDialogStockMin" :fromPos="true"></Stock-min>
+         <transfer-items :visible.sync="showDialogTransferItems"></transfer-items>
     </div>
 </template>
 
@@ -1368,7 +1386,6 @@ import {
     exchangeRate
 } from "../../../../../../../resources/js/mixins/functions";
 import { calculateRowItem } from "../../../../../../../resources/js/helpers/functions";
-
 import queryString from "query-string";
 // cotizaciones de modal
 const Warranty = () => import("./partials/warranty.vue");
@@ -1416,7 +1433,7 @@ const ConsolidatedListModal = () =>
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
-
+import TransferItems from "./partials/transfer_items.vue";
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
 import PosLibrary from "../../../../../../../resources/js/views/items/form_library.vue";
 import StockMin from "./partials/stock_min.vue";
@@ -1499,13 +1516,15 @@ export default {
         SaleNoteCreditCash,
         Swal,
         CleanModal,
-        ExpiredRoomModal
+        ExpiredRoomModal,
+        TransferItems
     },
     mixins: [functions, exchangeRate],
 
     data() {
         return {
             // Control local para alternar el texto del botón (Tabla/Card)
+            showDialogTransferItems: false,
             showDialogLibrary: false,
             showList: false,
             countdown: 0,
@@ -2567,7 +2586,7 @@ export default {
 
                 {
                     id: 195,
-                    title: [" Créditos", "Nota de venta "],
+                    title: [" Finanzas"],
                     icon: "fas fa-cash-register",
                     visible:
                         this.cashId &&
@@ -2605,6 +2624,14 @@ export default {
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
 
+                {
+                    id: 77,
+                    title: ["Ingreso de Stock", ""],
+                    icon: "fas fa-history ",
+                    visible:
+                        !this.isSeller
+                        
+                },
                 {
                     id: 9,
                     title: ["Matriculas", "Mensualidades"],
@@ -3295,6 +3322,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                 case 77:
+                    this.showDialogTransferItems = true;
+                    break;
                 case 256:
                     this.showDialogWarranty = true;
                     break;
@@ -6941,6 +6971,7 @@ export default {
             try {
                 console.log("Procesando producto de balanza:", productData);
 
+                // Buscar el producto en listFoods por internal_id (codigo)
                 const productIndex = this.listFoods.findIndex(food =>
                     food.item && food.item.internal_id === productData.internal_id
                 );
@@ -6950,101 +6981,65 @@ export default {
                     return;
                 }
 
-                let selectedFoodCopy;
-                try {
-                    selectedFoodCopy = JSON.parse(JSON.stringify(this.listFoods[productIndex]));
-                } catch (e) {
-                    console.warn("No se pudo hacer copia profunda, usando spread operator", e);
-                    selectedFoodCopy = { ...this.listFoods[productIndex] };
-                }
+                // Configurar el producto seleccionado
+                this.selectedFood = { ...this.listFoods[productIndex] };
+
+                // Crear el objeto currentFood con los datos de la balanza
+                this.currentFood = {
+                    id: this.selectedFood.id,
+                    food: this.selectedFood,
+                    observation: `Peso: ${productData.peso}kg - Balanza`,
+                    price: parseFloat(productData.sale_unit_price),
+                    quantity: parseFloat(productData.peso), // Usar el peso como cantidad
+                    total_balanza: parseFloat(productData.total),
+                    warehouse_id: productData.warehouse_id || null
+                };
 
                 // Verificar stock si está habilitado
                 let quotation_stock = localStorage.getItem("quotation_stock") || 0;
                 quotation_stock = quotation_stock == 1;
 
                 if (
-                    Number(selectedFoodCopy.item.stock) <= 0 &&
+                    Number(this.selectedFood.item.stock) <= 0 &&
                     this.configuration.sales_stock == true &&
                     !quotation_stock &&
-                    selectedFoodCopy.item.unit_type_id != "ZZ"
+                    this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
                     this.$toast.warning("Stock insuficiente");
                     return;
                 }
 
                 // Verificar si el producto ya existe en la orden
-                let foodFoundIndex = this.localOrden.findIndex(f => f.id == selectedFoodCopy.id);
-                let foodFound = foodFoundIndex !== -1 ? this.localOrden[foodFoundIndex] : null;
+                let foodFound = this.localOrden.filter(
+                    f => f.id == this.selectedFood.id
+                );
 
-                // Si ya existe, sumar el peso recibido a la cantidad existente
-                if (foodFound) {
-                    let nuevaCantidad = Number(foodFound.quantity) + parseFloat(productData.peso);
-                    // Validar stock
+                if (foodFound.length > 0) {
+                    // Si ya existe, verificar límites de stock
+                    let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                    qty += parseFloat(productData.peso);
+
                     if (
                         this.configuration.sales_stock == true &&
-                        selectedFoodCopy.item.is_set == 0 &&
+                        this.selectedFood.item.is_set == 0 &&
                         !quotation_stock &&
-                        selectedFoodCopy.item.unit_type_id != "ZZ"
+                        this.selectedFood.item.unit_type_id != "ZZ"
                     ) {
-                        if (nuevaCantidad > Number(selectedFoodCopy.item.stock)) {
+                        if (qty > Number(this.selectedFood.item.stock)) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
                     }
-                    // Actualizar cantidad y totales
-                    this.localOrden[foodFoundIndex].quantity = nuevaCantidad;
-                    this.localOrden[foodFoundIndex].total_balanza = (this.localOrden[foodFoundIndex].total_balanza || 0) + parseFloat(productData.total);
-                    this.localOrden[foodFoundIndex].price = parseFloat(productData.sale_unit_price); // Actualiza precio si cambia
-                    this.localOrden[foodFoundIndex].observation = `Peso: ${nuevaCantidad}kg - Balanza`;
-                } else {
-                    // Crear el objeto currentFood con los datos de la balanza
-                    const currentFoodData = {
-                        id: selectedFoodCopy.id,
-                        food: selectedFoodCopy,
-                        observation: `Peso: ${productData.peso}kg - Balanza`,
-                        price: parseFloat(productData.sale_unit_price),
-                        quantity: parseFloat(productData.peso), // Usar el peso como cantidad
-                        total_balanza: parseFloat(productData.total),
-                        warehouse_id: productData.warehouse_id || null
-                    };
-
-                    // Crear un mock temporal de las referencias que insertOrden necesita
-                    const tempRefs = {
-                        ordenRef: this.$refs.ordenRef || {
-                            calculateTotal: () => {
-                                console.log('[BALANZA] ordenRef.calculateTotal no disponible, usando calculateTotal directo');
-                                this.calculateTotal();
-                            }
-                        }
-                    };
-
-                    // Guardar las referencias originales
-                    const originalRefs = this.$refs;
-
-                    // Temporalmente sobrescribir las referencias
-                    this.$refs = { ...originalRefs, ...tempRefs };
-
-                    try {
-                        // Insertar en la orden
-                        this.insertOrden(
-                            currentFoodData,
-                            selectedFoodCopy.id,
-                            null, // type
-                            false, // selectSerie
-                            null // categoria
-                        );
-                    } finally {
-                        // Restaurar las referencias originales
-                        this.$refs = originalRefs;
-                    }
                 }
 
-                // Asegurar que el total se recalcule
-                if (this.$refs.ordenRef && typeof this.$refs.ordenRef.calculateTotal === 'function') {
-                    this.$refs.ordenRef.calculateTotal();
-                } else {
-                    this.calculateTotal();
-                }
+                // Insertar en la orden
+                this.insertOrden(
+                    this.currentFood,
+                    this.selectedFood.id,
+                    null, // type
+                    false, // selectSerie
+                    null // categoria
+                );
 
                 // Notificar éxito
                 this.$notify({
@@ -7055,16 +7050,21 @@ export default {
                     position: "bottom-left"
                 });
 
-                console.log("Producto agregado desde balanza exitosamente");
-
-                // Limpiar el input si existe
-                if (this.input_item) {
-                    this.input_item = null;
-                }
+                console.log("Producto agregado desde balanza:", this.currentFood);
 
             } catch (error) {
                 console.error("Error en addFoodFromBalanza:", error);
-                this.$message.error(`Error al agregar producto desde balanza: ${error.message}`);
+                this.$message.error("Error al agregar producto desde balanza");
+            } finally {
+                // Limpiar variables
+                this.currentFood = {
+                    food: null,
+                    observation: null,
+                    quantity: 0,
+                    price: 0,
+                    categoria: null
+                };
+                this.selectedFood = null;
             }
         },
 
