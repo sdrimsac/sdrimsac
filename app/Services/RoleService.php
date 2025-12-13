@@ -34,6 +34,18 @@ class RoleService
         }
         return false;
     }
+    public static function isManagement()
+    {
+        $worker_type_id = auth()->user()->worker_type_id;
+        if ($worker_type_id == null) {
+            return false;
+        }
+        $worker_types = WorkersType::where('description', 'GESTION')->first();
+        if ($worker_types != null) {
+            return $worker_types->id == $worker_type_id;
+        }
+        return false;
+    }
     public function isArca()
     {
         // $is_arca = (bool) auth()->user()->is_arca;

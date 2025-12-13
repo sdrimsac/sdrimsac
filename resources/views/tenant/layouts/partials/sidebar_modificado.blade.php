@@ -66,7 +66,7 @@
 
         @if (!$roleService->isAccountant($user->worker_type_id))
 
-            @if (!$roleService->isLogistic())
+            @if (!$roleService->isLogistic() || $roleService->isManagement())
                 <li>
                     <a class="{{ $path[0] === 'Dashboard' ? 'active' : '' }}" href="{{ route('tenant.dashboard.index') }}"
                         data-role="button"
@@ -98,7 +98,7 @@
                             </div>
                         </li>
                     {{-- Penalidades para Créditos --}}
-                    @if ($config->sale_note_credit_penalty && !$roleService->isLogistic())
+                    @if ($config->sale_note_credit_penalty && !$roleService->isLogistic() && !$roleService->isManagement())
                         <li>
                             <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
                                 href="{{ route('tenant.sale_note_credit_penalty.index') }}">
@@ -110,7 +110,7 @@
                     @endif
 
                     {{-- Usuarios --}}
-                    @if ($config->users_views && !$roleService->isLogistic())
+                    @if ($config->users_views && !$roleService->isLogistic() && !$roleService->isManagement())
                         <li>
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
                                 href="{{ route('restaurant.workers') }}">
@@ -121,7 +121,7 @@
                     @endif
 
                     {{-- Clientes --}}
-                    @if ($user->type == 'superadmin' || ($config->clientes && !$roleService->isLogistic()))
+                    @if ($user->type == 'superadmin' || ($config->clientes && !$roleService->isLogistic() && !$roleService->isManagement()))
                         <li>
                             <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
                                 href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
@@ -143,7 +143,7 @@
                     @endif
 
                     {{-- Vendedores --}}
-                    @if ($user->type == 'superadmin' || ($config->vendedores && !$roleService->isLogistic()))
+                    @if ($user->type == 'superadmin' || ($config->vendedores && !$roleService->isLogistic() && !$roleService->isManagement()))
                         <li>
                             <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.sellers.index') }}">
@@ -158,7 +158,7 @@
                     </li>
 
                     {{-- Cuentas Bancarias --}}
-                    @if ($user->type == 'superadmin' || ($config->cuentas_bancarias && !$roleService->isLogistic()))
+                    @if ($user->type == 'superadmin' || ($config->cuentas_bancarias && !$roleService->isLogistic() && !$roleService->isManagement()))
                         <li>
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.bank_accounts.index') }}">
@@ -169,7 +169,7 @@
                     @endif
 
                     {{-- Bancos --}}
-                    @if ($user->type == 'superadmin' || ($config->bancos && !$roleService->isLogistic()))
+                    @if ($user->type == 'superadmin' || ($config->bancos && !$roleService->isLogistic() && !$roleService->isManagement()))
                         <li>
                             <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.banks.index') }}">
@@ -184,7 +184,7 @@
 
 
                     {{-- Productos en Logística y Colegio --}}
-                    @if ($config->college && !$roleService->isLogistic())
+                    @if ($config->college && !$roleService->isLogistic() && !$roleService->isManagement())
                         <li>
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.index') }}">
@@ -196,7 +196,7 @@
 
 
                     {{-- Categorías Principales --}}
-                    @if ($config->health_network && !$roleService->isLogistic() && $noIsArcaProduct)
+                    @if ($config->health_network && !$roleService->isLogistic() && !$roleService->isManagement() && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
                                 href="{{ route('tenant.principal_categories.index') }}">
@@ -448,7 +448,7 @@
                         {{-- Tratamiento Comercial --}}
                         @if (
                             $config->commercial_treatments ||
-                                ($config->commercial_treatment_items && !$roleService->isLogistic() && $noIsArcaProduct))
+                                ($config->commercial_treatment_items && !$roleService->isLogistic() && !$roleService->isManagement() && $noIsArcaProduct) )
                             <li>
                                 <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.commercial_treatment.index') }}">
@@ -600,7 +600,7 @@
         </li> --}}
 
         {{-- Comprobante de Pagos Electrónicos --}}
-        @if (!$roleService->isLogistic())
+        @if (!$roleService->isLogistic() && !$roleService->isManagement())
             <li>
                 <a href="#documents" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'documents' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}"
@@ -744,7 +744,7 @@
         @endif
 
         {{-- Arqueo de Caja --}}
-        @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isLogistic() && $noIsArcaProduct)
+        @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isLogistic() && !$roleService->isManagement() && $noIsArcaProduct )
             <li>
                 <a href="#boxes" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'caja' && $path[1] === 'boxes' ? true : false }}"
@@ -881,7 +881,7 @@
                         REPORTES
                     </div>
                 </li>
-                @if ($user->type == 'superadmin' || !$roleService->isLogistic())
+                @if ($user->type == 'superadmin' || (!$roleService->isLogistic() && !$roleService->isAccountant($user->worker_type_id) && !$roleService->isManagement()))
                     <li>
                         <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
                             href="{{ route('tenant.account_exports') }}">

@@ -568,6 +568,7 @@ class RestaurantController extends Controller
             $mechanic = false;
             $restobar = false;
             $restaurant_waiter = false;
+            $management = false;
             if (strtolower($user->worker_type->description) == "mozo") {
                 if ($configuration->restobar_home) {
                     $restaurant_waiter = true;
@@ -583,6 +584,8 @@ class RestaurantController extends Controller
                 $cleaner =  true;
             } else if (strtolower($user->worker_type->description) == "logistica") {
                 $logistic =  true;
+            } else if (strtolower($user->worker_type->description) == "gestion") {
+                $management =  true;
             } else if (strtolower($user->worker_type->description) == "mantenimiento") {
                 $maintenance =  true;
             } else if (strtolower($user->worker_type->description) == "estilista") {
@@ -622,6 +625,7 @@ class RestaurantController extends Controller
                 'success' => true,
                 'kitchen' => $kitchen,
                 'logistic' => $logistic,
+                'management' => $management,
                 'pos' => $pos,
                 'waiter' => $waiter,
                 'restaurant_waiter' => $restaurant_waiter,

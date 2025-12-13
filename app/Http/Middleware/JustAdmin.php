@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Tenant\Configuration;
 use Closure;
 use App\Services\RoleService;
+use Illuminate\Support\Str;
 use Modules\Restaurant\Models\WorkersType;
 
 class JustAdmin
@@ -19,14 +20,16 @@ class JustAdmin
     public function handle($request, Closure $next)
     {
         $config = Configuration::first();
-        $user = $request->user(); 
-        $path = $request->path(); 
+        $user = $request->user();
+        $path = $request->path();
         $type = $user->type;
         $isAccountant = false;
         $isLogistic = false;
+        $isManagement = false;
         $isArca = false;
 
         $isLogistic = RoleService::isLogistic();
+        $isManagement = RoleService::isManagement();
         //crear una variable $isArca y que sea true si el usuario actual tiene el worker_type de ARCA
         $worker_types = WorkersType::where('description', 'ARCA')->first();
         if ($worker_types != null) {
@@ -86,10 +89,29 @@ class JustAdmin
             "productos",
             "receta",
             "promotions",
+        ];
+
+        $paths_gestion = [
+            "items",
+            "purchases",
+            "purchases/create",
+            "transfers",
+            "transfers/transfer_place",
+            "dispatches",
+            "item-sets",
+            "reports/inventory",
+            "report_product_client",
+            "reports/stockmin",
+            "reports/kardex",
+            "productos",
+            "receta",
+            "promotions",
             "person_staff",
             "report_closed_cash",
             "main_cash"
         ];
+
+
         $worker_type = WorkersType::find($user->worker_type_id);
         // $redirect_to = "";
         if ($worker_type) {
@@ -98,7 +120,7 @@ class JustAdmin
         } else {
             $description_type = "";
         }
-        if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {
+        if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca || $isManagement) {
             if ($isAccountant) {
                 $pathPass = in_array($path, $paths);
                 if (!$pathPass) {
@@ -114,6 +136,16 @@ class JustAdmin
                 if (!$pathPass) {
                     return redirect('/purchases');
                 }
+            } else if ($isManagement) {
+                $pathPass = Str::startsWith($path, $paths_gestion);
+                if (!$pathPass) {
+                    return redirect('/purchases');
+                }
+
+                /* $pathPass = in_array($path, $paths_gestion);
+                if (!$pathPass) {
+                    return redirect('/purchases');
+                } */
             } else if ($isArca) {
                 $pathPass = in_array($path, $paths_arca);
                 if (!$pathPass) {

@@ -272,6 +272,8 @@ export default {
                     route = "toll";
                 } else if (response.data.logistic == true) {
                     route = "items";
+                } else if (response.data.management == true) {
+                    route = "items";
                 } else if (
                     response.data.cleaner == true ||
                     response.data.maintenance == true
