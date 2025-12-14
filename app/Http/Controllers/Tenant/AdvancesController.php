@@ -30,16 +30,17 @@ class AdvancesController extends Controller
         ];
     }
 
-    public function records($type = null)
+    public function records(Request $request)
     {
         // Construir la consulta base
         $query = WorkerAdvance::query();
+        
+        if ($request->has('person_id')) {
+            $query->where('person_id', $request->input('person_id'));
+        }
 
-        if (!is_null($type)) {
-
-            if (in_array($type, ['some_type', 'other_type'])) {
-                $query->where('type', $type);
-            }
+        if ($request->has('date')) {
+            $query->whereDate('date_time_advance', $request->input('date'));
         }
 
         return new AdvancesCollection($query->paginate(config('tenant.items_per_page')));

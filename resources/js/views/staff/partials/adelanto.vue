@@ -7,7 +7,7 @@
                     <div class="">
                         <div class="col-12">
                             Personal/Empleado
-                            <el-select v-model="form.selectedPerson" placeholder="Buscar personal">
+                            <el-select v-model="form.selectedPerson" placeholder="Buscar personal" clearable filterable>
                                 <el-option v-for="person in staffList" :key="person.id" :label="person.name"
                                     :value="person.id" />
                             </el-select>
@@ -50,18 +50,29 @@
                 </el-form>
             </div>
         </div>
-        <div> 
+        <div>
             <br>
         </div>
         <div class="card">
             <div class="card-body">
                 <div class="">
                     <div class="row">
-
+                        <div class="col-md-6">
+                            <label for="">Personal</label>
+                            <el-select v-model="filterPerson" placeholder="Buscar personal" clearable filterable
+                                @change="getDataRecords">
+                                <el-option v-for="person in staffList" :key="person.id" :label="person.name"
+                                    :value="person.id" />
+                            </el-select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Fecha</label>
+                            <el-date-picker v-model="date" type="date" placeholder="Seleccione fecha"
+                                style="width: 100%;" @change="getDataRecords" />
+                        </div>
                     </div>
-
                 </div>
-
+                <br>
                 <table class="table table-striped">
                     <thead>
                         <tr class="bg-primary">
@@ -94,6 +105,7 @@ export default {
     },
     data() {
         return {
+            showFormSelect: true,
             loading: false,
             persons: [],
             adelantos: [],
@@ -104,6 +116,8 @@ export default {
                 method: null,
                 observacion: ""
             },
+            filterPerson: null,
+            date: null,
             rules: {
                 selectedPerson: [
                     {
@@ -132,6 +146,7 @@ export default {
         };
     },
     async mounted() {
+        this.getDataRecords();
         // Fetch persons list from server and store locally as a fallback
         try {
             const response = await this.$http.get("/staff/tables");
@@ -142,7 +157,7 @@ export default {
             console.error("Failed to load persons:", error);
         }
 
-        try {
+        /* try {
             const response = await this.$http.get("adelantos/records");
             if (response && response.data) {
 
@@ -151,7 +166,7 @@ export default {
             }
         } catch (error) {
             console.error("Failed to load persons:", error);
-        }
+        } */
     },
     computed: {
         // safely read staff list from the store; if the module/state isn't registered, return empty array
@@ -175,6 +190,32 @@ export default {
         }
     },
     methods: {
+
+        async getDataRecords() {
+            try {
+                const params = {};
+                if (this.filterPerson) params.person_id = this.filterPerson;
+                if (this.date) {
+                    let dateValue = this.date;
+                    // Si es un objeto Date, formatear a YYYY-MM-DD
+                    if (Object.prototype.toString.call(dateValue) === '[object Date]') {
+                        dateValue = dateValue.toISOString().slice(0, 10);
+                    }
+                    // Si es string tipo ISO, tomar solo la parte de la fecha
+                    if (typeof dateValue === 'string' && dateValue.length >= 10) {
+                        dateValue = dateValue.slice(0, 10);
+                    }
+                    params.date = dateValue;
+                }
+                const response = await this.$http.get("adelantos/records", { params });
+                if (response && response.data) {
+                    this.adelantos = response.data.data;
+                }
+            } catch (error) {
+                console.error("Failed to load adelantos:", error);
+            }
+        },
+
         // NOTE: mounted() logic moved to the component-level mounted() hook above.
         handleBeforeClose(done) {
             // emit update for .sync binding so parent updates its boolean
