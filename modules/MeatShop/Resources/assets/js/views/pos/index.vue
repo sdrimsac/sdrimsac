@@ -4537,6 +4537,7 @@ export default {
         },
 
         async addFoodFromBalanza(productData) {
+
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",
@@ -4551,11 +4552,11 @@ export default {
 
                 // Buscar el producto en listFoods por internal_id (codigo)
                 const productIndex = this.listFoods.findIndex(food =>
-                    food.item && food.item.internal_id === productData.internal_id
+                    food && food.item && food.item.internal_id === productData.internal_id
                 );
 
-                if (productIndex === -1) {
-                    this.$message.warning(`Producto con código ${productData.internal_id} no encontrado en el menú`);
+                if (productIndex === -1 || !this.listFoods[productIndex] || !this.listFoods[productIndex].item) {
+                    this.$message.warning(`Producto con código ${productData.internal_id} no encontrado o mal formado en el menú`);
                     return;
                 }
 
