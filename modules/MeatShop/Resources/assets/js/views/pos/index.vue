@@ -4574,7 +4574,9 @@ export default {
                 let quotation_stock = localStorage.getItem("quotation_stock") || 0;
                 quotation_stock = quotation_stock == 1;
 
-                if (this.selectedFood.item.is_set == 1) {
+                if (!this.selectedFood || !this.selectedFood.item) {
+                    // Si no hay selectedFood válido, saltar validación de set y continuar flujo normal
+                } else if (this.selectedFood.item.is_set == 1) {
                     if (
                         this.configuration.sales_stock == true &&
                         !quotation_stock &&
