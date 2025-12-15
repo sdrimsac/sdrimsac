@@ -61,7 +61,7 @@ trait PromotionDocumentTrait
                     })
                     ->first();
                 // Los puntos siempre deben ser enteros
-                $points_to_subtract += intval($item_promotion->points_value);
+                $points_to_subtract += intval($item_promotion->points_value) * intval($item->quantity);
                 $this->savePromotionReceived($promotion_customer, $item->item_id, $item->quantity, $document);
             }
         }

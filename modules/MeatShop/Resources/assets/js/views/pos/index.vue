@@ -120,8 +120,8 @@
                                         ">
                                             <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables"
                                                 :title="isHotelArea
-                                                        ? '[F2] Cuartos para Alquilar'
-                                                        : '[F2] Mesas de Atención'
+                                                    ? '[F2] Cuartos para Alquilar'
+                                                    : '[F2] Mesas de Atención'
                                                     ">
                                                 <i v-if="isHotelArea" class="fas fa-hotel"
                                                     style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
@@ -241,9 +241,9 @@
                                                             category ===
                                                             null
                                                     }" @click="
-                                                            category = null;
-                                                        search_items(null);
-                                                        ">
+                                                        category = null;
+                                                    search_items(null);
+                                                    ">
                                                         <div class="category-circle">
                                                             <i class="fas fa-th text-primary"
                                                                 style="font-size: 24px;"></i>
@@ -266,7 +266,7 @@
                                                             <img v-if="
                                                                 item.icono
                                                             " :src="`/storage/uploads/category/${item.icono}`
-                                                                    " alt=""
+                                                                " alt=""
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;" />
                                                             <img v-else src="/logo/imagen-no-disponible.jpg"
                                                                 alt="Imagen no disponible"
@@ -316,8 +316,8 @@
                                                 <el-checkbox v-if="
                                                     configuration.search_series_pos
                                                 " v-model="searchSeries" @change="
-                                                        saveInLocalStorageSearchSeries
-                                                    " class="d-flex align-items-center">
+                                                    saveInLocalStorageSearchSeries
+                                                " class="d-flex align-items-center">
                                                     <i class="fas fa-list-alt me-2"></i>
                                                     <span>Series</span>
                                                 </el-checkbox>
@@ -406,7 +406,7 @@
                                                                 <el-option v-for="item in categories" :key="item.id
                                                                     " :label="item.name
                                                                         " :value="item.id
-                                                                        "></el-option>
+                                                                            "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
@@ -426,7 +426,7 @@
                                                                 <el-option v-for="item in brands" :key="item.id
                                                                     " :label="item.name
                                                                         " :value="item.id
-                                                                        "></el-option>
+                                                                            "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
@@ -516,18 +516,18 @@
                                                         <template>
                                                             <el-input-number :disabled="disableCantidad
                                                                 " :min="1" size="mini" v-model="row.food
-                                                                        .item
-                                                                        .quantity
+                                                                    .item
+                                                                    .quantity
                                                                     " controls-position="right" @change="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price_sale
-                                                                    )
-                                                                    "></el-input-number>
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price_sale
+                                                                        )
+                                                                        "></el-input-number>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -562,18 +562,18 @@
                                                     <div class="text-alternate">
                                                         <span>
                                                             <el-input v-model="row.food
-                                                                    .price
+                                                                .price
                                                                 " :disabled="disableCantidad
                                                                     " size="mini" @input="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price
-                                                                    )
-                                                                    ">
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price
+                                                                        )
+                                                                        ">
                                                                 <template slot="prepend">S/.</template>
                                                             </el-input>
                                                         </span>
@@ -623,8 +623,8 @@
                             <div class="col-12 col-lg-6 col-xxl-2 mb-2" v-for="(row, index) in listar_tables"
                                 :key="index">
                                 <div class="card hover-border-secondary" :class="selecttables == row.id
-                                        ? 'border-secondary'
-                                        : ''
+                                    ? 'border-secondary'
+                                    : ''
                                     " @click="selectTable(row, index)" data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                     <div class="h-100 row g-0 card-body align-items-center">
@@ -750,10 +750,10 @@
                                                                 data.status_id ==
                                                                 1
                                                             " :class="data.status_id ==
-                                                                        0
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
-                                                                    ">
+                                                                0
+                                                                ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                : ''
+                                                                ">
                                                                 <div
                                                                     class="col-12 d-flex align-items-center mb-2 mb-md-0 p-2 font-weight-bold">
                                                                     ORDEN Nº
@@ -768,9 +768,9 @@
                                                             <div v-for="(ordersItem,
                                                                 indexx) in data.orden_items" :key="indexx">
                                                                 <div class="card mb-1 pt-2 pb-2 border" :class="data.status_orden_id ==
-                                                                        3
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
+                                                                    3
+                                                                    ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                    : ''
                                                                     " v-if="
                                                                         ordersItem.status_orden_id ==
                                                                         1
@@ -814,9 +814,9 @@
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input" :value="ordersItem.id
                                                                                             " v-model="selectedCatIds
-                                                                                            " @click="
-                                                                                            select
-                                                                                        " />
+                                                                                                " @click="
+                                                                                                    select
+                                                                                                " />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -942,7 +942,7 @@
                                             <div class="col-12 p-1" v-for="(data,
                                                 index) in allFoods" :key="index">
                                                 <el-tooltip effect="dark" :disabled="data.item.warehouses
-                                                        .length == 1 ||
+                                                    .length == 1 ||
                                                     !configuration.show_stock_establishment_box
                                                     ">
                                                     <div slot="content">
@@ -1140,7 +1140,7 @@
                                                                     <el-dropdown-item v-for="(type,
                                                                         idx) in data.types" :key="idx
                                                                             " :command="type
-                                                                            ">
+                                                                                ">
                                                                         {{
                                                                             formatDescriptionType(
                                                                                 type
@@ -1309,7 +1309,7 @@
                 <div class="col-12 d-flex flex-wrap justify-content-center">
                     <el-button v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="num" class="m-2"
                         @click="generatePin(num)">{{
-                        num }}</el-button>
+                            num }}</el-button>
                     <el-button @click="pin = ''" class="m-2" type="danger" icon="el-icon-delete"></el-button>
                 </div>
             </div>
@@ -4536,7 +4536,7 @@ export default {
             this.$refs.ordenRef.calculateTotal();
         },
 
-        addFoodFromBalanza(productData) {
+        async addFoodFromBalanza(productData) {
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",
@@ -4573,14 +4573,51 @@ export default {
                 let quotation_stock = localStorage.getItem("quotation_stock") || 0;
                 quotation_stock = quotation_stock == 1;
 
-                if (
-                    Number(selectedFoodCopy.item.stock) <= 0 &&
-                    this.configuration.sales_stock == true &&
-                    !quotation_stock &&
-                    selectedFoodCopy.item.unit_type_id != "ZZ"
-                ) {
-                    this.$toast.warning("Stock insuficiente");
-                    return;
+                if (this.selectedFood.item.is_set == 1) {
+                    if (
+                        this.configuration.sales_stock == true &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
+                        let qty = 1;
+                        if (foodFound.length != 0) {
+                            qty = foodFound.reduce(
+                                (a, b) => a + Number(b.quantity),
+                                0
+                            );
+                            qty += 1;
+                        }
+                        let pass; // declare once and reuse
+                        if (this.configuration.restaurant) {
+                            pass = await this.setItemCheckStock(
+                                this.selectedFood.item.id,
+                                qty
+                            );
+                        } else {
+                            pass = await this.setItemPolicy(
+                                this.selectedFood.item.id,
+                                qty
+                            );
+                        }
+                        if (pass === false) return;
+                        // Si el item-set requiere selección (modal abierto) detenemos aquí y guardamos contexto
+                        if (this.showDialogItemSet) {
+                            this.pendingItemSetAdd = { index, type, selectSerie, categoria, color_size };
+                            console.log("addFood pausado esperando confirmación de item set", this.pendingItemSetAdd);
+                            return; // Esperar a addconfirm
+                        }
+                    }
+                } else {
+                    if (
+                        Number(selectedFoodCopy.item.stock) <= 0 &&
+                        this.configuration.sales_stock == true &&
+                        !quotation_stock &&
+                        selectedFoodCopy.item.unit_type_id != "ZZ"
+                    ) {
+                        this.$toast.warning("Stock insuficiente");
+                        return;
+                    }
+
                 }
 
                 // Verificar si el producto ya existe en la orden
@@ -4678,7 +4715,7 @@ export default {
                 this.$message.error(`Error al agregar producto desde balanza: ${error.message}`);
             }
         },
-        
+
         total_sales(val) {
             this.total_sales_pos = val;
         },

@@ -123,6 +123,11 @@ class PromotionDocumentController extends Controller
                 $promotion_document_item->save();
             }
 
+            // Descontar puntos si es promoción por puntos
+            if ($configuration->promotions_by_points) {
+                $this->subtractPromotionPoints($promotion_document);
+            }
+
             DB::connection('tenant')->commit();
 
             return [
@@ -139,13 +144,6 @@ class PromotionDocumentController extends Controller
             ];
         }
     }
-    // public function checkLimit($promotion_document_id,$customer_id){
-    //     $promotion_document = PromotionDocument::find($promotion_document_id);
-    //     $limit_changes = $promotion_document->limit_changes;
-    //     if(!$limit_changes) return true;
-    //     $changes = PromotionReceived::where('customer_id', $customer_id)->where('promotion_document_id', $promotion_document_id)->count();
-    //     return $changes < $limit_changes;
-    // }
 
     public function pointsByCustomer($id, $promotion_document_id)
     {
@@ -529,8 +527,10 @@ class PromotionDocumentController extends Controller
         $result = [];
 
         foreach ($promotions as $promo) {
+
             $promoCustomer = PromotionDocumentCustomer::where('customer_id', $customer_id)
                 ->where('promotion_document_id', $promo->id)
+                ->where('active', 1)
                 ->first();
 
             if (!$promoCustomer || $promoCustomer->points <= 0) {
@@ -555,6 +555,10 @@ class PromotionDocumentController extends Controller
                     'item_id' => $item->item_id,
                     'item_name' => $itemData->name ?? '',
                     'item_description' => $itemData->description ?? '',
+                    //'image_url' => ($itemData->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $itemData->image) : asset("/logo/{$itemData->image}"),
+                    'image_url' => ($itemData->image !== 'imagen-no-disponible.jpg')
+                        ? public_path('storage/uploads/items/' . $itemData->image)
+                        : public_path('logo/imagen-no-disponible.jpg'),
                     'item_image' => $itemData->image ?? '',
                     'item_points_value' => $item->points_value,
                     'item_quantity' => $item->quantity,
@@ -609,7 +613,6 @@ class PromotionDocumentController extends Controller
             $absolutePath = storage_path('app/public/' . $fileName);
 
             $pdf->save($absolutePath);
-            /* } */
         } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,

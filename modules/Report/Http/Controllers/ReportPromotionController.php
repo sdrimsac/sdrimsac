@@ -69,19 +69,50 @@ class ReportPromotionController extends Controller
     {
         $document_customer = PromotionDocumentCustomer::findOrFail($document_customer_id);
         $document_promotion = PromotionDocument::find($document_customer->promotion_document_id);
-        $receiveds = PromotionReceived::where('promotion_document_customer_id', $document_customer_id)->get()->transform(function ($row) use ($document_promotion) {
+        /* $receiveds = PromotionReceived::where('promotion_document_customer_id', $document_customer_id)->get()->transform(function ($row) use ($document_promotion) {
             $item = $document_promotion->items->where('item_id', $row->item_id)->first();
             $points = $item->points_value;
             return [
                 'id' => $row->id,
                 'product' => $row->item->description,
                 'quantity' => $row->quantity,
+                'image' => $row->item->image,
+                'image_url' => ($row->item->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->item->image) : asset("/logo/{$row->item->image}"),
                 'date' => $row->created_at->format('d/m/Y'),
                 'time' => $row->created_at->format('H:i:s'),
                 'seller' => isset($row->user) ? $row->user->name : '-',
                 'points' => $points
             ];
+        }); */
+
+        $receiveds = PromotionReceived::where(
+            'promotion_document_customer_id',
+            $document_customer_id
+        )->get()->transform(function ($row) use ($document_promotion) {
+
+            $item = $document_promotion->items
+                ->where('item_id', $row->item_id)
+                ->first();
+
+            $unit_points = (float) $item->points_value;
+            $total_points_used = $unit_points * $row->quantity;
+
+            return [
+                'id' => $row->id,
+                'product' => $row->item->description,
+                'quantity' => $row->quantity,
+                'unit_points' => $unit_points,          // 🔹 NUEVO
+                'total_points' => $total_points_used,   // 🔹 NUEVO
+                'image' => $row->item->image,
+                'image_url' => ($row->item->image !== 'imagen-no-disponible.jpg')
+                    ? asset('storage/uploads/items/' . $row->item->image)
+                    : asset("/logo/{$row->item->image}"),
+                'date' => $row->created_at->format('d/m/Y'),
+                'time' => $row->created_at->format('H:i:s'),
+                'seller' => isset($row->user) ? $row->user->name : '-',
+            ];
         });
+
 
         return [
             'success' => true,
@@ -113,7 +144,7 @@ class ReportPromotionController extends Controller
         $pdf = PDF::loadView(
             'report::promotions.report_items_points',
             compact("document_customer", "receiveds", "company", "establishment", "customer")
-        )->setPaper('a4', );
+        )->setPaper('a4',);
         // Guardar PDF
         //$path = storage_path("app/public/reports/report_items_points_{$document_customer_id}.pdf");
         //$pdf->save($path);
@@ -129,29 +160,6 @@ class ReportPromotionController extends Controller
         $records = $this->getRecords($request);
         return new ReportPromotionDocumentCollection($records->paginate(config('tenant.items_per_page')));
     }
-
-    /* public function getRecords(Request $request)
-    {
-        $configuration = Configuration::first();
-        $records = PromotionDocumentCustomer::query();
-        $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
-            $query->where('is_points', $configuration->promotions_by_points);
-        })->whereHas('customer', function ($query) {
-            $query->where('name', 'not like', '%clientes varios%');
-        });
-        $period = $this->getDatesOfPeriod($request);
-        $person_id = $request->person_id;
-        if ($period['d_start'] && $period['d_end']) {
-            $d_start = Carbon::parse($period['d_start'])->startOfDay();
-            $d_end = Carbon::parse($period['d_end'])->endOfDay();
-            $records = $records->whereBetween('created_at', [$d_start, $d_end]);
-        }
-        if ($person_id) {
-            $records = $records->where('customer_id', $person_id);
-        }
-
-        return $records;
-    } */
 
     public function getRecords(Request $request)
     {

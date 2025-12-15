@@ -29,7 +29,7 @@
                         <td v-if="isPromotionPoints">{{ row.points }}</td>
                         <td v-else>{{ row.acc_total }}</td>
                         <td>
-                            <button class="btn btn-sm btn-success" @click="showPoints(row.customer_id, row.customer_name)">Item disponibles</button>
+                            <button v-if="row.active == true" class="btn btn-sm btn-success" @click="showPoints(row.customer_id, row.customer_name)">Item disponibles</button>
                         </td>
                         <td>
                             <button class="btn btn-sm btn-primary" @click="showDetail(row)">Ver detalle</button>

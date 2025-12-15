@@ -11,9 +11,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Imagen</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
-                        <th v-if="isPromotionPoints">Puntos</th>
+                        <th v-if="isPromotionPoints">Puntos unitarios</th>
+                        <th v-if="isPromotionPoints">Puntos totales</th>
                         <th>Fecha</th>
                         <th>Vendedor</th>
                     </tr>
@@ -23,22 +25,28 @@
                     <template v-if="receiveds.length > 0">
                         <tr v-for="(received, idx) in receiveds" :key="received.id">
                             <td>{{ idx + 1 }}</td>
+                            <td>
+                                <img :src="received.image_url" alt="Imagen del producto" width="50" />
+                            </td>
                             <td>{{ received.product }}</td>
                             <td>{{ received.quantity }}</td>
                             <td v-if="isPromotionPoints">
-                                -{{ received.points }}
+                                {{ received.unit_points }}
+                            </td>
+                            <td>
+                                {{ received.total_points }}
                             </td>
                             <td>
                                 {{ received.date }} <br /><small>{{
                                     received.time
-                                    }}</small>
+                                }}</small>
                             </td>
                             <td>{{ received.seller }}</td>
                         </tr>
                     </template>
                     <template v-else>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 No hay productos canjeados
                             </td>
                         </tr>
@@ -84,7 +92,7 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
         },
-        downloadPDF () {
+        downloadPDF() {
             const url = `/reports/pdf-points/${this.currentRow.id}`;
             window.open(url, "_blank");
         }

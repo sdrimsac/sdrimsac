@@ -1,7 +1,7 @@
 <template>
     <el-dialog :visible.sync="showDetailDialog" width="80%" :close-on-click-modal="false"
-        :before-close="() => { showDetailDialog = false; currentRow = null; }" centered :destroy-on-close="true"
-        :title="`Detalle de la promoción ${currentRow ? currentRow.promotion_name : ''}` " appended-to-body>
+        :before-close="() => { showDetailDialog = false; localRow = null; }" centered :destroy-on-close="true"
+    :title="`Detalle de la promoción ${currentRow ? currentRow.promotion_name : ''}` " appended-to-body>
         <div>
             <div class="card mb-0 pt-2 pt-md-0">
                 <div class="card-header">
@@ -27,6 +27,7 @@
                                         <th>Nombre promocion</th>
                                         <th>Puntos disponibles</th>
                                         <th>Producto</th>
+                                        <th>Imagen</th>
                                         <th>Precio puntos</th>
                                         <th>Cantidad</th>
                                     </tr>
@@ -38,6 +39,9 @@
                                         <td>
                                             {{ prod.item_description }}
                                         </td>
+                                        <td>
+                                            <img :src="getPublicImageUrl(prod.image_url)" alt="Imagen del producto" width="50"/>
+                                        </td>
                                         <td>{{ prod.item_points_value }}</td>
                                         <td v-if="prod.item_quantity != null">Cant: {{ prod.item_quantity }}</td>
                                     </tr>
@@ -48,7 +52,7 @@
                 </div>
             </div>
         </div>
-    <Whatsapp :customer-id="customerId" :showDialog.sync="showWhatsappDialog" :currentRow="currentRow"/>
+    <Whatsapp :customer-id="customerId" :showDialog.sync="showWhatsappDialog" :currentRow="localRow"/>
     </el-dialog>
 </template>
 <script>
@@ -63,6 +67,7 @@ export default {
             loadingProducts: false,
             productsError: null,
             showWhatsappDialog : false,
+            localRow: this.currentRow ? { ...this.currentRow } : null,
         }
     },
     watch: {
@@ -75,12 +80,18 @@ export default {
             } else {
                 this.$emit('update:showDialog', false);
             }
+        },
+        currentRow: {
+            handler(newVal) {
+                this.localRow = newVal ? { ...newVal } : null;
+            },
+            deep: true
         }
     },
     methods: {
         closeDialog() {
             this.showDetailDialog = false;
-            this.currentRow = null;
+            this.localRow = null;
         },
         getPoints() {
             return this.isPromotionPoints ? 'Puntos' : 'Monto';
@@ -101,14 +112,18 @@ export default {
             }
         },
 
-        /* generatePDF() {
-            const url = `/promotions-document/exportable-pdf?customer_id=${this.customerId}`;
-            window.open(url, '_blank');
-        } */
-
         generatePDF() {
             const url = `/promotions-document/exportable-pdf/${this.customerId}`;
             window.open(url, '_blank');
+        },
+
+        getPublicImageUrl(url) {
+            if (!url) return '/logo/imagen-no-disponible.jpg';
+            // Reemplaza la ruta absoluta de Windows a una ruta pública
+            let publicUrl = url.replace(/^.*public[\\/]/, '/').replace(/\\/g, '/');
+            // Si la imagen no existe, muestra la imagen por defecto
+            if (!publicUrl || publicUrl === '/') return '/logo/imagen-no-disponible.jpg';
+            return publicUrl;
         }
     }
 }
