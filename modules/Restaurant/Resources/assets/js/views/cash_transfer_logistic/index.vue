@@ -1,4 +1,4 @@
-<!-- Modulo Listado de productos -->
+<!-- Modulo Listado de traslado de dinero a usuarios -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -11,7 +11,7 @@
                                 <a href="/dashboard">Traslados</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                <span class="text-muted">Lista de traslados de dinero dasdadadas</span>
+                                <span class="text-muted">Lista de traslados de dinero</span>
                             </li>
                         </ol>
                     </div>
@@ -27,8 +27,7 @@
             <div class="card mb-0">
                 <div class="card-header bg-primary">
                     <h4 class="my-0 text-white">
-                        <i class="fas fa-cash"></i> Listado de traslados de
-                        dinero a usuarios
+                        <i class="fas fa-cash"></i> Listado de traslados de dinero a usuarios
                     </h4> 
                 </div>
                 <div class="card-body">
@@ -116,7 +115,7 @@
                     </data-table>
                 </div>
 
-                <form-cash-transfer :cashAvailable="cashAvailable" :showDialog.sync="showDialog" :recordId="recordId"
+                <form-cash-transfer :cashAvailable="cashAvailable" :showDialog.sync="showDialog" :recordId="recordId" :configuration="configuration"
                     @updateCash="getCashAvailable"></form-cash-transfer>
             </div>
         </div>

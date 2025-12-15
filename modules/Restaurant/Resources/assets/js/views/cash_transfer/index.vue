@@ -12,7 +12,7 @@
                             </li>
                             <li class="breadcrumb-item active">
                                 <span class="text-muted"
-                                    >Lista de traslados de dinero dasdadadas</span
+                                    >Lista de traslados de dinero</span
                                 >
                             </li>
                         </ol>
@@ -31,8 +31,7 @@
             <div class="card mb-0">
                 <div class="card-header bg-primary">
                     <h4 class="my-0 text-white">
-                        <i class="fas fa-cash"></i> Listado de traslados de
-                        dinero
+                        <i class="fas fa-cash"></i> Listado de traslados de dinero
                     </h4>
                 </div>
                 <div class="card-body">

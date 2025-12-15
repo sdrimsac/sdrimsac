@@ -462,6 +462,7 @@ Route::prefix('caja')->group(function () {
             Route::get('dashboard-pos', 'DashboardController@pos')->name('restaurant.pos.dashboard')->middleware('just.worker');;
             Route::post('subcategories', [App\Http\Controllers\Tenant\SubcategoryController::class, 'store']);
             Route::post('category', [App\Http\Controllers\Tenant\CategoryController::class, 'store']);
+            
             //Gastos
             Route::get('expenses', [PosController::class, 'expenses'])->name('restaurant.expenses.index')->middleware('just.worker');;
             Route::get('expenses/records', [PosController::class, 'records']);
@@ -470,8 +471,6 @@ Route::prefix('caja')->group(function () {
             Route::delete('expenses/{id}', [PosController::class, 'destroy']);
             Route::get('expenses/columns', [PosController::class, 'columns']);
             Route::get('expenses/tables', [PosController::class, 'tables']);
-
-
 
             //Ingresos
             Route::get('incomes', [IncomesController::class, 'incomes'])->name('restaurant.incomes.index')->middleware('just.worker');;

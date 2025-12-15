@@ -71,11 +71,13 @@ class StaffController extends Controller
         $amount = $request->input('amount');
         $method = $request->input('method');
         $date_time_advances = $request->input('date_time_advances');
+        $observation = $request->input('observation');
 
         $create = WorkerAdvance::create([
             'person_id' => $person_id,
             'amount' => $amount,
             'method' => $method,
+            'obervation' => $observation,
             'date_time_advance' => $date_time_advances ?? now()
         ]);
 

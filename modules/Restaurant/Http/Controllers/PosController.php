@@ -55,6 +55,7 @@ use Modules\Restaurant\Http\Resources\FoodCollection;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\WorkersType;
 
 class PosController extends Controller
 {
@@ -324,7 +325,7 @@ class PosController extends Controller
         if ($category_ins_id) {
             $foods = $foods->where('category_food_id', '<>', $category_ins_id);
         }
-       /*  $configuration = Configuration::first(); */
+        /*  $configuration = Configuration::first(); */
         $hotels = $configuration->hotels;
         if ($configuration->ord_dscp) {
             $foods = $foods->orderByRaw("description LIKE ? DESC", ["{$value}%"])
@@ -725,15 +726,47 @@ class PosController extends Controller
 
     public function records(Request $request)
     {
-        if ($request->column == 'date' && isset($request->value)) {
-            $d = explode(",", $request->value);
-            $d_start = $d[0];
-            $d_end = $d[1];
-            $records = Box::whereBetween('date', [$d_start, $d_end])->where('type', '2')->where('expenses', 1)->orderBy('id', 'desc'); //para ordenar
-        } else {
 
-            $records = Box::where($request->column, 'like', "%{$request->value}%")->where('type', '2')->where('expenses', 1)->orderBy('id', 'desc'); //para ordenar
+        $user = auth()->user();
+
+        $isGestion = WorkersType::where('id', $user->worker_type_id)
+            ->where('description', 'GESTION')
+            ->exists();
+
+        if ($isGestion) {
+
+            $records = Box::query()
+                ->where('type', '2')
+                ->where('expenses', 1);
+
+            // Gestión ve: él mismo + sellers
+            $sellerIds = User::where('type', 'seller')->pluck('id');
+            $records->whereIn('user_id', $sellerIds->push($user->id));
+
+            // Filtros
+            if ($request->column === 'date' && !empty($request->value)) {
+                [$d_start, $d_end] = explode(',', $request->value);
+                $records->whereBetween('date', [$d_start, $d_end]);
+            } else {
+                $records->where($request->column, 'like', "%{$request->value}%");
+            }
+
+            return new BoxCollection(
+                $records->orderBy('id', 'desc')
+                    ->paginate(config('tenant.items_per_page'))
+            );
+        } else {
+            if ($request->column == 'date' && isset($request->value)) {
+                $d = explode(",", $request->value);
+                $d_start = $d[0];
+                $d_end = $d[1];
+                $records = Box::whereBetween('date', [$d_start, $d_end])->where('type', '2')->where('expenses', 1)->orderBy('id', 'desc'); //para ordenar
+            } else {
+
+                $records = Box::where($request->column, 'like', "%{$request->value}%")->where('type', '2')->where('expenses', 1)->orderBy('id', 'desc'); //para ordenar
+            }
         }
+
         return new BoxCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function reports_expenses(Request $request)

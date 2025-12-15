@@ -15,6 +15,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\PaymentMethodType;
 use App\Models\Tenant\User;
+use App\Services\RoleService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Report\Exports\CashTransferExport;
+use Modules\Restaurant\Models\WorkersType;
 
 class CashTransferController extends Controller
 {
@@ -62,9 +64,28 @@ class CashTransferController extends Controller
 
         return compact('cashes');
     }
-    public function cashes()
+    /* public function cashes()
     {
-        $cashes = Cash::where('state', 1)->where('principal', 0)->get()
+        $configuration = Configuration::first();
+        if ($configuration->restobar_home) {
+
+            $user = auth()->user();
+            $user_role = RoleService::isManagement($user);
+
+            $cashes = Cash::where('state', 1)->where('principal', 0)->get()
+            ->filter(function ($cash) use ($user_role) {
+                // solo dejar pasar las cajas cuyo usuario cumpla el mismo role (management o no)
+                return $cash->user && RoleService::isManagement($cash->user) === $user_role;
+            })
+            ->transform(function ($cash) {
+                return [
+                'id' => $cash->id,
+                'description' => $cash->reference_number,
+                'user_name' => $cash->user->name,
+                ];
+            });
+        } else {
+            $cashes = Cash::where('state', 1)->where('principal', 0)->get()
             ->transform(function ($cash) {
                 return [
                     'id' => $cash->id,
@@ -73,8 +94,48 @@ class CashTransferController extends Controller
                 ];
             });
 
+        }
+        
+        return compact('cashes');
+    } */
+
+    public function cashes()
+    {
+        $configuration = Configuration::first();
+        $user = auth()->user();
+        $IsArca = $user->is_arca;
+        $user_role = RoleService::isManagement($user);
+
+        if ($configuration->restobar_home && $IsArca) {
+            // Buscar los IDs de los tipos de trabajador LOGISTICA y GESTION
+            $workerTypes = WorkersType::whereIn('description', ['GESTION'])->pluck('id');
+            $users = User::whereIn('worker_type_id', $workerTypes)->pluck('id');
+            $cashes = Cash::where('state', 1)
+                ->where('principal', 0)
+                ->whereIn('user_id', $users)
+                ->get()
+                ->transform(function ($cash) {
+                    return [
+                        'id' => $cash->id,
+                        'description' => $cash->reference_number,
+                        'user_name' => $cash->user->name,
+                    ];
+                });
+        } else {
+            // Mostrar todas las cajas
+            $cashes = Cash::where('state', 1)->where('principal', 0)->get()
+                ->transform(function ($cash) {
+                    return [
+                        'id' => $cash->id,
+                        'description' => $cash->reference_number,
+                        'user_name' => $cash->user->name,
+                    ];
+                });
+        }
+
         return compact('cashes');
     }
+
     function get_records_report(Request $request)
     {
 
@@ -167,6 +228,9 @@ class CashTransferController extends Controller
             $boxes = CashTransfer::query();
         }
 
+        // order by id desc
+        $boxes = $boxes->orderBy('id', 'desc');
+
 
         return new CashTransferCollection($boxes->paginate(config('tenant.items_per_page')));
     }
@@ -210,9 +274,9 @@ class CashTransferController extends Controller
             $box->state = 1;
             $box->type = 1;
             $box->soap_type_id = $soap_type_id;
-            $box->user_id = auth()->id();
+            $box->user_id = $user_destination->id;
             $box->cash_transfer_id = $cash_transfer->id;
-            $box->description = 'Transferencia de caja principal';
+            $box->description = 'Transferencia de dinero caja principal '  . ' usuario ' . $user->name;
             $box->method = 'Efectivo';
             $box->save();
             (new WhatsappController)->sendMessageOne($user_destination->telephone, $message, $user->establishment_id);
@@ -231,6 +295,96 @@ class CashTransferController extends Controller
             ];
         }
     }
+
+    /* public function store()
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+
+            $data = request()->all();
+            $user_id = auth()->id();
+            $user = User::findOrFail($user_id);
+
+            $soap_type_id = Company::first()->soap_type_id;
+            $date_of_issue = date('Y-m-d');
+
+            // Caja principal (origen)
+            $cash_principal = Cash::where('principal', 1)
+                ->where('user_id', $user_id)
+                ->where('state', 1)
+                ->firstOrFail();
+
+            $data['cash_principal_id'] = $cash_principal->id;
+            $data['date_of_issue'] = $date_of_issue;
+
+            // Registrar transferencia
+            $cash_transfer = CashTransfer::create($data);
+
+            $amount = $cash_transfer->amount;
+            $cash_destination = Cash::findOrFail($cash_transfer->cash_destination_id);
+            $user_destination = $cash_destination->user;
+
+
+
+            $box_out = new Box;
+            $box_out->cash_id = $cash_principal->id;
+            $box_out->date = $date_of_issue;
+            $box_out->amount = $amount;
+            $box_out->expenses = 1;
+            $box_out->group_id = 1;
+            $box_out->category_id = 1;
+            $box_out->subcategory_id = 1;
+            $box_out->state = 1;
+            $box_out->type = 2; // egreso
+            $box_out->soap_type_id = $soap_type_id;
+            $box_out->user_id = $user_id; // 👈 usuario que opera
+            $box_out->cash_transfer_id = $cash_transfer->id;
+            $box_out->description = 'Transferencia a caja ' . $cash_destination->reference_number;
+            $box_out->method = 'Efectivo';
+            $box_out->save();
+
+            $box_in = new Box;
+            $box_in->cash_id = $cash_destination->id;
+            $box_in->date = $date_of_issue;
+            $box_in->amount = $amount;
+            $box_in->incomes = 1;
+            $box_in->group_id = 1;
+            $box_in->category_id = 1;
+            $box_in->subcategory_id = 1;
+            $box_in->state = 1;
+            $box_in->type = 1; // ingreso
+            $box_in->soap_type_id = $soap_type_id;
+            $box_in->user_id = $user_id; // 👈 MISMO usuario
+            $box_in->cash_transfer_id = $cash_transfer->id;
+            $box_in->description = 'Transferencia desde caja principal ' . $cash_principal->reference_number;
+            $box_in->method = 'Efectivo';
+            $box_in->save();
+
+            $message = "La caja principal ha transferido S/. $amount a la caja {$cash_destination->reference_number} de {$user_destination->name}";
+            if ($cash_transfer->observation) {
+                $message .= " con la observación: {$cash_transfer->observation}";
+            }
+
+            (new WhatsappController)
+                ->sendMessageOne($user_destination->telephone, $message, $user->establishment_id);
+
+            DB::connection('tenant')->commit();
+
+            return [
+                'success' => true,
+                'data' => $cash_transfer,
+                'message' => 'Transferencia realizada con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    } */
+
 
     public function availableCredit()
     {

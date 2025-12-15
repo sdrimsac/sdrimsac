@@ -32,7 +32,7 @@
                         </div>
                         Motivo / Observación
                         <el-input type="textarea" rows="3" placeholder="Ingrese una observación"
-                            v-model="form.observacion" />
+                            v-model="form.observation" />
 
 
                         <div class="row">
@@ -114,7 +114,7 @@ export default {
                 selectedPerson: this.person_id || null,
                 amount: null,
                 method: null,
-                observacion: ""
+                observation: ""
             },
             filterPerson: null,
             date: null,
@@ -230,7 +230,7 @@ export default {
                     person_id: this.form.selectedPerson,
                     amount: this.form.amount,
                     method: this.form.method,
-                    observacion: this.form.observacion,
+                    observation: this.form.observation,
                     date_time_advances: new Date()
                         .toISOString()
                         .slice(0, 19)
@@ -266,8 +266,10 @@ export default {
             this.$nextTick(() => {
                 if (this.$refs.adelantoForm)
                     this.$refs.adelantoForm.resetFields();
-                // keep selected person in sync if parent provided one
                 this.form.selectedPerson = this.person_id || null;
+                this.form.amount = null;
+                this.form.method = null;
+                this.form.observation = "";
             });
         }
     }
